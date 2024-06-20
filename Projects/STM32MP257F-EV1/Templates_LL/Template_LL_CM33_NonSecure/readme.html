@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Readme</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="./../../../../_htmresc/mini-st_2020.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="row">
+<div class="col-sm-12 col-lg-8">
+<div class="row">
+<div class="col-sm-12 col-lg-8">
+<h2
+id="template_cm33_nonsecure-application-description"><b>Template_CM33_NonSecure
+Application Description</b></h2>
+<ul>
+<li>This project provides a reference template based on the STM32Cube
+HAL API that can be used to build any firmware application</li>
+</ul>
+<h4 id="expected-success-behavior"><b>Expected success behavior</b></h4>
+<ul>
+<li>Print message in UART console</li>
+<li>Blink LED3 (orange) led every 1s</li>
+</ul>
+<h4 id="error-behaviors"><b>Error behaviors</b></h4>
+<ul>
+<li>No print in UART console, No LED3 blink</li>
+</ul>
+<h3 id="directory-contents"><b>Directory contents</b></h3>
+<ul>
+<li>Src/main.c Main program source file</li>
+<li>Src/stm32mp2xx_it.c Interrupt handlers source file</li>
+<li>Src/stm32mp2xx_hal_msp.c HAL MSP module</li>
+<li>Src/syscalls.c STM32MP2xx system clock configuration file</li>
+<li>Inc/main.h Main program header file</li>
+<li>Inc/stm32mp2xx_hal_conf.h HAL Configuration file</li>
+<li>Inc/stm32mp2xx_it.h Interrupt handlers header file</li>
+<li>Inc/stm32mp257f_eval_conf.h STM32MP257-EV1 board configuration
+file</li>
+</ul>
+<h3 id="hardware-and-software-environment"><b>Hardware and Software
+environment</b></h3>
+<ul>
+<li><p>This example runs on STM32MP25xx devices</p></li>
+<li><p>This example has been tested with STMicroelectronics
+STM32MP257F-EV1. and can be easily tailored to any other supported
+device and development board.</p></li>
+<li><p>Connect ST-Link cable to the PC USB port to display
+trace</p></li>
+</ul>
+<h3 id="how-to-use-it"><b>How to use it ?</b></h3>
+<p>In order to make the program work, you must do the following :</p>
+<ul>
+<li>Open your preferred toolchain</li>
+<li>Rebuild all files and load your image into target memory</li>
+<li>Run the application</li>
+<li>Connect a type C device on the Type-C connector 21</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Readme</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="./../../../../_htmresc/mini-st_2020.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="row">
+<div class="col-sm-12 col-lg-8">
+<div class="row">
+<div class="col-sm-12 col-lg-8">
+<h2
+id="tfm_protected_storage-application-description"><b>TFM_Protected_Storage
+Application Description</b></h2>
+<ul>
+<li>It demonstrates an example of Protected Storage API (PSA) usage
+provided by the trusted firmware (TFM) middleware.</li>
+<li>This non-secure application (TFM_Protected_Storage_CM33_NonSecure)
+has to be compiled after trusted firmware Secure project
+(TFM_Protected_Storage_CM33_trusted-firmware-m). It contains a postbuild
+command which create a single binary containing NonSecure and secure FW
+with OPTEE image header.</li>
+<li>IDE files for this secure project
+(TFM_Protected_Storage_CM33_trusted-firmware-m)are also present and
+relies on CMAKE build process not integrated inside IDE. Plese, check in
+main Release Note the tools prerequisites.</li>
+</ul>
+<h4 id="expected-success-behavior"><b>Expected success behavior</b></h4>
+<ul>
+<li><p>Blink LED3 (orange) led every 1s</p></li>
+<li><p>Print message in UART console </p>
+<pre><code>  [INF] welcome to stm32mp257f eval
+  [INF] Beginning TF-M provisioning
+  [WRN] TFM_DUMMY_PROVISIONING is not suitable for production! This device is NOT SECURE
+  [Sec Thread] Secure image initializing!
+  TF-M isolation level is: 0x00000002
+  Booting TF-M v1.7.0-stm32mp25-r3
+  Creating an empty ITS flash layout.
+  [INF][Crypto] Provisioning entropy seed... complete.
+  **** TFM_Protected_Storage M33 NonSecure ****
+  STM32Cube FW version: v0.2.0
+  Protected Storage sample started.
+  PSA Protected Storage API Version 1.0
+  Writing data to UID1: WRITE_DATA_1
+  Info on data stored in UID1:
+  - Size: 13
+  - Flags: 0x 0
+  Read and compare data stored in UID1
+  Data stored in UID1: WRITE_DATA_1
+  Overwriting data stored in UID1: WRITE_DATA_2
+  Writing data to UID2 with overwrite protection: WRITE_DATA_1
+  Attempting to write &#39;WRITE_DATA_2&#39; to UID2
+  Got expected error (PSA_ERROR_NOT_PERMITTED) when writing to protected UID
+  Removing UID1
+  **** End of application ****</code></pre></li>
+</ul>
+<h4 id="error-behaviors"><b>Error behaviors</b></h4>
+<ul>
+<li>Print message in UART console </li>
+<li>Blink LED3 (orange) led every 100ms</li>
+</ul>
+<h4 id="assumptions-if-any"><b>Assumptions if any</b></h4>
+<p>User is familiar with security and trusted firmware (TFM)
+middleware.</p>
+<h4 id="known-limitations"><b>Known limitations</b></h4>
+<h3 id="keywords"><b>Keywords</b></h3>
+<p>Security, TFM, Secure Storage, PSA, SNOR</p>
+<h3 id="hardware-and-software-environment"><b>Hardware and Software
+environment</b></h3>
+<ul>
+<li><p>As a prerequisites, trusted-firmware-m source code shall be
+installed under “Middlewares/Third_Party” directory with the following
+path name “Middlewares/Third_Party/trusted-firmware-m” - Please make
+sure that you stick to the right trusted-firmware-m version as described
+in the overall STM32 MPU release note.</p></li>
+<li><p>This example runs on STM32MP25xx devices</p></li>
+<li><p>This example has been tested with STMicroelectronics
+STM32MP257F-EV1. and can be easily tailored to any other supported
+device and development board.</p></li>
+<li><p>Connect ST-Link cable to the PC USB port to display
+trace</p></li>
+</ul>
+<h3 id="how-to-use-it"><b>How to use it ?</b></h3>
+<p>In order to make the program work, you must do the following :</p>
+<ul>
+<li>Open your preferred toolchain</li>
+<li>Rebuild all files and load your image into target memory</li>
+<li>Run the application</li>
+<li>Connect a type C device on the Type-C connector 21</li>
+</ul>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Release Notes for STM32 USB-C Power Delivery UCSI Library</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <link rel="stylesheet" href="_htmresc/mini-st_2020.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <link rel="icon" type="image/x-icon" href="_htmresc/favicon.png" />
+</head>
+<body>
+<div class="row">
+<div class="col-sm-12 col-lg-4">
+<center>
+<h1 id="release-notes-for-stm32-usb-c-power-delivery-ucsi-library">Release Notes for STM32 USB-C Power Delivery UCSI Library</h1>
+<p>Copyright © 2022 STMicroelectronics<br />
+</p>
+<a href="https://www.st.com" class="logo"><img src="_htmresc/st_logo_2020.png" alt="ST logo" /></a>
+</center>
+<h1 id="purpose">Purpose</h1>
+<p>USB Type-C Connector System Software Interface (UCSI) defines the commands and notifications to manage a platform that exposes one or more USB Type-C connectors. The combination of hardware and firmware and any vendor-provided OS software that provides this interface is referred to as the Platform Policy Manager or the PPM. UCSI PPM is typically implemented by an Embedded Controller (EC) which may either implement Power Delivery (PD) state machines or interface a PD controller. STMicroelectronics interfaces with STM32G0 over the I2C physical transport.</p>
+<p>Here is an example of architecture between a STM32M135 MPU (OPM) and STM32G0 Device (PPM/LPM): <img src="_htmresc/Architecture_STM32MP135_STM32G0.JPG" /></p>
+<p>Here is the list of references to user documents:</p>
+<ul>
+<li><a href="https://www.st.com/en/applications/connectivity/usb-type-c-and-power-delivery.html">ST page</a>: Key features of the new USB Type-C™ connector</li>
+<li><a href="https://www.intel.com/content/dam/www/public/us/en/documents/technical-specifications/usb-type-c-ucsi-spec.pdf">UCSI Page</a>: USB Type-C Connector System Software Interface</li>
+</ul>
+</div>
+<div class="col-sm-12 col-lg-8">
+<h1 id="update-history">Update History</h1>
+<div class="collapse">
+<input type="checkbox" id="collapse-section2" checked aria-hidden="true"> <label for="collapse-section2" aria-hidden="true">V1.1.0 / 06-June-2023</label>
+<div>
+<h2 id="main-changes">Main Changes</h2>
+<h3 id="initial-release">Initial release</h3>
+<h2 id="contents">Contents</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Headline</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Update for ThreadX support</td>
+</tr>
+<tr class="even">
+<td>MISRA corrections</td>
+</tr>
+<tr class="odd">
+<td>MCUAstyle &amp; Codespell corections</td>
+</tr>
+</tbody>
+</table>
+<h2 id="known-limitations">Known limitations</h2>
+<h2 id="development-toolchains-and-compilers">Development Toolchains and Compilers</h2>
+<ul>
+<li>IAR Embedded Workbench for ARM (EWARM) toolchain V8.50.6 + ST-Link</li>
+<li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.32 + ST-Link</li>
+<li>STM32CubeIDE <a href="https://www.st.com/en/development-tools/stm32cubeide.html">V1.9.0</a> + ST-Link</li>
+</ul>
+<h2 id="supported-devices-and-boards">Supported Devices and boards</h2>
+<h2 id="backward-compatibility">Backward compatibility</h2>
+<p>NA</p>
+<h2 id="dependencies">Dependencies</h2>
+<p>NA</p>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" aria-hidden="true">V1.0.0 / 30-June-2022</label>
+<div>
+<h2 id="main-changes-1">Main Changes</h2>
+<h3 id="initial-release-1">Initial release</h3>
+<h2 id="contents-1">Contents</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Headline</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Initial release</td>
+</tr>
+</tbody>
+</table>
+<h2 id="known-limitations-1">Known limitations</h2>
+<h2 id="development-toolchains-and-compilers-1">Development Toolchains and Compilers</h2>
+<ul>
+<li>IAR Embedded Workbench for ARM (EWARM) toolchain V8.50.6 + ST-Link</li>
+<li>RealView Microcontroller Development Kit (MDK-ARM) toolchain V5.32 + ST-Link</li>
+<li>STM32CubeIDE <a href="https://www.st.com/en/development-tools/stm32cubeide.html">V1.9.0</a> + ST-Link</li>
+</ul>
+<h2 id="supported-devices-and-boards-1">Supported Devices and boards</h2>
+<h2 id="backward-compatibility-1">Backward compatibility</h2>
+<p>NA</p>
+<h2 id="dependencies-1">Dependencies</h2>
+<p>NA</p>
+</div>
+</div>
+</div>
+</div>
+<footer class="sticky">
+<p>For complete documentation on STM32,visit: [<a href="http://www.st.com">www.st.com/stm32</a>]</p>
+This release note uses up to date web standards and, for this reason, should not be opened with Internet Explorer but preferably with popular browsers such as Google Chrome, Mozilla Firefox, Opera or Microsoft Edge.
+</footer>
+</body>
+</html>
