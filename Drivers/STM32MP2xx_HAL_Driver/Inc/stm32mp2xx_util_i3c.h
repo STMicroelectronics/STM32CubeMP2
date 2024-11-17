@@ -27,9 +27,11 @@ extern "C" {
 /* Includes ----------------------------------------------------------------------------------------------------------*/
 #if defined (USE_HAL_DRIVER)
 #include "stm32mp2xx_hal.h"
-#else
-#include "stm32mp2xx_ll_i3c.h"
 #endif /* USE_HAL_DRIVER */
+
+#if defined (USE_FULL_LL_DRIVER)
+#include "stm32mp2xx_ll_i3c.h"
+#endif /* USE_FULL_LL_DRIVER */
 
 /** @addtogroup STM32MP2xx_UTIL_Driver
   * @{
