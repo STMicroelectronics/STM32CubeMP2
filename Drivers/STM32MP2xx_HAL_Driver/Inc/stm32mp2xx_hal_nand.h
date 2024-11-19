@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -383,5 +383,3 @@ void Delay(uint32_t nCount);
 #endif
 
 #endif /* STM32MP2xx_HAL_NAND_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

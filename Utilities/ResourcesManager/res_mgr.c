@@ -19,23 +19,137 @@
 /* Includes ------------------------------------------------------------------*/
 #include "res_mgr.h"
 #if !defined(USE_DEVELOPMENT_MODE)
-GPIO_TypeDef *GPIO_base_addrs[] =
-{
-#if !defined (CORE_CM0PLUS)
-  GPIOA,
-  GPIOB,
-  GPIOC,
-  GPIOD,
-  GPIOE,
-  GPIOF,
-  GPIOG,
-  GPIOH,
-  GPIOI,
-  GPIOJ,
-  GPIOK,
+
+
+#if defined(CORE_CA35)
+uint32_t scid = RESMGR_CIDCFGR_SCID1;
+uint32_t semcid = RESMGR_CIDCFGR_SEMWLC1;
+#elif defined(CORE_CM33)
+uint32_t scid = RESMGR_CIDCFGR_SCID2;
+uint32_t semcid = RESMGR_CIDCFGR_SEMWLC2;
+#elif defined (CORE_CM0PLUS)
+uint32_t scid = RESMGR_CIDCFGR_SCID3;
+uint32_t semcid = RESMGR_CIDCFGR_SEMWLC3;
+#else
+#error "Invalid coprocessor..."
 #endif
-  GPIOZ,
-};
+
+#define CPUSCID(scid) (scid >> RESMGR_CIDCFGR_SCID_Pos)
+#define CPUSEMCID(semcid) (semcid >> RESMGR_CIDCFGR_SEMWL_Pos)
+
+static GPIO_TypeDef* GetGPIOBaseAddr(ResMgr_Res_Type_t res_type)
+{
+
+  GPIO_TypeDef *gpioBaseAddr = NULL;
+
+  switch(res_type)
+  {
+#ifdef GPIOA
+    case RESMGR_RESOURCE_RIF_GPIOA:
+    {
+      gpioBaseAddr = GPIOA;
+      break;
+    }
+#endif /* GPIOA */
+
+#ifdef GPIOB
+    case RESMGR_RESOURCE_RIF_GPIOB:
+    {
+      gpioBaseAddr = GPIOB;
+      break;
+    }
+#endif /* GPIOB */
+
+#ifdef GPIOC
+    case RESMGR_RESOURCE_RIF_GPIOC:
+    {
+      gpioBaseAddr = GPIOC;
+      break;
+    }
+#endif /* GPIOC */
+
+#ifdef GPIOD
+    case RESMGR_RESOURCE_RIF_GPIOD:
+    {
+      gpioBaseAddr = GPIOD;
+      break;
+    }
+#endif /* GPIOD */
+
+#ifdef GPIOE
+    case RESMGR_RESOURCE_RIF_GPIOE:
+    {
+      gpioBaseAddr = GPIOE;
+      break;
+    }
+#endif /* GPIOE */
+
+#ifdef GPIOF
+    case RESMGR_RESOURCE_RIF_GPIOF:
+    {
+      gpioBaseAddr = GPIOF;
+      break;
+    }
+#endif /* GPIOF */
+
+#ifdef GPIOG
+    case RESMGR_RESOURCE_RIF_GPIOG:
+    {
+      gpioBaseAddr = GPIOG;
+      break;
+    }
+#endif /* GPIOG */
+
+#ifdef GPIOH
+    case RESMGR_RESOURCE_RIF_GPIOH:
+    {
+      gpioBaseAddr = GPIOH;
+      break;
+    }
+#endif /* GPIOH */
+
+#ifdef GPIOI
+    case RESMGR_RESOURCE_RIF_GPIOI:
+    {
+      gpioBaseAddr = GPIOI;
+      break;
+    }
+#endif /* GPIOI */
+
+#ifdef GPIOJ
+    case RESMGR_RESOURCE_RIF_GPIOJ:
+    {
+      gpioBaseAddr = GPIOJ;
+      break;
+    }
+#endif /* GPIOJ */
+
+#ifdef GPIOK
+    case RESMGR_RESOURCE_RIF_GPIOK:
+    {
+      gpioBaseAddr = GPIOK;
+      break;
+    }
+#endif /* GPIOK */
+
+#ifdef GPIOZ
+    case RESMGR_RESOURCE_RIF_GPIOZ:
+    {
+      gpioBaseAddr = GPIOZ;
+      break;
+    }
+#endif /* GPIOZ */
+
+    default:
+    {
+      gpioBaseAddr = NULL;
+    }
+
+  }
+
+  return gpioBaseAddr;
+
+}
 
 static ResMgr_Status_t GetBaseAddrRIF_rifsc(ResMgr_data_info_t *rif_info, uint8_t res_num)
 {
@@ -72,15 +186,11 @@ static ResMgr_Status_t GetBaseAddrRIF_RCC(ResMgr_data_info_t *rif_info, uint8_t 
     
   return ret;
 }
-#else
-static ResMgr_Status_t GetBaseAddrRIF_RCC(ResMgr_data_info_t *rif_info, uint8_t res_num)
-{
-  return RESMGR_STATUS_ACCESS_ERROR;
-}
 #endif
+
 static ResMgr_Status_t GetBaseAddrRIF_GPIO(ResMgr_data_info_t *rif_info, uint8_t res_num)
 {
-  GPIO_TypeDef *GPIO_base = GPIO_base_addrs[rif_info->res_type - RESMGR_RESOURCE_RIF_GPIOA];
+  GPIO_TypeDef *GPIO_base = GetGPIOBaseAddr(rif_info->res_type);
   ResMgr_Status_t  ret =  RESMGR_STATUS_ERROR_NONE;	
   /*Check the Parameter*/
   if(!IS_RESMGR_GPIO_RSC(res_num))
@@ -94,6 +204,7 @@ static ResMgr_Status_t GetBaseAddrRIF_GPIO(ResMgr_data_info_t *rif_info, uint8_t
   
   return ret;
 }
+#if !defined (CORE_CM0PLUS)
 static ResMgr_Status_t GetBaseAddrRIF_PWR_WIO(ResMgr_data_info_t *rif_info, uint8_t res_num)
 {
   ResMgr_Status_t  ret =  RESMGR_STATUS_ERROR_NONE;	  	
@@ -110,6 +221,7 @@ static ResMgr_Status_t GetBaseAddrRIF_PWR_WIO(ResMgr_data_info_t *rif_info, uint
   
   return ret;
 }
+#endif
 #if !defined (CORE_CM0PLUS)
 static ResMgr_Status_t GetBaseAddrRIF_FMC(ResMgr_data_info_t *rif_info, uint8_t res_num)
 {
@@ -126,11 +238,6 @@ static ResMgr_Status_t GetBaseAddrRIF_FMC(ResMgr_data_info_t *rif_info, uint8_t 
   rif_info->cid_type = RESMGR_COM_CID_WITH_SEMCR;
   
   return ret;
-}
-#else
-static ResMgr_Status_t GetBaseAddrRIF_FMC(ResMgr_data_info_t *rif_info, uint8_t res_num)
-{
-  return RESMGR_STATUS_ACCESS_ERROR;
 }
 #endif
 static ResMgr_Status_t GetBaseAddrRIF_PWR(ResMgr_data_info_t *rif_info, uint8_t res_num)
@@ -193,11 +300,6 @@ static ResMgr_Status_t GetBaseAddrRIF_EXTI(ResMgr_data_info_t *rif_info, uint8_t
   
   return ret;
 }
-#else
-static ResMgr_Status_t GetBaseAddrRIF_EXTI(ResMgr_data_info_t *rif_info, uint8_t res_num)
-{
-  return RESMGR_STATUS_ACCESS_ERROR;
-}
 #endif
 #if !defined (CORE_CM0PLUS)
 static ResMgr_Status_t GetBaseAddrRIF_DMA(ResMgr_data_info_t *rif_info, uint8_t res_num)
@@ -229,11 +331,6 @@ static ResMgr_Status_t GetBaseAddrRIF_DMA(ResMgr_data_info_t *rif_info, uint8_t 
   
   return ret;
 }
-#else
-static ResMgr_Status_t GetBaseAddrRIF_DMA(ResMgr_data_info_t *rif_info, uint8_t res_num)
-{
-  return RESMGR_STATUS_ACCESS_ERROR;
-}
 #endif
 static ResMgr_Status_t GetBaseAddrRIF(ResMgr_data_info_t *rif_info, uint8_t res_num)
 {
@@ -244,35 +341,64 @@ static ResMgr_Status_t GetBaseAddrRIF(ResMgr_data_info_t *rif_info, uint8_t res_
     case RESMGR_RESOURCE_RIFSC:
       ret = GetBaseAddrRIF_rifsc(rif_info, res_num);
       break;
+#if !defined (CORE_CM0PLUS)
     case RESMGR_RESOURCE_RIF_PWR_WIO:
       ret = GetBaseAddrRIF_PWR_WIO(rif_info, res_num);
       break;
     case RESMGR_RESOURCE_RIF_RCC:
       ret = GetBaseAddrRIF_RCC(rif_info, res_num);
       break;
+#if defined (GPIOA)
     case RESMGR_RESOURCE_RIF_GPIOA:
+#endif /* GPIOA */
+#if defined (GPIOB)
     case RESMGR_RESOURCE_RIF_GPIOB:
+#endif /* GPIOB */
+#if defined (GPIOC)
     case RESMGR_RESOURCE_RIF_GPIOC:
+#endif /* GPIOC */
+#if defined (GPIOD)
     case RESMGR_RESOURCE_RIF_GPIOD:
+#endif /* GPIOD */
+#if defined (GPIOE)
     case RESMGR_RESOURCE_RIF_GPIOE:
+#endif /* GPIOE */
+#if defined (GPIOF)
     case RESMGR_RESOURCE_RIF_GPIOF:
+#endif /* GPIOF */
+#if defined (GPIOG)
     case RESMGR_RESOURCE_RIF_GPIOG:
+#endif /* GPIOG */
+#if defined (GPIOH)
     case RESMGR_RESOURCE_RIF_GPIOH:
+#endif /* GPIOH */
+#if defined (GPIOI)
     case RESMGR_RESOURCE_RIF_GPIOI:
+#endif /* GPIOI */
+#if defined (GPIOJ)
     case RESMGR_RESOURCE_RIF_GPIOJ:
+#endif /* GPIOJ */
+#if defined (GPIOK)
     case RESMGR_RESOURCE_RIF_GPIOK:
+#endif /* GPIOK */
+#endif /* !defined (CORE_CM0PLUS) */
+#if defined (GPIOZ)
     case RESMGR_RESOURCE_RIF_GPIOZ:
+#endif /* GPIOZ */
       ret = GetBaseAddrRIF_GPIO(rif_info, res_num);
       break;
+#if !defined (CORE_CM0PLUS)
     case RESMGR_RESOURCE_RIF_FMC:
       ret = GetBaseAddrRIF_FMC(rif_info, res_num);
       break;
-    case RESMGR_RESOURCE_RIF_PWR:
+#endif
+      case RESMGR_RESOURCE_RIF_PWR:
       ret = GetBaseAddrRIF_PWR(rif_info, res_num);
       break;
     case RESMGR_RESOURCE_RIF_RTC:
       ret = GetBaseAddrRIF_RTC(rif_info, res_num);
       break;
+#if !defined (CORE_CM0PLUS)
     case RESMGR_RESOURCE_RIF_EXTI1:
     case RESMGR_RESOURCE_RIF_EXTI2:
       ret = GetBaseAddrRIF_EXTI(rif_info, res_num);
@@ -282,7 +408,8 @@ static ResMgr_Status_t GetBaseAddrRIF(ResMgr_data_info_t *rif_info, uint8_t res_
     case RESMGR_RESOURCE_RIF_HPDMA3:
       ret = GetBaseAddrRIF_DMA(rif_info, res_num);
       break;
-    default:
+#endif
+      default:
       ret = RESMGR_STATUS_RES_TYP_ERROR;
       break;
   }
@@ -303,6 +430,9 @@ uint32_t GetCoreMode(void)
         return THREAD_MODE_PRIVILEGED;
   else
         return THREAD_MODE_UNPRIVILEGED;
+#elif defined (CORE_CM0PLUS)
+  SecureState = CPU_UNSECURE;
+  return THREAD_MODE_UNPRIVILEGED;
 #else
   return 0;
 #endif
@@ -408,9 +538,113 @@ static uint32_t ResMgr_Get_SemCidWlist(ResMgr_data_info_t *resmgr_data, uint32_t
 }
 
 /**
-  * @brief  < Add here the function description >
-  * @note   < OPTIONAL: add here global note >
-  * @param  None
+  * @brief  Resource Manager MultiPin GPIO resource Request API
+  * @note   Request the GPIO Pin resources of specific GPIO(A to Z) Port
+  * @param  res_type
+  * @param  pin
+  * @retval None
+  */
+ResMgr_Status_t ResMgr_GPIO_Request(ResMgr_Res_Type_t res_type, uint16_t pin)
+{
+
+
+	ResMgr_Status_t status = RESMGR_STATUS_ERROR_NONE;
+	uint16_t temp_pin;
+	uint8_t  pos;
+	uint16_t pin_mask = 0;
+
+    /* Check the Parameter */
+	if(!IS_RESMGR_GPIO_PIN(pin))
+	{
+		/* Invalid RESOURCE GPIO Pin */
+		return RESMGR_STATUS_RES_NUM_ERROR;
+	}
+
+	temp_pin = pin;
+
+	if( NULL != GetGPIOBaseAddr(res_type) )
+	{
+		while(temp_pin)
+		{
+		  pin_mask  =  temp_pin & (-temp_pin);
+		  pos = RESMGR_LSB_SET_BIT_POS(pin_mask);
+		  status = ResMgr_Request(res_type, (uint8_t)RESMGR_GPIO_PIN(pos));
+
+		  if(status != RESMGR_STATUS_ACCESS_OK)
+		  {
+			temp_pin = pin & (pin_mask - 1);
+			while(temp_pin)
+			{
+			  pin_mask  =  temp_pin & (-temp_pin);
+			  pos = RESMGR_LSB_SET_BIT_POS(pin_mask);
+			  ResMgr_Release(res_type, (uint8_t)RESMGR_GPIO_PIN(pos));
+			  temp_pin = temp_pin & (~pin_mask);
+			}
+
+			return status;
+		  }
+
+		  temp_pin = temp_pin & (~pin_mask);
+		}
+
+	} else {
+
+		status = RESMGR_STATUS_RES_TYP_ERROR;
+	}
+
+	return status;
+}
+
+/**
+  * @brief  Resource Manager MultiPin GPIO resource Release API
+  * @note   Releases the GPIO Pin resources of specific GPIO(A to Z) Port
+  * @param  res_type
+  * @param  pin
+  * @retval None
+  */
+ResMgr_Status_t ResMgr_GPIO_Release(ResMgr_Res_Type_t res_type, uint16_t pin)
+{
+	ResMgr_Status_t status;
+	uint16_t temp_pin;
+	uint16_t pin_mask = 0;
+	uint8_t  pos;
+
+    /* Check the Parameter */
+	if(!IS_RESMGR_GPIO_PIN(pin))
+	{
+		/* Invalid RESOURCE GPIO Pin */
+		return RESMGR_STATUS_RES_NUM_ERROR;
+	}
+
+	temp_pin = pin;
+
+	if( NULL != GetGPIOBaseAddr(res_type) )
+	{
+	    while(temp_pin)
+		{
+		  pin_mask  =  temp_pin & (-temp_pin);
+		  pos = RESMGR_LSB_SET_BIT_POS(pin_mask);
+		  status = ResMgr_Release(res_type, (uint8_t)RESMGR_GPIO_PIN(pos));
+
+		  if(status != RESMGR_STATUS_ACCESS_OK)
+		  {
+			return status;
+	      }
+
+		  temp_pin = temp_pin & (~pin_mask);
+		}
+	} else {
+
+		status = RESMGR_STATUS_RES_TYP_ERROR;
+	}
+
+	return status;
+}
+
+/**
+  * @brief  Resource Manager Resource Request API
+  * @param  res_type
+  * @param  res_num
   * @retval None
   */
 ResMgr_Status_t ResMgr_Request(ResMgr_Res_Type_t res_type, uint8_t res_num)
@@ -450,8 +684,8 @@ ResMgr_Status_t ResMgr_Request(ResMgr_Res_Type_t res_type, uint8_t res_num)
     /* in other words is Peripheral shared with semaphore ? */
     if ((resmgr_data->cid_type == RESMGR_COMP_CID_ONLY) || ResMgr_Get_SemEnable(resmgr_data) == 0)
     {
-      /* Is SCID == CPU2 ? */
-      if (ResMgr_Get_StaticCid(resmgr_data, RESMGR_CIDCFGR_SCID2))
+      /* Is SCID == CPUx ? */
+      if (ResMgr_Get_StaticCid(resmgr_data, scid))
       {
         /* SCID == CPU1 : configuration is correct : */
         /* return an OK access response to caller    */
@@ -459,30 +693,30 @@ ResMgr_Status_t ResMgr_Request(ResMgr_Res_Type_t res_type, uint8_t res_num)
       }
       else
       {
-        /* SCID != CPU2 : configuration is not correct : */
+        /* SCID != CPUx : configuration is not correct : */
         /* return a KO access response to caller         */
-        printf("[ERROR]: %s: SCID != CPU2 - Res num = %d\n\r", __func__, res_num);
+        printf("[ERROR]: %s: SCID != CPU%lx - Res num = %d\n\r", __func__, CPUSCID(scid), res_num);
         return (RESMGR_STATUS_SCID_ACCESS_ERROR);
       }
     } /* of if(semEn == 0) */
     else if(resmgr_data->cid_type == RESMGR_COM_CID_WITH_SEMCR)
     {
       /* Peripheral Sharing with semaphore is activated */
-      /* Is CPU2 part of programmed semaphore white list ? */
-      if (((ResMgr_Get_SemCidWlist(resmgr_data, RESMGR_CIDCFGR_SEMWLC2) == 0)))
+      /* Is CPUx part of programmed semaphore white list ? */
+      if (((ResMgr_Get_SemCidWlist(resmgr_data, semcid) == 0)))
       {
-        /* CPU2 is not in white list       */
-        printf("[ERROR]: %s: CPU2 is not in SEM white list - Res num = %d\n\r", __func__, res_num);
+        /* CPUx is not in white list       */
+        printf("[ERROR]: %s: CPU%lx is not in SEM white list - Res num = %d\n\r", __func__, CPUSEMCID(semcid), res_num);
         /* return a KO access response to caller */
         return (RESMGR_STATUS_CID_WL_ACCESS_ERROR);
       }
       else
       {
-        /* CPU2 is in white list ... */
+        /* CPUx is in white list ... */
         if (ResMgr_Get_SemTake(resmgr_data) == RESMGR_SEM_STATUS_ERROR)
         {
           /* return(ResMgr_Get_SemTake(res_num, RIF_CID_MPU, ISOLATION_SEM_WAIT_TIMEOUT_VAL)); */
-          printf("[ERROR]: %s: SEM for CPU2 is already taken - Res num = %d\n\r", __func__, res_num);
+          printf("[ERROR]: %s: SEM for CPU%lx is already taken - Res num = %d\n\r", __func__, CPUSEMCID(semcid), res_num);
           return RESMGR_STATUS_SEM_ACCESS_ERROR;
         }
       } /* of else CPU1 is in RISUP white list */
@@ -491,10 +725,11 @@ ResMgr_Status_t ResMgr_Request(ResMgr_Res_Type_t res_type, uint8_t res_num)
   } /* of if(ResMgr_Get_CidFiltering(res_num) != 0) */
   return (RESMGR_STATUS_ACCESS_OK);
 }
+
 /**
-  * @brief  < Add here the function description >
-  * @note   < OPTIONAL: add here global note >
-  * @param  None
+  * @brief  Resource Manager Resource Release API
+  * @param  res_type
+  * @param  res_num
   * @retval None
   */
 ResMgr_Status_t ResMgr_Release(ResMgr_Res_Type_t res_type, uint8_t res_num)
@@ -536,45 +771,45 @@ ResMgr_Status_t ResMgr_Release(ResMgr_Res_Type_t res_type, uint8_t res_num)
     /* in other words is Peripheral shared with semaphore ? */
     if ((resmgr_data->cid_type == RESMGR_COMP_CID_ONLY) || ResMgr_Get_SemEnable(resmgr_data) == 0)
     {
-      /* There is no Semaphore sharing so compartment filtering */
+    	/* There is no Semaphore sharing so compartment filtering */
       /* is used with a Static CID (SCID)                       */
-      /* Is SCID == CPU2 ? */
-      if (ResMgr_Get_StaticCid(resmgr_data, RESMGR_CIDCFGR_SCID2))
+      /* Is SCID == CPUx ? */
+      if (ResMgr_Get_StaticCid(resmgr_data, scid))
       {
-        /* SCID == CPU2 : configuration is correct : */
+        /* SCID == CPUx : configuration is correct : */
         /* return an OK access response to caller    */
         /* cut1 correction return(RESMGR_STATUS_OK); */
         return (RESMGR_STATUS_ACCESS_OK);
       }
       else
       {
-        /* SCID != CPU2 : configuration is not correct : */
+        /* SCID != CPUx : configuration is not correct : */
         /* return a KO access response to caller         */
-        printf("[ERROR]: %s: SCID != CPU2 - Res num = %d\n\r", __func__, res_num);
+        printf("[ERROR]: %s: SCID != CPU%lx - Res num = %d\n\r", __func__, CPUSCID(scid), res_num);
         return (RESMGR_STATUS_SCID_ACCESS_ERROR);
       }
     } /* of if(semEn == 0) */
     else if(resmgr_data->cid_type == RESMGR_COM_CID_WITH_SEMCR)
     {
       /* Peripheral Sharing with semaphore is activated */
-      /* Is CPU2 part of programmed RISUP semaphore white list ? */
-      if (((ResMgr_Get_SemCidWlist(resmgr_data, RESMGR_CIDCFGR_SEMWLC2) == 0)))
+      /* Is CPUx part of programmed RISUP semaphore white list ? */
+      if (((ResMgr_Get_SemCidWlist(resmgr_data, semcid) == 0)))
       {
-        /* CPU2 is not in RISUP white list       */
-        printf("[ERROR]: %s: CPU2 is not in SEM white list - Res num = %d\n\r", __func__, res_num);
+        /* CPUx is not in RISUP white list       */
+        printf("[ERROR]: %s: CPU%lx is not in SEM white list - Res num = %d\n\r", __func__, CPUSEMCID(semcid), res_num);
         /* return a KO access response to caller */
         return (RESMGR_STATUS_CID_WL_ACCESS_ERROR);
       }
       else
       {
-        /* CPU2 is in RISUP white list ... */
+        /* CPUx is in RISUP white list ... */
         if (ResMgr_SemRel(resmgr_data) == RESMGR_SEM_STATUS_ERROR)
         {
           /* return(ResMgr_Get_SemTake(res_num, RIF_CID_MPU, ISOLATION_SEM_WAIT_TIMEOUT_VAL)); */
-          printf("[ERROR]: %s: SEM for CPU2 is already taken - Res num = %d\n\r", __func__, res_num);
+          printf("[ERROR]: %s: SEM for CPU%lx is already taken - Res num = %d\n\r", __func__, CPUSEMCID(semcid), res_num);
           return RESMGR_STATUS_SEM_ACCESS_ERROR;
         }
-      } /* of else CPU2 is in RISUP white list */
+      } /* of else CPUx is in RISUP white list */
     } /* of else Peripheral Sharing with semaphore is activated */
 
   }

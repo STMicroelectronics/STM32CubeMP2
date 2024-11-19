@@ -253,12 +253,15 @@ HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
   assert_param(IS_SPI_ALL_INSTANCE(hspi->Instance));
   assert_param(IS_SPI_MODE(hspi->Init.Mode));
   assert_param(IS_SPI_DIRECTION(hspi->Init.Direction));
+#if defined (IS_SPI_LIMITED_INSTANCE)
   if (IS_SPI_LIMITED_INSTANCE(hspi->Instance))
   {
     assert_param(IS_SPI_LIMITED_DATASIZE(hspi->Init.DataSize));
     assert_param(IS_SPI_LIMITED_FIFOTHRESHOLD(hspi->Init.FifoThreshold));
   }
-  else if (IS_SPI_PARTIAL_INSTANCE(hspi->Instance))
+#endif /* (IS_SPI_LIMITED_INSTANCE) */
+#if defined (IS_SPI_PARTIAL_INSTANCE)
+  if (IS_SPI_PARTIAL_INSTANCE(hspi->Instance))
   {
     assert_param(IS_SPI_PARTIAL_DATASIZE(hspi->Init.DataSize));
     assert_param(IS_SPI_LIMITED_FIFOTHRESHOLD(
@@ -266,11 +269,14 @@ HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
                                                   Instance have the same size of \
                                                   FIFOs (8x8-bit) */
   }
-  else
+#endif /* (IS_SPI_PARTIAL_INSTANCE) */
+#if defined (IS_SPI_FULL_INSTANCE)
+  if (IS_SPI_FULL_INSTANCE(hspi->Instance))
   {
     assert_param(IS_SPI_DATASIZE(hspi->Init.DataSize));
     assert_param(IS_SPI_FIFOTHRESHOLD(hspi->Init.FifoThreshold));
   }
+#endif /* (IS_SPI_FULL_INSTANCE) */
   assert_param(IS_SPI_NSS(hspi->Init.NSS));
   assert_param(IS_SPI_NSSP(hspi->Init.NSSPMode));
   assert_param(IS_SPI_BAUDRATE_PRESCALER(hspi->Init.BaudRatePrescaler));
@@ -285,18 +291,24 @@ HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
   assert_param(IS_SPI_CRC_CALCULATION(hspi->Init.CRCCalculation));
   if (hspi->Init.CRCCalculation == SPI_CRCCALCULATION_ENABLE)
   {
+#if defined (IS_SPI_LIMITED_INSTANCE)
     if (IS_SPI_LIMITED_INSTANCE(hspi->Instance))
     {
       assert_param(IS_SPI_LIMITED_CRC_LENGTH(hspi->Init.CRCLength));
     }
-    else if (IS_SPI_PARTIAL_INSTANCE(hspi->Instance))
+#endif /* (IS_SPI_LIMITED_INSTANCE) */
+#if defined (IS_SPI_PARTIAL_INSTANCE)
+    if (IS_SPI_PARTIAL_INSTANCE(hspi->Instance))
     {
       assert_param(IS_SPI_PARTIAL_CRC_LENGTH(hspi->Init.CRCLength));
     }
-    else
-    {
-      assert_param(IS_SPI_CRC_LENGTH(hspi->Init.CRCLength));
-    }
+#endif /* (IS_SPI_PARTIAL_INSTANCE) */
+#if defined (IS_SPI_FULL_INSTANCE)
+  if (IS_SPI_FULL_INSTANCE(hspi->Instance))
+  {
+		assert_param(IS_SPI_CRC_LENGTH(hspi->Init.CRCLength));
+  }
+#endif /* (IS_SPI_FULL_INSTANCE) */
     assert_param(IS_SPI_CRC_POLYNOMIAL(hspi->Init.CRCPolynomial));
     assert_param(IS_SPI_CRC_INITIALIZATION_PATTERN(hspi->Init.TxCRCInitializationPattern));
     assert_param(IS_SPI_CRC_INITIALIZATION_PATTERN(hspi->Init.RxCRCInitializationPattern));
@@ -310,20 +322,31 @@ HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
   assert_param(IS_SPI_MASTER_RX_AUTOSUSP(hspi->Init.MasterReceiverAutoSusp));
 
   /* Verify that the SPI instance supports Data Size higher than 16bits */
+#if defined (IS_SPI_LIMITED_INSTANCE)
   if ((IS_SPI_LIMITED_INSTANCE(hspi->Instance)) && (hspi->Init.DataSize > SPI_DATASIZE_16BIT))
   {
     return HAL_ERROR;
   }
-
+#endif /* (IS_SPI_LIMITED_INSTANCE) */
+#if defined (IS_SPI_PARTIAL_INSTANCE)
   if ((IS_SPI_PARTIAL_INSTANCE(hspi->Instance)) && (hspi->Init.DataSize > SPI_DATASIZE_16BIT))
   {
     return HAL_ERROR;
   }
+#endif /* (IS_SPI_PARTIAL_INSTANCE) */
   /* Verify that the SPI instance supports requested data packing */
   packet_length = SPI_GetPacketSize(hspi);
-  if (((IS_SPI_LIMITED_INSTANCE(hspi->Instance)) && (packet_length > SPI_LOWEND_FIFO_SIZE)) ||
+  if (
+#if defined (IS_SPI_LIMITED_INSTANCE)
+			((IS_SPI_LIMITED_INSTANCE(hspi->Instance)) && (packet_length > SPI_LOWEND_FIFO_SIZE)) ||
+#endif /* (IS_SPI_LIMITED_INSTANCE) */
+#if defined (IS_SPI_PARTIAL_INSTANCE)
       ((IS_SPI_PARTIAL_INSTANCE(hspi->Instance)) && (packet_length > SPI_LOWEND_FIFO_SIZE)) ||
-      ((IS_SPI_FULL_INSTANCE(hspi->Instance)) && (packet_length > SPI_HIGHEND_FIFO_SIZE)))
+#endif /* (IS_SPI_PARTIAL_INSTANCE) */
+#if defined (IS_SPI_FULL_INSTANCE)
+      ((IS_SPI_FULL_INSTANCE(hspi->Instance)) && (packet_length > SPI_HIGHEND_FIFO_SIZE))
+#endif /* (IS_SPI_FULL_INSTANCE) */
+			)
   {
     return HAL_ERROR;
   }
@@ -331,16 +354,20 @@ HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
 #if (USE_SPI_CRC != 0UL)
   if (hspi->Init.CRCCalculation == SPI_CRCCALCULATION_ENABLE)
   {
+#if defined (IS_SPI_LIMITED_INSTANCE)
     /* Verify that the SPI instance supports CRC Length higher than 16bits */
     if ((IS_SPI_LIMITED_INSTANCE(hspi->Instance)) && (hspi->Init.CRCLength > SPI_CRC_LENGTH_16BIT))
     {
       return HAL_ERROR;
     }
+#endif /* (IS_SPI_LIMITED_INSTANCE) */
+#if defined (IS_SPI_PARTIAL_INSTANCE)
     /* Verify that the SPI instance supports CRC Length higher than 16bits */
-    else if ((IS_SPI_PARTIAL_INSTANCE(hspi->Instance)) && (hspi->Init.CRCLength > SPI_CRC_LENGTH_16BIT))
+    if ((IS_SPI_PARTIAL_INSTANCE(hspi->Instance)) && (hspi->Init.CRCLength > SPI_CRC_LENGTH_16BIT))
     {
       return HAL_ERROR;
     }
+#endif /* (IS_SPI_PARTIAL_INSTANCE) */
 
     /* Align the CRC Length on the data size */
     if (hspi->Init.CRCLength == SPI_CRC_LENGTH_DATASIZE)
@@ -466,9 +493,17 @@ HAL_StatusTypeDef HAL_SPI_Init(SPI_HandleTypeDef *hspi)
     }
 
     /* Enable 33/17 bits CRC computation */
-    if (((IS_SPI_LIMITED_INSTANCE(hspi->Instance)) && (crc_length == SPI_CRC_LENGTH_16BIT)) ||
+		if (
+#if defined (IS_SPI_LIMITED_INSTANCE)
+				((IS_SPI_LIMITED_INSTANCE(hspi->Instance)) && (crc_length == SPI_CRC_LENGTH_16BIT)) ||
+#endif /* (IS_SPI_LIMITED_INSTANCE) */
+#if defined (IS_SPI_PARTIAL_INSTANCE)
         ((IS_SPI_PARTIAL_INSTANCE(hspi->Instance)) && (crc_length == SPI_CRC_LENGTH_16BIT)) ||
-        ((IS_SPI_FULL_INSTANCE(hspi->Instance)) && (crc_length == SPI_CRC_LENGTH_32BIT)))
+#endif /* (IS_SPI_PARTIAL_INSTANCE) */
+#if defined (IS_SPI_FULL_INSTANCE)
+        ((IS_SPI_FULL_INSTANCE(hspi->Instance)) && (crc_length == SPI_CRC_LENGTH_32BIT))
+#endif /* (IS_SPI_FULL_INSTANCE) */
+			)
     {
       SET_BIT(hspi->Instance->CR1, SPI_CR1_CRC33_17);
     }

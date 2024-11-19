@@ -19,8 +19,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32mp2xx_ll_lpuart.h"
+#if ! defined(CORE_CM0PLUS)
 #include "stm32mp2xx_ll_rcc.h"
 #include "stm32mp2xx_ll_bus.h"
+#endif /* ! CORE_CM0PLUS */
 #ifdef USE_FULL_ASSERT
 #include "stm32_assert.h"
 #else
@@ -136,6 +138,7 @@ ErrorStatus LL_LPUART_DeInit(const USART_TypeDef *LPUARTx)
   /* Check the parameters */
   assert_param(IS_LPUART_INSTANCE(LPUARTx));
 
+#if ! defined(CORE_CM0PLUS)
   if (LPUARTx == LPUART1)
   {
     /* Force reset of LPUART peripheral */
@@ -144,7 +147,10 @@ ErrorStatus LL_LPUART_DeInit(const USART_TypeDef *LPUARTx)
     /* Release reset of LPUART peripheral */
     LL_RCC_LPUART1_ReleaseReset();
   }
+#endif /* ! CORE_CM0PLUS */
+#if ! defined(CORE_CM0PLUS)
   else
+#endif /* ! CORE_CM0PLUS */
   {
     status = ERROR;
   }
@@ -212,15 +218,24 @@ ErrorStatus LL_LPUART_Init(USART_TypeDef *LPUARTx, const LL_LPUART_InitTypeDef *
     /*---------------------------- LPUART BRR Configuration -----------------------
      * Retrieve Clock frequency used for LPUART Peripheral
      */
+#if ! defined(CORE_CM0PLUS)
     periphclk = LL_RCC_GetUARTClockFreq(LL_RCC_LPUART1_CLKSOURCE);
+#else /* CORE_CM0PLUS */
+    periphclk = MSI_VALUE;
+#endif /* ! CORE_CM0PLUS */
 
     /* Configure the LPUART Baud Rate :
        - prescaler value is required
        - valid baud rate value (different from 0) is required
        - Peripheral clock as returned by RCC service, should be valid (different from 0).
     */
+#if ! defined(CORE_CM0PLUS)
     if ((periphclk != LL_RCC_PERIPH_FREQUENCY_NO)
         && (LPUART_InitStruct->BaudRate != 0U))
+#else /* CORE_CM0PLUS */
+    if ((periphclk != 0U)
+        && (LPUART_InitStruct->BaudRate != 0U))
+#endif /* ! CORE_CM0PLUS */
     {
       status = SUCCESS;
       LL_LPUART_SetBaudRate(LPUARTx,

@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -467,6 +467,4 @@ HAL_StatusTypeDef HAL_OTFDEC_RegionGetConfig(OTFDEC_HandleTypeDef *hotfdec, uint
 #endif
 
 #endif /* STM32MP2xx_HAL_OTFDEC_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
 

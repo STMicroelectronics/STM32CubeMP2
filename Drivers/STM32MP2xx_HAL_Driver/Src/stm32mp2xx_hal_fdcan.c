@@ -5135,5 +5135,3 @@ static void FDCAN_CopyMessageToRAM(FDCAN_HandleTypeDef *hfdcan, const FDCAN_TxHe
   */
 
 #endif /* FDCAN1 */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

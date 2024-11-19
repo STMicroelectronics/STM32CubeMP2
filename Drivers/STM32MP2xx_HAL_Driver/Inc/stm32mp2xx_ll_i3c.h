@@ -31,7 +31,7 @@ extern "C" {
   * @{
   */
 
-#if defined (I3C1)
+#if defined (I3C1) || defined (I3C2) || defined (I3C3) || defined (I3C4)
 
 /** @defgroup I3C_LL I3C
   * @{

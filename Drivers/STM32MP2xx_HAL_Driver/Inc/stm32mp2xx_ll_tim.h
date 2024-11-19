@@ -1474,9 +1474,9 @@ typedef struct
 #define LL_TIM_TIM15_TI1_RMP_TIM3_CH1           (TIM_TISEL_TI1SEL_1)                                           /*!< TIM15_TI1 is connected to TIM3 CH1 GPIO */
 #define LL_TIM_TIM15_TI1_RMP_TIM4_CH1           (TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0)                      /*!< TIM15_TI1 is connected to TIM4 CH1 GPIO */
 #define LL_TIM_TIM15_TI1_RMP_LSE                (TIM_TISEL_TI1SEL_2)                                           /*!< TIM15_TI1 is connected to LSE */
-#define LL_TIM_TIM15_TI1_RMP_MSI                (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_0)                      /*!< TIM15_TI1 is connected to MSI */
+#define LL_TIM_TIM15_TI1_RMP_CSI                (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_0)                      /*!< TIM15_TI1 is connected to CSI */
 #define LL_TIM_TIM15_TI1_RMP_MCO2               (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1)                      /*!< TIM15_TI1 is connected to MCO2 */
-#define LL_TIM_TIM15_TI1_RMP_MSI_256            (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0) /*!< TIM15_TI1 is connected to MSI/256 */
+#define LL_TIM_TIM15_TI1_RMP_CSI_256            (TIM_TISEL_TI1SEL_2 | TIM_TISEL_TI1SEL_1 | TIM_TISEL_TI1SEL_0) /*!< TIM15_TI1 is connected to CSI/256 */
 #define LL_TIM_TIM15_TI1_RMP_HSI_1024           (TIM_TISEL_TI1SEL_3)                                           /*!< TIM15_TI1 is connected to HSI/1024 */
 /**
   * @}
@@ -4954,9 +4954,9 @@ __STATIC_INLINE void LL_TIM_ConfigIDX(TIM_TypeDef *TIMx, uint32_t Configuration)
   *            @arg LL_TIM_TIM15_TI1_RMP_TIM3_CH1:          TIM15 TI1 is connected to TIM3 CH1 output
   *            @arg LL_TIM_TIM15_TI1_RMP_TIM4_CH1:          TIM15 TI1 is connected to TIM4 CH1 output
   *            @arg LL_TIM_TIM15_TI1_RMP_LSE:               TIM15 TI1 is connected to LSE
-  *            @arg LL_TIM_TIM15_TI1_RMP_MSI:               TIM15 TI1 is connected to MSI
+  *            @arg LL_TIM_TIM15_TI1_RMP_CSI:               TIM15 TI1 is connected to CSI
   *            @arg LL_TIM_TIM15_TI1_RMP_MCO2:              TIM15 TI1 is connected to MCO2
-  *            @arg LL_TIM_TIM15_TI1_RMP_MSI_256:           TIM15 TI1 is connected to MSI/256
+  *            @arg LL_TIM_TIM15_TI1_RMP_CSI_256:           TIM15 TI1 is connected to CSI/256
   *            @arg LL_TIM_TIM15_TI1_RMP_HSI_1024:          TIM15 TI1 is connected to HSI/1024
   *            @arg LL_TIM_TIM15_TI2_RMP_GPIO:              TIM15 TI2 is connected to GPIO
   *            @arg LL_TIM_TIM15_TI2_RMP_TIM2_CH2:          TIM15 TI2 is connected to TIM2 CH2 output

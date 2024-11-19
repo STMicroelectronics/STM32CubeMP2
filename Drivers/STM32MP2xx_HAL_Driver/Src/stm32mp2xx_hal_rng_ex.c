@@ -28,9 +28,9 @@
   * @{
   */
 
-#if defined(RNG) || defined(RNG1) || defined(RNG2)
+#if defined (RNG) || defined (RNG1) || defined (RNG2)
 
-/** @addtogroup RNG_Ex
+/** @addtogroup RNGEx
   * @brief RNG Extended HAL module driver.
   * @{
   */
@@ -41,7 +41,7 @@
 /* Private defines -----------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private constants ---------------------------------------------------------*/
-/** @addtogroup RNG_Ex_Private_Constants
+/** @addtogroup RNGEx_Private_Constants
   * @{
   */
 #define RNG_TIMEOUT_VALUE     2U
@@ -53,11 +53,11 @@
 /* Private functions  --------------------------------------------------------*/
 /* Exported functions --------------------------------------------------------*/
 
-/** @defgroup RNG_Ex_Exported_Functions RNG_Ex Exported Functions
+/** @defgroup RNGEx_Exported_Functions RNGEx Exported Functions
   * @{
   */
 
-/** @defgroup RNG_Ex_Exported_Functions_Group1 Configuration and lock functions
+/** @defgroup RNGEx_Exported_Functions_Group1 Configuration and lock functions
   *  @brief   Configuration functions
   *
 @verbatim
@@ -285,7 +285,7 @@ HAL_StatusTypeDef HAL_RNGEx_LockConfig(RNG_HandleTypeDef *hrng)
   * @}
   */
 
-/** @defgroup RNG_Ex_Exported_Functions_Group2 Recover from seed error function
+/** @defgroup RNGEx_Exported_Functions_Group2 Recover from seed error function
   *  @brief   Recover from seed error function
   *
 @verbatim
@@ -322,6 +322,11 @@ HAL_StatusTypeDef HAL_RNGEx_RecoverSeedError(RNG_HandleTypeDef *hrng)
 
     /* sequence to fully recover from a seed error */
     status = RNG_RecoverSeedError(hrng);
+    if (status == HAL_ERROR)
+    {
+      /* Update the error code */
+      hrng->ErrorCode = HAL_RNG_ERROR_RECOVERSEED;
+    }
   }
   else
   {
@@ -347,7 +352,7 @@ HAL_StatusTypeDef HAL_RNGEx_RecoverSeedError(RNG_HandleTypeDef *hrng)
   * @}
   */
 
-#endif /* RNG */
+#endif /* RNG  || RNG1 || RNG2 */
 
 /**
   * @}

@@ -314,11 +314,13 @@ ErrorStatus LL_TIM_DeInit(const TIM_TypeDef *TIMx)
     LL_RCC_TIM17_ForceReset();
     LL_RCC_TIM17_ReleaseReset();
   }
+#if defined(TIM20)
   else if (TIMx == TIM20)
   {
     LL_RCC_TIM20_ForceReset();
     LL_RCC_TIM20_ReleaseReset();
   }
+#endif /* TIM20 */
   else
   {
     result = ERROR;

@@ -421,16 +421,34 @@ ErrorStatus LL_ADC_CommonDeInit(const ADC_Common_TypeDef *ADCxy_COMMON)
   /* Check the parameters */
   assert_param(IS_ADC_COMMON_INSTANCE(ADCxy_COMMON));
 
+#if defined(ADC1_COMMON)
+  if (ADCxy_COMMON == ADC1_COMMON)
+  {
+    __HAL_RCC_ADC1_FORCE_RESET();
+    __HAL_RCC_ADC1_RELEASE_RESET();
+  }
+#endif /* ADC1_COMMON */
+#if defined(ADC2_COMMON)
+  if (ADCxy_COMMON == ADC2_COMMON)
+  {
+    __HAL_RCC_ADC2_FORCE_RESET();
+    __HAL_RCC_ADC2_RELEASE_RESET();
+  }
+#endif /* ADC2_COMMON */
+#if defined(ADC12_COMMON)
   if (ADCxy_COMMON == ADC12_COMMON)
   {
     __HAL_RCC_ADC12_FORCE_RESET();
     __HAL_RCC_ADC12_RELEASE_RESET();
   }
-  else /*if ( ADCxy_COMMON == ADC3_COMMON)*/
+#endif /* ADC12_COMMON */
+#if defined(ADC3_COMMON)
+  if ( ADCxy_COMMON == ADC3_COMMON)
   {
     __HAL_RCC_ADC3_FORCE_RESET();
     __HAL_RCC_ADC3_RELEASE_RESET();
   }
+#endif /* ADC3_COMMON */
   return SUCCESS;
 }
 

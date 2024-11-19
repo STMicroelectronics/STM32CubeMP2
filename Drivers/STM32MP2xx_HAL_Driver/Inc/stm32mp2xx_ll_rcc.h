@@ -20,7 +20,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -436,8 +436,8 @@ typedef struct
   * @{
   */
 #define LL_RCC_LSEDRIVE_LOW                     (0x0U << RCC_BDCR_LSEDRV_Pos) /*!< Xtal mode lower driving capability */
-#define LL_RCC_LSEDRIVE_MEDIUMLOW               (0x1U << RCC_BDCR_LSEDRV_Pos) /*!< Xtal mode medium low driving capability */
-#define LL_RCC_LSEDRIVE_MEDIUMHIGH              (0x2U << RCC_BDCR_LSEDRV_Pos) /*!< Xtal mode medium high driving capability */
+#define LL_RCC_LSEDRIVE_MEDIUMHIGH              (0x1U << RCC_BDCR_LSEDRV_Pos) /*!< Xtal mode medium high driving capability */
+#define LL_RCC_LSEDRIVE_MEDIUMLOW               (0x2U << RCC_BDCR_LSEDRV_Pos) /*!< Xtal mode medium low driving capability */
 #define LL_RCC_LSEDRIVE_HIGH                    (0x3U << RCC_BDCR_LSEDRV_Pos) /*!< Xtal mode higher driving capability */
 /**
   * @}
@@ -600,29 +600,26 @@ typedef struct
   * @}
   */
 
-#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
-#define  LL_RCC_SPI1_CLKSOURCE                 0x0U
-#define  LL_RCC_SPI23_CLKSOURCE                0x1U
-#define  LL_RCC_SPI45_CLKSOURCE                0x2U
-#define  LL_RCC_SPI67_CLKSOURCE                0x3U
-#define  LL_RCC_SPI8_CLKSOURCE                 0x4U
-#else
+#if defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
 #define  LL_RCC_SPI1_CLKSOURCE                 0x0U
 #define  LL_RCC_SPI2_CLKSOURCE                 0x1U
 #define  LL_RCC_SPI3_CLKSOURCE                 0x2U
 #define  LL_RCC_SPI45_CLKSOURCE                0x3U
 #define  LL_RCC_SPI6_CLKSOURCE                 0x4U
+#elif defined(RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING)
+#define  LL_RCC_SPI1_CLKSOURCE                 0x0U
+#define  LL_RCC_SPI23_CLKSOURCE                0x1U
+#define  LL_RCC_SPI45_CLKSOURCE                0x2U
+#define  LL_RCC_SPI8_CLKSOURCE                 0x3U
+#else
+#define  LL_RCC_SPI1_CLKSOURCE                 0x0U
+#define  LL_RCC_SPI23_CLKSOURCE                0x1U
+#define  LL_RCC_SPI45_CLKSOURCE                0x2U
+#define  LL_RCC_SPI67_CLKSOURCE                0x3U
+#define  LL_RCC_SPI8_CLKSOURCE                 0x4U
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
 
-#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
-#define  LL_RCC_USART1_CLKSOURCE               0x0U
-#define  LL_RCC_UART24_CLKSOURCE               0x1U
-#define  LL_RCC_USART35_CLKSOURCE              0x2U
-#define  LL_RCC_USART6_CLKSOURCE               0x3U
-#define  LL_RCC_UART78_CLKSOURCE               0x4U
-#define  LL_RCC_UART9_CLKSOURCE                0x5U
-#define  LL_RCC_LPUART1_CLKSOURCE              0x6U
-#else
+#if defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
 #define  LL_RCC_USART1_CLKSOURCE               0x0U
 #define  LL_RCC_UART24_CLKSOURCE               0x1U
 #define  LL_RCC_USART35_CLKSOURCE              0x2U
@@ -630,6 +627,21 @@ typedef struct
 #define  LL_RCC_UART7_CLKSOURCE                0x4U
 #define  LL_RCC_LPUART1_CLKSOURCE              0x5U
 #define  LL_RCC_UART78_CLKSOURCE               LL_RCC_UART7_CLKSOURCE    /* backward compatibility */
+#elif defined(RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING)
+#define  LL_RCC_USART1_CLKSOURCE               0x0U
+#define  LL_RCC_UART24_CLKSOURCE               0x1U
+#define  LL_RCC_USART35_CLKSOURCE              0x2U
+#define  LL_RCC_USART6_CLKSOURCE               0x3U
+#define  LL_RCC_UART78_CLKSOURCE               0x4U
+#define  LL_RCC_LPUART1_CLKSOURCE              0x5U
+#else
+#define  LL_RCC_USART1_CLKSOURCE               0x0U
+#define  LL_RCC_UART24_CLKSOURCE               0x1U
+#define  LL_RCC_USART35_CLKSOURCE              0x2U
+#define  LL_RCC_USART6_CLKSOURCE               0x3U
+#define  LL_RCC_UART78_CLKSOURCE               0x4U
+#define  LL_RCC_UART9_CLKSOURCE                0x5U
+#define  LL_RCC_LPUART1_CLKSOURCE              0x6U
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
 
 #if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
@@ -645,18 +657,23 @@ typedef struct
 #define  LL_RCC_SAI4_CLKSOURCE                 0x3U
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
 
-#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
+#if defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
+#define  LL_RCC_I2C12_CLKSOURCE                0x0U
+#define  LL_RCC_I2C3_CLKSOURCE                 0x1U
+#define  LL_RCC_I3C12_CLKSOURCE                0x0U
+#define  LL_RCC_I3C3_CLKSOURCE                 0x1U
+#elif defined(RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING)
+#define  LL_RCC_I2C12_I3C12_CLKSOURCE          0x0U
+#define  LL_RCC_I2C7_CLKSOURCE                 0x1U
+#define  LL_RCC_I3C4_CLKSOURCE                 0x2U
+#define  LL_RCC_I2C8_CLKSOURCE                 0x3U
+#else
 #define  LL_RCC_I2C12_I3C12_CLKSOURCE          0x0U
 #define  LL_RCC_I2C46_CLKSOURCE                0x1U
 #define  LL_RCC_I2C35_I3C3_CLKSOURCE           0x2U
 #define  LL_RCC_I2C7_CLKSOURCE                 0x3U
 #define  LL_RCC_I3C4_CLKSOURCE                 0x4U
-#else
-#define  LL_RCC_I2C12_CLKSOURCE                0x0U
-#define  LL_RCC_I2C3_CLKSOURCE                 0x1U
-
-#define  LL_RCC_I3C12_CLKSOURCE                0x0U
-#define  LL_RCC_I3C3_CLKSOURCE                 0x1U
+#define  LL_RCC_I2C8_CLKSOURCE                 0x5U
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
 
 #define  LL_RCC_SDMMC1_CLKSOURCE               0x0U
@@ -2381,6 +2398,7 @@ __STATIC_INLINE void LL_RCC_DisableI3C1_2_KerClk(void)
 }
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
 
+#if !defined(RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING)
 #if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
 
 /**
@@ -2599,8 +2617,10 @@ __STATIC_INLINE void LL_RCC_DisableI3C3_KerClk(void)
 }
 
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
+#endif /* RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING */
 
 #if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
+#if !defined(RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING)
 /**
   * @brief  Get I2C4_6 clock source select
   * @rmtoll XBAR14CFGR      XBAR14SEL      LL_RCC_GetI2C4_6ClockSource
@@ -2671,6 +2691,8 @@ __STATIC_INLINE void LL_RCC_DisableI2C4_6_KerClk(void)
 {
   CLEAR_BIT(RCC->XBARxCFGR[14], RCC_XBARxCFGR_XBARxEN);
 }
+
+#endif /* RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING */
 
 /**
   * @brief  Get I2C7 clock source select
@@ -2887,6 +2909,7 @@ __STATIC_INLINE void LL_RCC_DisableSPI4_5_KerClk(void)
   CLEAR_BIT(RCC->XBARxCFGR[17], RCC_XBARxCFGR_XBARxEN);
 }
 
+#if !defined(RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING)
 #if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
 /**
   * @brief  Get SPI6_7 clock source select
@@ -3030,6 +3053,7 @@ __STATIC_INLINE void LL_RCC_DisableSPI6_KerClk(void)
   CLEAR_BIT(RCC->XBARxCFGR[37], RCC_XBARxCFGR_XBARxEN);
 }
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
+#endif /* RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING */
 
 #if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
 /**
@@ -3515,7 +3539,7 @@ __STATIC_INLINE void LL_RCC_DisableUSART7_KerClk(void)
 
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
 
-#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
+#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING) && !defined(RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING)
 /**
   * @brief  Get UART9 clock source select
   * @rmtoll XBAR22CFGR      XBAR22SEL      LL_RCC_GetUART9ClockSource
@@ -5462,7 +5486,7 @@ __STATIC_INLINE void LL_RCC_DisableLPTIM5_KerClk(void)
 
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
 
-#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
+#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING) && !defined(RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING)
 /**
   * @brief  Get ADF1 clock source select
   * @rmtoll XBAR42CFGR      XBAR42SEL      LL_RCC_GetADF1ClockSource
@@ -7454,7 +7478,7 @@ __STATIC_INLINE uint32_t LL_RCC_GetUART7_FINDIV(void)
 
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
 
-#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
+#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING) && !defined(RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING)
 /**
   * @brief  Get UART9 channel pre divided Value
   * @rmtoll PREDIV22CFGR      PREDIV22      LL_RCC_GetUART9_PREDIV
@@ -8066,6 +8090,7 @@ __STATIC_INLINE void LL_RCC_DisableI3C1_2_FINDIV(void)
 
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
 
+#if !defined(RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING)
 #if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
 /**
   * @brief  Get I2C3_5_I3C3 channel pre divided Value
@@ -8286,8 +8311,10 @@ __STATIC_INLINE void LL_RCC_DisableI3C3_FINDIV(void)
 }
 
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
+#endif /* RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING */
 
-#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
+
+#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING) && !defined(RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING)
 
 /**
   * @brief  Get I2C4_6 channel pre divided Value
@@ -8579,6 +8606,7 @@ __STATIC_INLINE void LL_RCC_DisableSPI4_5_FINDIV(void)
   CLEAR_BIT(RCC->FINDIVxCFGR[17], RCC_FINDIVxCFGR_FINDIVxEN_Msk);
 }
 
+#if !defined(RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING)
 #if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
 
 /**
@@ -8725,6 +8753,7 @@ __STATIC_INLINE void LL_RCC_DisableSPI6_FINDIV(void)
   CLEAR_BIT(RCC->FINDIVxCFGR[37], RCC_FINDIVxCFGR_FINDIVxEN_Msk);
 }
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
+#endif /* RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING */
 
 #if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
 /**
@@ -9190,7 +9219,7 @@ __STATIC_INLINE void LL_RCC_DisableUSART7_FINDIV(void)
 
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
 
-#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
+#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING) && !defined(RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING)
 /**
   * @brief  Get USART9 channel pre divided Value
   * @rmtoll PREDIV22CFGR      PREDIV22      LL_RCC_GetUSART9_PREDIV
@@ -9631,6 +9660,7 @@ __STATIC_INLINE void LL_RCC_DisableSAI2_FINDIV(void)
   CLEAR_BIT(RCC->FINDIVxCFGR[23], RCC_FINDIVxCFGR_FINDIVxEN_Msk);
 }
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
+
 #if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
 /**
   * @brief  Get SAI3_4 channel pre divided Value
@@ -11160,7 +11190,7 @@ __STATIC_INLINE void LL_RCC_DisableLPTIM5_FINDIV(void)
 }
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
 
-#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
+#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING) && !defined(RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING)
 /**
   * @brief  Get ADF1 channel pre divided Value
   * @rmtoll PREDIV42CFGR      PREDIV42      LL_RCC_GetADF1_PREDIV
@@ -17624,5 +17654,3 @@ __STATIC_INLINE uint32_t LL_RCC_GetLocalResSem(uint32_t LocalResIndex)
 #endif
 
 #endif /* STM32MP2xx_LL_RCC_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

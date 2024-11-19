@@ -69,6 +69,27 @@
 #define STM32MP2
 #endif /* STM32MP2 */
 
+#if defined(STM32MP257Fxx) || defined(STM32MP257Dxx) || defined(STM32MP257Cxx) || defined(STM32MP257Axx) ||\
+    defined(STM32MP255Fxx) || defined(STM32MP255Dxx) || defined(STM32MP255Cxx) || defined(STM32MP255Axx) ||\
+    defined(STM32MP253Fxx) || defined(STM32MP253Dxx) || defined(STM32MP253Cxx) || defined(STM32MP253Axx) ||\
+    defined(STM32MP251Fxx) || defined(STM32MP251Dxx) || defined(STM32MP251Cxx) || defined(STM32MP251Axx)
+#if !defined(STM32MP25xxxx)
+#define STM32MP25xxxx
+#endif
+#elif defined(STM32MP215Fxx) || defined(STM32MP215Dxx) || defined(STM32MP215Cxx) || defined(STM32MP215Axx) ||\
+      defined(STM32MP213Fxx) || defined(STM32MP213Dxx) || defined(STM32MP213Cxx) || defined(STM32MP213Axx) ||\
+      defined(STM32MP211Fxx) || defined(STM32MP211Dxx) || defined(STM32MP211Cxx) || defined(STM32MP211Axx)
+#if !defined(STM32MP21xxxx)
+#define STM32MP21xxxx
+#endif
+#elif defined(STM32MP235Fxx) || defined(STM32MP235Dxx) || defined(STM32MP235Cxx) || defined(STM32MP235Axx) ||\
+      defined(STM32MP233Fxx) || defined(STM32MP233Dxx) || defined(STM32MP233Cxx) || defined(STM32MP233Axx) ||\
+      defined(STM32MP231Fxx) || defined(STM32MP231Dxx) || defined(STM32MP231Cxx) || defined(STM32MP231Axx)
+#if !defined(STM32MP23xxxx)
+#define STM32MP23xxxx
+#endif
+#endif
+
 /* Uncomment the line below according to the target STM32MP2 device used in your
    application
   */
@@ -93,9 +114,9 @@
   * @brief CMSIS Device version number
   */
 #define __STM32MP2xx_CMSIS_VERSION_MAIN   (0x01U) /*!< [31:24] main version */
-#define __STM32MP2xx_CMSIS_VERSION_SUB1   (0x00U) /*!< [23:16] sub1 version */
+#define __STM32MP2xx_CMSIS_VERSION_SUB1   (0x01U) /*!< [23:16] sub1 version */
 #define __STM32MP2xx_CMSIS_VERSION_SUB2   (0x00U) /*!< [15:8]  sub2 version */
-#define __STM32MP2xx_CMSIS_VERSION_RC     (0x00U) /*!< [7:0]  release candidate */
+#define __STM32MP2xx_CMSIS_VERSION_RC     (0x09U) /*!< [7:0]  release candidate */
 #define __STM32MP2xx_CMSIS_VERSION        ((__CMSIS_DEVICE_VERSION_MAIN     << 24)\
                                       |(__CMSIS_DEVICE_HAL_VERSION_SUB1 << 16)\
                                       |(__CMSIS_DEVICE_HAL_VERSION_SUB2 << 8 )\
@@ -109,8 +130,38 @@
   * @{
   */
 #if defined(CORE_CA35)
-  #if defined(STM32MP257Cxx)
+  #if defined(STM32MP257Axx)
+    #include "stm32mp257axx_ca35.h"
+  #elif defined(STM32MP257Dxx)
+    #include "stm32mp257dxx_ca35.h"
+  #elif defined(STM32MP257Cxx)
     #include "stm32mp257cxx_ca35.h"
+  #elif defined(STM32MP257Fxx)
+    #include "stm32mp257fxx_ca35.h"
+  #elif defined(STM32MP255Axx)
+    #include "stm32mp255axx_ca35.h"
+  #elif defined(STM32MP255Dxx)
+    #include "stm32mp255dxx_ca35.h"
+  #elif defined(STM32MP255Cxx)
+    #include "stm32mp255cxx_ca35.h"
+  #elif defined(STM32MP255Fxx)
+    #include "stm32mp255fxx_ca35.h"
+  #elif defined(STM32MP253Axx)
+    #include "stm32mp253axx_ca35.h"
+  #elif defined(STM32MP253Dxx)
+    #include "stm32mp253dxx_ca35.h"
+  #elif defined(STM32MP253Cxx)
+    #include "stm32mp253cxx_ca35.h"
+  #elif defined(STM32MP253Fxx)
+    #include "stm32mp253fxx_ca35.h"
+  #elif defined(STM32MP251Axx)
+    #include "stm32mp251axx_ca35.h"
+  #elif defined(STM32MP251Dxx)
+    #include "stm32mp251dxx_ca35.h"
+  #elif defined(STM32MP251Cxx)
+    #include "stm32mp251cxx_ca35.h"
+  #elif defined(STM32MP251Fxx)
+    #include "stm32mp251fxx_ca35.h"
   #elif defined(STM32MP215Cxx)
     #include "stm32mp215cxx_ca35.h"
   #elif defined(STM32MP215Fxx)
@@ -134,7 +185,31 @@
   #elif defined(STM32MP211Axx)
     #include "stm32mp211axx_ca35.h"
   #elif defined(STM32MP211Dxx)
-    #include "stm32mp211dxx_ca35.h"	
+    #include "stm32mp211dxx_ca35.h"
+  #elif defined(STM32MP235Cxx)
+    #include "stm32mp235cxx_ca35.h"
+  #elif defined(STM32MP235Fxx)
+    #include "stm32mp235fxx_ca35.h"
+  #elif defined(STM32MP235Axx)
+    #include "stm32mp235axx_ca35.h"
+  #elif defined(STM32MP235Dxx)
+    #include "stm32mp235dxx_ca35.h"
+   #elif defined(STM32MP233Cxx)
+    #include "stm32mp233cxx_ca35.h"
+  #elif defined(STM32MP233Fxx)
+    #include "stm32mp233fxx_ca35.h"
+  #elif defined(STM32MP233Axx)
+    #include "stm32mp233axx_ca35.h"
+  #elif defined(STM32MP233Dxx)
+    #include "stm32mp233dxx_ca35.h"
+  #elif defined(STM32MP231Cxx)
+    #include "stm32mp231cxx_ca35.h"
+  #elif defined(STM32MP231Fxx)
+    #include "stm32mp231fxx_ca35.h"
+  #elif defined(STM32MP231Axx)
+    #include "stm32mp231axx_ca35.h"
+  #elif defined(STM32MP231Dxx)
+    #include "stm32mp231dxx_ca35.h"
   #else
    #error "Please select first the target STM32MP2xx device used in your application (in stm32mp2xx.h file or IDE preprocessor defines)"
   #endif
@@ -159,7 +234,7 @@
     #include "stm32mp253axx_cm33.h"
   #elif defined(STM32MP253Dxx)
     #include "stm32mp253dxx_cm33.h"
-  #elif defined(STM32MP255Cxx)
+  #elif defined(STM32MP253Cxx)
     #include "stm32mp253cxx_cm33.h"
   #elif defined(STM32MP253Fxx)
     #include "stm32mp253fxx_cm33.h"
@@ -195,12 +270,66 @@
     #include "stm32mp211axx_cm33.h"
   #elif defined(STM32MP211Dxx)
     #include "stm32mp211dxx_cm33.h"
+  #elif defined(STM32MP235Axx)
+    #include "stm32mp235axx_cm33.h"
+  #elif defined(STM32MP235Cxx)
+    #include "stm32mp235cxx_cm33.h"
+  #elif defined(STM32MP235Fxx)
+    #include "stm32mp235fxx_cm33.h"
+  #elif defined(STM32MP235Dxx)
+    #include "stm32mp235dxx_cm33.h"
+  #elif defined(STM32MP233Cxx)
+    #include "stm32mp233cxx_cm33.h"
+  #elif defined(STM32MP233Fxx)
+    #include "stm32mp233fxx_cm33.h"
+  #elif defined(STM32MP233Axx)
+    #include "stm32mp233axx_cm33.h"
+  #elif defined(STM32MP233Dxx)
+    #include "stm32mp233dxx_cm33.h"
+  #elif defined(STM32MP231Cxx)
+    #include "stm32mp231cxx_cm33.h"
+  #elif defined(STM32MP231Fxx)
+    #include "stm32mp231fxx_cm33.h"
+  #elif defined(STM32MP231Axx)
+    #include "stm32mp231axx_cm33.h"
+  #elif defined(STM32MP231Dxx)
+    #include "stm32mp231dxx_cm33.h"
   #else
     #error "Please select first the target STM32MP2xx device used in your application (in stm32mp2xx.h file or IDE preprocessor defines)"
   #endif
 #elif defined(CORE_CM0PLUS)
-  #if defined(STM32MP257Cxx)
+  #if defined(STM32MP257Axx)
+    #include "stm32mp257axx_cm0.h"
+  #elif defined(STM32MP257Dxx)
+    #include "stm32mp257dxx_cm0.h"
+  #elif defined(STM32MP257Cxx)
     #include "stm32mp257cxx_cm0.h"
+  #elif defined(STM32MP257Fxx)
+    #include "stm32mp257fxx_cm0.h"
+  #elif defined(STM32MP255Axx)
+    #include "stm32mp255axx_cm0.h"
+  #elif defined(STM32MP255Dxx)
+    #include "stm32mp255dxx_cm0.h"
+  #elif defined(STM32MP255Cxx)
+    #include "stm32mp255cxx_cm0.h"
+  #elif defined(STM32MP255Fxx)
+    #include "stm32mp255fxx_cm0.h"
+  #elif defined(STM32MP253Axx)
+    #include "stm32mp253axx_cm0.h"
+  #elif defined(STM32MP253Dxx)
+    #include "stm32mp253dxx_cm0.h"
+  #elif defined(STM32MP253Cxx)
+    #include "stm32mp253cxx_cm0.h"
+  #elif defined(STM32MP253Fxx)
+    #include "stm32mp253fxx_cm0.h"
+  #elif defined(STM32MP251Axx)
+    #include "stm32mp251axx_cm0.h"
+  #elif defined(STM32MP251Dxx)
+    #include "stm32mp251dxx_cm0.h"
+  #elif defined(STM32MP251Cxx)
+    #include "stm32mp251cxx_cm0.h"
+  #elif defined(STM32MP251Fxx)
+    #include "stm32mp251fxx_cm0.h"
   #else
     #error "Please select first the target STM32MP2xx device used in your application (in stm32mp2xx.h file or IDE preprocessor defines)"
   #endif

@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -240,6 +240,7 @@ typedef struct
                                     This parameter can be any value between 0 and 0xFFFF */
 } OSPI_MemoryMappedTypeDef;
 
+#if    defined(OCTOSPIM)
 /**
   * @brief HAL OSPI IO Manager Configuration structure definition
   */
@@ -259,6 +260,7 @@ typedef struct
                                         if some signals are multiplexed in the OSPI IO Manager with the other OSPI.
                                         This parameter can be a value between 1 and 256 */
 } OSPIM_CfgTypeDef;
+#endif /* GENERATOR_IOMNG_NOT_AVAILABLE */
 
 #if defined (USE_HAL_OSPI_REGISTER_CALLBACKS) && (USE_HAL_OSPI_REGISTER_CALLBACKS == 1U)
 /**
@@ -651,6 +653,8 @@ typedef void (*pOSPI_CallbackTypeDef)(OSPI_HandleTypeDef *hospi);
   * @}
   */
 
+#if   !defined(OCTOSPIM)
+#else
 /** @defgroup OSPIM_IOPort OSPI IO Manager IO Port
   * @{
   */
@@ -670,9 +674,12 @@ typedef void (*pOSPI_CallbackTypeDef)(OSPI_HandleTypeDef *hospi);
 #define HAL_OSPIM_IOPORT_7_HIGH            ((uint32_t)(OCTOSPIM_PCR_IOHEN | 0x7U))                          /*!< Port 7 - IO[7:4] */
 #define HAL_OSPIM_IOPORT_8_LOW             ((uint32_t)(OCTOSPIM_PCR_IOLEN | 0x8U))                          /*!< Port 8 - IO[3:0] */
 #define HAL_OSPIM_IOPORT_8_HIGH            ((uint32_t)(OCTOSPIM_PCR_IOHEN | 0x8U))                          /*!< Port 8 - IO[7:4] */
+#endif /* GENERATOR_IOMNG_NOT_AVAILABLE */
 /**
   * @}
   */
+#if   !defined(OCTOSPIM)
+#else
 /** @defgroup OSPIM_MuxEn OSPI IO Manager Multiplexed mode enable
   * @{
   */
@@ -704,7 +711,7 @@ typedef void (*pOSPI_CallbackTypeDef)(OSPI_HandleTypeDef *hospi);
   * @{
   */
 #define HAL_OSPIM_CSSEL_OVR_01_NCS1        ((uint32_t)0x00000000U)
-#define HAL_OSPIM_CSSEL_OVR_01_NCS2        ((uint32_t)OCTOSPIM_CR_CSSEL_OVR_01)
+#define HAL_OSPIM_CSSEL_OVR_01_NCS2        ((uint32_t)OCTOSPIM_CR_CSSEL_OVR_O1)
 /**
   * @}
   */
@@ -713,10 +720,11 @@ typedef void (*pOSPI_CallbackTypeDef)(OSPI_HandleTypeDef *hospi);
   * @{
   */
 #define HAL_OSPIM_CSSEL_OVR_02_NCS1        ((uint32_t)0x00000000U)
-#define HAL_OSPIM_CSSEL_OVR_02_NCS2        ((uint32_t)OCTOSPIM_CR_CSSEL_OVR_02)
+#define HAL_OSPIM_CSSEL_OVR_02_NCS2        ((uint32_t)OCTOSPIM_CR_CSSEL_OVR_O2)
 /**
   * @}
   */
+#endif /* GENERATOR_STM32MP2XX */
 /**
   * @}
   */
@@ -805,7 +813,7 @@ typedef void (*pOSPI_CallbackTypeDef)(OSPI_HandleTypeDef *hospi);
   *            @arg HAL_OSPI_FLAG_TE:   OSPI Transfer error flag
   * @retval None
   */
-#define __HAL_OSPI_GET_FLAG(__HANDLE__, __FLAG__)           ((READ_BIT((__HANDLE__)->Instance->SR, (__FLAG__)) \
+#define __HAL_OSPI_GET_FLAG(__HANDLE__, __FLAG__)           ((READ_BIT((__HANDLE__)->Instance->SR, (__FLAG__))\
                                                               != 0U) ? SET : RESET)
 
 /** @brief  Clears the specified OSPI's flag status.
@@ -914,6 +922,8 @@ uint32_t              HAL_OSPI_GetState(const OSPI_HandleTypeDef *hospi);
   * @}
   */
 
+#if   !defined(OCTOSPIM)
+#else
 /* OSPI IO Manager configuration function  ************************************/
 /** @addtogroup OSPI_Exported_Functions_Group4
   * @{
@@ -924,6 +934,7 @@ HAL_StatusTypeDef     HAL_OSPIM_Config(const OSPIM_CfgTypeDef *cfg, uint32_t Tim
   * @}
   */
 
+#endif /* GENERATOR_IOMNG_NOT_AVAILABLE */
 /**
   * @}
   */
@@ -1106,5 +1117,3 @@ HAL_StatusTypeDef     HAL_OSPIM_Config(const OSPIM_CfgTypeDef *cfg, uint32_t Tim
 #endif
 
 #endif /* STM32MP2xx_HAL_OSPI_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

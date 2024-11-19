@@ -310,4 +310,3 @@ void                  HAL_WWDG_EarlyWakeupCallback(WWDG_HandleTypeDef *hwwdg);
 
 #endif /* STM32MP2xx_HAL_WWDG_H */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

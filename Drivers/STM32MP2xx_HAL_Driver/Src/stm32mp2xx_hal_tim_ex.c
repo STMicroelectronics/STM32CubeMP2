@@ -2482,9 +2482,9 @@ HAL_StatusTypeDef HAL_TIMEx_RemapConfig(TIM_HandleTypeDef *htim, uint32_t Remap)
   *            @arg TIM_TIM15_TI1_TIM3_CH1            TIM15_TI1 is connected to TIM3 CH1 GPIO
   *            @arg TIM_TIM15_TI1_TIM4_CH1            TIM15_TI1 is connected to TIM4 CH1 GPIO
   *            @arg TIM_TIM15_TI1_CSE                 TIM15_TI1 is connected to CSE
-  *            @arg TIM_TIM15_TI1_MSI                 TIM15_TI1 is connected to MSI
+  *            @arg TIM_TIM15_TI1_CSI                 TIM15_TI1 is connected to CSI
   *            @arg TIM_TIM15_TI1_MCO2                TIM15_TI1 is connected to MCO2
-  *            @arg TIM_TIM15_TI1_MSI_256             TIM15_TI1 is connected to MSI/256
+  *            @arg TIM_TIM15_TI1_CSI_256             TIM15_TI1 is connected to CSI/256
   *            @arg TIM_TIM15_TI1_HSI_1024            TIM15_TI1 is connected to HSI/1024
   *            @arg TIM_TIM15_TI2_GPIO                TIM15_TI2 is connected to GPIO
   *            @arg TIM_TIM15_TI2_TIM2_CH1            TIM15_TI2 is connected to TIM2 CH2 GPIO

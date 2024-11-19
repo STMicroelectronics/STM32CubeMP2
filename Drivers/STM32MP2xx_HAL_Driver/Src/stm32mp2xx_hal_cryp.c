@@ -305,27 +305,6 @@
 #define  CRYP_PHASE_HEADER_DMA_FEED      0x00000006U /*!< GCM/GMAC/CCM header is fed to the peripheral in 
                                                           DMA mode */
 
-#if !defined(USE_HAL_CRYP_ONLY) || (USE_HAL_CRYP_ONLY == 1)
-#define CRYP_PHASE_INIT                  0x00000000U             /*!< GCM/GMAC (or CCM) init phase */
-#define CRYP_PHASE_HEADER                CRYP_CR_GCM_CCMPH_0     /*!< GCM/GMAC or CCM header phase */
-#define CRYP_PHASE_PAYLOAD               CRYP_CR_GCM_CCMPH_1     /*!< GCM(/CCM) payload phase      */
-#define CRYP_PHASE_FINAL                 CRYP_CR_GCM_CCMPH       /*!< GCM/GMAC or CCM  final phase */
-#endif /* USE_HAL_CRYP_ONLY */
-
-#if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
-#if defined(SAES_CR_CPHASE)
-#define SAES_PHASE_INIT                  0x00000000U             /*!< GCM/GMAC (or CCM) init phase */
-#define SAES_PHASE_HEADER                SAES_CR_CPHASE_0        /*!< GCM/GMAC or CCM header phase */
-#define SAES_PHASE_PAYLOAD               SAES_CR_CPHASE_1        /*!< GCM(/CCM) payload phase      */
-#define SAES_PHASE_FINAL                 SAES_CR_CPHASE        /*!< GCM/GMAC or CCM  final phase */
-#else
-#define SAES_PHASE_INIT                  0x00000000U             /*!< GCM/GMAC (or CCM) init phase */
-#define SAES_PHASE_HEADER                SAES_CR_GCMPH_0         /*!< GCM/GMAC or CCM header phase */
-#define SAES_PHASE_PAYLOAD               SAES_CR_GCMPH_1         /*!< GCM(/CCM) payload phase      */
-#define SAES_PHASE_FINAL                 SAES_CR_GCMPH           /*!< GCM/GMAC or CCM  final phase */
-#endif /* SAES_CR_CPHASE */
-#endif /* USE_HAL_SAES_ONLY */
-
 /*  CTR1 information to use in CCM algorithm */
 #define CRYP_CCM_CTR1_0                  0x07FFFFFFU
 #define CRYP_CCM_CTR1_1                  0xFFFFFF00U
@@ -508,6 +487,9 @@ HAL_StatusTypeDef HAL_CRYP_Init(CRYP_HandleTypeDef *hcryp)
     assert_param(IS_SAES_KEYSIZE(hcryp->Init.KeySize));
     assert_param(IS_SAES_ALGORITHM(hcryp->Init.Algorithm));
     assert_param(IS_SAES_KEYMODE(hcryp->Init.KeyMode));
+#if defined(SAES_CR_WRAPID)
+    assert_param(IS_SAES_KEYSHARED(hcryp->Init.KeySharedDirection));
+#endif /* SAES_CR_WRAPID */
     assert_param(IS_SAES_KEYPROT(hcryp->Init.KeyProtection));
     assert_param(IS_SAES_KEYSEL(hcryp->Init.KeySelect));
   }
@@ -575,8 +557,9 @@ HAL_StatusTypeDef HAL_CRYP_Init(CRYP_HandleTypeDef *hcryp)
 
 #if defined (SAES_CR_WRAPEN)
     MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR,
-               SAES_CR_KEYSEL | SAES_CR_WRAPEN | SAES_CR_KEYPROT | SAES_CR_DATATYPE | SAES_CR_KEYSIZE | SAES_CR_CHMOD,
-               hcryp->Init.KeySelect | hcryp->Init.KeyMode | hcryp->Init.KeyProtection | \
+               SAES_CR_KEYSEL | SAES_CR_WRAPEN | SAES_CR_WRAPID | SAES_CR_KEYPROT | SAES_CR_DATATYPE | \
+               SAES_CR_KEYSIZE | SAES_CR_CHMOD, hcryp->Init.KeySelect | hcryp->Init.KeyMode | \
+               hcryp->Init.KeySharedDirection | hcryp->Init.KeyProtection | \
                SAES_CONV_DATATYPE(hcryp->Init.DataType) | SAES_CONV_KEYSIZE(hcryp->Init.KeySize) | \
                CRYP_SAES_AlgoConversion(hcryp->Init.Algorithm, ALGOMODE_CRYP_TO_CHMOD_SAES));
 #else
@@ -706,6 +689,9 @@ HAL_StatusTypeDef HAL_CRYP_SetConfig(CRYP_HandleTypeDef *hcryp, CRYP_ConfigTypeD
     assert_param(IS_SAES_KEYSIZE(pConf->KeySize));
     assert_param(IS_SAES_ALGORITHM(pConf->Algorithm));
     assert_param(IS_SAES_KEYMODE(pConf->KeyMode));
+#if defined(SAES_CR_WRAPID)
+    assert_param(IS_SAES_KEYSHARED(pConf->KeySharedDirection));
+#endif /* SAES_CR_WRAPID */
     assert_param(IS_SAES_KEYPROT(hcryp->Init.KeyProtection));
     assert_param(IS_SAES_KEYSEL(pConf->KeySelect));
   }
@@ -737,6 +723,9 @@ HAL_StatusTypeDef HAL_CRYP_SetConfig(CRYP_HandleTypeDef *hcryp, CRYP_ConfigTypeD
     hcryp->Init.KeyMode         = pConf->KeyMode;
     hcryp->Init.KeyIVConfigSkip = pConf->KeyIVConfigSkip;
     hcryp->Init.KeySelect       = pConf->KeySelect;
+#if defined (SAES_CR_WRAPID)
+    hcryp->Init.KeySharedDirection = pConf->KeySharedDirection;
+#endif /* SAES_CR_WRAPID  */
     hcryp->Init.KeyProtection   = pConf->KeyProtection;
 
     /* Set the key size, data type, algo Mode and operating mode*/
@@ -750,22 +739,11 @@ HAL_StatusTypeDef HAL_CRYP_SetConfig(CRYP_HandleTypeDef *hcryp, CRYP_ConfigTypeD
 #if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
     if (IS_SAES_INSTANCE(hcryp->Instance))
     {
-      /*in case of HSW, HW, SW or AHK key selection, we should specify Key mode selection (SAES_CR_KMOD) */
-      if ((hcryp->Init.KeySelect != CRYP_KEYSEL_NORMAL) && (hcryp->Init.KeyMode == CRYP_KEYMODE_WRAPPED))
-      {
-#if defined (SAES_CR_WRAPEN)
-        /* Set key mode selection (Normal, Wrapped or Shared key )*/
-        MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_WRAPEN, CRYP_KEYMODE_WRAPPED);
-#else
-        /* Set key mode selection (Normal, Wrapped or Shared key )*/
-        MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_KMOD, CRYP_KEYMODE_WRAPPED);
-#endif /* SAES_CR_WRAPEN */
-      }
-
 #if defined (SAES_CR_WRAPEN)
       MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, \
-                 SAES_CR_KEYSEL | SAES_CR_WRAPEN | SAES_CR_KEYPROT | SAES_CR_DATATYPE | SAES_CR_KEYSIZE | SAES_CR_CHMOD,
-                 hcryp->Init.KeySelect | hcryp->Init.KeyMode | hcryp->Init.KeyProtection | \
+                 SAES_CR_KEYSEL | SAES_CR_WRAPEN | SAES_CR_WRAPID | SAES_CR_KEYPROT | SAES_CR_DATATYPE | \
+                 SAES_CR_KEYSIZE | SAES_CR_CHMOD, hcryp->Init.KeySelect | hcryp->Init.KeyMode | \
+                 hcryp->Init.KeySharedDirection | hcryp->Init.KeyProtection | \
                  SAES_CONV_DATATYPE(hcryp->Init.DataType) | SAES_CONV_KEYSIZE(hcryp->Init.KeySize) | \
                  CRYP_SAES_AlgoConversion(hcryp->Init.Algorithm, ALGOMODE_CRYP_TO_CHMOD_SAES));
 #else
@@ -840,7 +818,10 @@ HAL_StatusTypeDef HAL_CRYP_GetConfig(CRYP_HandleTypeDef *hcryp, CRYP_ConfigTypeD
     pConf->HeaderWidthUnit = hcryp->Init.HeaderWidthUnit;
     pConf->KeyMode         = hcryp->Init.KeyMode;
     pConf->KeySelect       = hcryp->Init.KeySelect;
-    hcryp->Init.KeyProtection   = pConf->KeyProtection;
+#if defined (SAES_CR_WRAPID)
+    pConf->KeySharedDirection = hcryp->Init.KeySharedDirection;
+#endif /* SAES_CR_WRAPID */
+    pConf->KeyProtection   = hcryp->Init.KeyProtection;
     pConf->KeyIVConfigSkip = hcryp->Init.KeyIVConfigSkip;
 
     /* Process Unlocked */
@@ -1408,7 +1389,7 @@ HAL_StatusTypeDef HAL_CRYP_Resume(CRYP_HandleTypeDef *hcryp)
       if (((IS_CRYP_INSTANCE(hcryp->Instance)) && \
            (READ_BIT(hcryp->CR_saved, CRYP_CR_ALGODIR) == CRYP_OPERATINGMODE_ENCRYPT)) || \
           ((IS_SAES_INSTANCE(hcryp->Instance)) && \
-           (READ_BIT(hcryp->CR_saved, SAES_CR_MODE) == CRYP_OPERATINGMODE_ENCRYPT)))
+           (READ_BIT(hcryp->CR_saved, SAES_OPERATION_MODE) == CRYP_OPERATINGMODE_ENCRYPT)))
       {
         if (HAL_CRYP_Encrypt_DMA(hcryp, hcryp->pCrypInBuffPtr_saved, (uint16_t) hcryp->CrypInCount_saved,
                                  hcryp->pCrypOutBuffPtr_saved) != HAL_OK)
@@ -1433,7 +1414,7 @@ HAL_StatusTypeDef HAL_CRYP_Resume(CRYP_HandleTypeDef *hcryp)
       if (((IS_CRYP_INSTANCE(hcryp->Instance)) &&
            (READ_BIT(hcryp->CR_saved, CRYP_CR_ALGODIR) == CRYP_OPERATINGMODE_ENCRYPT)) || \
           ((IS_SAES_INSTANCE(hcryp->Instance)) && \
-           (READ_BIT(hcryp->CR_saved, SAES_CR_MODE) == CRYP_OPERATINGMODE_ENCRYPT)))
+           (READ_BIT(hcryp->CR_saved, SAES_OPERATION_MODE) == CRYP_OPERATINGMODE_ENCRYPT)))
       {
         if (HAL_CRYP_Encrypt_IT(hcryp, hcryp->pCrypInBuffPtr_saved,
                                 hcryp->Size_saved, hcryp->pCrypOutBuffPtr_saved) != HAL_OK)
@@ -1542,12 +1523,21 @@ HAL_StatusTypeDef HAL_CRYP_Encrypt(CRYP_HandleTypeDef *hcryp, uint32_t *Input, u
 #if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
     if (IS_SAES_INSTANCE(hcryp->Instance))
     {
-      MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_MODE, CRYP_MODE_ENCRYPT);
+      MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_OPERATION_MODE, CRYP_MODE_ENCRYPT);
 
       /* algo get algorithm selected */
       algo = CRYP_SAES_AlgoConversion((((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_CHMOD),
                                       ALGOMODE_SAES_TO_CHMOD_CRYP);
     }
+#if defined (SAES_CR_WRAPEN)
+    /* When SAES_CR_WRAPEN = 01 (wrapped key) and MODE[1:0] = 10 (decryption), then a read access to
+    SAES_DOUTR register triggers a read error (RDERR). So, clear SAES_CR_WRAPEN for the upcoming
+    ciphering */
+    if (((((SAES_TypeDef *)(hcryp->Instance))->CR) & (CRYP_KEYMODE_WRAPPED)) != 0U)
+    {
+      MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_WRAPEN, CRYP_KEYMODE_NORMAL);
+    }
+#endif /* SAES_CR_WRAPEN */
 #endif /* USE_HAL_SAES_ONLY */
 
     switch (algo)
@@ -1687,7 +1677,7 @@ HAL_StatusTypeDef HAL_CRYP_Decrypt(CRYP_HandleTypeDef *hcryp, uint32_t *Input, u
 #if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
     if (IS_SAES_INSTANCE(hcryp->Instance))
     {
-      MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_MODE, CRYP_MODE_DECRYPT);
+      MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_OPERATION_MODE, CRYP_MODE_DECRYPT);
 
       /* algo get algorithm selected */
       algo = CRYP_SAES_AlgoConversion((((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_CHMOD),
@@ -1843,12 +1833,21 @@ HAL_StatusTypeDef HAL_CRYP_Encrypt_IT(CRYP_HandleTypeDef *hcryp, uint32_t *Input
 #if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
     if (IS_SAES_INSTANCE(hcryp->Instance))
     {
-      MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_MODE, CRYP_MODE_ENCRYPT);
+      MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_OPERATION_MODE, CRYP_MODE_ENCRYPT);
 
       /* algo get algorithm selected */
       algo = CRYP_SAES_AlgoConversion((((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_CHMOD),
                                       ALGOMODE_SAES_TO_CHMOD_CRYP);
     }
+#if defined (SAES_CR_WRAPEN)
+    /* When SAES_CR_WRAPEN = 01 (wrapped key) and MODE[1:0] = 10 (decryption), then a read access to
+    SAES_DOUTR register triggers a read error (RDERR). So, clear SAES_CR_WRAPEN for the upcoming
+    ciphering */
+    if (((((SAES_TypeDef *)(hcryp->Instance))->CR) & (CRYP_KEYMODE_WRAPPED)) != 0U)
+    {
+      MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_WRAPEN, CRYP_KEYMODE_NORMAL);
+    }
+#endif /* SAES_CR_WRAPEN */
 #endif /* USE_HAL_SAES_ONLY */
 
     switch (algo)
@@ -1984,7 +1983,7 @@ HAL_StatusTypeDef HAL_CRYP_Decrypt_IT(CRYP_HandleTypeDef *hcryp, uint32_t *Input
 #if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
     if (IS_SAES_INSTANCE(hcryp->Instance))
     {
-      MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_MODE, CRYP_MODE_DECRYPT);
+      MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_OPERATION_MODE, CRYP_MODE_DECRYPT);
 
       /* algo get algorithm selected */
       algo = CRYP_SAES_AlgoConversion((((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_CHMOD),
@@ -2118,12 +2117,21 @@ HAL_StatusTypeDef HAL_CRYP_Encrypt_DMA(CRYP_HandleTypeDef *hcryp, uint32_t *Inpu
 #if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
     if (IS_SAES_INSTANCE(hcryp->Instance))
     {
-      MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_MODE, CRYP_MODE_ENCRYPT);
+      MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_OPERATION_MODE, CRYP_MODE_ENCRYPT);
 
       /* algo get algorithm selected */
       algo = CRYP_SAES_AlgoConversion((((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_CHMOD),
                                       ALGOMODE_SAES_TO_CHMOD_CRYP);
     }
+#if defined (SAES_CR_WRAPEN)
+    /* When SAES_CR_WRAPEN = 01 (wrapped key) and MODE[1:0] = 10 (decryption), then a read access to
+    SAES_DOUTR register triggers a read error (RDERR). So, clear SAES_CR_WRAPEN for the upcoming
+    ciphering */
+    if (((((SAES_TypeDef *)(hcryp->Instance))->CR) & (CRYP_KEYMODE_WRAPPED)) != 0U)
+    {
+      MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_WRAPEN, CRYP_KEYMODE_NORMAL);
+    }
+#endif /* SAES_CR_WRAPEN */
 #endif /* USE_HAL_SAES_ONLY */
 
     switch (algo)
@@ -2321,7 +2329,7 @@ HAL_StatusTypeDef HAL_CRYP_Decrypt_DMA(CRYP_HandleTypeDef *hcryp, uint32_t *Inpu
 #if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
     if (IS_SAES_INSTANCE(hcryp->Instance))
     {
-      MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_MODE, CRYP_MODE_DECRYPT);
+      MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_OPERATION_MODE, CRYP_MODE_DECRYPT);
 
       /* algo get algorithm selected */
       algo = CRYP_SAES_AlgoConversion((((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_CHMOD),
@@ -3135,9 +3143,15 @@ static HAL_StatusTypeDef CRYP_AES_Decrypt(CRYP_HandleTypeDef *hcryp, uint32_t Ti
       if (IS_SAES_INSTANCE(hcryp->Instance))
       {
 #if defined (SAES_CR_WRAPEN)
-
+        /* When SAES_CR_WRAPEN = 01 (wrapped key) and MODE[1:0] = 10 (decryption), then a read access to
+        SAES_DOUTR register triggers a read error (RDERR). So, clear SAES_CR_WRAPEN for the upcoming
+        deciphering */
+        if (((((SAES_TypeDef *)(hcryp->Instance))->CR) & (CRYP_KEYMODE_WRAPPED)) != 0U)
+        {
+          MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_WRAPEN, CRYP_KEYMODE_NORMAL);
+        }
 #else
-        /* When KMOD[1:0] = 01 (wrapped key) or  KMOD[1:0] = 01 (shared key)
+        /* When KMOD[1:0] = 01 (wrapped key) or KMOD[1:0] = 01 (shared key)
            and MODE[1:0] = 10 (decryption), then a read access to
           SAES_DOUTR register triggers a read error (RDERR). So, clear KMOD for the upcoming deciphering */
         if (((((SAES_TypeDef *)(hcryp->Instance))->CR) & (CRYP_KEYMODE_WRAPPED | CRYP_KEYMODE_SHARED)) != 0U)
@@ -3146,7 +3160,7 @@ static HAL_StatusTypeDef CRYP_AES_Decrypt(CRYP_HandleTypeDef *hcryp, uint32_t Ti
         }
 #endif /* SAES_CR_WRAPEN */
         /* key preparation for decryption, operating mode 2*/
-        MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_MODE, CRYP_MODE_KEY_DERIVATION);
+        MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_OPERATION_MODE, CRYP_MODE_KEY_DERIVATION);
 
         /* we should re-write Key, in the case where we change key after first operation*/
         if ((hcryp->Init.KeySelect == CRYP_KEYSEL_NORMAL) && (hcryp->Init.KeyMode == CRYP_KEYMODE_NORMAL))
@@ -3179,7 +3193,7 @@ static HAL_StatusTypeDef CRYP_AES_Decrypt(CRYP_HandleTypeDef *hcryp, uint32_t Ti
 
         /*  End of Key preparation for ECB/CBC */
         /* Return to decryption operating mode(Mode 3)*/
-        MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_MODE, CRYP_MODE_DECRYPT);
+        MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_OPERATION_MODE, CRYP_MODE_DECRYPT);
       } /* if (IS_SAES_INSTANCE(hcryp->Instance)) */
 #endif /* USE_HAL_SAES_ONLY */
     }
@@ -3345,10 +3359,10 @@ static HAL_StatusTypeDef CRYP_AES_Decrypt_IT(CRYP_HandleTypeDef *hcryp)
         deciphering */
         if (((((SAES_TypeDef *)(hcryp->Instance))->CR) & (CRYP_KEYMODE_WRAPPED)) != 0U)
         {
-          MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_WRAPEN, SAES_KEYMODE_NORMAL);
+          MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_WRAPEN, CRYP_KEYMODE_NORMAL);
         }
 #else
-        /* When KMOD[1:0] = 01 (wrapped key) or  KMOD[1:0] = 01 (shared key)
+        /* When KMOD[1:0] = 01 (wrapped key) or KMOD[1:0] = 01 (shared key)
            and MODE[1:0] = 10 (decryption), then a read access to
           SAES_DOUTR register triggers a read error (RDERR). So, clear KMOD for the upcoming deciphering */
         if (((((SAES_TypeDef *)(hcryp->Instance))->CR) & (CRYP_KEYMODE_WRAPPED | CRYP_KEYMODE_SHARED)) != 0U)
@@ -3357,7 +3371,7 @@ static HAL_StatusTypeDef CRYP_AES_Decrypt_IT(CRYP_HandleTypeDef *hcryp)
         }
 #endif /* SAES_CR_WRAPEN */
         /* key preparation for decryption, operating mode 2*/
-        MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_MODE, CRYP_MODE_KEY_DERIVATION);
+        MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_OPERATION_MODE, CRYP_MODE_KEY_DERIVATION);
 
         /* we should re-write Key, in the case where we change key after first operation*/
         if ((hcryp->Init.KeySelect == CRYP_KEYSEL_NORMAL) && (hcryp->Init.KeyMode == CRYP_KEYMODE_NORMAL))
@@ -3390,7 +3404,7 @@ static HAL_StatusTypeDef CRYP_AES_Decrypt_IT(CRYP_HandleTypeDef *hcryp)
 
         /*  End of Key preparation for ECB/CBC */
         /* Return to decryption operating mode(Mode 3)*/
-        MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_MODE, CRYP_MODE_DECRYPT);
+        MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_OPERATION_MODE, CRYP_MODE_DECRYPT);
       } /* if (IS_SAES_INSTANCE(hcryp->Instance)) */
 #endif /* USE_HAL_SAES_ONLY */
     }
@@ -3577,10 +3591,10 @@ static HAL_StatusTypeDef CRYP_AES_Decrypt_DMA(CRYP_HandleTypeDef *hcryp)
         deciphering */
         if (((((SAES_TypeDef *)(hcryp->Instance))->CR) & (CRYP_KEYMODE_WRAPPED)) != 0U)
         {
-          MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_WRAPEN, SAES_KEYMODE_NORMAL);
+          MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_WRAPEN, CRYP_KEYMODE_NORMAL);
         }
 #else
-        /* When KMOD[1:0] = 01 (wrapped key) or  KMOD[1:0] = 01 (shared key)
+        /* When KMOD[1:0] = 01 (wrapped key) or KMOD[1:0] = 01 (shared key)
            and MODE[1:0] = 10 (decryption), then a read access to
           SAES_DOUTR register triggers a read error (RDERR). So, clear KMOD for the upcoming deciphering */
         if (((((SAES_TypeDef *)(hcryp->Instance))->CR) & (CRYP_KEYMODE_WRAPPED | CRYP_KEYMODE_SHARED)) != 0U)
@@ -3589,7 +3603,7 @@ static HAL_StatusTypeDef CRYP_AES_Decrypt_DMA(CRYP_HandleTypeDef *hcryp)
         }
 #endif /* SAES_CR_WRAPEN */
         /* key preparation for decryption, operating mode 2*/
-        MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_MODE, CRYP_MODE_KEY_DERIVATION);
+        MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_OPERATION_MODE, CRYP_MODE_KEY_DERIVATION);
 
         /* we should re-write Key, in the case where we change key after first operation*/
         if ((hcryp->Init.KeySelect == CRYP_KEYSEL_NORMAL) && (hcryp->Init.KeyMode == CRYP_KEYMODE_NORMAL))
@@ -3622,7 +3636,7 @@ static HAL_StatusTypeDef CRYP_AES_Decrypt_DMA(CRYP_HandleTypeDef *hcryp)
 
         /*  End of Key preparation for ECB/CBC */
         /* Return to decryption operating mode(Mode 3) */
-        MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_MODE, CRYP_MODE_DECRYPT);
+        MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_OPERATION_MODE, CRYP_MODE_DECRYPT);
 
       } /* if (IS_SAES_INSTANCE(hcryp->Instance)) */
 #endif /* USE_HAL_SAES_ONLY */
@@ -3786,7 +3800,7 @@ static void CRYP_DMAOutCplt(DMA_HandleTypeDef *hdma)
       npblb = ((((uint32_t)(hcryp->Size) / 16U) + 1U) * 16U) - (uint32_t)(hcryp->Size);
 
       /* Case of AES GCM payload encryption or AES CCM payload decryption to get right tag */
-      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_MODE);
+      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_OPERATION_MODE);
       if (((mode == CRYP_OPERATINGMODE_ENCRYPT) && (hcryp->Init.Algorithm == CRYP_AES_GCM)) ||
           ((mode == CRYP_OPERATINGMODE_DECRYPT) && (hcryp->Init.Algorithm == CRYP_AES_CCM)))
       {
@@ -3874,7 +3888,7 @@ static void CRYP_DMAOutCplt(DMA_HandleTypeDef *hdma)
       /* Compute the number of padding bytes in last block of payload */
       npblb = ((((uint32_t)hcryp->Size / 16U) + 1U) * 16U) - ((uint32_t)hcryp->Size);
 
-      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_MODE);
+      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_OPERATION_MODE);
       if (((mode == CRYP_OPERATINGMODE_ENCRYPT) && (hcryp->Init.Algorithm == CRYP_AES_GCM)) ||
           ((mode == CRYP_OPERATINGMODE_DECRYPT) && (hcryp->Init.Algorithm == CRYP_AES_CCM)))
       {
@@ -4823,7 +4837,7 @@ static HAL_StatusTypeDef CRYP_AESGCM_Process(CRYP_HandleTypeDef *hcryp, uint32_t
 #if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
     if (IS_SAES_INSTANCE(hcryp->Instance))
     {
-      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_MODE);
+      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_OPERATION_MODE);
       if (mode == CRYP_OPERATINGMODE_ENCRYPT)
       {
         /* Specify the number of non-valid bytes using NPBLB register */
@@ -5093,6 +5107,11 @@ static HAL_StatusTypeDef CRYP_AESGCM_Process_IT(CRYP_HandleTypeDef *hcryp)
       else /*after sharing the key, AES should set KMOD[1:0] to 00.*/
       {
         ((SAES_TypeDef *)(hcryp->Instance))->CR &= ~CRYP_KEYMODE_SHARED;
+#if defined (SAES_CR_WRAPEN)
+        ((SAES_TypeDef *)(hcryp->Instance))->CR &= ~SAES_CR_WRAPEN;
+#else
+        ((SAES_TypeDef *)(hcryp->Instance))->CR &= ~SAES_CR_KMOD;
+#endif /* SAES_CR_WRAPEN */
       }
 
       /* Set the initialization vector and the counter : Initial Counter Block (ICB)*/
@@ -5138,12 +5157,7 @@ static HAL_StatusTypeDef CRYP_AESGCM_Process_IT(CRYP_HandleTypeDef *hcryp)
           __HAL_UNLOCK(hcryp);
           return HAL_ERROR;
         }
-#if !defined(SAES_SR_CCF)
       } while (HAL_IS_BIT_CLR(((SAES_TypeDef *)(hcryp->Instance))->ISR, SAES_ISR_CCF));
-#else
-      }
-      while (HAL_IS_BIT_CLR(((SAES_TypeDef *)(hcryp->Instance))->SR, SAES_SR_CCF));
-#endif /* SAES_SR_CCF */
       /* Clear CCF flag */
       __HAL_CRYP_CLEAR_FLAG(hcryp, CRYP_CLEAR_CCF);
     }
@@ -5226,7 +5240,7 @@ static HAL_StatusTypeDef CRYP_AESGCM_Process_IT(CRYP_HandleTypeDef *hcryp)
           /* Compute the number of padding bytes in last block of payload */
           npblb = 16U - ((uint32_t)hcryp->Size);
 
-          if ((((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_MODE) == CRYP_OPERATINGMODE_ENCRYPT)
+          if ((((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_OPERATION_MODE) == CRYP_OPERATINGMODE_ENCRYPT)
           {
             /* Set to 0 the number of non-valid bytes using NPBLB register*/
             MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_NPBLB, npblb << 20U);
@@ -5380,7 +5394,7 @@ static HAL_StatusTypeDef CRYP_AESGCM_Process_IT(CRYP_HandleTypeDef *hcryp)
         /* Compute the number of padding bytes in last block of payload */
         npblb = 16U - ((uint32_t)hcryp->Size);
 
-        if ((((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_MODE) == CRYP_OPERATINGMODE_ENCRYPT)
+        if ((((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_OPERATION_MODE) == CRYP_OPERATINGMODE_ENCRYPT)
         {
           /* Set to 0 the number of non-valid bytes using NPBLB register*/
           MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_NPBLB, npblb << 20U);
@@ -5705,7 +5719,7 @@ static HAL_StatusTypeDef CRYP_AESGCM_Process_DMA(CRYP_HandleTypeDef *hcryp)
     if (IS_SAES_INSTANCE(hcryp->Instance))
     {
 
-      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_MODE);
+      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_OPERATION_MODE);
       if (((mode == CRYP_OPERATINGMODE_ENCRYPT) && (hcryp->Init.Algorithm == CRYP_AES_GCM)) ||
           ((mode == CRYP_OPERATINGMODE_DECRYPT) && (hcryp->Init.Algorithm == CRYP_AES_CCM)))
       {
@@ -6108,7 +6122,7 @@ static HAL_StatusTypeDef CRYP_AESCCM_Process(CRYP_HandleTypeDef *hcryp, uint32_t
       /* Compute the number of padding bytes in last block of payload */
       npblb = ((((uint32_t)hcryp->Size / 16U) + 1U) * 16U) - ((uint32_t)hcryp->Size);
 
-      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_MODE);
+      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_OPERATION_MODE);
       if (mode == CRYP_OPERATINGMODE_DECRYPT)
       {
         /* Set Npblb in case of AES CCM payload decryption to get right tag  */
@@ -6435,7 +6449,7 @@ static HAL_StatusTypeDef CRYP_AESCCM_Process_IT(CRYP_HandleTypeDef *hcryp)
           /* Compute the number of padding bytes in last block of payload */
           npblb = 16U - (uint32_t)hcryp->Size;
 
-          mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_MODE);
+          mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_OPERATION_MODE);
           if (((mode == CRYP_OPERATINGMODE_ENCRYPT) && (hcryp->Init.Algorithm == CRYP_AES_GCM)) ||
               ((mode == CRYP_OPERATINGMODE_DECRYPT) && (hcryp->Init.Algorithm == CRYP_AES_CCM)))
           {
@@ -6576,7 +6590,7 @@ static HAL_StatusTypeDef CRYP_AESCCM_Process_IT(CRYP_HandleTypeDef *hcryp)
       /* Compute the number of padding bytes in last block of payload */
       npblb = 16U - (uint32_t)hcryp->Size;
 
-      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_MODE);
+      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_OPERATION_MODE);
       if (((mode == CRYP_OPERATINGMODE_ENCRYPT) && (hcryp->Init.Algorithm == CRYP_AES_GCM)) ||
           ((mode == CRYP_OPERATINGMODE_DECRYPT) && (hcryp->Init.Algorithm == CRYP_AES_CCM)))
       {
@@ -6896,7 +6910,7 @@ static HAL_StatusTypeDef CRYP_AESCCM_Process_DMA(CRYP_HandleTypeDef *hcryp)
 #if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
     if (IS_SAES_INSTANCE(hcryp->Instance))
     {
-      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_MODE);
+      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_OPERATION_MODE);
 
       if (mode == CRYP_OPERATINGMODE_DECRYPT)
       {
@@ -7322,7 +7336,7 @@ static void CRYP_GCMCCM_SetPayloadPhase_IT(CRYP_HandleTypeDef *hcryp)
       /* Compute the number of padding bytes in last block of payload */
       npblb = ((((uint32_t)hcryp->Size / 16U) + 1U) * 16U) - ((uint32_t)hcryp->Size);
 
-      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_MODE);
+      mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_OPERATION_MODE);
       if (((mode == CRYP_OPERATINGMODE_ENCRYPT) && (hcryp->Init.Algorithm == CRYP_AES_GCM)) ||
           ((mode == CRYP_OPERATINGMODE_DECRYPT) && (hcryp->Init.Algorithm == CRYP_AES_CCM)))
       {
@@ -8040,7 +8054,7 @@ static void CRYP_GCMCCM_SetHeaderPhase_IT(CRYP_HandleTypeDef *hcryp)
       {
         /* Compute the number of padding bytes in last block of payload */
         npblb = 16U - ((uint32_t)hcryp->Size);
-        mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_CR_MODE);
+        mode = CRYP_CONV_ALGODIR(((SAES_TypeDef *)(hcryp->Instance))->CR & SAES_OPERATION_MODE);
         if (((mode == CRYP_OPERATINGMODE_ENCRYPT) && (hcryp->Init.Algorithm == CRYP_AES_GCM)) ||
             ((mode == CRYP_OPERATINGMODE_DECRYPT) && (hcryp->Init.Algorithm == CRYP_AES_CCM)))
         {
@@ -8269,11 +8283,7 @@ static HAL_StatusTypeDef CRYP_WaitOnCCFlag(const CRYP_HandleTypeDef *hcryp, uint
 
   /* Get timeout */
   tickstart = HAL_GetTick();
-#if !defined(SAES_SR_CCF)
   while (HAL_IS_BIT_CLR(((SAES_TypeDef *)(hcryp->Instance))->ISR, SAES_ISR_CCF))
-#else
-  while (HAL_IS_BIT_CLR(((SAES_TypeDef *)(hcryp->Instance))->SR, SAES_SR_CCF))
-#endif /* SAES_SR_CCF */
   {
     /* Check for the Timeout */
     if (Timeout != HAL_MAX_DELAY)

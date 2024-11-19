@@ -2342,5 +2342,3 @@ HAL_FDCAN_StateTypeDef HAL_FDCAN_GetState(const FDCAN_HandleTypeDef *hfdcan);
 
 #endif /* STM32MP2xx_HAL_FDCAN_H */
 
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

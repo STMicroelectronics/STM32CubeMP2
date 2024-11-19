@@ -303,14 +303,18 @@ HAL_StatusTypeDef HAL_RTC_Init(RTC_HandleTypeDef *hrtc)
       hrtc->Tamper6EventCallback         =  HAL_RTCEx_Tamper6EventCallback;
       /* Legacy weak Tamper7EventCallback */
       hrtc->Tamper7EventCallback         =  HAL_RTCEx_Tamper7EventCallback;
+#ifdef RTC_TAMPER_8
       /* Legacy weak Tamper8EventCallback */
       hrtc->Tamper8EventCallback         =  HAL_RTCEx_Tamper8EventCallback;
+#endif /* RTC_TAMPER_8 */
       /* Legacy weak InternalTamper1EventCallback */
       hrtc->InternalTamper1EventCallback =  HAL_RTCEx_InternalTamper1EventCallback;
       /* Legacy weak InternalTamper2EventCallback */
       hrtc->InternalTamper2EventCallback =  HAL_RTCEx_InternalTamper2EventCallback;
       /* Legacy weak InternalTamper3EventCallback */
       hrtc->InternalTamper3EventCallback =  HAL_RTCEx_InternalTamper3EventCallback;
+      /* Legacy weak InternalTamper4EventCallback */
+      hrtc->InternalTamper4EventCallback =  HAL_RTCEx_InternalTamper4EventCallback;
       /* Legacy weak InternalTamper5EventCallback */
       hrtc->InternalTamper5EventCallback =  HAL_RTCEx_InternalTamper5EventCallback;
       /* Legacy weak InternalTamper6EventCallback */
@@ -325,6 +329,20 @@ HAL_StatusTypeDef HAL_RTC_Init(RTC_HandleTypeDef *hrtc)
       hrtc->InternalTamper10EventCallback =  HAL_RTCEx_InternalTamper10EventCallback;
       /* Legacy weak InternalTamper11EventCallback */
       hrtc->InternalTamper11EventCallback =  HAL_RTCEx_InternalTamper11EventCallback;
+      /* Legacy weak InternalTamper12EventCallback */
+      hrtc->InternalTamper12EventCallback =  HAL_RTCEx_InternalTamper12EventCallback;
+#ifdef RTC_INT_TAMPER_13
+      /* Legacy weak InternalTamper13EventCallback */
+      hrtc->InternalTamper13EventCallback =  HAL_RTCEx_InternalTamper13EventCallback;
+#endif /* RTC_INT_TAMPER_13 */
+      /* Legacy weak InternalTamper14EventCallback */
+      hrtc->InternalTamper14EventCallback =  HAL_RTCEx_InternalTamper14EventCallback;
+      /* Legacy weak InternalTamper15EventCallback */
+      hrtc->InternalTamper15EventCallback =  HAL_RTCEx_InternalTamper15EventCallback;
+#ifdef RTC_INT_TAMPER_16
+      /* Legacy weak InternalTamper16EventCallback */
+      hrtc->InternalTamper16EventCallback =  HAL_RTCEx_InternalTamper16EventCallback;
+#endif /* RTC_INT_TAMPER_16 */
 
       if (hrtc->MspInitCallback == NULL)
       {
@@ -575,9 +593,11 @@ HAL_StatusTypeDef HAL_RTC_RegisterCallback(RTC_HandleTypeDef *hrtc, HAL_RTC_Call
         hrtc->Tamper7EventCallback = pCallback;
         break;
 
+#ifdef RTC_TAMPER_8
       case HAL_RTC_TAMPER8_EVENT_CB_ID :
         hrtc->Tamper8EventCallback = pCallback;
         break;
+#endif /* RTC_TAMPER_8 */
 
       case HAL_RTC_INTERNAL_TAMPER1_EVENT_CB_ID :
         hrtc->InternalTamper1EventCallback = pCallback;
@@ -591,13 +611,61 @@ HAL_StatusTypeDef HAL_RTC_RegisterCallback(RTC_HandleTypeDef *hrtc, HAL_RTC_Call
         hrtc->InternalTamper3EventCallback = pCallback;
         break;
 
+      case HAL_RTC_INTERNAL_TAMPER4_EVENT_CB_ID :
+        hrtc->InternalTamper4EventCallback = pCallback;
+        break;
+
       case HAL_RTC_INTERNAL_TAMPER5_EVENT_CB_ID :
         hrtc->InternalTamper5EventCallback = pCallback;
+        break;
+
+      case HAL_RTC_INTERNAL_TAMPER6_EVENT_CB_ID :
+        hrtc->InternalTamper6EventCallback = pCallback;
+        break;
+
+      case HAL_RTC_INTERNAL_TAMPER7_EVENT_CB_ID :
+        hrtc->InternalTamper7EventCallback = pCallback;
         break;
 
       case HAL_RTC_INTERNAL_TAMPER8_EVENT_CB_ID :
         hrtc->InternalTamper8EventCallback = pCallback;
         break;
+
+      case HAL_RTC_INTERNAL_TAMPER9_EVENT_CB_ID :
+        hrtc->InternalTamper9EventCallback = pCallback;
+        break;
+
+      case HAL_RTC_INTERNAL_TAMPER10_EVENT_CB_ID :
+        hrtc->InternalTamper10EventCallback = pCallback;
+        break;
+
+      case HAL_RTC_INTERNAL_TAMPER11_EVENT_CB_ID :
+        hrtc->InternalTamper11EventCallback = pCallback;
+        break;
+
+      case HAL_RTC_INTERNAL_TAMPER12_EVENT_CB_ID :
+        hrtc->InternalTamper12EventCallback = pCallback;
+        break;
+
+#ifdef RTC_INT_TAMPER_13
+      case HAL_RTC_INTERNAL_TAMPER13_EVENT_CB_ID :
+        hrtc->InternalTamper13EventCallback = pCallback;
+        break;
+#endif /* RTC_INT_TAMPER_13 */
+
+      case HAL_RTC_INTERNAL_TAMPER14_EVENT_CB_ID :
+        hrtc->InternalTamper14EventCallback = pCallback;
+        break;
+
+      case HAL_RTC_INTERNAL_TAMPER15_EVENT_CB_ID :
+        hrtc->InternalTamper15EventCallback = pCallback;
+        break;
+
+#ifdef RTC_INT_TAMPER_16
+      case HAL_RTC_INTERNAL_TAMPER16_EVENT_CB_ID :
+        hrtc->InternalTamper16EventCallback = pCallback;
+        break;
+#endif /* RTC_INT_TAMPER_16 */
 
       case HAL_RTC_MSPINIT_CB_ID :
         hrtc->MspInitCallback = pCallback;
@@ -743,10 +811,12 @@ HAL_StatusTypeDef HAL_RTC_UnRegisterCallback(RTC_HandleTypeDef *hrtc, HAL_RTC_Ca
         hrtc->Tamper7EventCallback = HAL_RTCEx_Tamper7EventCallback;
         break;
 
+#ifdef RTC_TAMPER_8
       case HAL_RTC_TAMPER8_EVENT_CB_ID :
         /* Legacy weak Tamper8EventCallback */
         hrtc->Tamper8EventCallback = HAL_RTCEx_Tamper8EventCallback;
         break;
+#endif /* RTC_TAMPER_8 */
 
       case HAL_RTC_INTERNAL_TAMPER1_EVENT_CB_ID :
         /* Legacy weak InternalTamper1EventCallback */
@@ -763,15 +833,74 @@ HAL_StatusTypeDef HAL_RTC_UnRegisterCallback(RTC_HandleTypeDef *hrtc, HAL_RTC_Ca
         hrtc->InternalTamper3EventCallback = HAL_RTCEx_InternalTamper3EventCallback;
         break;
 
+      case HAL_RTC_INTERNAL_TAMPER4_EVENT_CB_ID :
+        /* Legacy weak InternalTamper4EventCallback */
+        hrtc->InternalTamper4EventCallback = HAL_RTCEx_InternalTamper4EventCallback;
+        break;
+
       case HAL_RTC_INTERNAL_TAMPER5_EVENT_CB_ID :
         /* Legacy weak InternalTamper5EventCallback */
         hrtc->InternalTamper5EventCallback = HAL_RTCEx_InternalTamper5EventCallback;
+        break;
+
+      case HAL_RTC_INTERNAL_TAMPER6_EVENT_CB_ID :
+        /* Legacy weak InternalTamper6EventCallback */
+        hrtc->InternalTamper6EventCallback = HAL_RTCEx_InternalTamper6EventCallback;
+        break;
+
+      case HAL_RTC_INTERNAL_TAMPER7_EVENT_CB_ID :
+        /* Legacy weak InternalTamper7EventCallback */
+        hrtc->InternalTamper7EventCallback = HAL_RTCEx_InternalTamper7EventCallback;
         break;
 
       case HAL_RTC_INTERNAL_TAMPER8_EVENT_CB_ID :
         /* Legacy weak InternalTamper8EventCallback */
         hrtc->InternalTamper8EventCallback = HAL_RTCEx_InternalTamper8EventCallback;
         break;
+
+      case HAL_RTC_INTERNAL_TAMPER9_EVENT_CB_ID :
+        /* Legacy weak InternalTamper9EventCallback */
+        hrtc->InternalTamper9EventCallback = HAL_RTCEx_InternalTamper9EventCallback;
+        break;
+
+      case HAL_RTC_INTERNAL_TAMPER10_EVENT_CB_ID :
+        /* Legacy weak InternalTamper10EventCallback */
+        hrtc->InternalTamper10EventCallback = HAL_RTCEx_InternalTamper10EventCallback;
+        break;
+
+      case HAL_RTC_INTERNAL_TAMPER11_EVENT_CB_ID :
+        /* Legacy weak InternalTamper11EventCallback */
+        hrtc->InternalTamper11EventCallback = HAL_RTCEx_InternalTamper11EventCallback;
+        break;
+
+      case HAL_RTC_INTERNAL_TAMPER12_EVENT_CB_ID :
+        /* Legacy weak InternalTamper12EventCallback */
+        hrtc->InternalTamper12EventCallback = HAL_RTCEx_InternalTamper12EventCallback;
+        break;
+
+#ifdef RTC_INT_TAMPER_13
+      case HAL_RTC_INTERNAL_TAMPER13_EVENT_CB_ID :
+        /* Legacy weak InternalTamper13EventCallback */
+        hrtc->InternalTamper13EventCallback = HAL_RTCEx_InternalTamper13EventCallback;
+        break;
+#endif /* RTC_INT_TAMPER_13 */
+
+      case HAL_RTC_INTERNAL_TAMPER14_EVENT_CB_ID :
+        /* Legacy weak InternalTamper14EventCallback */
+        hrtc->InternalTamper14EventCallback = HAL_RTCEx_InternalTamper14EventCallback;
+        break;
+
+      case HAL_RTC_INTERNAL_TAMPER15_EVENT_CB_ID :
+        /* Legacy weak InternalTamper15EventCallback */
+        hrtc->InternalTamper15EventCallback = HAL_RTCEx_InternalTamper15EventCallback;
+        break;
+
+#ifdef RTC_INT_TAMPER_13
+      case HAL_RTC_INTERNAL_TAMPER16_EVENT_CB_ID :
+        /* Legacy weak InternalTamper16EventCallback */
+        hrtc->InternalTamper16EventCallback = HAL_RTCEx_InternalTamper16EventCallback;
+        break;
+#endif /* RTC_INT_TAMPER_13 */
 
       case HAL_RTC_MSPINIT_CB_ID :
         hrtc->MspInitCallback = HAL_RTC_MspInit;
@@ -2128,5 +2257,3 @@ uint8_t RTC_Bcd2ToByte(uint8_t Value)
 /**
   * @}
   */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

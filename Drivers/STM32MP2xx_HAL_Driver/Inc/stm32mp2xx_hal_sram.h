@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -228,5 +228,3 @@ HAL_SRAM_StateTypeDef HAL_SRAM_GetState(SRAM_HandleTypeDef *hsram);
 #endif
 
 #endif /* STM32MP2xx_HAL_SRAM_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

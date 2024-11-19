@@ -571,6 +571,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
 #define ADC_CLOCK_CK_ICN_LS_MCU_DIV64             (LL_ADC_CLOCK_CK_ICN_LS_CSU | LL_ADC_CLOCK_DIV64)     /*!< ADC CK_ICN_LS_MCU clock with prescaler division by 64  */
 #define ADC_CLOCK_CK_ICN_LS_MCU_DIV128            (LL_ADC_CLOCK_CK_ICN_LS_CSU | LL_ADC_CLOCK_DIV128)    /*!< ADC CK_ICN_LS_MCU clock with prescaler division by 128 */
 #define ADC_CLOCK_CK_ICN_LS_MCU_DIV256            (LL_ADC_CLOCK_CK_ICN_LS_CSU | LL_ADC_CLOCK_DIV256)    /*!< ADC CK_ICN_LS_MCU clock with prescaler division by 256 */
+#if defined(ADC12_COMMON)
 #define ADC_CLOCK_CK_KER_ADC12_DIV1               (LL_ADC_CLOCK_KER_ADC12     | LL_ADC_CLOCK_DIV1)      /*!< ADC CK_KER_ADC12 clock without prescaler               */
 #define ADC_CLOCK_CK_KER_ADC12_DIV2               (LL_ADC_CLOCK_KER_ADC12     | LL_ADC_CLOCK_DIV2)      /*!< ADC CK_KER_ADC12 clock with prescaler division by 2    */
 #define ADC_CLOCK_CK_KER_ADC12_DIV4               (LL_ADC_CLOCK_KER_ADC12     | LL_ADC_CLOCK_DIV4)      /*!< ADC CK_KER_ADC12 clock with prescaler division by 4    */
@@ -583,6 +584,36 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
 #define ADC_CLOCK_CK_KER_ADC12_DIV64              (LL_ADC_CLOCK_KER_ADC12     | LL_ADC_CLOCK_DIV64)     /*!< ADC CK_KER_ADC12 clock with prescaler division by 64   */
 #define ADC_CLOCK_CK_KER_ADC12_DIV128             (LL_ADC_CLOCK_KER_ADC12     | LL_ADC_CLOCK_DIV128)    /*!< ADC CK_KER_ADC12 clock with prescaler division by 128  */
 #define ADC_CLOCK_CK_KER_ADC12_DIV256             (LL_ADC_CLOCK_KER_ADC12     | LL_ADC_CLOCK_DIV256)    /*!< ADC CK_KER_ADC12 clock with prescaler division by 256  */
+#endif /* ADC12_COMMON */
+#if defined(ADC1_COMMON)
+#define ADC_CLOCK_CK_KER_ADC1_DIV1                (LL_ADC_CLOCK_KER_ADC1      | LL_ADC_CLOCK_DIV1)      /*!< ADC CK_KER_ADC3 clock without prescaler                */
+#define ADC_CLOCK_CK_KER_ADC1_DIV2                (LL_ADC_CLOCK_KER_ADC1      | LL_ADC_CLOCK_DIV2)      /*!< ADC CK_KER_ADC3 clock with prescaler division by 2     */
+#define ADC_CLOCK_CK_KER_ADC1_DIV4                (LL_ADC_CLOCK_KER_ADC1      | LL_ADC_CLOCK_DIV4)      /*!< ADC CK_KER_ADC3 clock with prescaler division by 4     */
+#define ADC_CLOCK_CK_KER_ADC1_DIV6                (LL_ADC_CLOCK_KER_ADC1      | LL_ADC_CLOCK_DIV6)      /*!< ADC CK_KER_ADC3 clock with prescaler division by 6     */
+#define ADC_CLOCK_CK_KER_ADC1_DIV8                (LL_ADC_CLOCK_KER_ADC1      | LL_ADC_CLOCK_DIV8)      /*!< ADC CK_KER_ADC3 clock with prescaler division by 8     */
+#define ADC_CLOCK_CK_KER_ADC1_DIV10               (LL_ADC_CLOCK_KER_ADC1      | LL_ADC_CLOCK_DIV10)     /*!< ADC CK_KER_ADC3 clock with prescaler division by 10    */
+#define ADC_CLOCK_CK_KER_ADC1_DIV12               (LL_ADC_CLOCK_KER_ADC1      | LL_ADC_CLOCK_DIV12)     /*!< ADC CK_KER_ADC3 clock with prescaler division by 12    */
+#define ADC_CLOCK_CK_KER_ADC1_DIV16               (LL_ADC_CLOCK_KER_ADC1      | LL_ADC_CLOCK_DIV16)     /*!< ADC CK_KER_ADC3 clock with prescaler division by 16    */
+#define ADC_CLOCK_CK_KER_ADC1_DIV32               (LL_ADC_CLOCK_KER_ADC1      | LL_ADC_CLOCK_DIV32)     /*!< ADC CK_KER_ADC3 clock with prescaler division by 32    */
+#define ADC_CLOCK_CK_KER_ADC1_DIV64               (LL_ADC_CLOCK_KER_ADC1      | LL_ADC_CLOCK_DIV64)     /*!< ADC CK_KER_ADC3 clock with prescaler division by 64    */
+#define ADC_CLOCK_CK_KER_ADC1_DIV128              (LL_ADC_CLOCK_KER_ADC1      | LL_ADC_CLOCK_DIV128)    /*!< ADC CK_KER_ADC3 clock with prescaler division by 128   */
+#define ADC_CLOCK_CK_KER_ADC1_DIV256              (LL_ADC_CLOCK_KER_ADC1      | LL_ADC_CLOCK_DIV256)    /*!< ADC CK_KER_ADC3 clock with prescaler division by 256   */
+#endif /* ADC1_COMMON */
+#if defined(ADC2_COMMON)
+#define ADC_CLOCK_CK_KER_ADC2_DIV1                (LL_ADC_CLOCK_KER_ADC2      | LL_ADC_CLOCK_DIV1)      /*!< ADC CK_KER_ADC3 clock without prescaler                */
+#define ADC_CLOCK_CK_KER_ADC2_DIV2                (LL_ADC_CLOCK_KER_ADC2      | LL_ADC_CLOCK_DIV2)      /*!< ADC CK_KER_ADC3 clock with prescaler division by 2     */
+#define ADC_CLOCK_CK_KER_ADC2_DIV4                (LL_ADC_CLOCK_KER_ADC2      | LL_ADC_CLOCK_DIV4)      /*!< ADC CK_KER_ADC3 clock with prescaler division by 4     */
+#define ADC_CLOCK_CK_KER_ADC2_DIV6                (LL_ADC_CLOCK_KER_ADC2      | LL_ADC_CLOCK_DIV6)      /*!< ADC CK_KER_ADC3 clock with prescaler division by 6     */
+#define ADC_CLOCK_CK_KER_ADC2_DIV8                (LL_ADC_CLOCK_KER_ADC2      | LL_ADC_CLOCK_DIV8)      /*!< ADC CK_KER_ADC3 clock with prescaler division by 8     */
+#define ADC_CLOCK_CK_KER_ADC2_DIV10               (LL_ADC_CLOCK_KER_ADC2      | LL_ADC_CLOCK_DIV10)     /*!< ADC CK_KER_ADC3 clock with prescaler division by 10    */
+#define ADC_CLOCK_CK_KER_ADC2_DIV12               (LL_ADC_CLOCK_KER_ADC2      | LL_ADC_CLOCK_DIV12)     /*!< ADC CK_KER_ADC3 clock with prescaler division by 12    */
+#define ADC_CLOCK_CK_KER_ADC2_DIV16               (LL_ADC_CLOCK_KER_ADC2      | LL_ADC_CLOCK_DIV16)     /*!< ADC CK_KER_ADC3 clock with prescaler division by 16    */
+#define ADC_CLOCK_CK_KER_ADC2_DIV32               (LL_ADC_CLOCK_KER_ADC2      | LL_ADC_CLOCK_DIV32)     /*!< ADC CK_KER_ADC3 clock with prescaler division by 32    */
+#define ADC_CLOCK_CK_KER_ADC2_DIV64               (LL_ADC_CLOCK_KER_ADC2      | LL_ADC_CLOCK_DIV64)     /*!< ADC CK_KER_ADC3 clock with prescaler division by 64    */
+#define ADC_CLOCK_CK_KER_ADC2_DIV128              (LL_ADC_CLOCK_KER_ADC2      | LL_ADC_CLOCK_DIV128)    /*!< ADC CK_KER_ADC3 clock with prescaler division by 128   */
+#define ADC_CLOCK_CK_KER_ADC2_DIV256              (LL_ADC_CLOCK_KER_ADC2      | LL_ADC_CLOCK_DIV256)    /*!< ADC CK_KER_ADC3 clock with prescaler division by 256   */
+#endif /* ADC2_COMMON */
+#if defined(ADC3_COMMON)
 #define ADC_CLOCK_CK_KER_ADC3_DIV1                (LL_ADC_CLOCK_KER_ADC3      | LL_ADC_CLOCK_DIV1)      /*!< ADC CK_KER_ADC3 clock without prescaler                */
 #define ADC_CLOCK_CK_KER_ADC3_DIV2                (LL_ADC_CLOCK_KER_ADC3      | LL_ADC_CLOCK_DIV2)      /*!< ADC CK_KER_ADC3 clock with prescaler division by 2     */
 #define ADC_CLOCK_CK_KER_ADC3_DIV4                (LL_ADC_CLOCK_KER_ADC3      | LL_ADC_CLOCK_DIV4)      /*!< ADC CK_KER_ADC3 clock with prescaler division by 4     */
@@ -595,6 +626,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
 #define ADC_CLOCK_CK_KER_ADC3_DIV64               (LL_ADC_CLOCK_KER_ADC3      | LL_ADC_CLOCK_DIV64)     /*!< ADC CK_KER_ADC3 clock with prescaler division by 64    */
 #define ADC_CLOCK_CK_KER_ADC3_DIV128              (LL_ADC_CLOCK_KER_ADC3      | LL_ADC_CLOCK_DIV128)    /*!< ADC CK_KER_ADC3 clock with prescaler division by 128   */
 #define ADC_CLOCK_CK_KER_ADC3_DIV256              (LL_ADC_CLOCK_KER_ADC3      | LL_ADC_CLOCK_DIV256)    /*!< ADC CK_KER_ADC3 clock with prescaler division by 256   */
+#endif /* ADC3_COMMON */
 /**
   * @}
   */
@@ -1108,6 +1140,7 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   * @param __ADC_CLOCK__ programmed ADC clock.
   * @retval SET (__ADC_CLOCK__ is a valid value) or RESET (__ADC_CLOCK__ is invalid)
   */
+#if defined (ADC12_COMMON)
 #define IS_ADC12_CLOCKPRESCALER(__ADC_CLOCK__) (((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC12_DIV1)     || \
                                                 ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC12_DIV2)     || \
                                                 ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC12_DIV4)     || \
@@ -1132,7 +1165,63 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
                                                 ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV64)    || \
                                                 ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV128)   || \
                                                 ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV256) )
+#endif /* ADC12_COMMON */
 
+#if defined (ADC1_COMMON)
+#define IS_ADC1_CLOCKPRESCALER(__ADC_CLOCK__)  (((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC1_DIV1)       || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC1_DIV2)       || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC1_DIV4)       || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC1_DIV6)       || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC1_DIV8)       || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC1_DIV10)      || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC1_DIV12)      || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC1_DIV16)      || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC1_DIV32)      || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC1_DIV64)      || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC1_DIV128)     || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC1_DIV256)     || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV1)     || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV2)     || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV4)     || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV6)     || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV8)     || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV10)    || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV12)    || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV16)    || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV32)    || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV64)    || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV128)   || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV256) )
+#endif /* ADC1_COMMON */
+
+#if defined (ADC2_COMMON)
+#define IS_ADC2_CLOCKPRESCALER(__ADC_CLOCK__)  (((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC2_DIV1)       || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC2_DIV2)       || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC2_DIV4)       || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC2_DIV6)       || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC2_DIV8)       || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC2_DIV10)      || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC2_DIV12)      || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC2_DIV16)      || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC2_DIV32)      || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC2_DIV64)      || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC2_DIV128)     || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC2_DIV256)     || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV1)     || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV2)     || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV4)     || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV6)     || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV8)     || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV10)    || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV12)    || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV16)    || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV32)    || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV64)    || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV128)   || \
+                                                ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV256) )
+#endif /* ADC2_COMMON */
+
+#if defined(ADC3_COMMON)
 #define IS_ADC3_CLOCKPRESCALER(__ADC_CLOCK__)  (((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC12_DIV1)     || \
                                                 ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC12_DIV2)     || \
                                                 ((__ADC_CLOCK__) == ADC_CLOCK_CK_KER_ADC12_DIV4)     || \
@@ -1169,12 +1258,21 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
                                                 ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV64)   || \
                                                 ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV128)  || \
                                                 ((__ADC_CLOCK__) == ADC_CLOCK_CK_ICN_LS_MCU_DIV256) )
+#endif /* ADC3_COMMON */
 
+#if defined (ADC12_COMMON) && defined(ADC3_COMMON)
 #define IS_ADC_CLOCKPRESCALER(__INSTANCE__, __ADC_CLOCK__)                 \
   (((     ((__INSTANCE__) == ADC1)||((__INSTANCE__) == ADC2))  && IS_ADC12_CLOCKPRESCALER(__ADC_CLOCK__))  \
    ||                                                       \
    ((((__INSTANCE__) == ADC3) && IS_ADC3_CLOCKPRESCALER(__ADC_CLOCK__))))
+#endif /* defined (ADC12_COMMON) && defined(ADC3_COMMON) */
 
+#if defined (ADC1_COMMON) && defined(ADC2_COMMON)
+#define IS_ADC_CLOCKPRESCALER(__INSTANCE__, __ADC_CLOCK__)                 \
+  (((     ((__INSTANCE__) == ADC1))  && IS_ADC1_CLOCKPRESCALER(__ADC_CLOCK__))  \
+   ||                                                       \
+   ((((__INSTANCE__) == ADC2) && IS_ADC2_CLOCKPRESCALER(__ADC_CLOCK__))))
+#endif /* defined (ADC1_COMMON) && defined(ADC2_COMMON) */
 
 /**
   * @brief Verify the ADC resolution setting.

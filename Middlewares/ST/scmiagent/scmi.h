@@ -12,14 +12,19 @@
 
 #include "stm32mp2xx_hal.h"
 
+/*
 #define CONFIG_64BIT
+*/
+
 #ifdef CONFIG_64BIT
-#define BITS_PER_LONG 64
-#else
-#define BITS_PER_LONG 32
+#define BITS_PER_LONG  64
+#else  /* CONFIG_64BIT */
+#define BITS_PER_LONG  32
 #endif /* CONFIG_64BIT */
 
-#define BIT(nr)			(1 << (nr))
+#ifndef BIT
+#define BIT(nr)         (1UL << (nr))
+#endif /* BIT */
 
 /*
  * Create a contiguous bitmask starting at bit position @l and ending at
@@ -29,6 +34,9 @@
 #define GENMASK(h, l) \
 	(((~0) << (l)) & (~0 >> (BITS_PER_LONG - 1 - (h))))
 
+#define SCMI_SHM_START_ADDRESS    0x81200000
+#define SCMI_SHM_SIZE             0x100000
+#define SCMI_TIMEOUT_MS           1000
 
 /* Identifiers for SCMI protocols */
 enum scmi_protocol_id {
@@ -86,6 +94,19 @@ struct scmi_message_data {
 	size_t message_size;
 	void *response;
 	size_t response_size;
+};
+
+/*
+ * struct scmi_channel - An SCMI channel instance
+ * @tx_mailbox: Mailbox for client to server request
+ * @tx_buffer: Shared 128byte buffer for client to server request
+ * @rx_mailbox: Mailbox for client to server request
+ * @rx_buffer: Shared 128byte buffer for client to server request
+ */
+struct scmi_channel {
+	unsigned int tx_timeout_ms;
+	uint32_t *rx_buffer;
+	uint32_t *tx_buffer;
 };
 
 /**

@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -47,22 +47,22 @@ extern "C" {
 /** @defgroup IPCC_Channel IPCC Channel
   * @{
   */
-#define IPCC_CHANNEL_1 0x00000000U
-#define IPCC_CHANNEL_2 0x00000001U
-#define IPCC_CHANNEL_3 0x00000002U
-#define IPCC_CHANNEL_4 0x00000003U
-#define IPCC_CHANNEL_5 0x00000004U
-#define IPCC_CHANNEL_6 0x00000005U
-#define IPCC_CHANNEL_7 0x00000006U
-#define IPCC_CHANNEL_8 0x00000007U
-#define IPCC_CHANNEL_9 0x00000008U
-#define IPCC_CHANNEL_10 0x00000009U
-#define IPCC_CHANNEL_11 0x00000010U
-#define IPCC_CHANNEL_12 0x00000011U
-#define IPCC_CHANNEL_13 0x00000012U
-#define IPCC_CHANNEL_14 0x00000013U
-#define IPCC_CHANNEL_15 0x00000014U
-#define IPCC_CHANNEL_16 0x00000015U
+#define IPCC_CHANNEL_1    0x00000000U
+#define IPCC_CHANNEL_2    0x00000001U
+#define IPCC_CHANNEL_3    0x00000002U
+#define IPCC_CHANNEL_4    0x00000003U
+#define IPCC_CHANNEL_5    0x00000004U
+#define IPCC_CHANNEL_6    0x00000005U
+#define IPCC_CHANNEL_7    0x00000006U
+#define IPCC_CHANNEL_8    0x00000007U
+#define IPCC_CHANNEL_9    0x00000008U
+#define IPCC_CHANNEL_10   0x00000009U
+#define IPCC_CHANNEL_11   0x0000000AU
+#define IPCC_CHANNEL_12   0x0000000BU
+#define IPCC_CHANNEL_13   0x0000000CU
+#define IPCC_CHANNEL_14   0x0000000DU
+#define IPCC_CHANNEL_15   0x0000000EU
+#define IPCC_CHANNEL_16   0x0000000FU
 /**
   * @}
   */
@@ -456,4 +456,3 @@ HAL_StatusTypeDef HAL_IPCC_GetConfigAttributes(const IPCC_HandleTypeDef *hipcc, 
 
 #endif /* STM32MP2xx_HAL_IPCC_H */
 
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

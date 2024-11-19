@@ -4,14 +4,14 @@
  * Copyright (c) 2015-2019, Arm Limited and Contributors. All rights reserved.
  */
 
-#include "ipcc.h"
 #include "scmi.h"
+#include "mbox_ipcc.h"
 
 /*
  * Shared Memory based Transport (SMT) relies on a 128byte piece of
  * shared memory, aligned on 32bit words that is used to exchange
  * SCMI messages. The 28 first bytes of the memory are used for SMT
- * protocol meta data, exchaged between communication initiator and
+ * protocol meta data, exchanged between communication initiator and
  * target
  *
  * SMT uses a 28 byte header prior message payload to handle the state of
@@ -28,20 +28,6 @@ struct scmi_smt_header {
 	uint8_t msg_payload[];
 };
 
-/*
- * struct scmi_channel - An SCMI channel instance
- * @tx_mailbox: Mailbox for client to server request
- * @tx_buffer: Shared 128byte buffer for client to server request
- * @rx_mailbox: Mailbox for client to server request
- * @rx_buffer: Shared 128byte buffer for client to server request
- */
-struct scmi_channel {
-	struct mailbox *tx_mailbox;
-	uint32_t *tx_buffer;
-	unsigned int tx_timeout_ms;
-	struct mailbox *rx_mailbox;
-	uint32_t *rx_buffer;
-};
 
 #define SMT_SHARED_MEMORY_SIZE	128
 
@@ -106,7 +92,7 @@ static void clear_smt_channel(uint32_t *shared_buffer)
 {
 	struct scmi_smt_header *hdr = (struct scmi_smt_header *)shared_buffer;
 
-	hdr->channel_status &= SMT_CHANNEL_STATUS_ERROR;
+	hdr->channel_status &= ~SMT_CHANNEL_STATUS_ERROR;
 }
 
 int scmi_process_message(struct scmi_message_data *msg)
@@ -126,10 +112,12 @@ int scmi_process_message(struct scmi_message_data *msg)
 		goto out;
 */
 
-	IPCC_Req();
+	SCMI_IPCC_Req();
 
 	ret = read_resp_from_smt(msg->channel->tx_buffer, msg);
+/*
 out:
+*/
 	clear_smt_channel(msg->channel->tx_buffer);
 
 	return ret;

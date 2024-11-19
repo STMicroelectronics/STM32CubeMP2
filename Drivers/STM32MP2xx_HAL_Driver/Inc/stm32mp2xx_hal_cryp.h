@@ -85,12 +85,14 @@ typedef struct
                                             Vector only once and to skip configuration for consecutive processing.
                                         This parameter can be a value of @ref CRYP_Configuration_Skip */
   uint32_t KeyMode;                    /*!< Key mode selection, this parameter can be a value of @ref CRYP_Key_Mode */
+#if defined (SAES_CR_WRAPEN)
+  uint32_t KeySharedDirection;         /*!< Only for SAES : this parameter can be a value of @ref CRYP_Key_Shared_Direction */
+#endif /* SAES_CR_WRAPEN */
   uint32_t KeySelect;                  /*!< Only for SAES : Key selection, this parameter can be a value
                                             of @ref CRYP_Key_Select */
   uint32_t KeyProtection;              /*!< Only for SAES : Key protection, this parameter can be a value of @ref CRYP_Key_Protection */
 
 } CRYP_ConfigTypeDef;
-
 
 /**
   * @brief  CRYP State Structure definition
@@ -426,12 +428,8 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
 #else
 #define CRYP_FLAG_RDERR    (SAES_SR_RDERR | 0x80000000U) /*!< SAES peripheral Read error flag */
 #endif /* SAES_SR_RDERRF */
-#if !defined(SAES_SR_CCF)
 #define CRYP_FLAG_CCF      SAES_ISR_CCF                   /*!< SAES peripheral Computation completed flag
                                                               as AES_ISR_CCF */
-#else
-#define CRYP_FLAG_CCF      SAES_SR_CCF
-#endif /* SAES_SR_CCF */
 #define CRYP_FLAG_KEIF     SAES_ISR_KEIF                 /*!< SAES peripheral Key error interrupt flag */
 #define CRYP_FLAG_RWEIF    SAES_ISR_RWEIF                /*!< SAES peripheral Read or Write error Interrupt flag */
 #define CRYP_FLAG_RNGEIF   SAES_ISR_RNGEIF               /*!< SAES peripheral RNG error Interrupt flag */
@@ -470,16 +468,13 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
 /** @defgroup CRYP_Key_Mode CRYP or SAES Key Mode
   * @{
   */
-#define SAES_KEYMODE_NORMAL         0x00000000U         /*!< Normal key usage, Key registers are freely usable */
-#define CRYP_KEYMODE_NORMAL         0x00000000U         /*!< Normal key usage, Key registers are freely usable */
+#define CRYP_KEYMODE_NORMAL         0x00000000U               /*!< Normal key usage, Key registers are freely usable */
 #if defined (SAES_CR_WRAPEN)
-#define SAES_KEYMODE_WRAPPED        SAES_CR_WRAPEN      /*!< Only for SAES, Wrapped key: to encrypt or decrypt AES keys */
-#define CRYP_KEYMODE_WRAPPED        SAES_KEYMODE_WRAPPED      /*!< Only for SAES, Wrapped key: to encrypt or decrypt AES keys */
-#define CRYP_KEYMODE_SHARED         CRYP_CR_KMOD_2      /*!< Only for SAES, Wrapped key: to encrypt or decrypt AES keys */
+#define CRYP_KEYMODE_WRAPPED        SAES_CR_WRAPEN            /*!< Only for SAES, Wrapped key: to encrypt or decrypt AES keys */
+#define CRYP_KEYMODE_SHARED         (0x02U << CRYP_CR_KMOD_Pos) /*!< Only for SAES, Wrapped key: to encrypt or decrypt AES keys */
 #else
-#define CRYP_KEYMODE_WRAPPED        SAES_CR_KMOD_0      /*!< Only for SAES, Wrapped key: to encrypt
-                                                             or decrypt AES keys */
-#define CRYP_KEYMODE_SHARED         (0x02U << CRYP_CR_KMOD_Pos)      /*!< Key shared by SAES peripheral */
+#define CRYP_KEYMODE_WRAPPED        SAES_CR_KMOD_0            /*!< Only for SAES, Wrapped key: to encrypt or decrypt AES keys */
+#define CRYP_KEYMODE_SHARED         (0x02U << CRYP_CR_KMOD_Pos) /*!< Key shared by SAES peripheral */
 #endif /* SAES_CR_WRAPEN */
 /**
   * @}
@@ -519,14 +514,16 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
   * @}
   */
 
-/** @defgroup CRYP_Key_Shared SAES Key Shared with Peripheral
+/** @defgroup CRYP_Key_Shared_Direction SAES Key Shared with Peripheral
   * @{
   */
 #if defined(SAES_CR_WRAPID)
-#define CRYP_KEYSHARED_CRYP1         SAES_CR_WRAPID_CRYP1     /*!< Only for SAES, key is shared with CRYP peripheral */
-#define CRYP_KEYSHARED_CRYP2         SAES_CR_WRAPID_CRYP2     /*!< Only for SAES, key is shared with CRYP peripheral */
+#define CRYP_KEYSHARED_SELF         0x00000000U              /*!< Only for SAES, key is used by SAES peripheral */
+#define CRYP_KEYSHARED_CRYP1        SAES_CR_WRAPID_CRYP1     /*!< Only for SAES, key is shared with CRYP1 peripheral */
+#define CRYP_KEYSHARED_CRYP2        SAES_CR_WRAPID_CRYP2     /*!< Only for SAES, key is shared with CRYP2 peripheral */
 #else
-#define CRYP_KEYSHARED_CRYP         0x00000000U     /*!< Only for SAES, key is shared with CRYP peripheral */
+#define CRYP_KEYSHARED_CRYP1        0x00000000U              /*!< Only for SAES, key is shared with CRYP1 peripheral */
+#define CRYP_KEYSHARED_CRYP2        SAES_CR_KSHAREID_0       /*!< Only for SAES, key is shared with CRYP2 peripheral */
 #endif /* SAES_CR_WRAPID */
 /**
   * @}
@@ -537,8 +534,13 @@ typedef  void (*pCRYP_CallbackTypeDef)(CRYP_HandleTypeDef *hcryp);    /*!< point
   */
 
 #define CRYP_MODE_ENCRYPT                0x00000000U             /*!< SAES peripheral encryption mode   */
+#if defined (SAES_CR_WRAPEN)
+#define CRYP_MODE_KEY_DERIVATION         SAES_CR_OPMOD_0         /*!< SAES peripheral key derivation    */
+#define CRYP_MODE_DECRYPT                SAES_CR_OPMOD_1         /*!< SAES peripheral decryption mode   */
+#else
 #define CRYP_MODE_KEY_DERIVATION         SAES_CR_MODE_0          /*!< SAES peripheral key derivation    */
 #define CRYP_MODE_DECRYPT                SAES_CR_MODE_1          /*!< SAES peripheral decryption mode   */
+#endif /* SAES_CR_WRAPEN */
 
 /**
   * @}
@@ -773,7 +775,7 @@ void HAL_CRYP_ProcessSuspend(CRYP_HandleTypeDef *hcryp);
 HAL_StatusTypeDef HAL_CRYP_DMAProcessSuspend(CRYP_HandleTypeDef *hcryp);
 HAL_StatusTypeDef HAL_CRYP_Suspend(CRYP_HandleTypeDef *hcryp);
 HAL_StatusTypeDef HAL_CRYP_Resume(CRYP_HandleTypeDef *hcryp);
-#endif /* defined (USE_HAL_CRYP_SUSPEND_RESUME) */
+#endif /* USE_HAL_CRYP_SUSPEND_RESUME */
 /**
   * @}
   */
@@ -885,8 +887,14 @@ uint32_t HAL_CRYP_GetError(const CRYP_HandleTypeDef *hcryp);
                                    ((SELECTION) == CRYP_KEYSEL_AHK)      || \
                                    ((SELECTION) == CRYP_KEYSEL_DUK_AHK)  || \
                                    ((SELECTION) == CRYP_KEYSEL_TEST_KEY))
-
-#define IS_SAES_KEYSHARED(PERIPHERAL) ((PERIPHERAL) == CRYP_KEYSHARED_CRYP)
+#if defined(SAES_CR_WRAPID)
+#define IS_SAES_KEYSHARED(PERIPHERAL) (((PERIPHERAL) == CRYP_KEYSHARED_SELF) ||\
+                                       ((PERIPHERAL) == CRYP_KEYSHARED_CRYP1) ||\
+                                       ((PERIPHERAL) == CRYP_KEYSHARED_CRYP2))
+#else
+#define IS_SAES_KEYSHARED(PERIPHERAL) (((PERIPHERAL) == SAES_CR_KSHAREID_0)  ||\
+                                       ((PERIPHERAL) == SAES_CR_KSHAREID_1))
+#endif /* SAES_CR_WRAPID */
 /**
   * @}
   */
@@ -899,19 +907,24 @@ uint32_t HAL_CRYP_GetError(const CRYP_HandleTypeDef *hcryp);
 #if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
 #define SAES_CONV_DATATYPE(__DATATYPE__) ((__DATATYPE__) >> (CRYP_CR_DATATYPE_Pos - SAES_CR_DATATYPE_Pos))
 
-#if defined(SAES_CR_KEYSIZE_1)
+#if defined(SAES_CR_WRAPEN)
 #define SAES_CONV_KEYSIZE(__KEY__) (((__KEY__)\
                                      & CRYP_CR_KEYSIZE_Msk) << (SAES_CR_KEYSIZE_Pos - CRYP_CR_KEYSIZE_Pos))
 #else
 #define SAES_CONV_KEYSIZE(__KEY__) (((__KEY__)\
                                      & CRYP_CR_KEYSIZE_Msk) << (SAES_CR_KEYSIZE_Pos - (CRYP_CR_KEYSIZE_Pos + 1U)))
-#endif /* SAES_CR_KEYSIZE_1 */
+#endif /* SAES_CR_WRAPEN */
 #define SAES_CONV_ALGO(__ALGO__) (((__ALGO__)\
                                    & (CRYP_CR_ALGOMODE_1 | CRYP_CR_ALGOMODE_0)) << (SAES_CR_CHMOD_Pos - \
                                        CRYP_CR_ALGOMODE_Pos))
 #endif /* USE_HAL_SAES_ONLY */
+#if defined(SAES_CR_OPMOD)
 #define CRYP_CONV_ALGODIR(__ALGODIR__) (((__ALGODIR__)\
-                                         & SAES_CR_MODE_1) >> ((SAES_CR_MODE_Pos + 1U) - CRYP_CR_ALGODIR_Pos))
+                                         & CRYP_MODE_DECRYPT) >> ((SAES_CR_OPMOD_Pos + 1U) - CRYP_CR_ALGODIR_Pos))
+#else
+#define CRYP_CONV_ALGODIR(__ALGODIR__) (((__ALGODIR__)\
+                                         & CRYP_MODE_DECRYPT) >> ((SAES_CR_MODE_Pos + 1U) - CRYP_CR_ALGODIR_Pos))
+#endif /* SAES_CR_OPMOD */
 
 /**
   * @}
@@ -927,10 +940,32 @@ uint32_t HAL_CRYP_GetError(const CRYP_HandleTypeDef *hcryp);
 /** @defgroup CRYP_Private_Constants CRYP Private Constants
   * @{
   */
+#if !defined(USE_HAL_CRYP_ONLY) || (USE_HAL_CRYP_ONLY == 1)
+#define CRYP_PHASE_INIT                  0x00000000U             /*!< GCM/GMAC (or CCM) init phase */
+#define CRYP_PHASE_HEADER                CRYP_CR_GCM_CCMPH_0     /*!< GCM/GMAC or CCM header phase */
+#define CRYP_PHASE_PAYLOAD               CRYP_CR_GCM_CCMPH_1     /*!< GCM(/CCM) payload phase      */
+#define CRYP_PHASE_FINAL                 CRYP_CR_GCM_CCMPH       /*!< GCM/GMAC or CCM  final phase */
+#endif /* USE_HAL_CRYP_ONLY */
 
+#if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
+#if defined(SAES_CR_CPHASE)
+#define SAES_PHASE_INIT                  0x00000000U             /*!< GCM/GMAC (or CCM) init phase */
+#define SAES_PHASE_HEADER                SAES_CR_CPHASE_0        /*!< GCM/GMAC or CCM header phase */
+#define SAES_PHASE_PAYLOAD               SAES_CR_CPHASE_1        /*!< GCM(/CCM) payload phase      */
+#define SAES_PHASE_FINAL                 SAES_CR_CPHASE          /*!< GCM/GMAC or CCM  final phase */
+#define SAES_OPERATION_MODE              SAES_CR_OPMOD           /*!< SAES Mode Of Operation */
+#else
+#define SAES_PHASE_INIT                  0x00000000U             /*!< GCM/GMAC (or CCM) init phase */
+#define SAES_PHASE_HEADER                SAES_CR_GCMPH_0         /*!< GCM/GMAC or CCM header phase */
+#define SAES_PHASE_PAYLOAD               SAES_CR_GCMPH_1         /*!< GCM(/CCM) payload phase      */
+#define SAES_PHASE_FINAL                 SAES_CR_GCMPH           /*!< GCM/GMAC or CCM  final phase */
+#define SAES_OPERATION_MODE              SAES_CR_MODE            /*!< SAES Mode Of Operation */
+#endif /* SAES_CR_CPHASE */
+#endif /* USE_HAL_SAES_ONLY */
 /**
   * @}
   */
+
 /* Private defines -----------------------------------------------------------*/
 /** @defgroup CRYP_Private_Defines CRYP Private Defines
   * @{

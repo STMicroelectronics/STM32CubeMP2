@@ -3159,7 +3159,7 @@ HAL_StatusTypeDef UART_SetConfig(UART_HandleTypeDef *huart)
     pclk = HAL_RCCEx_GetPeriphCLKFreq(clocksource);
 #else /* CORE_CM0PLUS */
     UNUSED(clocksource);
-    pclk = 0U;
+    pclk = MSI_VALUE;
 #endif /* ! CORE_CM0PLUS */
 
     /* If proper clock source reported */

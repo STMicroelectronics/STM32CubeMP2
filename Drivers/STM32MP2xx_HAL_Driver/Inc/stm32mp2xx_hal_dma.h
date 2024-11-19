@@ -251,6 +251,7 @@ typedef struct __DMA_HandleTypeDef
   * @{
   */
 /* HPDMA requests */
+#if defined (LPDMA)
 #define HPDMA_REQUEST_FMC_TXRX   (0U)   /*!< HPDMA HW request is FMC_TXRX      */
 #define HPDMA_REQUEST_FMC_BCH    (1U)   /*!< HPDMA HW request is FMC_BCH       */
 #define HPDMA_REQUEST_OCTOSPI1   (2U)   /*!< HPDMA HW request is OCTOSPI1      */
@@ -460,6 +461,158 @@ typedef struct __DMA_HandleTypeDef
 
 /* Software request */
 #define DMA_REQUEST_SW            DMA_CTR2_SWREQ /*!< DMA SW request           */
+
+#else
+
+#define HPDMA_REQUEST_FMC_TXRX   (0U)   /*!< HPDMA HW request is FMC_TXRX      */
+#define HPDMA_REQUEST_FMC_BCH    (1U)   /*!< HPDMA HW request is FMC_BCH       */
+#define HPDMA_REQUEST_OCTOSPI1   (2U)   /*!< HPDMA HW request is OCTOSPI1      */
+#define HPDMA_REQUEST_RESERVED3  (3U)   /*!< HPDMA HW request is RESERVED      */
+#define HPDMA_REQUEST_CRYP1_IN   (4U)   /*!< HPDMA HW request is CRYP1_IN      */
+#define HPDMA_REQUEST_CRYP1_OUT  (5U)   /*!< HPDMA HW request is CRYP1_OUT     */
+#define HPDMA_REQUEST_HASH1      (6U)   /*!< HPDMA HW request is HASH1          */
+#define HPDMA_REQUEST_SAES_OUT   (7U)   /*!< HPDMA HW request is SAES_OUT      */
+#define HPDMA_REQUEST_SAES_IN    (8U)   /*!< HPDMA HW request is SAES_IN       */
+#define HPDMA_REQUEST_USART1_RX  (9U)   /*!< HPDMA HW request is USART1_RX     */
+#define HPDMA_REQUEST_USART1_TX  (10U)  /*!< HPDMA HW request is USART1_TX     */
+#define HPDMA_REQUEST_USART2_RX  (11U)  /*!< HPDMA HW request is USART2_RX     */
+#define HPDMA_REQUEST_USART2_TX  (12U)  /*!< HPDMA HW request is USART2_TX     */
+#define HPDMA_REQUEST_USART3_RX  (13U)  /*!< HPDMA HW request is USART3_RX     */
+#define HPDMA_REQUEST_USART3_TX  (14U)  /*!< HPDMA HW request is USART3_TX     */
+#define HPDMA_REQUEST_UART4_RX   (15U)  /*!< HPDMA HW request is UART4_RX      */
+#define HPDMA_REQUEST_UART4_TX   (16U)  /*!< HPDMA HW request is UART4_TX      */
+#define HPDMA_REQUEST_UART5_RX   (17U)  /*!< HPDMA HW request is UART5_RX      */
+#define HPDMA_REQUEST_UART5_TX   (18U)  /*!< HPDMA HW request is UART5_TX      */
+#define HPDMA_REQUEST_USART6_RX  (19U)  /*!< HPDMA HW request is USART6_RX     */
+#define HPDMA_REQUEST_USART6_TX  (20U)  /*!< HPDMA HW request is USART6_TX     */
+#define HPDMA_REQUEST_UART7_RX   (21U)  /*!< HPDMA HW request is UART7_RX      */
+#define HPDMA_REQUEST_UART7_TX   (22U)  /*!< HPDMA HW request is UART7_TX      */
+#define HPDMA_REQUEST_I2C1_RX    (23U)  /*!< HPDMA HW request is I2C1_RX       */
+#define HPDMA_REQUEST_I2C1_TX    (24U)  /*!< HPDMA HW request is I2C1_TX       */
+#define HPDMA_REQUEST_I2C1_EVC   (25U)  /*!< HPDMA HW request is I2C1_EVC      */
+#define HPDMA_REQUEST_I2C2_RX    (26U)  /*!< HPDMA HW request is I2C2_RX       */
+#define HPDMA_REQUEST_I2C2_TX    (27U)  /*!< HPDMA HW request is I2C2_TX       */
+#define HPDMA_REQUEST_I2C2_EVC   (28U)  /*!< HPDMA HW request is I2C2_EVC      */
+#define HPDMA_REQUEST_I2C3_RX    (29U)  /*!< HPDMA HW request is I2C3_RX       */
+#define HPDMA_REQUEST_I2C3_TX    (30U)  /*!< HPDMA HW request is I2C3_TX       */
+#define HPDMA_REQUEST_I2C3_EVC   (31U)  /*!< HPDMA HW request is I2C3_EVC      */
+#define HPDMA_REQUEST_SPI1_RX    (32U)  /*!< HPDMA HW request is SPI1_RX       */
+#define HPDMA_REQUEST_SPI1_TX    (33U)  /*!< HPDMA HW request is SPI1_TX       */
+#define HPDMA_REQUEST_SPI2_RX    (34U)  /*!< HPDMA HW request is SPI2_RX       */
+#define HPDMA_REQUEST_SPI2_TX    (35U)  /*!< HPDMA HW request is SPI2_TX       */
+#define HPDMA_REQUEST_SPI3_RX    (36U)  /*!< HPDMA HW request is SPI3_RX       */
+#define HPDMA_REQUEST_SPI3_TX    (37U)  /*!< HPDMA HW request is SPI3_TX       */
+#define HPDMA_REQUEST_SPI4_RX    (38U)  /*!< HPDMA HW request is SPI4_RX       */
+#define HPDMA_REQUEST_SPI4_TX    (39U)  /*!< HPDMA HW request is SPI4_TX       */
+#define HPDMA_REQUEST_SPI5_RX    (40U)  /*!< HPDMA HW request is SPI5_RX       */
+#define HPDMA_REQUEST_SPI5_TX    (41U)  /*!< HPDMA HW request is SPI5_TX       */
+#define HPDMA_REQUEST_SPI6_RX    (42U)  /*!< HPDMA HW request is SPI6_RX       */
+#define HPDMA_REQUEST_SPI6_TX    (43U)  /*!< HPDMA HW request is SPI6_TX       */
+#define HPDMA_REQUEST_MDF1_FLT0  (44U)  /*!< HPDMA HW request is MDF1_FLT0     */
+#define HPDMA_REQUEST_MDF1_FLT1  (45U)  /*!< HPDMA HW request is MDF1_FLT1     */
+#define HPDMA_REQUEST_MDF1_FLT2  (46U)  /*!< HPDMA HW request is MDF1_FLT2     */
+#define HPDMA_REQUEST_MDF1_FLT3  (47U)  /*!< HPDMA HW request is MDF1_FLT3     */
+#define HPDMA_REQUEST_SPDIFRX_DT (48U)  /*!< HPDMA HW request is SPDIFRX_DT    */
+#define HPDMA_REQUEST_SPDIFRX_CS (49U)  /*!< HPDMA HW request is SPDIFRX_CS    */
+#define HPDMA_REQUEST_SAI1_A     (50U)  /*!< HPDMA HW request is SAI1_A        */
+#define HPDMA_REQUEST_SAI1_B     (51U)  /*!< HPDMA HW request is SAI1_B        */
+#define HPDMA_REQUEST_SAI2_A     (52U)  /*!< HPDMA HW request is SAI2_A        */
+#define HPDMA_REQUEST_SAI2_B     (53U)  /*!< HPDMA HW request is SAI2_B        */
+#define HPDMA_REQUEST_SAI3_A     (54U)  /*!< HPDMA HW request is SAI3_A        */
+#define HPDMA_REQUEST_SAI3_B     (55U)  /*!< HPDMA HW request is SAI3_B        */
+#define HPDMA_REQUEST_SAI4_A     (56U)  /*!< HPDMA HW request is SAI4_A        */
+#define HPDMA_REQUEST_SAI4_B     (57U)  /*!< HPDMA HW request is SAI4_B        */
+#define HPDMA_REQUEST_ADC1       (58U)  /*!< HPDMA HW request is ADC1          */
+#define HPDMA_REQUEST_ADC2       (59U)  /*!< HPDMA HW request is ADC2          */
+#define HPDMA_REQUEST_TIM1_CH1   (60U)  /*!< HPDMA HW request is TIM1_CH1      */
+#define HPDMA_REQUEST_TIM1_CH2   (61U)  /*!< HPDMA HW request is TIM1_CH2      */
+#define HPDMA_REQUEST_TIM1_CH3   (62U)  /*!< HPDMA HW request is TIM1_CH3      */
+#define HPDMA_REQUEST_TIM1_CH4   (63U)  /*!< HPDMA HW request is TIM1_CH4      */
+#define HPDMA_REQUEST_TIM1_UP    (64U)  /*!< HPDMA HW request is TIM1_UP       */
+#define HPDMA_REQUEST_TIM1_TRIG  (65U)  /*!< HPDMA HW request is TIM1_TRIG     */
+#define HPDMA_REQUEST_TIM1_COM   (66U)  /*!< HPDMA HW request is TIM1_COM      */
+#define HPDMA_REQUEST_TIM2_CH1   (67U)  /*!< HPDMA HW request is TIM2_CH1      */
+#define HPDMA_REQUEST_TIM2_CH2   (68U)  /*!< HPDMA HW request is TIM2_CH2      */
+#define HPDMA_REQUEST_TIM2_CH3   (69U)  /*!< HPDMA HW request is TIM2_CH3      */
+#define HPDMA_REQUEST_TIM2_CH4   (70U)  /*!< HPDMA HW request is TIM2_CH4      */
+#define HPDMA_REQUEST_TIM2_UP    (71U)  /*!< HPDMA HW request is TIM2_UP       */
+#define HPDMA_REQUEST_TIM3_CH1   (72U)  /*!< HPDMA HW request is TIM3_CH1      */
+#define HPDMA_REQUEST_TIM3_CH2   (73U)  /*!< HPDMA HW request is TIM3_CH2      */
+#define HPDMA_REQUEST_TIM3_CH3   (74U)  /*!< HPDMA HW request is TIM3_CH3      */
+#define HPDMA_REQUEST_TIM3_CH4   (75U)  /*!< HPDMA HW request is TIM3_CH4      */
+#define HPDMA_REQUEST_TIM3_UP    (76U) /*!< HPDMA HW request is TIM3_UP       */
+#define HPDMA_REQUEST_TIM3_TRIG  (77U) /*!< HPDMA HW request is TIM3_TRIG     */
+#define HPDMA_REQUEST_TIM4_CH1   (78U) /*!< HPDMA HW request is TIM4_CH1      */
+#define HPDMA_REQUEST_TIM4_CH2   (79U) /*!< HPDMA HW request is TIM4_CH2      */
+#define HPDMA_REQUEST_TIM4_CH3   (80U) /*!< HPDMA HW request is TIM4_CH3      */
+#define HPDMA_REQUEST_TIM4_UP    (81U) /*!< HPDMA HW request is TIM4_UP       */
+#define HPDMA_REQUEST_TIM5_CH1   (82U) /*!< HPDMA HW request is TIM5_CH1      */
+#define HPDMA_REQUEST_TIM5_CH2   (83U) /*!< HPDMA HW request is TIM5_CH2      */
+#define HPDMA_REQUEST_TIM5_CH3   (84U) /*!< HPDMA HW request is TIM5_CH3      */
+#define HPDMA_REQUEST_TIM5_CH4   (85U) /*!< HPDMA HW request is TIM5_CH4      */
+#define HPDMA_REQUEST_TIM5_UP    (86U) /*!< HPDMA HW request is TIM5_UP       */
+#define HPDMA_REQUEST_TIM5_TRIG  (87U) /*!< HPDMA HW request is TIM5_TRIG     */
+#define HPDMA_REQUEST_TIM6_UP    (88U) /*!< HPDMA HW request is TIM6_UP       */
+#define HPDMA_REQUEST_TIM7_UP    (89U) /*!< HPDMA HW request is TIM7_UP       */
+#define HPDMA_REQUEST_TIM8_CH1   (90U) /*!< HPDMA HW request is TIM8_CH1      */
+#define HPDMA_REQUEST_TIM8_CH2   (91U) /*!< HPDMA HW request is TIM8_CH2      */
+#define HPDMA_REQUEST_TIM8_CH3   (92U) /*!< HPDMA HW request is TIM8_CH3      */
+#define HPDMA_REQUEST_TIM8_CH4   (93U) /*!< HPDMA HW request is TIM8_CH4      */
+#define HPDMA_REQUEST_TIM8_UP    (94U) /*!< HPDMA HW request is TIM8_UP       */
+#define HPDMA_REQUEST_TIM8_TRIG  (95U) /*!< HPDMA HW request is TIM8_TRIG     */
+#define HPDMA_REQUEST_TIM8_COM   (96U) /*!< HPDMA HW request is TIM8_COM      */
+#define HPDMA_REQUEST_TIM15_CH1  (97U) /*!< HPDMA HW request is TIM15_CH1     */
+#define HPDMA_REQUEST_TIM15_UP   (98U) /*!< HPDMA HW request is TIM15_UP      */
+#define HPDMA_REQUEST_TIM15_TRIG (99U) /*!< HPDMA HW request is TIM15_TRIG    */
+#define HPDMA_REQUEST_TIM15_COM  (100U) /*!< HPDMA HW request is TIM15_COM     */
+#define HPDMA_REQUEST_TIM16_CH1  (101U) /*!< HPDMA HW request is TIM16_CH1     */
+#define HPDMA_REQUEST_TIM16_UP   (102U) /*!< HPDMA HW request is TIM16_UP      */
+#define HPDMA_REQUEST_TIM17_CH1  (103U) /*!< HPDMA HW request is TIM17_CH1     */
+#define HPDMA_REQUEST_TIM17_UP   (104U) /*!< HPDMA HW request is TIM17_UP      */
+#define HPDMA_REQUEST_DCMI       (105U) /*!< HPDMA HW request is DCMI          */
+#define HPDMA_REQUEST_RESERVED106 (106U)  /*!< HPDMA HW request is RESERVED      */
+#define HPDMA_REQUEST_RESERVED107 (107U)  /*!< HPDMA HW request is RESERVED      */
+#define HPDMA_REQUEST_CRYP2_IN   (108U) /*!< HPDMA HW request is CRYP2_IN      */
+#define HPDMA_REQUEST_CRYP2_OUT  (109U) /*!< HPDMA HW request is CRYP2_OUT     */
+#define HPDMA_REQUEST_TIM4_CH4   (110U) /*!< HPDMA HW request is TIM4_CH4      */
+#define HPDMA_REQUEST_LPTIM1_IC1 (111U) /*!< HPDMA HW request is LPTIM1_IC1    */
+#define HPDMA_REQUEST_LPTIM1_IC2 (112U) /*!< HPDMA HW request is LPTIM1_IC2    */
+#define HPDMA_REQUEST_LPTIM1_UE  (113U) /*!< HPDMA HW request is LPTIM1_UE     */
+#define HPDMA_REQUEST_LPTIM2_IC1 (115U) /*!< HPDMA HW request is LPTIM2_IC1    */
+#define HPDMA_REQUEST_LPTIM2_IC2 (115U) /*!< HPDMA HW request is LPTIM2_IC2    */
+#define HPDMA_REQUEST_LPTIM2_UE  (116U) /*!< HPDMA HW request is LPTIM2_UE     */
+#define HPDMA_REQUEST_TIM2_TRIG  (117U) /*!< HPDMA HW request is TIM2_TRIG     */
+#define HPDMA_REQUEST_TIM4_TRIG  (118U) /*!< HPDMA HW request is TIM4_TRIG     */
+#define HPDMA_REQUEST_TIM15_CH2  (119U) /*!< HPDMA HW request is TIM15_CH2     */
+#define HPDMA_REQUEST_TIM16_COM  (120U) /*!< HPDMA HW request is TIM16_COM     */
+#define HPDMA_REQUEST_TIM17_COM  (121U) /*!< HPDMA HW request is TIM17_COM     */
+#define HPDMA_REQUEST_I3C1_RX    (122U) /*!< HPDMA HW request is I3C1_RX       */
+#define HPDMA_REQUEST_I3C1_TX    (123U) /*!< HPDMA HW request is I3C1_TX       */
+#define HPDMA_REQUEST_I3C1_CMD   (124U) /*!< HPDMA HW request is I3C1_CMD      */
+#define HPDMA_REQUEST_I3C1_STAT  (125U) /*!< HPDMA HW request is I3C1_STAT     */
+#define HPDMA_REQUEST_I3C2_RX    (126U) /*!< HPDMA HW request is I3C2_RX       */
+#define HPDMA_REQUEST_I3C2_TX    (127U) /*!< HPDMA HW request is I3C2_TX       */
+#define HPDMA_REQUEST_I3C2_CMD   (128U) /*!< HPDMA HW request is I3C2_CMD      */
+#define HPDMA_REQUEST_I3C2_STAT  (129U) /*!< HPDMA HW request is I3C2_STAT     */
+#define HPDMA_REQUEST_I3C3_RX    (130U) /*!< HPDMA HW request is I3C3_RX       */
+#define HPDMA_REQUEST_I3C3_TX    (131U) /*!< HPDMA HW request is I3C3_TX       */
+#define HPDMA_REQUEST_I3C3_CMD   (132U) /*!< HPDMA HW request is I3C3_CMD      */
+#define HPDMA_REQUEST_I3C3_STAT  (133U) /*!< HPDMA HW request is I3C3_STAT     */
+#define HPDMA_REQUEST_LPUART1_RX (134U) /*!< HPDMA HW request is LPUART1_RX    */
+#define HPDMA_REQUEST_LPUART1_TX (135U) /*!< HPDMA HW request is LPUART1_TX    */
+#define HPDMA_REQUEST_LPTIM3_IC1 (136U) /*!< HPDMA HW request is LPTIM3_IC1    */
+#define HPDMA_REQUEST_LPTIM3_IC2 (137U) /*!< HPDMA HW request is LPTIM3_IC2    */
+#define HPDMA_REQUEST_LPTIM3_UE  (138U) /*!< HPDMA HW request is LPTIM3_UE     */
+#define HPDMA_REQUEST_LPTIM4_IC1 (139U) /*!< HPDMA HW request is LPTIM4_IC1    */
+#define HPDMA_REQUEST_LPTIM4_IC2 (140U) /*!< HPDMA HW request is LPTIM4_IC2    */
+#define HPDMA_REQUEST_LPTIM4_UE  (141U) /*!< HPDMA HW request is LPTIM4_UE     */
+#define HPDMA_REQUEST_HASH2      (142U) /*!< HPDMA HW request is HASH1          */
+
+
+/* Software request */
+#define DMA_REQUEST_SW            DMA_CTR2_SWREQ /*!< DMA SW request           */
+
+#endif /* LPDMA */
 /**
   * @}
   */
@@ -609,7 +762,6 @@ typedef struct __DMA_HandleTypeDef
 #define DMA_CHANNEL_CID_DYNAMIC_0            (DMA_CHANNEL_ATTR_CID_DYNAMIC_SELECT | DMA_CCIDCFGR_WLISTCID0)          /*!< Enable CID filtering (shared mode) and give pin control  to CID0 */
 #define DMA_CHANNEL_CID_DYNAMIC_1            (DMA_CHANNEL_ATTR_CID_DYNAMIC_SELECT | DMA_CCIDCFGR_WLISTCID1)          /*!< Enable CID filtering (shared mode) and give pin control  to CID1 */
 #define DMA_CHANNEL_CID_DYNAMIC_2            (DMA_CHANNEL_ATTR_CID_DYNAMIC_SELECT | DMA_CCIDCFGR_WLISTCID2)          /*!< Enable CID filtering (shared mode) and give pin control  to CID2 */
-#define DMA_CHANNEL_CID_DYNAMIC_3            (DMA_CHANNEL_ATTR_CID_DYNAMIC_SELECT | DMA_CCIDCFGR_WLISTCID3)          /*!< Enable CID filtering (shared mode) and give pin control  to CID3 */
 
 #define DMA_CHANNEL_CID_STATIC_0             (DMA_CHANNEL_ATTR_CID_STATIC_SELECT|(0<<DMA_CCIDCFGR_SCID_Pos))         /*!< Enable CID filtering (static mode) and give pin control  to CID0 */
 #define DMA_CHANNEL_CID_STATIC_1             (DMA_CHANNEL_ATTR_CID_STATIC_SELECT|(1U<<DMA_CCIDCFGR_SCID_Pos))         /*!< Enable CID filtering (static mode) and give pin control  to CID1 */
@@ -860,8 +1012,7 @@ HAL_StatusTypeDef HAL_DMA_ReleaseChannelSemaphore(DMA_HandleTypeDef *hdma);
 #define DMA_CHANNEL_ATTR_SEC_DEST_MASK (0x08000000U) /* DMA channel destination secure           */
 
 
-#define DMA_CHANNEL_ATTR_CID_DYNAMIC_MASK   (DMA_CCIDCFGR_WLISTCID3 |\
-                                             DMA_CCIDCFGR_WLISTCID2 | DMA_CCIDCFGR_WLISTCID1 | DMA_CCIDCFGR_WLISTCID0)
+#define DMA_CHANNEL_ATTR_CID_DYNAMIC_MASK   (DMA_CCIDCFGR_WLISTCID2 | DMA_CCIDCFGR_WLISTCID1 | DMA_CCIDCFGR_WLISTCID0)
 
 #define DMA_CHANNEL_ATTR_CID_DYNAMIC_SELECT (0x10000000U)
 #define DMA_CHANNEL_ATTR_CID_STATIC_SELECT  (0x20000000U)
@@ -949,15 +1100,15 @@ HAL_StatusTypeDef HAL_DMA_ReleaseChannelSemaphore(DMA_HandleTypeDef *hdma);
 #define  IS_DMA_TRANSFER_ALLOCATED_PORT(ALLOCATED_PORT) \
   (((ALLOCATED_PORT) & (~(DMA_CTR1_SAP | DMA_CTR1_DAP))) == 0U)
 
-#if ! defined(STM32MP25XX_SI_CUT1_X)
+#if  defined(I3C4)
 #define IS_DMA_REQUEST(REQUEST)     \
   (((REQUEST) == DMA_REQUEST_SW) || \
    ((REQUEST) <= HPDMA_REQUEST_I3C4_STAT))
-#else /* ! STM32MP25XX_SI_CUT1_X */
+#else /* I3C4 */
 #define IS_DMA_REQUEST(REQUEST)     \
   (((REQUEST) == DMA_REQUEST_SW) || \
-   ((REQUEST) <= HPDMA_REQUEST_I3C3_STAT))
-#endif /* ! STM32MP25XX_SI_CUT1_X */
+   ((REQUEST) <= HPDMA_REQUEST_HASH2))
+#endif /* I3C4 */
 
 #define IS_DMA_BLOCK_HW_REQUEST(MODE)   \
   (((MODE) == DMA_BREQ_SINGLE_BURST) || \

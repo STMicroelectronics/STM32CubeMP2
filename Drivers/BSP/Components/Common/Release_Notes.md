@@ -9,7 +9,7 @@ header-includes: <link rel="icon" type="image/x-icon" href="_htmresc/favicon.png
 
 <center>
 # <small>Release Notes for</small> <mark>BSP Common Components Drivers</mark>
-Copyright &copy; 2014 STMicroelectronics\
+Copyright &copy; 2014-2023 STMicroelectronics\
     
 [![ST logo](_htmresc/st_logo.png)](https://www.st.com){.logo}
 </center>
@@ -24,7 +24,21 @@ This directory contains the BSP Common components drivers.
 # Update History
 
 ::: {.collapse}
-<input type="checkbox" id="collapse-section19" checked aria-hidden="true">
+<input type="checkbox" id="collapse-section20" checked aria-hidden="true">
+<label for="collapse-section20" aria-hidden="true">V7.3.0 / 28-September-2023</label>
+<div>
+
+## Main Changes
+
+### Component release
+
+- Add Frequency, Exposure and Gain configuration function pointers in camera.h
+
+</div>
+:::
+
+::: {.collapse}
+<input type="checkbox" id="collapse-section19" aria-hidden="true">
 <label for="collapse-section19" aria-hidden="true">V7.2.1 / 16-November-2021</label>
 <div>
 
@@ -32,7 +46,7 @@ This directory contains the BSP Common components drivers.
 
 ### Component release
 
--  Update licensing
+- Update licensing
 
 </div>
 :::

@@ -69,20 +69,42 @@
 		<td class="descriptionColumn"><b>Description</b></td>
 		<td>STM32MP257F-EV1</td>
 		<td>STM32MP257F-DK</td>
+		<td>STM32MP235F-DK</td>
 	</tr>
 
 	<tr align=center>
-        	<td style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" rowspan=1><p id="Demonstrations">Demonstrations</p></td>
+        	<td style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" rowspan=3><p id="Demonstrations">Demonstrations</p></td>
         	<td align=left rowspan=1><p id="USBPD">USBPD</p></td>
-        	<td align=left><p id="CORTEXM_ModePrivilege">USBPD_DRP_UCSI</p></td>
+        	<td align=left><p id="USBPD_DRP_UCSI">USBPD_DRP_UCSI</p></td>
         	<td align=left>
 			Demonstrate usage of STM32MP25xx Cortex-M33 as a UCSI (USB Type-CTM Connector System Software Interface) Platform Policy Manager(PPM). The PPM is a combination of hardware and firmware that manages the USB Type-C connectors on the platform. The Cortex-A35 has a role of UCSI OS Policy Manager to interface with the PPM, via OpenAMP-rpmsg Virtual I2C with the UCSI interface.
 		</td>
         	<td><font size="5" color=green>X</font></td>
         	<td><font size="5" color=green>X</font></td>
+        	<td><font size="5" color=green>X</font></td>
+      </tr>
+	<tr align=center>
+        	<td align=left rowspan=1><p id="CM0">CM0</p></td>
+        	<td align=left><p id="CM0PLUS">CM0PLUS Demo</p></td>
+        	<td align=left>
+			Shows usage of Cortex-M0 exercising the LPUART (part of SmartRun Domain) while interacting with Cortex A35 through IPCC.
+		</td>
+        	<td><font size="5" color=green>X</font></td>
+        	<td><font size="5" color=green></font></td>
+        	<td><font size="5" color=green></font></td>
+      </tr>
+	<tr align=center>
+        	<td align=left rowspan=1><p id="LowPower">LowPower</p></td>
+        	<td align=left><p id="LowPowerSRAM_Demo">LowPowerSRAM_Demo</p></td>
+        	<td align=left>
+			A demonstration showing transition of CPU subsystems and power domains into low power states.
+		</td>
+        	<td><font size="5" color=green>X</font></td>
+        	<td><font size="5" color=green></font></td>
+        	<td><font size="5" color=green></font></td>
       </tr>
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-        <td colspan="6"><b>Total number of Demonstrations: 1</b></td>
+        <td colspan="7"><b>Total number of Demonstrations: 3</b></td>
       </tr>
 
 	<!-- ================= 1 Templates Start ========================================== -->
@@ -95,9 +117,10 @@
 		</td>
         	<td><font size="5" color=green>X</font></td>
         	<td><font size="5" color=green>X</font></td>
+        	<td><font size="5" color=green>X</font></td>
       </tr>
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-        <td colspan="6"><b>Total number of Templates: 1</b></td>
+        <td colspan="7"><b>Total number of Templates: 1</b></td>
       </tr>
 	<!--================= 1 Templates End ==========================================-->
 
@@ -111,9 +134,10 @@
 		</td>
         	<td><font size="5" color=green>X</font></td>
         	<td><font size="5" color=green></font></td>
+        	<td><font size="5" color=green></font></td>
       </tr>
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-        <td colspan="6"><b>Total number of Templates_LL: 1</b></td>
+        <td colspan="7"><b>Total number of Templates_LL: 1</b></td>
       </tr>
 	<!--================= 1 Templates_LL End ==========================================-->
 
@@ -125,10 +149,12 @@
         <td align=left>Demonstrate MsgQueue API</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="FreeRTOS_ThreadCreation">FreeRTOS_ThreadCreation</p></td>
         <td align=left>How to implement thread creation using CMSIS RTOS API.</td>
+        <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
       </tr>
@@ -137,11 +163,13 @@
         <td align=left>How to use semaphores with CMSIS RTOS API</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="FreeRTOS_Timers">FreeRTOS_Timers</p></td>
         <td align=left>How to use timers of CMSIS RTOS API.</td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
       </tr>
 
@@ -149,7 +177,8 @@
       <tr align=center>
         <td align=left rowspan=1><p id="USBPD">USBPD</p></td>
         <td align=left><p id="USBPD_DRP_UCSI">USBPD_DRP_UCSI</p></td>
-        <td align=left>	Demonstrate usage of STM32MP25xx Cortex-M33 as a UCSI (USB Type-CTM Connector System Software Interface) Platform Policy Manager(PPM). The PPM is a combination of hardware and firmware that manages the USB Type-C connectors on the platform. The Cortex-A35 has a role of UCSI OS Policy Manager to interface with the PPM, via OpenAMP-rpmsg Virtual I2C with the UCSI interface.</td>
+        <td align=left>	Demonstrate usage of STM32MP25xx/STM32MP23xx Cortex-M33 as a UCSI (USB Type-CTM Connector System Software Interface) Platform Policy Manager(PPM). The PPM is a combination of hardware and firmware that manages the USB Type-C connectors on the platform. The Cortex-A35 has a role of UCSI OS Policy Manager to interface with the PPM, via OpenAMP-rpmsg Virtual I2C with the UCSI interface.</td>
+        <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
       </tr>
@@ -160,6 +189,7 @@
         <td align=left>It demonstrates an example of Protected Storage API (PSA) usage provided by the trusted firmware (TFM) middleware.</td>
         <td><font size="5" color=green>X</font></td>
         <td></td>
+        <td></td>
       </tr>
 	<!--================= ROW ==========================================-->
       <tr align=center>
@@ -168,9 +198,10 @@
         <td align=left>	It demonstrates How to use OpenAMP MW + Virtual UART to create an Inter-Processor Communication channel seen as TTY device in Linux OS.</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-        <td colspan="6"><b>Total number of Applications: 6</b></td>
+        <td colspan="7"><b>Total number of Applications: 6</b></td>
       </tr>
 	<!--================= 6 Applications End ==========================================-->
 	<!--================= 3 Examples_LL Start ==========================================-->
@@ -182,6 +213,7 @@
         <td align=left>Use of a timer peripheral to generate a PWM output signal and update the PWM duty cycle. This example is based on the STM32MP2xx TIM LL API. The peripheral initialization uses LL unitary service functions for optimization purposes (performance and size).</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green>X</font></td>
       </tr>
 	<!--================= EXTI ==========================================-->
       <tr align=center>
@@ -189,6 +221,7 @@
         <td align=left><p id="EXTI_ToggleLedOnIT_Init">EXTI_ToggleLedOnIT_Init</p></td>
         <td align=left>How to configure the EXTI and use GPIOs to toggle the user LEDs available on the board when a user button is pressed. This example is based on the STM32MP2xx LL API. The peripheral initialization uses LL initialization functions to demonstrate LL init usage.</td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
       </tr>
 	<!--================= TIM ==========================================-->
@@ -198,9 +231,10 @@
         <td align=left>Use of a timer peripheral to generate a PWM output signal and update the PWM duty cycle. This example is based on the STM32MP2xx TIM LL API. The peripheral initialization uses LL unitary service functions for optimization purposes (performance and size).</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-        <td colspan="6"><b>Total number of Examples_LL: 3</b></td>
+        <td colspan="7"><b>Total number of Examples_LL: 3</b></td>
       </tr>
 	<!--================= 3 Examples_LL end ==========================================-->
 
@@ -215,11 +249,13 @@
         <td align=left>How to handle I2C communication as I3C Controller data buffer transmission/reception between two boards, using DMA.</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="I3C_Target_I2C_ComDMA">I3C_Target_I2C_ComDMA</p></td>
         <td align=left>Handle I2C data buffer transmission/reception between two boards, using DMA.</td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
@@ -227,18 +263,21 @@
         <td align=left>How to handle an In-Band-Interrupt event between an I3C Controller and I3C Targets</td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green>X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="I3C_Target_InBandInterrupt_IT">I3C_Target_InBandInterrupt_IT</p></td>
         <td align=left>How to handle I2C communication as I3C Controller data buffer transmission/reception between two boards, using DMA.</td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
 	<!--================= SPI(1) ==========================================-->
       <tr align=center>
         <td align=left rowspan=1><p id="SPI">SPI</p></td>
         <td align=left><p id="SPI_FullDuplex_ComDMA">SPI_FullDuplex_ComDMA</p></td>
         <td align=left>This example shows how to perform SPI data buffer transmission/reception between two boards via DMA.</td>
+        <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
       </tr>
@@ -249,12 +288,14 @@
         <td align=left>This example describes how to configure and use LPTIM to count pulses through the LPTIM HAL API.</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green>X</font></td>
       </tr>
 	<!--================= Cortex(1) ==========================================-->
       <tr align=center>
         <td align=left rowspan=1><p id="LPTIM">LPTIM</p></td>
         <td align=left><p id="CORTEXM_ModePrivilege">CORTEXM_ModePrivilege</p></td>
         <td align=left>How to modify the Thread mode privilege access and stack. Thread mode is entered on reset or when returning from an exception.</td>
+        <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
       </tr>
@@ -265,6 +306,7 @@
         <td align=left>How to configure external interrupt lines.</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green>X</font></td>
       </tr>
 	<!--================= I2C(3) ==========================================-->
       <tr align=center>
@@ -273,17 +315,20 @@
         <td align=left>How to handle I2C data buffer transmission/reception between two boards, via DMA.</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="I2C_TwoBoards_ComPolling">I2C_TwoBoards_ComPolling</p></td>
         <td align=left>How to handle I2C data buffer transmission/reception between two boards, via Polling.</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="I2C_TwoBoards_ComIT">I2C_TwoBoards_ComIT</p></td>
         <td align=left>I2C data buffer transmission/reception between two boards, via Interrupt.</td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
       </tr>
 	<!--================= CRC(2) ==========================================-->
@@ -293,11 +338,13 @@
         <td align=left>Configure and use CRC HAL API to calculate 7 bit CRC</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green>X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="CRC_UserDefinedPolynomial">CRC_UserDefinedPolynomial</p></td>
         <td align=left>Compute CRC on a buffer using a User defined polynomial</td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
       </tr>
 	<!--================= CRYP(3) ==========================================-->
@@ -307,17 +354,20 @@
         <td align=left>How to use the CRYPTO peripheral to encrypt/decrypt data(Plaintext/Ciphertext) using AES Galois/counter mode (GCM)and generate the authentication TAG.</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="CRYP_AES_DMA">CRYP_AES_DMA</p></td>
         <td align=left>This example provides a short description of how to use the CRYPTO peripheral to encrypt and decrypt data using AES-128 Algorithm with ECB chaining mode.</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="CRYP_AESCCM_IT">CRYP_AESCCM_IT</p></td>
         <td align=left>How to use the CRYPTO peripheral to encrypt/decrypt data(Plaintext/Ciphertext) using cipher block chaining-message authentication code (CCM) mode (CCM)</td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
       </tr>
 	<!--================= DMA(2) ==========================================-->
@@ -327,10 +377,12 @@
         <td align=left>How to use the DMA to perform a list of transfers. The transfer list is organized as linked-list, each time the current transfer ends the DMA automatically reload the next transfer parameters, and starts it (without CPU intervention).</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green>X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="DMA_RepeatedBlock">DMA_RepeatedBlock</p></td>
         <td align=left>	This example describes how to configure and use the DMA HAL API to perform repeated block transactions.</td>
+        <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
       </tr>
@@ -341,17 +393,20 @@
         <td align=left>Configure the FDCAN peripheral to send and receive Classic CAN frames in normal mode.</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="FDCAN_Com_IT">FDCAN_Com_IT</p></td>
         <td align=left>Demonstrate Interrupt Process Communication between two FDCAN units</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="FDCAN_Loopback">FDCAN_Loopback</p></td>
         <td align=left>Configure the FDCAN to operate in loopback mode.</td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
       </tr>
 	<!--================= ADC(4) ==========================================-->
@@ -361,11 +416,13 @@
         <td align=left>configure and use the ADC to convert an external analog input in Differential Mode, difference between external voltage on VinN and VinP.</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="ADC_InternalChannelConversion">ADC_InternalChannelConversion</p></td>
         <td align=left>Configure and use the ADC to retrieve an internal ADC channel.</td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
@@ -373,11 +430,13 @@
         <td align=left>Configure and use the ADC to convert an external analog input combined with oversampling feature to increase resolution through the HAL API.</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="ADC_RegularConversion_Polling">ADC_RegularConversion_Polling</p></td>
         <td align=left>Use the ADC in Polling mode to convert data through the HAL API.</td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
       </tr>
 	<!--================= LTDC(1) ==========================================-->
@@ -387,6 +446,7 @@
         <td align=left>This example demonstrates CM33 controlled 3rd Layer non-protected while displaying standard HMI on linux side.</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
 	<!--================= TIM(5) ==========================================-->
       <tr align=center>
@@ -395,11 +455,13 @@
         <td align=left>This example shows how to update the TIMER TIM8_CH4 period and the duty cycle using the TIMER DMA burst feature.	</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="TIM_OnePulse">TIM_OnePulse</p></td>
         <td align=left>	This example shows how to use the TIMER peripheral to generate a single pulse when a rising edge of an external signal is received on the TIMER Input pin.</td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
@@ -407,11 +469,13 @@
         <td align=left>	This example shows how to configure the TIM peripheral in PWM (Pulse Width Modulation) mode.</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="TIM_TimeBase">TIM_TimeBase</p></td>
         <td align=left>This example shows how to configure the TIM peripheral to generate a time base of one second with the corresponding Interrupt request.	</td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
@@ -419,15 +483,16 @@
         <td align=left> Use the TIM peripheral to measure the frequency of an external signal.	</td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green>X</font></td>
       </tr>
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-        <td colspan="6"><b>Total number of Examples: 31</b></td>
+        <td colspan="7"><b>Total number of Examples: 31</b></td>
       </tr>
 	<!--================= 31 Examples End ==========================================-->
 
 
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-      	<td colspan="6"><b>Total number of projects: 56</b></td>
+      	<td colspan="7"><b>Total number of projects: 58</b></td>
       </tr>
     </table>
   </body>

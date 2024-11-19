@@ -82,5 +82,23 @@ In order to make the program work, you must do the following:
 	On target shell run:
 	- cd /home/root/GPIO_EXTI
 	- ./fw_cortex_m33.sh start
+	
+@par How to run this project from SRAM ?
+
+NOTE: It is necessary to flash the Linux code using - FlashLayout_sdcard_stm32mp257f-dk-ca35tdcid-ostl-m33-examples-optee.tsv
+
+In order to make this program work on SRAM, you must do the following:
+- Open STM32CubeIDE
+- Build with config: CA35TDCID_SRAM_m33_ns_sign
+- ssh root@192.168.7.1 'mkdir -p /home/root/GPIO_EXTI/lib/firmware'
+- scp the signed firmware GPIO_EXTI_CM33_NonSecure_sign.bin to root@192.168.7.1:/home/root/GPIO_EXTI/lib/firmware
+- scp the script Firmware/Utilities/scripts/fw_cortex_m33.sh to root@192.168.7.1:/home/root/GPIO_EXTI/
+- To run the example on target: 
+	On target shell run:
+	- cd /home/root/GPIO_EXTI
+	- ./fw_cortex_m33.sh start
+	To put Cortex A35 to sleep use command - echo freeze > /sys/power/state
+	Observe that the M33 is still running when A35 goes to sleep.
+	Press the wakeup button to help A35 exit from sleep. 
 
 */

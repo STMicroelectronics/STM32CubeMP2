@@ -23,7 +23,7 @@
  *
  *  ========   <-- new msg ---=============--------<------   =======
  * ||      ||                || CHANNEL 1 ||                ||     ||
- * ||  A7  ||  ------->-------=============--- buf free-->  || M4  ||
+ * ||  A35 ||  ------->-------=============--- buf free-->  || M33 ||
  * ||      ||                                               ||     ||
  * ||master||  <-- buf free---=============--------<------  ||slave||
  * ||      ||                || CHANNEL 2 ||                ||     ||
@@ -46,8 +46,8 @@
 
 #define MASTER_CPU_ID       0
 #define REMOTE_CPU_ID       1
-#define IPCC_CPU_A7         MASTER_CPU_ID
-#define IPCC_CPU_M4         REMOTE_CPU_ID
+#define IPCC_CPU_A35        MASTER_CPU_ID
+#define IPCC_CPU_M33         REMOTE_CPU_ID
 
 #define MBOX_NO_MSG           0
 #define MBOX_NEW_MSG          1
@@ -194,7 +194,7 @@ int MAILBOX_Notify(void *priv, uint32_t id)
       ;
   }
 
-  /* Inform A7 (either new message, or buf free) */
+  /* Inform A35(either new message, or buf free) */
   HAL_IPCC_NotifyCPU(&hipcc, channel, IPCC_CHANNEL_DIR_TX);
 
  /* USER CODE BEGIN POST_MAILBOX_NOTIFY */
@@ -222,7 +222,7 @@ void IPCC_channel1_callback(IPCC_HandleTypeDef * hipcc,
 
   msg_received_ch1 = MBOX_BUF_FREE;
 
-  /* Inform A7 that we have received the 'buff free' msg */
+  /* Inform A35 that we have received the 'buff free' msg */
   OPENAMP_log_dbg("Ack 'buff free' message on ch1\r\n");
   HAL_IPCC_NotifyCPU(hipcc, ChannelIndex, IPCC_CHANNEL_DIR_RX);
 
@@ -245,7 +245,7 @@ void IPCC_channel2_callback(IPCC_HandleTypeDef * hipcc,
 
   msg_received_ch2 = MBOX_NEW_MSG;
 
-  /* Inform A7 that we have received the new msg */
+  /* Inform A35 that we have received the new msg */
   OPENAMP_log_dbg("Ack new message on ch2\r\n");
   HAL_IPCC_NotifyCPU(hipcc, ChannelIndex, IPCC_CHANNEL_DIR_RX);
 

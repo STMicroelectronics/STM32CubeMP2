@@ -46,7 +46,7 @@ extern int __io_putchar(int ch) __attribute__((weak));
 extern int __io_getchar(void) __attribute__((weak));
 
 
-#ifdef A7_DUAL_CORE_SMP
+#ifdef A35_DUAL_CORE_SMP
 #define locked   1
 #define unlocked 0
 extern void lock_mutex(void *mutex);

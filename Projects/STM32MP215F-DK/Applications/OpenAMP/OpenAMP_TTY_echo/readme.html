@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Readme</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="./../../../../_htmresc/mini-st_2020.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="row">
+<div class="col-sm-12 col-lg-8">
+<div class="row">
+<div class="col-sm-12 col-lg-8">
+<h2 id="openamp_tty_echo-application-description"><b>OpenAMP_TTY_echo
+Application Description</b></h2>
+<ul>
+<li><p>It demonstrates How to use OpenAMP MW + Virtual UART to create an
+Inter-Processor Communication channel seen as TTY device in Linux
+OS.</p></li>
+<li><p>This project deals with CPU2 (Cortex-M33) firmware and requires
+Linux OS running on CPU1 (Cortex-A35).</p></li>
+<li><p>Following command should be done in Linux console to run the
+example :</p>
+<pre><code>  stty -onlcr -echo -F /dev/ttyRPMSG0
+  cat /dev/ttyRPMSG0 &amp;
+  stty -onlcr -echo -F /dev/ttyRPMSG1
+  cat /dev/ttyRPMSG1 &amp;
+  echo &quot;Hello Virtual UART0&quot; &gt;/dev/ttyRPMSG0
+  echo &quot;Hello Virtual UART1&quot; &gt;/dev/ttyRPMSG1</code></pre></li>
+</ul>
+<p>You should get “Hello Virtual UART0” and “Hello Virtual UART1” in
+Linux console</p>
+<h4 id="expected-success-behavior"><b>Expected success behavior</b></h4>
+<ul>
+<li>Blink LED3 (orange)</li>
+</ul>
+<h4 id="error-behaviors"><b>Error behaviors</b></h4>
+<ul>
+<li>LED3 (orange) does not blink</li>
+</ul>
+<h3 id="keywords"><b>Keywords</b></h3>
+<p>OpenAMP, RPMsg, TFM, IPCC, Inter-Processor Communication</p>
+<h3 id="hardware-and-software-environment"><b>Hardware and Software
+environment</b></h3>
+<ul>
+<li><p>This example runs on STM32MP21xx devices</p></li>
+<li><p>This example has been tested with STMicroelectronics
+STM32MP215F-VALID. and can be easily tailored to any other supported
+device and development board.</p></li>
+<li><p>Connect ST-Link cable to the PC USB port to display
+trace</p></li>
+</ul>
+<h3 id="how-to-use-it"><b>How to use it ?</b></h3>
+<p>In order to make the program work, you must do the following :</p>
+<ul>
+<li>Open your preferred toolchain</li>
+<li>Rebuild all files and load your image into target memory</li>
+<li>Run the application</li>
+<li>Connect a type C device on the Type-C connector 21</li>
+</ul>
+</body>
+</html>

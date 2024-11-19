@@ -453,10 +453,20 @@ typedef struct
   */
 #define RTC_TAMPER_1                        TAMP_CR1_TAMP1E
 #define RTC_TAMPER_2                        TAMP_CR1_TAMP2E
-#if (RTC_TAMP_NB == 3)
+#if (RTC_TAMP_NB == 3U)
 #define RTC_TAMPER_3                         TAMP_CR1_TAMP3E
 #define RTC_TAMPER_ALL                      (RTC_TAMPER_1 | RTC_TAMPER_2 | RTC_TAMPER_3 )
-#elif (RTC_TAMP_NB == 8)
+#elif (RTC_TAMP_NB == 7U)
+#define RTC_TAMPER_3                        TAMP_CR1_TAMP3E
+#define RTC_TAMPER_4                        TAMP_CR1_TAMP4E
+#define RTC_TAMPER_5                        TAMP_CR1_TAMP5E
+#define RTC_TAMPER_6                        TAMP_CR1_TAMP6E
+#define RTC_TAMPER_7                        TAMP_CR1_TAMP7E
+#define RTC_TAMPER_ALL                      (RTC_TAMPER_1 | RTC_TAMPER_2 |\
+                                             RTC_TAMPER_3 | RTC_TAMPER_4 |\
+                                             RTC_TAMPER_5 | RTC_TAMPER_6 |\
+                                             RTC_TAMPER_7 )
+#elif (RTC_TAMP_NB == 8U)
 #define RTC_TAMPER_3                        TAMP_CR1_TAMP3E
 #define RTC_TAMPER_4                        TAMP_CR1_TAMP4E
 #define RTC_TAMPER_5                        TAMP_CR1_TAMP5E
@@ -466,7 +476,7 @@ typedef struct
 #define RTC_TAMPER_ALL                      (RTC_TAMPER_1 | RTC_TAMPER_2 |\
                                              RTC_TAMPER_3 | RTC_TAMPER_4 |\
                                              RTC_TAMPER_5 | RTC_TAMPER_6 |\
-                                             RTC_TAMPER_7 | RTC_TAMPER_8 )
+											                       RTC_TAMPER_7 | RTC_TAMPER_8 )
 #else
 #define RTC_TAMPER_ALL                      (RTC_TAMPER_1 | RTC_TAMPER_2)
 #endif /* RTC_TAMP_NB */
@@ -480,6 +490,7 @@ typedef struct
 #define RTC_INT_TAMPER_1                    TAMP_CR1_ITAMP1E
 #define RTC_INT_TAMPER_2                    TAMP_CR1_ITAMP2E
 #define RTC_INT_TAMPER_3                    TAMP_CR1_ITAMP3E
+#define RTC_INT_TAMPER_4                    TAMP_CR1_ITAMP4E
 #define RTC_INT_TAMPER_5                    TAMP_CR1_ITAMP5E
 #define RTC_INT_TAMPER_6                    TAMP_CR1_ITAMP6E
 #define RTC_INT_TAMPER_7                    TAMP_CR1_ITAMP7E
@@ -487,11 +498,34 @@ typedef struct
 #define RTC_INT_TAMPER_9                    TAMP_CR1_ITAMP9E
 #define RTC_INT_TAMPER_10                   TAMP_CR1_ITAMP10E
 #define RTC_INT_TAMPER_11                   TAMP_CR1_ITAMP11E
-#define RTC_INT_TAMPER_ALL                  (RTC_INT_TAMPER_1  | RTC_INT_TAMPER_2  |\
-                                             RTC_INT_TAMPER_3  | RTC_INT_TAMPER_5  |\
-                                             RTC_INT_TAMPER_6  | RTC_INT_TAMPER_7  |\
-                                             RTC_INT_TAMPER_8  | RTC_INT_TAMPER_9  |\
-                                             RTC_INT_TAMPER_10 | RTC_INT_TAMPER_11)
+#define RTC_INT_TAMPER_12                   TAMP_CR1_ITAMP12E
+#ifdef TAMP_CR1_ITAMP13E
+#define RTC_INT_TAMPER_13                   TAMP_CR1_ITAMP13E
+#endif /* TAMP_CR1_ITAMP13E */
+#define RTC_INT_TAMPER_14                   TAMP_CR1_ITAMP14E
+#define RTC_INT_TAMPER_15                   TAMP_CR1_ITAMP15E
+#ifdef TAMP_CR1_ITAMP16E
+#define RTC_INT_TAMPER_16                   TAMP_CR1_ITAMP16E
+#endif /* TAMP_CR1_ITAMP16E */
+
+#if (RTC_INT_TAMP_NB == 14U)
+#define RTC_INT_TAMPER_ALL                  (RTC_INT_TAMPER_1  | RTC_INT_TAMPER_2   |\
+                                             RTC_INT_TAMPER_3  | RTC_INT_TAMPER_4   |\
+                                             RTC_INT_TAMPER_5  | RTC_INT_TAMPER_6   |\
+                                             RTC_INT_TAMPER_7  | RTC_INT_TAMPER_8   |\
+                                             RTC_INT_TAMPER_9  | RTC_INT_TAMPER_10  |\
+                                             RTC_INT_TAMPER_11 | RTC_INT_TAMPER_12  |\
+                                             RTC_INT_TAMPER_14 | RTC_INT_TAMPER_15)
+#elif (RTC_INT_TAMP_NB == 16U)
+#define RTC_INT_TAMPER_ALL                  (RTC_INT_TAMPER_1  | RTC_INT_TAMPER_2   |\
+                                             RTC_INT_TAMPER_3  | RTC_INT_TAMPER_4   |\
+                                             RTC_INT_TAMPER_5  | RTC_INT_TAMPER_6   |\
+                                             RTC_INT_TAMPER_7  | RTC_INT_TAMPER_8   |\
+                                             RTC_INT_TAMPER_9  | RTC_INT_TAMPER_10  |\
+                                             RTC_INT_TAMPER_11 | RTC_INT_TAMPER_12  |\
+                                             RTC_INT_TAMPER_13 | RTC_INT_TAMPER_14  |\
+                                             RTC_INT_TAMPER_15 | RTC_INT_TAMPER_16)
+#endif /* RTC_INT_TAMP_NB */
 /**
   * @}
   */
@@ -588,7 +622,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup RTCEx_Internal_Tamper_Interrupt  RTCEx Internal Tamper Interrupt
+/** @defgroup RTCEx_Tamper_Interrupt  RTCEx Tamper Interrupt
   * @{
   */
 #define RTC_IT_TAMP_1                      TAMP_IER_TAMP1IE     /*!< Tamper 1 Interrupt */
@@ -598,27 +632,64 @@ typedef struct
 #define RTC_IT_TAMP_5                      TAMP_IER_TAMP5IE     /*!< Tamper 5 Interrupt */
 #define RTC_IT_TAMP_6                      TAMP_IER_TAMP6IE     /*!< Tamper 6 Interrupt */
 #define RTC_IT_TAMP_7                      TAMP_IER_TAMP7IE     /*!< Tamper 7 Interrupt */
+#if (RTC_TAMP_NB == 7U)
+#define RTC_IT_TAMP_ALL                   (RTC_IT_TAMP_1 | RTC_IT_TAMP_2 |\
+                                           RTC_IT_TAMP_3 | RTC_IT_TAMP_4 |\
+                                           RTC_IT_TAMP_5 | RTC_IT_TAMP_6 |\
+                                           RTC_IT_TAMP_7 )
+#elif (RTC_TAMP_NB == 8U)
 #define RTC_IT_TAMP_8                      TAMP_IER_TAMP8IE     /*!< Tamper 8 Interrupt */
 #define RTC_IT_TAMP_ALL                   (RTC_IT_TAMP_1 | RTC_IT_TAMP_2 |\
                                            RTC_IT_TAMP_3 | RTC_IT_TAMP_4 |\
                                            RTC_IT_TAMP_5 | RTC_IT_TAMP_6 |\
                                            RTC_IT_TAMP_7 | RTC_IT_TAMP_8 )
+#endif /* RTC_TAMP_NB */
+/**
+  * @}
+  */
 
-#define RTC_IT_INT_TAMP_1                   TAMP_IER_ITAMP1IE    /*!< Tamper 1 internal Interrupt */
-#define RTC_IT_INT_TAMP_2                   TAMP_IER_ITAMP2IE    /*!< Tamper 2 internal Interrupt */
-#define RTC_IT_INT_TAMP_3                   TAMP_IER_ITAMP3IE    /*!< Tamper 3 internal Interrupt */
-#define RTC_IT_INT_TAMP_5                   TAMP_IER_ITAMP5IE    /*!< Tamper 5 internal Interrupt */
-#define RTC_IT_INT_TAMP_6                   TAMP_IER_ITAMP6IE    /*!< Tamper 6 internal Interrupt */
-#define RTC_IT_INT_TAMP_7                   TAMP_IER_ITAMP7IE    /*!< Tamper 7 internal Interrupt */
-#define RTC_IT_INT_TAMP_8                   TAMP_IER_ITAMP8IE    /*!< Tamper 8 internal Interrupt */
-#define RTC_IT_INT_TAMP_9                   TAMP_IER_ITAMP9IE    /*!< Tamper 9 internal Interrupt */
-#define RTC_IT_INT_TAMP_10                  TAMP_IER_ITAMP10IE    /*!< Tamper 10 internal Interrupt */
-#define RTC_IT_INT_TAMP_11                  TAMP_IER_ITAMP11IE    /*!< Tamper 11 internal Interrupt */
-#define RTC_IT_INT_TAMP_ALL                (RTC_IT_INT_TAMP_1 | RTC_IT_INT_TAMP_2 |\
-                                            RTC_IT_INT_TAMP_3 | RTC_IT_INT_TAMP_5 |\
-                                            RTC_IT_INT_TAMP_6 | RTC_IT_INT_TAMP_7 |\
-                                            RTC_IT_INT_TAMP_8 | RTC_IT_INT_TAMP_9 |\
-                                            RTC_IT_INT_TAMP_10 | RTC_IT_INT_TAMP_11)
+/** @defgroup RTCEx_Internal_Tamper_Interrupt  RTCEx Internal Tamper Interrupt
+  * @{
+  */
+#define RTC_IT_INT_TAMP_1                   TAMP_IER_ITAMP1IE    /*!< Tamper 1 internal Interrupt  */
+#define RTC_IT_INT_TAMP_2                   TAMP_IER_ITAMP2IE    /*!< Tamper 2 internal Interrupt  */
+#define RTC_IT_INT_TAMP_3                   TAMP_IER_ITAMP3IE    /*!< Tamper 3 internal Interrupt  */
+#define RTC_IT_INT_TAMP_4                   TAMP_IER_ITAMP4IE    /*!< Tamper 4 internal Interrupt  */
+#define RTC_IT_INT_TAMP_5                   TAMP_IER_ITAMP5IE    /*!< Tamper 5 internal Interrupt  */
+#define RTC_IT_INT_TAMP_6                   TAMP_IER_ITAMP6IE    /*!< Tamper 6 internal Interrupt  */
+#define RTC_IT_INT_TAMP_7                   TAMP_IER_ITAMP7IE    /*!< Tamper 7 internal Interrupt  */
+#define RTC_IT_INT_TAMP_8                   TAMP_IER_ITAMP8IE    /*!< Tamper 8 internal Interrupt  */
+#define RTC_IT_INT_TAMP_9                   TAMP_IER_ITAMP9IE    /*!< Tamper 9 internal Interrupt  */
+#define RTC_IT_INT_TAMP_10                  TAMP_IER_ITAMP10IE   /*!< Tamper 10 internal Interrupt */
+#define RTC_IT_INT_TAMP_11                  TAMP_IER_ITAMP11IE   /*!< Tamper 11 internal Interrupt */
+#define RTC_IT_INT_TAMP_12                  TAMP_IER_ITAMP12IE   /*!< Tamper 12 internal Interrupt */
+#ifdef TAMP_IER_ITAMP13IE
+#define RTC_IT_INT_TAMP_13                  TAMP_IER_ITAMP13IE   /*!< Tamper 13 internal Interrupt */
+#endif /* TAMP_IER_ITAMP13IE */
+#define RTC_IT_INT_TAMP_14                  TAMP_IER_ITAMP14IE   /*!< Tamper 14 internal Interrupt */
+#define RTC_IT_INT_TAMP_15                  TAMP_IER_ITAMP15IE   /*!< Tamper 15 internal Interrupt */
+#ifdef TAMP_IER_ITAMP16IE
+#define RTC_IT_INT_TAMP_16                  TAMP_IER_ITAMP16IE   /*!< Tamper 16 internal Interrupt */
+#endif /* TAMP_IER_ITAMP16IE */
+
+#if (RTC_INT_TAMP_NB == 14U)
+#define RTC_IT_INT_TAMP_ALL                (RTC_IT_INT_TAMP_1  | RTC_IT_INT_TAMP_2  |\
+                                            RTC_IT_INT_TAMP_3  | RTC_IT_INT_TAMP_4  |\
+                                            RTC_IT_INT_TAMP_5  | RTC_IT_INT_TAMP_6  |\
+                                            RTC_IT_INT_TAMP_7  | RTC_IT_INT_TAMP_8  |\
+                                            RTC_IT_INT_TAMP_9  | RTC_IT_INT_TAMP_10 |\
+                                            RTC_IT_INT_TAMP_11 | RTC_IT_INT_TAMP_12 |\
+                                            RTC_IT_INT_TAMP_14 | RTC_IT_INT_TAMP_15)
+#elif (RTC_INT_TAMP_NB == 16U)
+#define RTC_IT_INT_TAMP_ALL                (RTC_IT_INT_TAMP_1  | RTC_IT_INT_TAMP_2  |\
+                                            RTC_IT_INT_TAMP_3  | RTC_IT_INT_TAMP_4  |\
+                                            RTC_IT_INT_TAMP_5  | RTC_IT_INT_TAMP_6  |\
+                                            RTC_IT_INT_TAMP_7  | RTC_IT_INT_TAMP_8  |\
+                                            RTC_IT_INT_TAMP_9  | RTC_IT_INT_TAMP_10 |\
+                                            RTC_IT_INT_TAMP_11 | RTC_IT_INT_TAMP_12 |\
+                                            RTC_IT_INT_TAMP_13 | RTC_IT_INT_TAMP_14 |\
+                                            RTC_IT_INT_TAMP_15 | RTC_IT_INT_TAMP_16)
+#endif /* RTC_INT_TAMP_NB */
 /**
   * @}
   */
@@ -633,15 +704,21 @@ typedef struct
 #define RTC_FLAG_TAMP_5                    TAMP_SR_TAMP5F
 #define RTC_FLAG_TAMP_6                    TAMP_SR_TAMP6F
 #define RTC_FLAG_TAMP_7                    TAMP_SR_TAMP7F
+#if (RTC_TAMP_NB == 7U)
+#define RTC_FLAG_TAMP_ALL                 (RTC_FLAG_TAMP_1 | RTC_FLAG_TAMP_2 | RTC_FLAG_TAMP_3 |\
+                                           RTC_FLAG_TAMP_4 | RTC_FLAG_TAMP_5 | RTC_FLAG_TAMP_6 |\
+                                           RTC_FLAG_TAMP_7 )
+#elif (RTC_TAMP_NB == 8U)
 #define RTC_FLAG_TAMP_8                    TAMP_SR_TAMP8F
 #define RTC_FLAG_TAMP_ALL                 (RTC_FLAG_TAMP_1 | RTC_FLAG_TAMP_2 | RTC_FLAG_TAMP_3 |\
                                            RTC_FLAG_TAMP_4 | RTC_FLAG_TAMP_5 | RTC_FLAG_TAMP_6 |\
                                            RTC_FLAG_TAMP_7 | RTC_FLAG_TAMP_8)
-
+#endif /* RTC_TAMP_NB */
 
 #define RTC_FLAG_INT_TAMP_1                 TAMP_SR_ITAMP1F
 #define RTC_FLAG_INT_TAMP_2                 TAMP_SR_ITAMP2F
 #define RTC_FLAG_INT_TAMP_3                 TAMP_SR_ITAMP3F
+#define RTC_FLAG_INT_TAMP_4                 TAMP_SR_ITAMP4F
 #define RTC_FLAG_INT_TAMP_5                 TAMP_SR_ITAMP5F
 #define RTC_FLAG_INT_TAMP_6                 TAMP_SR_ITAMP6F
 #define RTC_FLAG_INT_TAMP_7                 TAMP_SR_ITAMP7F
@@ -649,11 +726,34 @@ typedef struct
 #define RTC_FLAG_INT_TAMP_9                 TAMP_SR_ITAMP9F
 #define RTC_FLAG_INT_TAMP_10                TAMP_SR_ITAMP10F
 #define RTC_FLAG_INT_TAMP_11                TAMP_SR_ITAMP11F
-#define RTC_FLAG_INT_TAMP_ALL               (RTC_FLAG_INT_TAMP_1 | RTC_FLAG_INT_TAMP2 |\
-                                             RTC_FLAG_INT_TAMP_3 | RTC_FLAG_INT_TAMP5 |\
-                                             RTC_FLAG_INT_TAMP_6 | RTC_FLAG_INT_TAMP7 |\
-                                             RTC_FLAG_INT_TAMP_8 | RTC_FLAG_INT_TAMP9 |\
-                                             RTC_FLAG_INT_TAMP_10 | RTC_FLAG_INT_TAMP11)
+#define RTC_FLAG_INT_TAMP_12                TAMP_SR_ITAMP12F
+#ifdef TAMP_SR_ITAMP13F
+#define RTC_FLAG_INT_TAMP_13                TAMP_SR_ITAMP13F
+#endif /* TAMP_SR_ITAMP13F */
+#define RTC_FLAG_INT_TAMP_14                TAMP_SR_ITAMP14F
+#define RTC_FLAG_INT_TAMP_15                TAMP_SR_ITAMP15F
+#ifdef TAMP_SR_ITAMP16F
+#define RTC_FLAG_INT_TAMP_16                TAMP_SR_ITAMP16F
+#endif /* TAMP_SR_ITAMP16F */
+
+#if (RTC_INT_TAMP_NB == 14U)
+#define RTC_FLAG_INT_TAMP_ALL               (RTC_FLAG_INT_TAMP_1  | RTC_FLAG_INT_TAMP_2  |\
+                                             RTC_FLAG_INT_TAMP_3  | RTC_FLAG_INT_TAMP_4  |\
+                                             RTC_FLAG_INT_TAMP_5  | RTC_FLAG_INT_TAMP_6  |\
+                                             RTC_FLAG_INT_TAMP_7  | RTC_FLAG_INT_TAMP_8  |\
+                                             RTC_FLAG_INT_TAMP_9  | RTC_FLAG_INT_TAMP_10 |\
+                                             RTC_FLAG_INT_TAMP_11 | RTC_FLAG_INT_TAMP_12 |\
+                                             RTC_FLAG_INT_TAMP_14 | RTC_FLAG_INT_TAMP_15)
+#elif (RTC_INT_TAMP_NB == 16U)
+#define RTC_FLAG_INT_TAMP_ALL               (RTC_FLAG_INT_TAMP_1  | RTC_FLAG_INT_TAMP_2  |\
+                                             RTC_FLAG_INT_TAMP_3  | RTC_FLAG_INT_TAMP_4  |\
+                                             RTC_FLAG_INT_TAMP_5  | RTC_FLAG_INT_TAMP_6  |\
+                                             RTC_FLAG_INT_TAMP_7  | RTC_FLAG_INT_TAMP_8  |\
+                                             RTC_FLAG_INT_TAMP_9  | RTC_FLAG_INT_TAMP_10 |\
+                                             RTC_FLAG_INT_TAMP_11 | RTC_FLAG_INT_TAMP_12 |\
+                                             RTC_FLAG_INT_TAMP_13 | RTC_FLAG_INT_TAMP_14 |\
+                                             RTC_FLAG_INT_TAMP_15 | RTC_FLAG_INT_TAMP_16)
+#endif /* RTC_INT_TAMP_NB */
 /**
   * @}
   */
@@ -697,6 +797,7 @@ typedef struct
 #define RTC_ATAMP_ASYNCPRES_RTCCLK_32    (TAMP_ATCR1_ATCKSEL_2 | TAMP_ATCR1_ATCKSEL_0)                            /*!< RTCCLK/32 */
 #define RTC_ATAMP_ASYNCPRES_RTCCLK_64    (TAMP_ATCR1_ATCKSEL_2 | TAMP_ATCR1_ATCKSEL_1)                            /*!< RTCCLK/64 */
 #define RTC_ATAMP_ASYNCPRES_RTCCLK_128   (TAMP_ATCR1_ATCKSEL_2 | TAMP_ATCR1_ATCKSEL_1 | TAMP_ATCR1_ATCKSEL_0)     /*!< RTCCLK/128 */
+#define RTC_ATAMP_ASYNCPRES_RTCCLK_2048  (TAMP_ATCR1_ATCKSEL_3 | TAMP_ATCR1_ATCKSEL_1 | TAMP_ATCR1_ATCKSEL_0)     /*!< RTCCLK/2048 */
 /**
   * @}
   */
@@ -1806,10 +1907,13 @@ void              HAL_RTCEx_Tamper4EventCallback(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_Tamper5EventCallback(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_Tamper6EventCallback(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_Tamper7EventCallback(RTC_HandleTypeDef *hrtc);
+#ifdef RTC_TAMPER_8
 void              HAL_RTCEx_Tamper8EventCallback(RTC_HandleTypeDef *hrtc);
+#endif /* RTC_TAMPER_8 */
 void              HAL_RTCEx_InternalTamper1EventCallback(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_InternalTamper2EventCallback(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_InternalTamper3EventCallback(RTC_HandleTypeDef *hrtc);
+void              HAL_RTCEx_InternalTamper4EventCallback(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_InternalTamper5EventCallback(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_InternalTamper6EventCallback(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_InternalTamper7EventCallback(RTC_HandleTypeDef *hrtc);
@@ -1817,6 +1921,15 @@ void              HAL_RTCEx_InternalTamper8EventCallback(RTC_HandleTypeDef *hrtc
 void              HAL_RTCEx_InternalTamper9EventCallback(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_InternalTamper10EventCallback(RTC_HandleTypeDef *hrtc);
 void              HAL_RTCEx_InternalTamper11EventCallback(RTC_HandleTypeDef *hrtc);
+void              HAL_RTCEx_InternalTamper12EventCallback(RTC_HandleTypeDef *hrtc);
+#ifdef RTC_INT_TAMPER_13
+void              HAL_RTCEx_InternalTamper13EventCallback(RTC_HandleTypeDef *hrtc);
+#endif /* RTC_INT_TAMPER_13 */
+void              HAL_RTCEx_InternalTamper14EventCallback(RTC_HandleTypeDef *hrtc);
+void              HAL_RTCEx_InternalTamper15EventCallback(RTC_HandleTypeDef *hrtc);
+#ifdef RTC_INT_TAMPER_16
+void              HAL_RTCEx_InternalTamper16EventCallback(RTC_HandleTypeDef *hrtc);
+#endif /* RTC_INT_TAMPER_16 */
 HAL_StatusTypeDef HAL_RTCEx_SetVcoreMonitor(RTC_HandleTypeDef *hrtc);
 HAL_StatusTypeDef HAL_RTCEx_DeactivateVcoreMonitor(RTC_HandleTypeDef *hrtc);
 HAL_StatusTypeDef HAL_RTCEx_SetSwMasterKey(const RTC_HandleTypeDef *hrtc);
@@ -2093,5 +2206,3 @@ HAL_StatusTypeDef HAL_RTCEx_CidModeGet(const RTC_HandleTypeDef *hrtc, RTC_CidSta
 #endif
 
 #endif /* __STM32MP2xx_HAL_RTC_EX_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

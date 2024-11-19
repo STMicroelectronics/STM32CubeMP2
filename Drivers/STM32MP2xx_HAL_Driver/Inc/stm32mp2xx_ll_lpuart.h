@@ -74,6 +74,13 @@ static const uint16_t LPUART_PRESCALER_TAB[] =
   * @}
   */
 
+/**
+  * @brief Internal  oscillator (MSI) default value.
+  *        This value is the default MSI value after Reset.
+  */
+#if !defined (MSI_VALUE)
+#define MSI_VALUE             ((uint32_t)4000000U)    /*!< Value of the Internal oscillator in Hz*/
+#endif /* MSI_VALUE */
 
 /* Private macros ------------------------------------------------------------*/
 #if defined(USE_FULL_LL_DRIVER)

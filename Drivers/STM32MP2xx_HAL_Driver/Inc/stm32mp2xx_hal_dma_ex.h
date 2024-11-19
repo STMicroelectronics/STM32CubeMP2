@@ -234,12 +234,14 @@ typedef struct __DMA_QListTypeDef
 #define DMA_DATA_LEFTALIGN_RIGHTTRUNC  DMA_CTR1_PAM_0 /*!< If source data width > destination data width
                                                            => Left Aligned Right Truncated down to the
                                                               destination data width                             */
-#define DMA_DATA_PACK                  DMA_CTR1_PAM_1 /*!< If source data width < destination data width
-                                                           => Packed at the destination data width
+#define DMA_DATA_PACK                  DMA_CTR1_PAM_1 /*!< If source data width < destination data width         
+                                                          < => Packed at the destination data width
                                                               (Not available on LPDMA)                           */
-#define DMA_DATA_UNPACK                DMA_CTR1_PAM_1 /*!< If source data width > destination data width
+
+#define DMA_DATA_UNPACK                DMA_CTR1_PAM_1 /*!< If source data width > destination data width         
                                                            => Unpacked at the destination data width
                                                               (Not available on LPDMA)                           */
+
 /**
   * @}
   */
@@ -285,6 +287,8 @@ typedef struct __DMA_QListTypeDef
   * @{
   */
 /* HPDMA triggers */
+#if defined(LPDMA)
+
 #define HPDMA_TRIGGER_EXTI_LINE0      (0U)  /*!< HPDMA HW Trigger signal is EXTI_LINE0      */
 #define HPDMA_TRIGGER_EXTI_LINE1      (1U)  /*!< HPDMA HW Trigger signal is EXTI_LINE1      */
 #define HPDMA_TRIGGER_EXTI_LINE2      (2U)  /*!< HPDMA HW Trigger signal is EXTI_LINE2      */
@@ -399,6 +403,88 @@ typedef struct __DMA_QListTypeDef
 #define LPDMA_TRIGGER_HPDMA3_CH12_TCF (27U) /*!< LPDMA HW Trigger signal is HPDMA3_CH12_TCF */
 #define LPDMA_TRIGGER_TIM2_TRGO       (28U) /*!< LPDMA HW Trigger signal is TIM2_TRGO       */
 #define LPDMA_TRIGGER_TIM15_TRGO      (29U) /*!< LPDMA HW Trigger signal is TIM15_TRGO      */
+
+#else
+
+#define HPDMA_TRIGGER_EXTI_LINE0      (0U)  /*!< HPDMA HW Trigger signal is EXTI_LINE0      */
+#define HPDMA_TRIGGER_EXTI_LINE1      (1U)  /*!< HPDMA HW Trigger signal is EXTI_LINE1      */
+#define HPDMA_TRIGGER_EXTI_LINE2      (2U)  /*!< HPDMA HW Trigger signal is EXTI_LINE2      */
+#define HPDMA_TRIGGER_EXTI_LINE3      (3U)  /*!< HPDMA HW Trigger signal is EXTI_LINE3      */
+#define HPDMA_TRIGGER_EXTI_LINE4      (4U)  /*!< HPDMA HW Trigger signal is EXTI_LINE4      */
+#define HPDMA_TRIGGER_EXTI_LINE5      (5U)  /*!< HPDMA HW Trigger signal is EXTI_LINE5      */
+#define HPDMA_TRIGGER_EXTI_LINE6      (6U)  /*!< HPDMA HW Trigger signal is EXTI_LINE6      */
+#define HPDMA_TRIGGER_EXTI_LINE7      (7U)  /*!< HPDMA HW Trigger signal is EXTI_LINE7      */
+#define HPDMA_TRIGGER_EXTI_LINE8      (8U)  /*!< HPDMA HW Trigger signal is EXTI_LINE8      */
+#define HPDMA_TRIGGER_EXTI_LINE9      (9U)  /*!< HPDMA HW Trigger signal is EXTI_LINE9      */
+#define HPDMA_TRIGGER_EXTI_LINE10     (10U) /*!< HPDMA HW Trigger signal is EXTI_LINE10     */
+#define HPDMA_TRIGGER_EXTI_LINE11     (11U) /*!< HPDMA HW Trigger signal is EXTI_LINE11     */
+#define HPDMA_TRIGGER_EXTI_LINE12     (12U) /*!< HPDMA HW Trigger signal is EXTI_LINE12     */
+#define HPDMA_TRIGGER_EXTI_LINE13     (13U) /*!< HPDMA HW Trigger signal is EXTI_LINE13     */
+#define HPDMA_TRIGGER_EXTI_LINE14     (14U) /*!< HPDMA HW Trigger signal is EXTI_LINE14     */
+#define HPDMA_TRIGGER_EXTI_LINE15     (15U) /*!< HPDMA HW Trigger signal is EXTI_LINE15     */
+#define HPDMA_TRIGGER_LPTIM1_CH1      (16U) /*!< HPDMA HW Trigger signal is LPTIM1_CH1      */
+#define HPDMA_TRIGGER_LPTIM2_CH1      (17U) /*!< HPDMA HW Trigger signal is LPTIM2_CH1      */
+#define HPDMA_TRIGGER_LPTIM3_CH1      (18U) /*!< HPDMA HW Trigger signal is LPTIM3_CH1      */
+#define HPDMA_TRIGGER_LPTIM4_CH1      (19U) /*!< HPDMA HW Trigger signal is LPTIM4_CH1      */
+#define HPDMA_TRIGGER_LPTIM5_CH1      (20U) /*!< HPDMA HW Trigger signal is LPTIM5_CH1      */
+#define HPDMA_TRIGGER_RTC_ALRA_TRG    (21U) /*!< HPDMA HW Trigger signal is RTC_ALRA_TRG    */
+#define HPDMA_TRIGGER_RTC_ALRB_TRG    (22U) /*!< HPDMA HW Trigger signal is RTC_ALRB_TRG    */
+#define HPDMA_TRIGGER_RTC_WUT_TRG     (23U) /*!< HPDMA HW Trigger signal is RTC_WUT_TRG     */
+#define HPDMA_TRIGGER_HPDMA1_CH0_TCF  (24U) /*!< HPDMA HW Trigger signal is HPDMA1_CH0_TCF  */
+#define HPDMA_TRIGGER_HPDMA1_CH1_TCF  (25U) /*!< HPDMA HW Trigger signal is HPDMA1_CH1_TCF  */
+#define HPDMA_TRIGGER_HPDMA1_CH2_TCF  (26U) /*!< HPDMA HW Trigger signal is HPDMA1_CH2_TCF  */
+#define HPDMA_TRIGGER_HPDMA1_CH3_TCF  (27U) /*!< HPDMA HW Trigger signal is HPDMA1_CH3_TCF  */
+#define HPDMA_TRIGGER_HPDMA1_CH4_TCF  (28U) /*!< HPDMA HW Trigger signal is HPDMA1_CH4_TCF  */
+#define HPDMA_TRIGGER_HPDMA1_CH5_TCF  (29U) /*!< HPDMA HW Trigger signal is HPDMA1_CH5_TCF  */
+#define HPDMA_TRIGGER_HPDMA1_CH6_TCF  (30U) /*!< HPDMA HW Trigger signal is HPDMA1_CH6_TCF  */
+#define HPDMA_TRIGGER_HPDMA1_CH7_TCF  (31U) /*!< HPDMA HW Trigger signal is HPDMA1_CH7_TCF  */
+#define HPDMA_TRIGGER_HPDMA1_CH8_TCF  (32U) /*!< HPDMA HW Trigger signal is HPDMA1_CH8_TCF  */
+#define HPDMA_TRIGGER_HPDMA1_CH9_TCF  (33U) /*!< HPDMA HW Trigger signal is HPDMA1_CH9_TCF  */
+#define HPDMA_TRIGGER_HPDMA1_CH10_TCF (34U) /*!< HPDMA HW Trigger signal is HPDMA1_CH10_TCF */
+#define HPDMA_TRIGGER_HPDMA1_CH11_TCF (35U) /*!< HPDMA HW Trigger signal is HPDMA1_CH11_TCF */
+#define HPDMA_TRIGGER_HPDMA1_CH12_TCF (36U) /*!< HPDMA HW Trigger signal is HPDMA1_CH12_TCF */
+#define HPDMA_TRIGGER_HPDMA1_CH13_TCF (37U) /*!< HPDMA HW Trigger signal is HPDMA1_CH13_TCF */
+#define HPDMA_TRIGGER_HPDMA1_CH14_TCF (38U) /*!< HPDMA HW Trigger signal is HPDMA1_CH14_TCF */
+#define HPDMA_TRIGGER_HPDMA1_CH15_TCF (39U) /*!< HPDMA HW Trigger signal is HPDMA1_CH15_TCF */
+#define HPDMA_TRIGGER_HPDMA2_CH0_TCF  (40U) /*!< HPDMA HW Trigger signal is HPDMA2_CH0_TCF  */
+#define HPDMA_TRIGGER_HPDMA2_CH1_TCF  (41U) /*!< HPDMA HW Trigger signal is HPDMA2_CH1_TCF  */
+#define HPDMA_TRIGGER_HPDMA2_CH2_TCF  (42U) /*!< HPDMA HW Trigger signal is HPDMA2_CH2_TCF  */
+#define HPDMA_TRIGGER_HPDMA2_CH3_TCF  (43U) /*!< HPDMA HW Trigger signal is HPDMA2_CH3_TCF  */
+#define HPDMA_TRIGGER_HPDMA2_CH4_TCF  (44U) /*!< HPDMA HW Trigger signal is HPDMA2_CH4_TCF  */
+#define HPDMA_TRIGGER_HPDMA2_CH5_TCF  (45U) /*!< HPDMA HW Trigger signal is HPDMA2_CH5_TCF  */
+#define HPDMA_TRIGGER_HPDMA2_CH6_TCF  (46U) /*!< HPDMA HW Trigger signal is HPDMA2_CH6_TCF  */
+#define HPDMA_TRIGGER_HPDMA2_CH7_TCF  (47U) /*!< HPDMA HW Trigger signal is HPDMA2_CH7_TCF  */
+#define HPDMA_TRIGGER_HPDMA2_CH8_TCF  (48U) /*!< HPDMA HW Trigger signal is HPDMA2_CH8_TCF  */
+#define HPDMA_TRIGGER_HPDMA2_CH9_TCF  (49U) /*!< HPDMA HW Trigger signal is HPDMA2_CH9_TCF  */
+#define HPDMA_TRIGGER_HPDMA2_CH10_TCF (50U) /*!< HPDMA HW Trigger signal is HPDMA2_CH10_TCF */
+#define HPDMA_TRIGGER_HPDMA2_CH11_TCF (51U) /*!< HPDMA HW Trigger signal is HPDMA2_CH11_TCF */
+#define HPDMA_TRIGGER_HPDMA2_CH12_TCF (52U) /*!< HPDMA HW Trigger signal is HPDMA2_CH12_TCF */
+#define HPDMA_TRIGGER_HPDMA2_CH13_TCF (53U) /*!< HPDMA HW Trigger signal is HPDMA2_CH13_TCF */
+#define HPDMA_TRIGGER_HPDMA2_CH14_TCF (54U) /*!< HPDMA HW Trigger signal is HPDMA2_CH14_TCF */
+#define HPDMA_TRIGGER_HPDMA2_CH15_TCF (55U) /*!< HPDMA HW Trigger signal is HPDMA2_CH15_TCF */
+#define HPDMA_TRIGGER_HPDMA3_CH0_TCF  (56U) /*!< HPDMA HW Trigger signal is HPDMA3_CH0_TCF  */
+#define HPDMA_TRIGGER_HPDMA3_CH1_TCF  (57U) /*!< HPDMA HW Trigger signal is HPDMA3_CH1_TCF  */
+#define HPDMA_TRIGGER_HPDMA3_CH2_TCF  (58U) /*!< HPDMA HW Trigger signal is HPDMA3_CH2_TCF  */
+#define HPDMA_TRIGGER_HPDMA3_CH3_TCF  (59U) /*!< HPDMA HW Trigger signal is HPDMA3_CH3_TCF  */
+#define HPDMA_TRIGGER_HPDMA3_CH4_TCF  (60U) /*!< HPDMA HW Trigger signal is HPDMA3_CH4_TCF  */
+#define HPDMA_TRIGGER_HPDMA3_CH5_TCF  (61U) /*!< HPDMA HW Trigger signal is HPDMA3_CH5_TCF  */
+#define HPDMA_TRIGGER_HPDMA3_CH6_TCF  (62U) /*!< HPDMA HW Trigger signal is HPDMA3_CH6_TCF  */
+#define HPDMA_TRIGGER_HPDMA3_CH7_TCF  (63U) /*!< HPDMA HW Trigger signal is HPDMA3_CH7_TCF  */
+#define HPDMA_TRIGGER_HPDMA3_CH8_TCF  (64U) /*!< HPDMA HW Trigger signal is HPDMA3_CH8_TCF  */
+#define HPDMA_TRIGGER_HPDMA3_CH9_TCF  (65U) /*!< HPDMA HW Trigger signal is HPDMA3_CH9_TCF  */
+#define HPDMA_TRIGGER_HPDMA3_CH10_TCF (66U) /*!< HPDMA HW Trigger signal is HPDMA3_CH10_TCF */
+#define HPDMA_TRIGGER_HPDMA3_CH11_TCF (67U) /*!< HPDMA HW Trigger signal is HPDMA3_CH11_TCF */
+#define HPDMA_TRIGGER_HPDMA3_CH12_TCF (68U) /*!< HPDMA HW Trigger signal is HPDMA3_CH12_TCF */
+#define HPDMA_TRIGGER_HPDMA3_CH13_TCF (69U) /*!< HPDMA HW Trigger signal is HPDMA3_CH13_TCF */
+#define HPDMA_TRIGGER_HPDMA3_CH14_TCF (70U) /*!< HPDMA HW Trigger signal is HPDMA3_CH14_TCF */
+#define HPDMA_TRIGGER_HPDMA3_CH15_TCF (71U) /*!< HPDMA HW Trigger signal is HPDMA3_CH15_TCF */
+#define HPDMA_TRIGGER_TIM2_TRGO       (72U) /*!< HPDMA HW Trigger signal is TIM2_TRGO       */
+#define HPDMA_TRIGGER_TIM15_TRGO      (73U) /*!< HPDMA HW Trigger signal is TIM15_TRGO      */
+#define HPDMA_TRIGGER_DCMIPP_P2_HSYNC (74U) /*!< HPDMA HW Trigger signal is DCMIPP_P2_HSYNC */
+#define HPDMA_TRIGGER_DCMIPP_P2_VSYNC (75U) /*!< HPDMA HW Trigger signal is DCMIPP_P2_VSYNC */
+#define HPDMA_TRIGGER_DCMIPP_P2_LEND  (76U) /*!< HPDMA HW Trigger signal is DCMIPP_P2_LEND  */
+#define HPDMA_TRIGGER_DCMIPP_P2_FEND  (77U) /*!< HPDMA HW Trigger signal is DCMIPP_P2_FEND  */
+#endif /* defined(STM32MP257Cxx) */
 /**
   * @}
   */
@@ -407,7 +493,9 @@ typedef struct __DMA_QListTypeDef
   * @brief    DMAEx Node Type
   * @{
   */
+#if  defined(LPDMA)
 #define DMA_LPDMA_LINEAR_NODE (DMA_CHANNEL_TYPE_LPDMA | DMA_CHANNEL_TYPE_LINEAR_ADDR) /*!< Defines the LPDMA linear addressing node type      */
+#endif /* LPDMA */
 #define DMA_HPDMA_LINEAR_NODE (DMA_CHANNEL_TYPE_HPDMA | DMA_CHANNEL_TYPE_LINEAR_ADDR) /*!< Defines the HPDMA linear addressing node type      */
 #define DMA_HPDMA_2D_NODE     (DMA_CHANNEL_TYPE_HPDMA | DMA_CHANNEL_TYPE_2D_ADDR)     /*!< Defines the HPDMA 2 dimension addressing node type */
 /**
@@ -592,7 +680,9 @@ typedef struct
 
 #define DMA_CHANNEL_TYPE_LINEAR_ADDR    (0x0001U) /* DMA channel linear addressing mode    */
 #define DMA_CHANNEL_TYPE_2D_ADDR        (0x0002U) /* DMA channel 2D addressing mode        */
+#if  defined(LPDMA)
 #define DMA_CHANNEL_TYPE_LPDMA          (0x0010U) /* LPDMA channel node                    */
+#endif /* LPDMA */
 #define DMA_CHANNEL_TYPE_HPDMA          (0x0040U) /* HPDMA channel node                    */
 
 #define NODE_TYPE_MASK                  (0x00FFU) /* DMA channel node type                 */
@@ -687,10 +777,16 @@ typedef struct
 #define IS_DMA_TRIGGER_SELECTION(TRIGGER) \
   ((TRIGGER) <= HPDMA_TRIGGER_DCMIPP_P2_FEND)
 
-#define IS_DMA_NODE_TYPE(TYPE)          \
+#if defined(LPDMA)
+#define IS_DMA_NODE_TYPE(TYPE)                \
   (((TYPE) == DMA_LPDMA_LINEAR_NODE) || \
    ((TYPE) == DMA_HPDMA_LINEAR_NODE) || \
    ((TYPE) == DMA_HPDMA_2D_NODE))
+#else
+#define IS_DMA_NODE_TYPE(TYPE)              \
+  (((TYPE) == DMA_HPDMA_LINEAR_NODE) || \
+   ((TYPE) == DMA_HPDMA_2D_NODE))
+#endif /* LPDMA */
 /**
   * @}
   */

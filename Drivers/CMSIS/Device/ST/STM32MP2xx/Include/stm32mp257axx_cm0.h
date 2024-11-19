@@ -145,68 +145,34 @@ typedef enum
   * @{
   */
 
-#if $MP2_CRYPTO$ && (defined (CORE_CA35) || defined (CORE_CM33))
-/**
-  * @brief Crypto Processor
-  */
-
-typedef struct
-{
-  __IO uint32_t CR;         /*!< CRYP control register,                                    Address offset: 0x00 */
-  __IO uint32_t SR;         /*!< CRYP status register,                                     Address offset: 0x04 */
-  __IO uint32_t DIN;        /*!< CRYP data input register,                                 Address offset: 0x08 */
-  __IO uint32_t DOUT;       /*!< CRYP data output register,                                Address offset: 0x0C */
-  __IO uint32_t DMACR;      /*!< CRYP DMA control register,                                Address offset: 0x10 */
-  __IO uint32_t IMSCR;      /*!< CRYP interrupt mask set/clear register,                   Address offset: 0x14 */
-  __IO uint32_t RISR;       /*!< CRYP raw interrupt status register,                       Address offset: 0x18 */
-  __IO uint32_t MISR;       /*!< CRYP masked interrupt status register,                    Address offset: 0x1C */
-  __IO uint32_t K0LR;       /*!< CRYP key left  register 0,                                Address offset: 0x20 */
-  __IO uint32_t K0RR;       /*!< CRYP key right register 0,                                Address offset: 0x24 */
-  __IO uint32_t K1LR;       /*!< CRYP key left  register 1,                                Address offset: 0x28 */
-  __IO uint32_t K1RR;       /*!< CRYP key right register 1,                                Address offset: 0x2C */
-  __IO uint32_t K2LR;       /*!< CRYP key left  register 2,                                Address offset: 0x30 */
-  __IO uint32_t K2RR;       /*!< CRYP key right register 2,                                Address offset: 0x34 */
-  __IO uint32_t K3LR;       /*!< CRYP key left  register 3,                                Address offset: 0x38 */
-  __IO uint32_t K3RR;       /*!< CRYP key right register 3,                                Address offset: 0x3C */
-  __IO uint32_t IV0LR;      /*!< CRYP initialization vector left-word  register 0,         Address offset: 0x40 */
-  __IO uint32_t IV0RR;      /*!< CRYP initialization vector right-word register 0,         Address offset: 0x44 */
-  __IO uint32_t IV1LR;      /*!< CRYP initialization vector left-word  register 1,         Address offset: 0x48 */
-  __IO uint32_t IV1RR;      /*!< CRYP initialization vector right-word register 1,         Address offset: 0x4C */
-  __IO uint32_t CSGCMCCM0R; /*!< CRYP GCM/GMAC or CCM/CMAC context swap register 0,        Address offset: 0x50 */
-  __IO uint32_t CSGCMCCM1R; /*!< CRYP GCM/GMAC or CCM/CMAC context swap register 1,        Address offset: 0x54 */
-  __IO uint32_t CSGCMCCM2R; /*!< CRYP GCM/GMAC or CCM/CMAC context swap register 2,        Address offset: 0x58 */
-  __IO uint32_t CSGCMCCM3R; /*!< CRYP GCM/GMAC or CCM/CMAC context swap register 3,        Address offset: 0x5C */
-  __IO uint32_t CSGCMCCM4R; /*!< CRYP GCM/GMAC or CCM/CMAC context swap register 4,        Address offset: 0x60 */
-  __IO uint32_t CSGCMCCM5R; /*!< CRYP GCM/GMAC or CCM/CMAC context swap register 5,        Address offset: 0x64 */
-  __IO uint32_t CSGCMCCM6R; /*!< CRYP GCM/GMAC or CCM/CMAC context swap register 6,        Address offset: 0x68 */
-  __IO uint32_t CSGCMCCM7R; /*!< CRYP GCM/GMAC or CCM/CMAC context swap register 7,        Address offset: 0x6C */
-  __IO uint32_t CSGCM0R;    /*!< CRYP GCM/GMAC context swap register 0,                    Address offset: 0x70 */
-  __IO uint32_t CSGCM1R;    /*!< CRYP GCM/GMAC context swap register 1,                    Address offset: 0x74 */
-  __IO uint32_t CSGCM2R;    /*!< CRYP GCM/GMAC context swap register 2,                    Address offset: 0x78 */
-  __IO uint32_t CSGCM3R;    /*!< CRYP GCM/GMAC context swap register 3,                    Address offset: 0x7C */
-  __IO uint32_t CSGCM4R;    /*!< CRYP GCM/GMAC context swap register 4,                    Address offset: 0x80 */
-  __IO uint32_t CSGCM5R;    /*!< CRYP GCM/GMAC context swap register 5,                    Address offset: 0x84 */
-  __IO uint32_t CSGCM6R;    /*!< CRYP GCM/GMAC context swap register 6,                    Address offset: 0x88 */
-  __IO uint32_t CSGCM7R;    /*!< CRYP GCM/GMAC context swap register 7,                    Address offset: 0x8C */
-  uint32_t RESERVED[216];
-  __IO uint32_t HWCFGR;     /*!< CRYP HW Configuration,                                    Address offset: 0x3F0 */
-  __IO uint32_t VERR;       /*!< CRYP version register ,                                   Address offset: 0x3F4 */
-  __IO uint32_t ID;         /*!< CRYP Identification register,                             Address offset: 0x3F8 */
-  __IO uint32_t MID;        /*!< CRYP HW Magic ID register,                                Address offset: 0x3FC */
-} CRYP_TypeDef;
-
-#endif /* MP2_CRYPTO && (CORE_CA35 || CORE_CM33) */
 /**
   * @brief DMA Controller
   */
 /* c7amba_dma3_v1_0 */
 typedef struct
 {
-  __IO uint32_t SECCFGR;      /*!< DMA secure configuration register,               Address offset: 0x00  */
-  __IO uint32_t PRIVCFGR;     /*!< DMA privileged configuration register,           Address offset: 0x04  */
-  __IO uint32_t RCFGLOCKR;    /*!< DMA configuration lock register                  Address offset: 0x08 */
-  __IO uint32_t MISR;         /*!< DMA non secure masked interrupt status register, Address offset: 0x0C  */
-  __IO uint32_t SMISR;        /*!< DMA secure masked interrupt status register,     Address offset: 0x10  */
+  __IO uint32_t SECCFGR;          /*!< DMA secure configuration register,                      Address offset: 0x00  */
+  __IO uint32_t PRIVCFGR;         /*!< DMA privileged configuration register,                  Address offset: 0x04  */
+  __IO uint32_t RCFGLOCKR;        /*!< DMA configuration lock register                         Address offset: 0x08 */
+  __IO uint32_t MISR;             /*!< DMA non secure masked interrupt status register,        Address offset: 0x0C  */
+  __IO uint32_t SMISR;            /*!< DMA secure masked interrupt status register,            Address offset: 0x10  */
+       uint32_t RESERVED[1003];   /*!< Reserved                                                Address offset: 0x014-0xFBC */
+  __IO uint32_t HWCFGR13;         /*!< HPDMA hardware configuration 13 register                Address offset: 0xFC0 */
+  __IO uint32_t HWCFGR12;         /*!< HPDMA hardware configuration 12 register                Address offset: 0xFC4 */
+  __IO uint32_t HWCFGR11;         /*!< HPDMA hardware configuration 11 register                Address offset: 0xFC8 */
+  __IO uint32_t HWCFGR10;         /*!< HPDMA hardware configuration 10 register                Address offset: 0xFCC */
+  __IO uint32_t HWCFGR9;          /*!< HPDMA hardware configuration 9 register                 Address offset: 0xFD0 */
+  __IO uint32_t HWCFGR8;          /*!< HPDMA hardware configuration 8 register                 Address offset: 0xFD4 */
+  __IO uint32_t HWCFGR7;          /*!< HPDMA hardware configuration 7 register                 Address offset: 0xFD8 */
+  __IO uint32_t HWCFGR6;          /*!< HPDMA hardware configuration 6 register                 Address offset: 0xFDC */
+  __IO uint32_t HWCFGR5;          /*!< HPDMA hardware configuration 5 register                 Address offset: 0xFE0 */
+  __IO uint32_t HWCFGR4;          /*!< HPDMA hardware configuration 4 register                 Address offset: 0xFE4 */
+  __IO uint32_t HWCFGR3;          /*!< HPDMA hardware configuration 3 register                 Address offset: 0xFE8 */
+  __IO uint32_t HWCFGR2;          /*!< HPDMA hardware configuration 2 register                 Address offset: 0xFEC */
+  __IO uint32_t HWCFGR1;          /*!< HPDMA hardware configuration 1 register                 Address offset: 0xFF0 */
+  __IO uint32_t VERR;             /*!< HPDMA version register                                  Address offset: 0xFF4 */
+  __IO uint32_t IPIDR;            /*!< HPDMA identification register                           Address offset: 0xFF8 */
+  __IO uint32_t SIDR;             /*!< HPDMA size identification register                      Address offset: 0xFFC */
 } DMA_TypeDef;
 
 typedef struct
@@ -342,8 +308,9 @@ typedef struct
        uint32_t RESERVED0;       /*!< Reserved                                            Address offset: 0x03C */
   __IO uint32_t DELAYRL;         /*!< GPIO delay low register                             Address offset: 0x040 */
   __IO uint32_t DELAYRH;         /*!< GPIO delay high register                            Address offset: 0x044 */
-  __IO uint32_t PIOCFGRL;        /*!< GPIO PIO control low register                       Address offset: 0x048 */
-  __IO uint32_t PIOCFGRH;        /*!< GPIO delay high register                            Address offset: 0x04C */
+  __IO uint32_t ADVCFGRL;        /*!< GPIO PIO control low register                       Address offset: 0x048 */
+  __IO uint32_t ADVCFGRH;        /*!< GPIO delay high register                            Address offset: 0x04C */
+
   __IO uint32_t CIDCFGR0;        /*!< GPIO CID configuration register for I/O pin 0       Address offset: 0x050 */
   __IO uint32_t SEMCR0;          /*!< GPIO semaphore control register for I/O pin 0       Address offset: 0x054 */
   __IO uint32_t CIDCFGR1;        /*!< GPIO CID configuration register for I/O pin 1       Address offset: 0x058 */
@@ -444,11 +411,11 @@ typedef struct
   __IO uint32_t G2CIDCFGR;       /*!< HSEM CID configuration register                  Address offset: 0x248 */
   __IO uint32_t G3CIDCFGR;       /*!< HSEM CID configuration register                  Address offset: 0x24C */
        uint32_t RESERVED8[103];  /*!< Reserved                                         Address offset: 0x250-0x3E8 */
-  __IO uint32_t HWCFGR2;         /*!< HSEM hardware configuration register 2           Address offset: 0x3EC */
-  __IO uint32_t HWCFGR1;         /*!< HSEM hardware configuration register 1           Address offset: 0x3F0 */
-  __IO uint32_t VERR;            /*!< HSEM IP version register                         Address offset: 0x3F4 */
-  __IO uint32_t IPIDR;           /*!< HSEM IP identification register                  Address offset: 0x3F8 */
-  __IO uint32_t SIDR;            /*!< HSEM size identification register                Address offset: 0x3FC */
+  __I  uint32_t HWCFGR2;         /*!< HSEM hardware configuration register 2           Address offset: 0x3EC */
+  __I  uint32_t HWCFGR1;         /*!< HSEM hardware configuration register 1           Address offset: 0x3F0 */
+  __I  uint32_t VERR;            /*!< HSEM IP version register                         Address offset: 0x3F4 */
+  __I  uint32_t IPIDR;           /*!< HSEM IP identification register                  Address offset: 0x3F8 */
+  __I  uint32_t SIDR;            /*!< HSEM size identification register                Address offset: 0x3FC */
 } HSEM_TypeDef;
 
 typedef struct
@@ -600,7 +567,7 @@ typedef struct
   __IO uint32_t CCR1;            /*!< LPTIM compare register 1                            Address offset: 0x014 */
   __IO uint32_t ARR;             /*!< LPTIM autoreload register                           Address offset: 0x018 */
   __IO uint32_t CNT;             /*!< LPTIM counter register                              Address offset: 0x01C */
-       uint32_t RESERVED0;       /*!< Reserved                                            Address offset: 0x020 */
+  __IO uint32_t OR;              /*!< LPTIM1 option register                              Address offset: 0x020 */
   __IO uint32_t CFGR2;           /*!< LPTIM configuration register 2                      Address offset: 0x024 */
   __IO uint32_t RCR;             /*!< LPTIM repetition register                           Address offset: 0x028 */
   __IO uint32_t CCMR1;           /*!< LPTIM capture/compare mode register 1               Address offset: 0x02C */
@@ -663,66 +630,63 @@ typedef struct
   */
 typedef struct
 {
-  __IO uint32_t CR1;             /*!< PWR Control Register 1 @ offset 0x0 */
-  __IO uint32_t CR2;             /*!< PWR Control Register 2 @ offset 0x4 */
-  __IO uint32_t CR3;             /*!< PWR Control Register 3 @ offset 0x8 */
-  __IO uint32_t CR4;             /*!< PWR Control Register 4 @ offset 0xc */
-  __IO uint32_t CR5;             /*!< PWR Control Register 5 @ offset 0x10 */
-  __IO uint32_t CR6;             /*!< PWR Control Register 6 @ offset 0x14 */
-  __IO uint32_t CR7;             /*!< PWR Control Register 7 @ offset 0x18 */
-  __IO uint32_t CR8;             /*!< PWR Control Register 8 @ offset 0x1c */
-  __IO uint32_t CR9;             /*!< PWR Control Register 9 @ offset 0x20 */
-  __IO uint32_t CR10;            /*!< PWR Control Register 10 @ offset 0x24 */
-  __IO uint32_t CR11;            /*!< PWR Control Register 11 @ offset 0x28 */
-  __IO uint32_t CR12;            /*!< PWR Control Register 12 @ offset 0x2c */
-  __IO uint32_t UCPDR;           /*!< PWR USB Type-C and Power Delivery Register @ offset 0x30 */
-       uint32_t RESERVED0;       /*!< Reserved @ offset 0x34 */
-  __IO uint32_t BDCR1;           /*!< PWR Backup domain control register 1 @ offset 0x38 */
-  __IO uint32_t BDCR2;           /*!< PWR Backup domain control register 2 @ offset 0x3c */
-  __IO uint32_t CPU1CR;          /*!< PWR CPU1 Control Register @ offset 0x40 */
-  __IO uint32_t CPU2CR;          /*!< PWR CPU2 Control Register @ offset 0x44 */
-  __IO uint32_t CPU3CR;          /*!< PWR CPU3 Control Register @ offset 0x48 */
-  __IO uint32_t D1CR;            /*!< PWR D1 Control Register @ offset 0x4c */
-  __IO uint32_t D2CR;            /*!< PWR D2 Control Register @ offset 0x50 */
-  __IO uint32_t D3CR;            /*!< PWR D3 Control Register @ offset 0x54 */
-       uint32_t RESERVED1[2];    /*!< Reserved @ offsets 0x58-0x5c */
-  __IO uint32_t WKUPCR1;         /*!< PWR Wakeup Control Register 1 @ offset 0x60 */
-  __IO uint32_t WKUPCR2;         /*!< PWR Wakeup Control Register 2 @ offset 0x64 */
-  __IO uint32_t WKUPCR3;         /*!< PWR Wakeup Control Register 3 @ offset 0x68 */
-  __IO uint32_t WKUPCR4;         /*!< PWR Wakeup Control Register 4 @ offset 0x6c */
-  __IO uint32_t WKUPCR5;         /*!< PWR Wakeup Control Register 5 @ offset 0x70 */
-  __IO uint32_t WKUPCR6;         /*!< PWR Wakeup Control Register 6 @ offset 0x74 */
-       uint32_t RESERVED2[8];    /*!< Reserved @ offsets 0x78-0x94 */
-  __IO uint32_t D3WKUPENR;       /*!< PWR D3 Wakeup Enable Register @ offset 0x98 */
-       uint32_t RESERVED3[25];   /*!< Reserved @ offsets 0x9c-0xfc */
-  __IO uint32_t RSECCFGR;        /*!< PWR Secure Configuration Register @ offset 0x100 */
-  __IO uint32_t RPRIVCFGR;       /*!< PWR Privileged Configuration Register @ offset 0x104 */
-  __IO uint32_t RxCIDCFGR[7];    /*!< PWR Resource 0-6 CID Configuration Registers @ offsets 0x108-0x120 */
-       uint32_t RESERVED4[23];   /*!< Reserved @ offsets 0x124-0x17c */
-  __IO uint32_t WIOSECCFGR;      /*!< PWR Secure Configuration Register @ offset 0x180 */
-  __IO uint32_t WIOPRIVCFGR;     /*!< PWR Privileged Configuration Register @ offset 0x184 */
-  __IO uint32_t WIO1CIDCFGR;     /*!< PWR Resource 1 CID Configuration Register @ offset 0x188 */
-  __IO uint32_t WIO1SEMCR;       /*!< PWR Resource 1 Semaphore Control Register @ offset 0x18c */
-  __IO uint32_t WIO2CIDCFGR;     /*!< PWR Resource 2 CID Configuration Register @ offset 0x190 */
-  __IO uint32_t WIO2SEMCR;       /*!< PWR Resource 2 Semaphore Control Register @ offset 0x194 */
-  __IO uint32_t WIO3CIDCFGR;     /*!< PWR Resource 3 CID Configuration Register @ offset 0x198 */
-  __IO uint32_t WIO3SEMCR;       /*!< PWR Resource 3 Semaphore Control Register @ offset 0x19c */
-  __IO uint32_t WIO4CIDCFGR;     /*!< PWR Resource 4 CID Configuration Register @ offset 0x1a0 */
-  __IO uint32_t WIO4SEMCR;       /*!< PWR Resource 4 Semaphore Control Register @ offset 0x1a4 */
-  __IO uint32_t WIO5CIDCFGR;     /*!< PWR Resource 5 CID Configuration Register @ offset 0x1a8 */
-  __IO uint32_t WIO5SEMCR;       /*!< PWR Resource 5 Semaphore Control Register @ offset 0x1ac */
-  __IO uint32_t WIO6CIDCFGR;     /*!< PWR Resource 6 CID Configuration Register @ offset 0x1b0 */
-  __IO uint32_t WIO6SEMCR;       /*!< PWR Resource 6 Semaphore Control Register @ offset 0x1b4 */
-       uint32_t RESERVED5[18];   /*!< Reserved @ offsets 0x1b8-0x1fc */
-  __IO uint32_t CPU1D1SR;        /*!< PWR CPU1 Status Register @ offset 0x200 */
-  __IO uint32_t CPU2D2SR;        /*!< PWR CPU2 Status Register @ offset 0x204 */
-  __IO uint32_t CPU3D3SR;        /*!< PWR CPU2 Status Register @ offset 0x208 */
-       uint32_t RESERVED6[63];   /*!< Reserved @ offsets 0x20c-0x304 */
-  __IO uint32_t DBGR;            /*!< PWR Debug Register @ offset 0x308 */
-       uint32_t RESERVED7[58];   /*!< Reserved @ offsets 0x30c-0x3f0 */
-  __IO uint32_t VERR;            /*!< PWR VER Register @ offset 0x3f4 */
-  __IO uint32_t IPIDR;           /*!< PWR ID register @ offset 0x3f8 */
-  __IO uint32_t SIDR;            /*!< PWR Size ID register @ offset 0x3fc */
+  __IO uint32_t CR1;             /*!< PWR control register 1                         Address offset: 0x000 */
+  __IO uint32_t CR2;             /*!< PWR control register 2                         Address offset: 0x004 */
+  __IO uint32_t CR3;             /*!< PWR control register 3                         Address offset: 0x008 */
+       uint32_t RESERVED0;       /*!< Reserved                                       Address offset: 0x00C */
+  __IO uint32_t CR5;             /*!< PWR control register 5                         Address offset: 0x010 */
+  __IO uint32_t CR6;             /*!< PWR control register 6                         Address offset: 0x014 */
+  __IO uint32_t CR7;             /*!< PWR control register 7                         Address offset: 0x018 */
+  __IO uint32_t CR8;             /*!< PWR control register 8                         Address offset: 0x01C */
+  __IO uint32_t CR9;             /*!< PWR control register 9                         Address offset: 0x020 */
+  __IO uint32_t CR10;            /*!< PWR control register 10                        Address offset: 0x024 */
+  __IO uint32_t CR11;            /*!< PWR control register 11                        Address offset: 0x028 */
+  __IO uint32_t CR12;            /*!< PWR control register 12                        Address offset: 0x02C */
+       uint32_t RESERVED1[2];    /*!< Reserved                                       Address offset: 0x030-0x034 */
+  __IO uint32_t BDCR1;           /*!< PWR backup domain control register 1           Address offset: 0x038 */
+  __IO uint32_t BDCR2;           /*!< PWR backup domain control register 2           Address offset: 0x03C */
+  __IO uint32_t CPU1CR;          /*!< PWR CPU1 control register                      Address offset: 0x040 */
+  __IO uint32_t CPU2CR;          /*!< PWR CPU2 control register                      Address offset: 0x044 */
+  __IO uint32_t CPU3CR;          /*!< PWR CPU3 control register                      Address offset: 0x048 */
+  __IO uint32_t D1CR;            /*!< PWR D1 control register                        Address offset: 0x04C */
+  __IO uint32_t D2CR;            /*!< PWR D2 control register                        Address offset: 0x050 */
+  __IO uint32_t D3CR;            /*!< PWR D3 control register                        Address offset: 0x054 */
+       uint32_t RESERVED2[2];    /*!< Reserved                                       Address offset: 0x058-0x05C */
+  __IO uint32_t WKUPCR1;         /*!< PWR wake-up control register 1                 Address offset: 0x060 */
+  __IO uint32_t WKUPCR2;         /*!< PWR wake-up control register 2                 Address offset: 0x064 */
+  __IO uint32_t WKUPCR3;         /*!< PWR wake-up control register 3                 Address offset: 0x068 */
+  __IO uint32_t WKUPCR4;         /*!< PWR wake-up control register 4                 Address offset: 0x06C */
+  __IO uint32_t WKUPCR5;         /*!< PWR wake-up control register 5                 Address offset: 0x070 */
+  __IO uint32_t WKUPCR6;         /*!< PWR wake-up control register 6                 Address offset: 0x074 */
+       uint32_t RESERVED3[8];    /*!< Reserved                                       Address offset: 0x078-0x094 */
+  __IO uint32_t D3WKUPENR;       /*!< PWR D3 wake-up enable register                 Address offset: 0x098 */
+       uint32_t RESERVED4[25];   /*!< Reserved                                       Address offset: 0x09C-0x0FC */
+  __IO uint32_t RSECCFGR;        /*!< PWR resource secure configuration register     Address offset: 0x100 */
+  __IO uint32_t RPRIVCFGR;       /*!< PWR resource privileged configuration register Address offset: 0x104 */
+  __IO uint32_t RxCIDCFGR[7];    /*!< PWR Resource 0-6 CID Configuration Registers   Address offsets 0x108-0x120 */
+       uint32_t RESERVED5[23];   /*!< Reserved                                       Address offset: 0x124-0x17C */
+  __IO uint32_t WIOSECCFGR;      /*!< PWR WIO secure configuration register          Address offset: 0x180 */
+  __IO uint32_t WIOPRIVCFGR;     /*!< PWR WIO privileged configuration register      Address offset: 0x184 */
+  __IO uint32_t WIO1CIDCFGR;     /*!< PWR WIO 1 CID configuration register           Address offset: 0x188 */
+  __IO uint32_t WIO1SEMCR;       /*!< PWR WIO 1 semaphore control register           Address offset: 0x18C */
+  __IO uint32_t WIO2CIDCFGR;     /*!< PWR WIO 2 CID configuration register           Address offset: 0x190 */
+  __IO uint32_t WIO2SEMCR;       /*!< PWR WIO 2 semaphore control register           Address offset: 0x194 */
+  __IO uint32_t WIO3CIDCFGR;     /*!< PWR WIO 3 CID configuration register           Address offset: 0x198 */
+  __IO uint32_t WIO3SEMCR;       /*!< PWR WIO 3 semaphore control register           Address offset: 0x19C */
+  __IO uint32_t WIO4CIDCFGR;     /*!< PWR WIO 4 CID configuration register           Address offset: 0x1A0 */
+  __IO uint32_t WIO4SEMCR;       /*!< PWR WIO 4 semaphore control register           Address offset: 0x1A4 */
+  __IO uint32_t WIO5CIDCFGR;     /*!< PWR WIO 5 CID configuration register           Address offset: 0x1A8 */
+  __IO uint32_t WIO5SEMCR;       /*!< PWR WIO 5 semaphore control register           Address offset: 0x1AC */
+  __IO uint32_t WIO6CIDCFGR;     /*!< PWR WIO 6 CID configuration register           Address offset: 0x1B0 */
+  __IO uint32_t WIO6SEMCR;       /*!< PWR WIO 6 semaphore control register           Address offset: 0x1B4 */
+       uint32_t RESERVED6[18];   /*!< Reserved                                       Address offset: 0x1B8-0x1FC */
+  __IO uint32_t CPU1D1SR;        /*!< PWR CPU1 status register                       Address offset: 0x200 */
+  __IO uint32_t CPU2D2SR;        /*!< PWR CPU2 status register                       Address offset: 0x204 */
+  __IO uint32_t CPU3D3SR;        /*!< PWR CPU3 status register                       Address offset: 0x208 */
+       uint32_t RESERVED7[122];  /*!< Reserved                                       Address offset: 0x20C-0x3F0 */
+  __IO uint32_t VERR;            /*!< PWR VER register                               Address offset: 0x3F4 */
+  __IO uint32_t IPIDR;           /*!< PWR identifier register                        Address offset: 0x3F8 */
+  __IO uint32_t SIDR;            /*!< PWR size identification register               Address offset: 0x3FC */
 } PWR_TypeDef;
 
 /**
@@ -768,6 +732,7 @@ typedef struct
 */
 #define RTC_BKP_NB         128U
 #define RTC_TAMP_NB        8U
+#define RTC_INT_TAMP_NB    14U
 
 /**
   * @brief Real-Time Clock
@@ -810,6 +775,7 @@ typedef struct
   __IO uint32_t IPIDR;          /*!< RTC identification register                      Address offset: 0x3F8 */
   __IO uint32_t SIDR;           /*!< RTC size identification register                 Address offset: 0x3FC */
 } RTC_TypeDef;
+
 
 /**
   * @brief SPI/I2S
@@ -1183,115 +1149,14 @@ typedef struct
 /*                         Peripheral Registers_Bits_Definition               */
 /******************************************************************************/
 
-#if $MP2_CRYPTO$ && (defined (CORE_CA35) || defined (CORE_CM33))
-/******************************************************************************/
-/*                                                                            */
-/*                            Crypto Processor                                */
-/*                                                                            */
-/******************************************************************************/
-/******************* Bits definition for CRYP_CR register  ********************/
-#define CRYP_CR_ALGODIR_Pos              (2U)
-#define CRYP_CR_ALGODIR_Msk              (0x1U << CRYP_CR_ALGODIR_Pos)         /*!< 0x00000004 */
-#define CRYP_CR_ALGODIR                  CRYP_CR_ALGODIR_Msk
-
-#define CRYP_CR_ALGOMODE_Pos             (3U)
-#define CRYP_CR_ALGOMODE_Msk             (0x10007U << CRYP_CR_ALGOMODE_Pos)    /*!< 0x00080038 */
-#define CRYP_CR_ALGOMODE                 CRYP_CR_ALGOMODE_Msk
-#define CRYP_CR_ALGOMODE_0               (0x00001U << CRYP_CR_ALGOMODE_Pos)    /*!< 0x00000008 */
-#define CRYP_CR_ALGOMODE_1               (0x00002U << CRYP_CR_ALGOMODE_Pos)    /*!< 0x00000010 */
-#define CRYP_CR_ALGOMODE_2               (0x00004U << CRYP_CR_ALGOMODE_Pos)    /*!< 0x00000020 */
-#define CRYP_CR_DATATYPE_Pos             (6U)
-#define CRYP_CR_DATATYPE_Msk             (0x3U << CRYP_CR_DATATYPE_Pos)        /*!< 0x000000C0 */
-#define CRYP_CR_DATATYPE                 CRYP_CR_DATATYPE_Msk
-#define CRYP_CR_DATATYPE_0               (0x1U << CRYP_CR_DATATYPE_Pos)        /*!< 0x00000040 */
-#define CRYP_CR_DATATYPE_1               (0x2U << CRYP_CR_DATATYPE_Pos)        /*!< 0x00000080 */
-#define CRYP_CR_KEYSIZE_Pos              (8U)
-#define CRYP_CR_KEYSIZE_Msk              (0x3U << CRYP_CR_KEYSIZE_Pos)         /*!< 0x00000300 */
-#define CRYP_CR_KEYSIZE                  CRYP_CR_KEYSIZE_Msk
-#define CRYP_CR_KEYSIZE_0                (0x1U << CRYP_CR_KEYSIZE_Pos)         /*!< 0x00000100 */
-#define CRYP_CR_KEYSIZE_1                (0x2U << CRYP_CR_KEYSIZE_Pos)         /*!< 0x00000200 */
-#define CRYP_CR_FFLUSH_Pos               (14U)
-#define CRYP_CR_FFLUSH_Msk               (0x1U << CRYP_CR_FFLUSH_Pos)          /*!< 0x00004000 */
-#define CRYP_CR_FFLUSH                   CRYP_CR_FFLUSH_Msk
-#define CRYP_CR_CRYPEN_Pos               (15U)
-#define CRYP_CR_CRYPEN_Msk               (0x1U << CRYP_CR_CRYPEN_Pos)          /*!< 0x00008000 */
-#define CRYP_CR_CRYPEN                   CRYP_CR_CRYPEN_Msk
-
-#define CRYP_CR_GCM_CCMPH_Pos            (16U)
-#define CRYP_CR_GCM_CCMPH_Msk            (0x3U << CRYP_CR_GCM_CCMPH_Pos)       /*!< 0x00030000 */
-#define CRYP_CR_GCM_CCMPH                CRYP_CR_GCM_CCMPH_Msk
-#define CRYP_CR_GCM_CCMPH_0              (0x1U << CRYP_CR_GCM_CCMPH_Pos)       /*!< 0x00010000 */
-#define CRYP_CR_GCM_CCMPH_1              (0x2U << CRYP_CR_GCM_CCMPH_Pos)       /*!< 0x00020000 */
-#define CRYP_CR_ALGOMODE_3               ((uint32_t)0x00080000)
-#define CRYP_CR_NPBLB_Pos                (20U)
-#define CRYP_CR_NPBLB_Msk                (0xFU << CRYP_CR_NPBLB_Pos)           /*!< 0x00F00000 */
-#define CRYP_CR_NPBLB                    CRYP_CR_NPBLB_Msk
-#define CRYP_CR_KMOD_Pos                 (24U)
-#define CRYP_CR_KMOD_Msk                 (0x3U << CRYP_CR_KMOD_Pos)            /*!< 0x03000000 */
-#define CRYP_CR_KMOD                     CRYP_CR_KMOD_Msk
-#define CRYP_CR_IPRST_Pos                (31U)
-#define CRYP_CR_IPRST_Msk                (0x1U << CRYP_CR_IPRST_Pos)           /*!< 0x80000000 */
-#define CRYP_CR_IPRST                    CRYP_CR_IPRST_Msk
-
-/****************** Bits definition for CRYP_SR register  *********************/
-#define CRYP_SR_IFEM_Pos                 (0U)
-#define CRYP_SR_IFEM_Msk                 (0x1U << CRYP_SR_IFEM_Pos)            /*!< 0x00000001 */
-#define CRYP_SR_IFEM                     CRYP_SR_IFEM_Msk
-#define CRYP_SR_IFNF_Pos                 (1U)
-#define CRYP_SR_IFNF_Msk                 (0x1U << CRYP_SR_IFNF_Pos)            /*!< 0x00000002 */
-#define CRYP_SR_IFNF                     CRYP_SR_IFNF_Msk
-#define CRYP_SR_OFNE_Pos                 (2U)
-#define CRYP_SR_OFNE_Msk                 (0x1U << CRYP_SR_OFNE_Pos)            /*!< 0x00000004 */
-#define CRYP_SR_OFNE                     CRYP_SR_OFNE_Msk
-#define CRYP_SR_OFFU_Pos                 (3U)
-#define CRYP_SR_OFFU_Msk                 (0x1U << CRYP_SR_OFFU_Pos)            /*!< 0x00000008 */
-#define CRYP_SR_OFFU                     CRYP_SR_OFFU_Msk
-#define CRYP_SR_BUSY_Pos                 (4U)
-#define CRYP_SR_BUSY_Msk                 (0x1U << CRYP_SR_BUSY_Pos)            /*!< 0x00000010 */
-#define CRYP_SR_BUSY                     CRYP_SR_BUSY_Msk
-#define CRYP_SR_KERF_Pos                 (6U)
-#define CRYP_SR_KERF_Msk                 (0x1U << CRYP_SR_KERF_Pos)            /*!< 0x00000040 */
-#define CRYP_SR_KERF                     CRYP_SR_KERF_Msk
-#define CRYP_SR_KEYVALID_Pos             (7U)
-#define CRYP_SR_KEYVALID_Msk             (0x1U << CRYP_SR_KEYVALID_Pos)        /*!< 0x00000080 */
-#define CRYP_SR_KEYVALID                 CRYP_SR_KEYVALID_Msk
-
-/****************** Bits definition for CRYP_DMACR register  ******************/
-#define CRYP_DMACR_DIEN_Pos              (0U)
-#define CRYP_DMACR_DIEN_Msk              (0x1U << CRYP_DMACR_DIEN_Pos)         /*!< 0x00000001 */
-#define CRYP_DMACR_DIEN                  CRYP_DMACR_DIEN_Msk
-#define CRYP_DMACR_DOEN_Pos              (1U)
-#define CRYP_DMACR_DOEN_Msk              (0x1U << CRYP_DMACR_DOEN_Pos)         /*!< 0x00000002 */
-#define CRYP_DMACR_DOEN                  CRYP_DMACR_DOEN_Msk
-/*****************  Bits definition for CRYP_IMSCR register  ******************/
-#define CRYP_IMSCR_INIM_Pos              (0U)
-#define CRYP_IMSCR_INIM_Msk              (0x1U << CRYP_IMSCR_INIM_Pos)         /*!< 0x00000001 */
-#define CRYP_IMSCR_INIM                  CRYP_IMSCR_INIM_Msk
-#define CRYP_IMSCR_OUTIM_Pos             (1U)
-#define CRYP_IMSCR_OUTIM_Msk             (0x1U << CRYP_IMSCR_OUTIM_Pos)        /*!< 0x00000002 */
-#define CRYP_IMSCR_OUTIM                 CRYP_IMSCR_OUTIM_Msk
-/****************** Bits definition for CRYP_RISR register  *******************/
-#define CRYP_RISR_OUTRIS_Pos             (0U)
-#define CRYP_RISR_OUTRIS_Msk             (0x1U << CRYP_RISR_OUTRIS_Pos)        /*!< 0x00000001 */
-#define CRYP_RISR_OUTRIS                 CRYP_RISR_OUTRIS_Msk
-#define CRYP_RISR_INRIS_Pos              (1U)
-#define CRYP_RISR_INRIS_Msk              (0x1U << CRYP_RISR_INRIS_Pos)         /*!< 0x00000002 */
-#define CRYP_RISR_INRIS                  CRYP_RISR_INRIS_Msk
-/****************** Bits definition for CRYP_MISR register  *******************/
-#define CRYP_MISR_INMIS_Pos              (0U)
-#define CRYP_MISR_INMIS_Msk              (0x1U << CRYP_MISR_INMIS_Pos)         /*!< 0x00000001 */
-#define CRYP_MISR_INMIS                  CRYP_MISR_INMIS_Msk
-#define CRYP_MISR_OUTMIS_Pos             (1U)
-#define CRYP_MISR_OUTMIS_Msk             (0x1U << CRYP_MISR_OUTMIS_Pos)        /*!< 0x00000002 */
-#define CRYP_MISR_OUTMIS                 CRYP_MISR_OUTMIS_Msk
-
-#endif /* MP2_CRYPTO && (CORE_CA35 || CORE_CM33) */
 /******************************************************************************/
 /*                                                                            */
 /*                             DMA Controller                                 */
 /*                                                                            */
 /******************************************************************************/
 /*******************  Bit definition for DMA_SECCFGR register  ****************/
+#define DMA_VER_V1_3
+
 #define DMA_SECCFGR_SEC0_Pos     (0U)
 #define DMA_SECCFGR_SEC0_Msk     (0x1U << DMA_SECCFGR_SEC0_Pos)                /*!< 0x00000001 */
 #define DMA_SECCFGR_SEC0         DMA_SECCFGR_SEC0_Msk                          /*!< Secure State of Channel 0 */
@@ -1565,9 +1430,7 @@ typedef struct
 #define DMA_CCIDCFGR_WLISTCID2_Pos      (18U)
 #define DMA_CCIDCFGR_WLISTCID2_Msk      (0x1U << DMA_CCIDCFGR_WLISTCID2_Pos)    /*!< 0x00040000 */
 #define DMA_CCIDCFGR_WLISTCID2          DMA_CCIDCFGR_WLISTCID2_Msk              /*!< white-listed CID2 in the CID allocation pool (of the channel x in semaphore mode) */
-#define DMA_CCIDCFGR_WLISTCID3_Pos      (19U)
-#define DMA_CCIDCFGR_WLISTCID3_Msk      (0x1U << DMA_CCIDCFGR_WLISTCID3_Pos)    /*!< 0x00080000 */
-#define DMA_CCIDCFGR_WLISTCID3          DMA_CCIDCFGR_WLISTCID3_Msk              /*!< white-listed CID3 in the CID allocation pool (of the channel x in semaphore mode) */
+
 #define DMA_CCIDCFGR_WLISTCID_CURRENT   ((0x1U << RIF_CID_CPU3_CM0) << DMA_CCIDCFGR_WLISTCID0_Pos)
 
 /*******************  Bit definition for DMA_CSEMCR register  *******************/
@@ -1676,16 +1539,6 @@ typedef struct
 #define DMA_CCR_PRIO           DMA_CCR_PRIO_Msk                             /*!< Priority level */
 #define DMA_CCR_PRIO_0         (0x1U << DMA_CCR_PRIO_Pos)                   /*!< 0x00400000 */
 #define DMA_CCR_PRIO_1         (0x2U << DMA_CCR_PRIO_Pos)                   /*!< 0x00800000 */
-#define DMA_CCR_BAM_Pos        (28U)
-#define DMA_CCR_BAM_Msk        (0x3U << DMA_CCR_BAM_Pos)                    /*!< 0x30000000 */
-#define DMA_CCR_BAM            DMA_CCR_BAM_Msk                              /*!< block alignment mode */
-#define DMA_CCR_BAM_0          (0x1U << DMA_CCR_BAM_Pos)                    /*!< 0x10000000 */
-#define DMA_CCR_BAM_1          (0x2U << DMA_CCR_BAM_Pos)                    /*!< 0x20000000 */
-#define DMA_CCR_BRAM_Pos       (30U)
-#define DMA_CCR_BRAM_Msk       (0x3U << DMA_CCR_BRAM_Pos)                   /*!< 0xC0000000 */
-#define DMA_CCR_BRAM           DMA_CCR_BRAM_Msk                             /*!< block repeated alignment mode */
-#define DMA_CCR_BRAM_0         (0x1U << DMA_CCR_BRAM_Pos)                   /*!< 0x40000000 */
-#define DMA_CCR_BRAM_1         (0x2U << DMA_CCR_BRAM_Pos)                   /*!< 0x80000000 */
 
 /*******************  Bit definition for DMA_CTR1 register  *******************/
 #define DMA_CTR1_SDW_LOG2_Pos  (0U)
@@ -5318,108 +5171,172 @@ typedef struct
 #define GPIO_LKR_LK15                  GPIO_LKR_LK15_Msk                        /*!< Port x latch keeper for I/O pin y (y= 0 to 15)These bits are written by software to control the I/O latch, to keep PU/PD value even in standby mode.Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
 
 /*****************  Bit definition for GPIO_DELAYRL register  *****************/
-#define GPIO_DELAYRL_DELAY0_Pos        (0U)
-#define GPIO_DELAYRL_DELAY0_Msk        (0xFU << GPIO_DELAYRL_DELAY0_Pos)        /*!< 0x0000000F */
-#define GPIO_DELAYRL_DELAY0            GPIO_DELAYRL_DELAY0_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_DELAYRL_DELAY1_Pos        (4U)
-#define GPIO_DELAYRL_DELAY1_Msk        (0xFU << GPIO_DELAYRL_DELAY1_Pos)        /*!< 0x000000F0 */
-#define GPIO_DELAYRL_DELAY1            GPIO_DELAYRL_DELAY1_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_DELAYRL_DELAY2_Pos        (8U)
-#define GPIO_DELAYRL_DELAY2_Msk        (0xFU << GPIO_DELAYRL_DELAY2_Pos)        /*!< 0x00000F00 */
-#define GPIO_DELAYRL_DELAY2            GPIO_DELAYRL_DELAY2_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_DELAYRL_DELAY3_Pos        (12U)
-#define GPIO_DELAYRL_DELAY3_Msk        (0xFU << GPIO_DELAYRL_DELAY3_Pos)        /*!< 0x0000F000 */
-#define GPIO_DELAYRL_DELAY3            GPIO_DELAYRL_DELAY3_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_DELAYRL_DELAY4_Pos        (16U)
-#define GPIO_DELAYRL_DELAY4_Msk        (0xFU << GPIO_DELAYRL_DELAY4_Pos)        /*!< 0x000F0000 */
-#define GPIO_DELAYRL_DELAY4            GPIO_DELAYRL_DELAY4_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_DELAYRL_DELAY5_Pos        (20U)
-#define GPIO_DELAYRL_DELAY5_Msk        (0xFU << GPIO_DELAYRL_DELAY5_Pos)        /*!< 0x00F00000 */
-#define GPIO_DELAYRL_DELAY5            GPIO_DELAYRL_DELAY5_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_DELAYRL_DELAY6_Pos        (24U)
-#define GPIO_DELAYRL_DELAY6_Msk        (0xFU << GPIO_DELAYRL_DELAY6_Pos)        /*!< 0x0F000000 */
-#define GPIO_DELAYRL_DELAY6            GPIO_DELAYRL_DELAY6_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_DELAYRL_DELAY7_Pos        (28U)
-#define GPIO_DELAYRL_DELAY7_Msk        (0xFU << GPIO_DELAYRL_DELAY7_Pos)        /*!< 0xF0000000 */
-#define GPIO_DELAYRL_DELAY7            GPIO_DELAYRL_DELAY7_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRL_DLY0_Pos        (0U)
+#define GPIO_DELAYRL_DLY0_Msk        (0xFU << GPIO_DELAYRL_DLY0_Pos)        /*!< 0x0000000F */
+#define GPIO_DELAYRL_DLY0            GPIO_DELAYRL_DLY0_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRL_DLY1_Pos        (4U)
+#define GPIO_DELAYRL_DLY1_Msk        (0xFU << GPIO_DELAYRL_DLY1_Pos)        /*!< 0x000000F0 */
+#define GPIO_DELAYRL_DLY1            GPIO_DELAYRL_DLY1_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRL_DLY2_Pos        (8U)
+#define GPIO_DELAYRL_DLY2_Msk        (0xFU << GPIO_DELAYRL_DLY2_Pos)        /*!< 0x00000F00 */
+#define GPIO_DELAYRL_DLY2            GPIO_DELAYRL_DLY2_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRL_DLY3_Pos        (12U)
+#define GPIO_DELAYRL_DLY3_Msk        (0xFU << GPIO_DELAYRL_DLY3_Pos)        /*!< 0x0000F000 */
+#define GPIO_DELAYRL_DLY3            GPIO_DELAYRL_DLY3_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRL_DLY4_Pos        (16U)
+#define GPIO_DELAYRL_DLY4_Msk        (0xFU << GPIO_DELAYRL_DLY4_Pos)        /*!< 0x000F0000 */
+#define GPIO_DELAYRL_DLY4            GPIO_DELAYRL_DLY4_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRL_DLY5_Pos        (20U)
+#define GPIO_DELAYRL_DLY5_Msk        (0xFU << GPIO_DELAYRL_DLY5_Pos)        /*!< 0x00F00000 */
+#define GPIO_DELAYRL_DLY5            GPIO_DELAYRL_DLY5_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRL_DLY6_Pos        (24U)
+#define GPIO_DELAYRL_DLY6_Msk        (0xFU << GPIO_DELAYRL_DLY6_Pos)        /*!< 0x0F000000 */
+#define GPIO_DELAYRL_DLY6            GPIO_DELAYRL_DLY6_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRL_DLY7_Pos        (28U)
+#define GPIO_DELAYRL_DLY7_Msk        (0xFU << GPIO_DELAYRL_DLY7_Pos)        /*!< 0xF0000000 */
+#define GPIO_DELAYRL_DLY7            GPIO_DELAYRL_DLY7_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
 
 /*****************  Bit definition for GPIO_DELAYRH register  *****************/
-#define GPIO_DELAYRH_DELAY8_Pos        (0U)
-#define GPIO_DELAYRH_DELAY8_Msk        (0xFU << GPIO_DELAYRH_DELAY8_Pos)        /*!< 0x0000000F */
-#define GPIO_DELAYRH_DELAY8            GPIO_DELAYRH_DELAY8_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_DELAYRH_DELAY9_Pos        (4U)
-#define GPIO_DELAYRH_DELAY9_Msk        (0xFU << GPIO_DELAYRH_DELAY9_Pos)        /*!< 0x000000F0 */
-#define GPIO_DELAYRH_DELAY9            GPIO_DELAYRH_DELAY9_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_DELAYRH_DELAY10_Pos       (8U)
-#define GPIO_DELAYRH_DELAY10_Msk       (0xFU << GPIO_DELAYRH_DELAY10_Pos)       /*!< 0x00000F00 */
-#define GPIO_DELAYRH_DELAY10           GPIO_DELAYRH_DELAY10_Msk                 /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_DELAYRH_DELAY11_Pos       (12U)
-#define GPIO_DELAYRH_DELAY11_Msk       (0xFU << GPIO_DELAYRH_DELAY11_Pos)       /*!< 0x0000F000 */
-#define GPIO_DELAYRH_DELAY11           GPIO_DELAYRH_DELAY11_Msk                 /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_DELAYRH_DELAY12_Pos       (16U)
-#define GPIO_DELAYRH_DELAY12_Msk       (0xFU << GPIO_DELAYRH_DELAY12_Pos)       /*!< 0x000F0000 */
-#define GPIO_DELAYRH_DELAY12           GPIO_DELAYRH_DELAY12_Msk                 /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_DELAYRH_DELAY13_Pos       (20U)
-#define GPIO_DELAYRH_DELAY13_Msk       (0xFU << GPIO_DELAYRH_DELAY13_Pos)       /*!< 0x00F00000 */
-#define GPIO_DELAYRH_DELAY13           GPIO_DELAYRH_DELAY13_Msk                 /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_DELAYRH_DELAY14_Pos       (24U)
-#define GPIO_DELAYRH_DELAY14_Msk       (0xFU << GPIO_DELAYRH_DELAY14_Pos)       /*!< 0x0F000000 */
-#define GPIO_DELAYRH_DELAY14           GPIO_DELAYRH_DELAY14_Msk                 /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_DELAYRH_DELAY15_Pos       (28U)
-#define GPIO_DELAYRH_DELAY15_Msk       (0xFU << GPIO_DELAYRH_DELAY15_Pos)       /*!< 0xF0000000 */
-#define GPIO_DELAYRH_DELAY15           GPIO_DELAYRH_DELAY15_Msk                 /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRH_DLY8_Pos        (0U)
+#define GPIO_DELAYRH_DLY8_Msk        (0xFU << GPIO_DELAYRH_DLY8_Pos)        /*!< 0x0000000F */
+#define GPIO_DELAYRH_DLY8            GPIO_DELAYRH_DLY8_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRH_DLY9_Pos        (4U)
+#define GPIO_DELAYRH_DLY9_Msk        (0xFU << GPIO_DELAYRH_DLY9_Pos)        /*!< 0x000000F0 */
+#define GPIO_DELAYRH_DLY9            GPIO_DELAYRH_DLY9_Msk                  /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRH_DLY10_Pos       (8U)
+#define GPIO_DELAYRH_DLY10_Msk       (0xFU << GPIO_DELAYRH_DLY10_Pos)       /*!< 0x00000F00 */
+#define GPIO_DELAYRH_DLY10           GPIO_DELAYRH_DLY10_Msk                 /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRH_DLY11_Pos       (12U)
+#define GPIO_DELAYRH_DLY11_Msk       (0xFU << GPIO_DELAYRH_DLY11_Pos)       /*!< 0x0000F000 */
+#define GPIO_DELAYRH_DLY11           GPIO_DELAYRH_DLY11_Msk                 /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRH_DLY12_Pos       (16U)
+#define GPIO_DELAYRH_DLY12_Msk       (0xFU << GPIO_DELAYRH_DLY12_Pos)       /*!< 0x000F0000 */
+#define GPIO_DELAYRH_DLY12           GPIO_DELAYRH_DLY12_Msk                 /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRH_DLY13_Pos       (20U)
+#define GPIO_DELAYRH_DLY13_Msk       (0xFU << GPIO_DELAYRH_DLY13_Pos)       /*!< 0x00F00000 */
+#define GPIO_DELAYRH_DLY13           GPIO_DELAYRH_DLY13_Msk                 /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRH_DLY14_Pos       (24U)
+#define GPIO_DELAYRH_DLY14_Msk       (0xFU << GPIO_DELAYRH_DLY14_Pos)       /*!< 0x0F000000 */
+#define GPIO_DELAYRH_DLY14           GPIO_DELAYRH_DLY14_Msk                 /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_DELAYRH_DLY15_Pos       (28U)
+#define GPIO_DELAYRH_DLY15_Msk       (0xFU << GPIO_DELAYRH_DLY15_Pos)       /*!< 0xF0000000 */
+#define GPIO_DELAYRH_DLY15           GPIO_DELAYRH_DLY15_Msk                 /*!< [3:0]: Port x IO pin y delay setup (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
 
 /****************  Bit definition for GPIO_PIOCFGRL register  *****************/
-#define GPIO_PIOCFGRL_PIOCFG0_Pos      (0U)
-#define GPIO_PIOCFGRL_PIOCFG0_Msk      (0xFU << GPIO_PIOCFGRL_PIOCFG0_Pos)      /*!< 0x0000000F */
-#define GPIO_PIOCFGRL_PIOCFG0          GPIO_PIOCFGRL_PIOCFG0_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_PIOCFGRL_PIOCFG1_Pos      (4U)
-#define GPIO_PIOCFGRL_PIOCFG1_Msk      (0xFU << GPIO_PIOCFGRL_PIOCFG1_Pos)      /*!< 0x000000F0 */
-#define GPIO_PIOCFGRL_PIOCFG1          GPIO_PIOCFGRL_PIOCFG1_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_PIOCFGRL_PIOCFG2_Pos      (8U)
-#define GPIO_PIOCFGRL_PIOCFG2_Msk      (0xFU << GPIO_PIOCFGRL_PIOCFG2_Pos)      /*!< 0x00000F00 */
-#define GPIO_PIOCFGRL_PIOCFG2          GPIO_PIOCFGRL_PIOCFG2_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_PIOCFGRL_PIOCFG3_Pos      (12U)
-#define GPIO_PIOCFGRL_PIOCFG3_Msk      (0xFU << GPIO_PIOCFGRL_PIOCFG3_Pos)      /*!< 0x0000F000 */
-#define GPIO_PIOCFGRL_PIOCFG3          GPIO_PIOCFGRL_PIOCFG3_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_PIOCFGRL_PIOCFG4_Pos      (16U)
-#define GPIO_PIOCFGRL_PIOCFG4_Msk      (0xFU << GPIO_PIOCFGRL_PIOCFG4_Pos)      /*!< 0x000F0000 */
-#define GPIO_PIOCFGRL_PIOCFG4          GPIO_PIOCFGRL_PIOCFG4_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_PIOCFGRL_PIOCFG5_Pos      (20U)
-#define GPIO_PIOCFGRL_PIOCFG5_Msk      (0xFU << GPIO_PIOCFGRL_PIOCFG5_Pos)      /*!< 0x00F00000 */
-#define GPIO_PIOCFGRL_PIOCFG5          GPIO_PIOCFGRL_PIOCFG5_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_PIOCFGRL_PIOCFG6_Pos      (24U)
-#define GPIO_PIOCFGRL_PIOCFG6_Msk      (0xFU << GPIO_PIOCFGRL_PIOCFG6_Pos)      /*!< 0x0F000000 */
-#define GPIO_PIOCFGRL_PIOCFG6          GPIO_PIOCFGRL_PIOCFG6_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_PIOCFGRL_PIOCFG7_Pos      (28U)
-#define GPIO_PIOCFGRL_PIOCFG7_Msk      (0xFU << GPIO_PIOCFGRL_PIOCFG7_Pos)      /*!< 0xF0000000 */
-#define GPIO_PIOCFGRL_PIOCFG7          GPIO_PIOCFGRL_PIOCFG7_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRL_0_Pos      	(0U)
+#define GPIO_ADVCFGRL_0_Msk    	  	(0xFU << GPIO_ADVCFGRL_0_Pos)      /*!< 0x0000000F */
+#define GPIO_ADVCFGRL_0          	GPIO_ADVCFGRL_0_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRL_DLYPATH0      (0x1UL << GPIO_ADVCFGRL_0_Pos)          /*!< 0x00000001 */
+#define GPIO_ADVCFGRL_DE0           (0x2UL << GPIO_ADVCFGRL_0_Pos)          /*!< 0x00000002 */
+#define GPIO_ADVCFGRL_INVCLK0       (0x4UL << GPIO_ADVCFGRL_0_Pos)          /*!< 0x00000004 */
+#define GPIO_ADVCFGRL_RET0          (0x8UL << GPIO_ADVCFGRL_0_Pos)          /*!< 0x00000008 */
+#define GPIO_ADVCFGRL_1_Pos      	(4U)
+#define GPIO_ADVCFGRL_1_Msk      	(0xFU << GPIO_ADVCFGRL_1_Pos)      /*!< 0x000000F0 */
+#define GPIO_ADVCFGRL_1          	GPIO_ADVCFGRL_1_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRL_DLYPATH1      (0x1UL << GPIO_ADVCFGRL_1_Pos)          /*!< 0x00000010 */
+#define GPIO_ADVCFGRL_DE1           (0x2UL << GPIO_ADVCFGRL_1_Pos)          /*!< 0x00000020 */
+#define GPIO_ADVCFGRL_INVCLK1       (0x4UL << GPIO_ADVCFGRL_1_Pos)          /*!< 0x00000040 */
+#define GPIO_ADVCFGRL_RET1          (0x8UL << GPIO_ADVCFGRL_1_Pos)          /*!< 0x00000080 */
+#define GPIO_ADVCFGRL_2_Pos      	(8U)
+#define GPIO_ADVCFGRL_2_Msk      	(0xFU << GPIO_ADVCFGRL_2_Pos)      /*!< 0x00000F00 */
+#define GPIO_ADVCFGRL_2          	GPIO_ADVCFGRL_2_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRL_DLYPATH2      (0x1UL << GPIO_ADVCFGRL_2_Pos)          /*!< 0x00000100 */
+#define GPIO_ADVCFGRL_DE2           (0x2UL << GPIO_ADVCFGRL_2_Pos)          /*!< 0x00000200 */
+#define GPIO_ADVCFGRL_INVCLK2       (0x4UL << GPIO_ADVCFGRL_2_Pos)          /*!< 0x00000400 */
+#define GPIO_ADVCFGRL_RET2          (0x8UL << GPIO_ADVCFGRL_2_Pos)          /*!< 0x00000800 */
+#define GPIO_ADVCFGRL_3_Pos      	(12U)
+#define GPIO_ADVCFGRL_3_Msk      	(0xFU << GPIO_ADVCFGRL_3_Pos)      /*!< 0x0000F000 */
+#define GPIO_ADVCFGRL_3          	GPIO_ADVCFGRL_3_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRL_DLYPATH3      (0x1UL << GPIO_ADVCFGRL_3_Pos)          /*!< 0x00001000 */
+#define GPIO_ADVCFGRL_DE3           (0x2UL << GPIO_ADVCFGRL_3_Pos)          /*!< 0x00002000 */
+#define GPIO_ADVCFGRL_INVCLK3       (0x4UL << GPIO_ADVCFGRL_3_Pos)          /*!< 0x00004000 */
+#define GPIO_ADVCFGRL_RET3          (0x8UL << GPIO_ADVCFGRL_3_Pos)          /*!< 0x00008000 */
+#define GPIO_ADVCFGRL_4_Pos      	(16U)
+#define GPIO_ADVCFGRL_4_Msk      	(0xFU << GPIO_ADVCFGRL_4_Pos)      /*!< 0x000F0000 */
+#define GPIO_ADVCFGRL_4          	GPIO_ADVCFGRL_4_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRL_DLYPATH4      (0x1UL << GPIO_ADVCFGRL_4_Pos)          /*!< 0x00010000 */
+#define GPIO_ADVCFGRL_DE4           (0x2UL << GPIO_ADVCFGRL_4_Pos)          /*!< 0x00020000 */
+#define GPIO_ADVCFGRL_INVCLK4       (0x4UL << GPIO_ADVCFGRL_4_Pos)          /*!< 0x00040000 */
+#define GPIO_ADVCFGRL_RET4          (0x8UL << GPIO_ADVCFGRL_4_Pos)          /*!< 0x00080000 */
+#define GPIO_ADVCFGRL_5_Pos      	(20U)
+#define GPIO_ADVCFGRL_5_Msk      	(0xFU << GPIO_ADVCFGRL_5_Pos)      /*!< 0x00F00000 */
+#define GPIO_ADVCFGRL_5          	GPIO_ADVCFGRL_5_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRL_DLYPATH5      (0x1UL << GPIO_ADVCFGRL_5_Pos)          /*!< 0x00100000 */
+#define GPIO_ADVCFGRL_DE5           (0x2UL << GPIO_ADVCFGRL_5_Pos)          /*!< 0x00200000 */
+#define GPIO_ADVCFGRL_INVCLK5       (0x4UL << GPIO_ADVCFGRL_5_Pos)          /*!< 0x00400000 */
+#define GPIO_ADVCFGRL_RET5          (0x8UL << GPIO_ADVCFGRL_5_Pos)          /*!< 0x00800000 */
+#define GPIO_ADVCFGRL_6_Pos      	(24U)
+#define GPIO_ADVCFGRL_6_Msk      	(0xFU << GPIO_ADVCFGRL_6_Pos)      /*!< 0x0F000000 */
+#define GPIO_ADVCFGRL_6          	GPIO_ADVCFGRL_6_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRL_DLYPATH6      (0x1UL << GPIO_ADVCFGRL_6_Pos)          /*!< 0x01000000 */
+#define GPIO_ADVCFGRL_DE6           (0x2UL << GPIO_ADVCFGRL_6_Pos)          /*!< 0x02000000 */
+#define GPIO_ADVCFGRL_INVCLK6       (0x4UL << GPIO_ADVCFGRL_6_Pos)          /*!< 0x04000000 */
+#define GPIO_ADVCFGRL_RET6          (0x8UL << GPIO_ADVCFGRL_6_Pos)          /*!< 0x08000000 */
+#define GPIO_ADVCFGRL_7_Pos      	(28U)
+#define GPIO_ADVCFGRL_7_Msk      	(0xFU << GPIO_ADVCFGRL_7_Pos)      /*!< 0xF0000000 */
+#define GPIO_ADVCFGRL_7          	GPIO_ADVCFGRL_7_Msk                /*!< [3:0]: Port x IO pin configuration (y = 0 to 7)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRL_DLYPATH7      (0x1UL << GPIO_ADVCFGRL_7_Pos)          /*!< 0x10000000 */
+#define GPIO_ADVCFGRL_DE7           (0x2UL << GPIO_ADVCFGRL_7_Pos)          /*!< 0x20000000 */
+#define GPIO_ADVCFGRL_INVCLK7       (0x4UL << GPIO_ADVCFGRL_7_Pos)          /*!< 0x40000000 */
+#define GPIO_ADVCFGRL_RET7          (0x8UL << GPIO_ADVCFGRL_7_Pos)          /*!< 0x80000000 */
 
 /****************  Bit definition for GPIO_PIOCFGRH register  *****************/
-#define GPIO_PIOCFGRH_PIOCFG8_Pos      (0U)
-#define GPIO_PIOCFGRH_PIOCFG8_Msk      (0xFU << GPIO_PIOCFGRH_PIOCFG8_Pos)      /*!< 0x0000000F */
-#define GPIO_PIOCFGRH_PIOCFG8          GPIO_PIOCFGRH_PIOCFG8_Msk                /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_PIOCFGRH_PIOCFG9_Pos      (4U)
-#define GPIO_PIOCFGRH_PIOCFG9_Msk      (0xFU << GPIO_PIOCFGRH_PIOCFG9_Pos)      /*!< 0x000000F0 */
-#define GPIO_PIOCFGRH_PIOCFG9          GPIO_PIOCFGRH_PIOCFG9_Msk                /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_PIOCFGRH_PIOCFG10_Pos     (8U)
-#define GPIO_PIOCFGRH_PIOCFG10_Msk     (0xFU << GPIO_PIOCFGRH_PIOCFG10_Pos)     /*!< 0x00000F00 */
-#define GPIO_PIOCFGRH_PIOCFG10         GPIO_PIOCFGRH_PIOCFG10_Msk               /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_PIOCFGRH_PIOCFG11_Pos     (12U)
-#define GPIO_PIOCFGRH_PIOCFG11_Msk     (0xFU << GPIO_PIOCFGRH_PIOCFG11_Pos)     /*!< 0x0000F000 */
-#define GPIO_PIOCFGRH_PIOCFG11         GPIO_PIOCFGRH_PIOCFG11_Msk               /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_PIOCFGRH_PIOCFG12_Pos     (16U)
-#define GPIO_PIOCFGRH_PIOCFG12_Msk     (0xFU << GPIO_PIOCFGRH_PIOCFG12_Pos)     /*!< 0x000F0000 */
-#define GPIO_PIOCFGRH_PIOCFG12         GPIO_PIOCFGRH_PIOCFG12_Msk               /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_PIOCFGRH_PIOCFG13_Pos     (20U)
-#define GPIO_PIOCFGRH_PIOCFG13_Msk     (0xFU << GPIO_PIOCFGRH_PIOCFG13_Pos)     /*!< 0x00F00000 */
-#define GPIO_PIOCFGRH_PIOCFG13         GPIO_PIOCFGRH_PIOCFG13_Msk               /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_PIOCFGRH_PIOCFG14_Pos     (24U)
-#define GPIO_PIOCFGRH_PIOCFG14_Msk     (0xFU << GPIO_PIOCFGRH_PIOCFG14_Pos)     /*!< 0x0F000000 */
-#define GPIO_PIOCFGRH_PIOCFG14         GPIO_PIOCFGRH_PIOCFG14_Msk               /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
-#define GPIO_PIOCFGRH_PIOCFG15_Pos     (28U)
-#define GPIO_PIOCFGRH_PIOCFG15_Msk     (0xFU << GPIO_PIOCFGRH_PIOCFG15_Pos)     /*!< 0xF0000000 */
-#define GPIO_PIOCFGRH_PIOCFG15         GPIO_PIOCFGRH_PIOCFG15_Msk               /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRH_8_Pos      	(0U)
+#define GPIO_ADVCFGRH_8_Msk      	(0xFU << GPIO_ADVCFGRH_8_Pos)      /*!< 0x0000000F */
+#define GPIO_ADVCFGRH_8          	GPIO_ADVCFGRH_8_Msk                /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRH_DLYPATH8      (0x1UL << GPIO_ADVCFGRH_8_Pos)          /*!< 0x00000001 */
+#define GPIO_ADVCFGRH_DE8           (0x2UL << GPIO_ADVCFGRH_8_Pos)          /*!< 0x00000002 */
+#define GPIO_ADVCFGRH_INVCLK8       (0x4UL << GPIO_ADVCFGRH_8_Pos)          /*!< 0x00000004 */
+#define GPIO_ADVCFGRH_RET8          (0x8UL << GPIO_ADVCFGRH_8_Pos)          /*!< 0x00000008 */
+#define GPIO_ADVCFGRH_9_Pos      	(4U)
+#define GPIO_ADVCFGRH_9_Msk      	(0xFU << GPIO_ADVCFGRH_9_Pos)      /*!< 0x000000F0 */
+#define GPIO_ADVCFGRH_9          	GPIO_ADVCFGRH_9_Msk                /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRH_DLYPATH9      (0x1UL << GPIO_ADVCFGRH_9_Pos)          /*!< 0x00000010 */
+#define GPIO_ADVCFGRH_DE9           (0x2UL << GPIO_ADVCFGRH_9_Pos)          /*!< 0x00000020 */
+#define GPIO_ADVCFGRH_INVCLK9       (0x4UL << GPIO_ADVCFGRH_9_Pos)          /*!< 0x00000040 */
+#define GPIO_ADVCFGRH_RET9          (0x8UL << GPIO_ADVCFGRH_9_Pos)          /*!< 0x00000080 */
+#define GPIO_ADVCFGRH_10_Pos     	(8U)
+#define GPIO_ADVCFGRH_10_Msk     	(0xFU << GPIO_ADVCFGRH_10_Pos)     /*!< 0x00000F00 */
+#define GPIO_ADVCFGRH_10         	GPIO_ADVCFGRH_10_Msk               /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRH_DLYPATH10     (0x1UL << GPIO_ADVCFGRH_10_Pos)         /*!< 0x00000100 */
+#define GPIO_ADVCFGRH_DE10          (0x2UL << GPIO_ADVCFGRH_10_Pos)         /*!< 0x00000200 */
+#define GPIO_ADVCFGRH_INVCLK10      (0x4UL << GPIO_ADVCFGRH_10_Pos)         /*!< 0x00000400 */
+#define GPIO_ADVCFGRH_RET10         (0x8UL << GPIO_ADVCFGRH_10_Pos)         /*!< 0x00000800 */
+#define GPIO_ADVCFGRH_11_Pos     	(12U)
+#define GPIO_ADVCFGRH_11_Msk     	(0xFU << GPIO_ADVCFGRH_11_Pos)     /*!< 0x0000F000 */
+#define GPIO_ADVCFGRH_11         	GPIO_ADVCFGRH_11_Msk               /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRH_DLYPATH11     (0x1UL << GPIO_ADVCFGRH_11_Pos)         /*!< 0x00001000 */
+#define GPIO_ADVCFGRH_DE11          (0x2UL << GPIO_ADVCFGRH_11_Pos)         /*!< 0x00002000 */
+#define GPIO_ADVCFGRH_INVCLK11      (0x4UL << GPIO_ADVCFGRH_11_Pos)         /*!< 0x00004000 */
+#define GPIO_ADVCFGRH_RET11         (0x8UL << GPIO_ADVCFGRH_11_Pos)         /*!< 0x00008000 */
+#define GPIO_ADVCFGRH_12_Pos    	(16U)
+#define GPIO_ADVCFGRH_12_Msk     	(0xFU << GPIO_ADVCFGRH_12_Pos)     /*!< 0x000F0000 */
+#define GPIO_ADVCFGRH_12         	GPIO_ADVCFGRH_12_Msk               /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRH_DLYPATH12     (0x1UL << GPIO_ADVCFGRH_12_Pos)         /*!< 0x00010000 */
+#define GPIO_ADVCFGRH_DE12          (0x2UL << GPIO_ADVCFGRH_12_Pos)         /*!< 0x00020000 */
+#define GPIO_ADVCFGRH_INVCLK12      (0x4UL << GPIO_ADVCFGRH_12_Pos)         /*!< 0x00040000 */
+#define GPIO_ADVCFGRH_RET12         (0x8UL << GPIO_ADVCFGRH_12_Pos)         /*!< 0x00080000 */
+#define GPIO_ADVCFGRH_13_Pos     	(20U)
+#define GPIO_ADVCFGRH_13_Msk     	(0xFU << GPIO_ADVCFGRH_13_Pos)     /*!< 0x00F00000 */
+#define GPIO_ADVCFGRH_13         	GPIO_ADVCFGRH_13_Msk               /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRH_DLYPATH13     (0x1UL << GPIO_ADVCFGRH_13_Pos)         /*!< 0x00100000 */
+#define GPIO_ADVCFGRH_DE13          (0x2UL << GPIO_ADVCFGRH_13_Pos)         /*!< 0x00200000 */
+#define GPIO_ADVCFGRH_INVCLK13      (0x4UL << GPIO_ADVCFGRH_13_Pos)         /*!< 0x00400000 */
+#define GPIO_ADVCFGRH_RET13         (0x8UL << GPIO_ADVCFGRH_13_Pos)         /*!< 0x00800000 */
+#define GPIO_ADVCFGRH_14_Pos     	(24U)
+#define GPIO_ADVCFGRH_14_Msk     	(0xFU << GPIO_ADVCFGRH_14_Pos)     /*!< 0x0F000000 */
+#define GPIO_ADVCFGRH_14         	GPIO_ADVCFGRH_14_Msk               /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRH_DLYPATH14     (0x1UL << GPIO_ADVCFGRH_14_Pos)         /*!< 0x01000000 */
+#define GPIO_ADVCFGRH_DE14          (0x2UL << GPIO_ADVCFGRH_14_Pos)         /*!< 0x02000000 */
+#define GPIO_ADVCFGRH_INVCLK14      (0x4UL << GPIO_ADVCFGRH_14_Pos)         /*!< 0x04000000 */
+#define GPIO_ADVCFGRH_RET14         (0x8UL << GPIO_ADVCFGRH_14_Pos)         /*!< 0x08000000 */
+#define GPIO_ADVCFGRH_15_Pos     	(28U)
+#define GPIO_ADVCFGRH_15_Msk     	(0xFU << GPIO_ADVCFGRH_15_Pos)     /*!< 0xF0000000 */
+#define GPIO_ADVCFGRH_15         	GPIO_ADVCFGRH_15_Msk               /*!< [3:0]: Port x IO pin y configuration (y = 8 to 15)Successful read or write to this bit must be secure if SECy bit is set in GPIOx_SECCFGR, and must be privileged if PRIVy bit is set in GPIOx_PRIVCFGR.Only authorized CPU can read or write this bit, as described in Section1.4: IO pin allocation to compartments. Illegal read returns zero. Illegal write is ignored. */
+#define GPIO_ADVCFGRH_DLYPATH15     (0x1UL << GPIO_ADVCFGRH_15_Pos)         /*!< 0x10000000 */
+#define GPIO_ADVCFGRH_DE15          (0x2UL << GPIO_ADVCFGRH_15_Pos)         /*!< 0x20000000 */
+#define GPIO_ADVCFGRH_INVCLK15      (0x4UL << GPIO_ADVCFGRH_15_Pos)         /*!< 0x40000000 */
+#define GPIO_ADVCFGRH_RET15         (0x8UL << GPIO_ADVCFGRH_15_Pos)         /*!< 0x80000000 */
 
 /****************  Bit definition for GPIO_CIDCFGR0 register  *****************/
 #define GPIO_CIDCFGR0_CFEN_Pos         (0U)
@@ -6099,6 +6016,55 @@ typedef struct
 #define HSEM_C1IER_ISE_Pos              (0U)
 #define HSEM_C1IER_ISE_Msk              (0xFFFFU << HSEM_C1IER_ISE_Pos)           /*!< 0x0000FFFF */
 #define HSEM_C1IER_ISE                  HSEM_C1IER_ISE_Msk                        /*!< non-secure Interrupt(n) semaphore x enable bit. (x = 0 to 15) */
+
+#define HSEM_C1IER_ISE0_Pos             (0U)
+#define HSEM_C1IER_ISE0_Msk             (0x1UL << HSEM_C1IER_ISE0_Pos)               /*!< 0x00000001 */
+#define HSEM_C1IER_ISE0                 HSEM_C1IER_ISE0_Msk                          /*!<semaphore 0 , interrupt 0 enable bit.  */
+#define HSEM_C1IER_ISE1_Pos             (1U)
+#define HSEM_C1IER_ISE1_Msk             (0x1UL << HSEM_C1IER_ISE1_Pos)               /*!< 0x00000002 */
+#define HSEM_C1IER_ISE1                 HSEM_C1IER_ISE1_Msk                          /*!<semaphore 1 , interrupt 0 enable bit.  */
+#define HSEM_C1IER_ISE2_Pos             (2U)
+#define HSEM_C1IER_ISE2_Msk             (0x1UL << HSEM_C1IER_ISE2_Pos)               /*!< 0x00000004 */
+#define HSEM_C1IER_ISE2                 HSEM_C1IER_ISE2_Msk                          /*!<semaphore 2 , interrupt 0 enable bit.  */
+#define HSEM_C1IER_ISE3_Pos             (3U)
+#define HSEM_C1IER_ISE3_Msk             (0x1UL << HSEM_C1IER_ISE3_Pos)               /*!< 0x00000008 */
+#define HSEM_C1IER_ISE3                 HSEM_C1IER_ISE3_Msk                          /*!<semaphore 3 , interrupt 0 enable bit.  */
+#define HSEM_C1IER_ISE4_Pos             (4U)
+#define HSEM_C1IER_ISE4_Msk             (0x1UL << HSEM_C1IER_ISE4_Pos)               /*!< 0x00000010 */
+#define HSEM_C1IER_ISE4                 HSEM_C1IER_ISE4_Msk                          /*!<semaphore 4 , interrupt 0 enable bit.  */
+#define HSEM_C1IER_ISE5_Pos             (5U)
+#define HSEM_C1IER_ISE5_Msk             (0x1UL << HSEM_C1IER_ISE5_Pos)               /*!< 0x00000020 */
+#define HSEM_C1IER_ISE5                 HSEM_C1IER_ISE5_Msk                          /*!<semaphore 5 interrupt 0 enable bit.    */
+#define HSEM_C1IER_ISE6_Pos             (6U)
+#define HSEM_C1IER_ISE6_Msk             (0x1UL << HSEM_C1IER_ISE6_Pos)               /*!< 0x00000040 */
+#define HSEM_C1IER_ISE6                 HSEM_C1IER_ISE6_Msk                          /*!<semaphore 6 interrupt 0 enable bit.    */
+#define HSEM_C1IER_ISE7_Pos             (7U)
+#define HSEM_C1IER_ISE7_Msk             (0x1UL << HSEM_C1IER_ISE7_Pos)               /*!< 0x00000080 */
+#define HSEM_C1IER_ISE7                 HSEM_C1IER_ISE7_Msk                          /*!<semaphore 7 interrupt 0 enable bit.    */
+#define HSEM_C1IER_ISE8_Pos             (8U)
+#define HSEM_C1IER_ISE8_Msk             (0x1UL << HSEM_C1IER_ISE8_Pos)               /*!< 0x00000100 */
+#define HSEM_C1IER_ISE8                 HSEM_C1IER_ISE8_Msk                          /*!<semaphore 8 interrupt 0 enable bit.    */
+#define HSEM_C1IER_ISE9_Pos             (9U)
+#define HSEM_C1IER_ISE9_Msk             (0x1UL << HSEM_C1IER_ISE9_Pos)               /*!< 0x00000200 */
+#define HSEM_C1IER_ISE9                 HSEM_C1IER_ISE9_Msk                          /*!<semaphore 9 interrupt 0 enable bit.    */
+#define HSEM_C1IER_ISE10_Pos            (10U)
+#define HSEM_C1IER_ISE10_Msk            (0x1UL << HSEM_C1IER_ISE10_Pos)              /*!< 0x00000400 */
+#define HSEM_C1IER_ISE10                HSEM_C1IER_ISE10_Msk                         /*!<semaphore 10 interrupt 0 enable bit.   */
+#define HSEM_C1IER_ISE11_Pos            (11U)
+#define HSEM_C1IER_ISE11_Msk            (0x1UL << HSEM_C1IER_ISE11_Pos)              /*!< 0x00000800 */
+#define HSEM_C1IER_ISE11                HSEM_C1IER_ISE11_Msk                         /*!<semaphore 11 interrupt 0 enable bit.   */
+#define HSEM_C1IER_ISE12_Pos            (12U)
+#define HSEM_C1IER_ISE12_Msk            (0x1UL << HSEM_C1IER_ISE12_Pos)              /*!< 0x00001000 */
+#define HSEM_C1IER_ISE12                HSEM_C1IER_ISE12_Msk                         /*!<semaphore 12 interrupt 0 enable bit.   */
+#define HSEM_C1IER_ISE13_Pos            (13U)
+#define HSEM_C1IER_ISE13_Msk            (0x1UL << HSEM_C1IER_ISE13_Pos)              /*!< 0x00002000 */
+#define HSEM_C1IER_ISE13                HSEM_C1IER_ISE13_Msk                         /*!<semaphore 13 interrupt 0 enable bit.   */
+#define HSEM_C1IER_ISE14_Pos            (14U)
+#define HSEM_C1IER_ISE14_Msk            (0x1UL << HSEM_C1IER_ISE14_Pos)              /*!< 0x00004000 */
+#define HSEM_C1IER_ISE14                HSEM_C1IER_ISE14_Msk                         /*!<semaphore 14 interrupt 0 enable bit.   */
+#define HSEM_C1IER_ISE15_Pos            (15U)
+#define HSEM_C1IER_ISE15_Msk            (0x1UL << HSEM_C1IER_ISE15_Pos)              /*!< 0x00008000 */
+#define HSEM_C1IER_ISE15                HSEM_C1IER_ISE15_Msk                         /*!<semaphore 15 interrupt 0 enable bit. */
 
 /******************  Bit definition for HSEM_C1ICR register  ******************/
 #define HSEM_C1ICR_ISC_Pos              (0U)
@@ -8563,7 +8529,22 @@ typedef struct
 #define LPTIM_CNT_CNT_Msk            (0xFFFFU << LPTIM_CNT_CNT_Pos)          /*!< 0x0000FFFF */
 #define LPTIM_CNT_CNT                LPTIM_CNT_CNT_Msk                       /*!< Counter value */
 
+/******************  Bit definition for LPTIM1_OR register  *******************/
+#define LPTIM1_OR_OR_0_Pos            (0U)
+#define LPTIM1_OR_OR_0_Msk            (0x1U << LPTIM1_OR_OR_0_Pos)           /*!< 0x00000001 */
+#define LPTIM1_OR_OR_0                LPTIM1_OR_OR_0_Msk                     /*!< Option register bit 0 */
+
 /*****************  Bit definition for LPTIM_CFGR2 register  ******************/
+#define LPTIM_CFGR2_IN1SEL_Pos       (0U)
+#define LPTIM_CFGR2_IN1SEL_Msk       (0x3U << LPTIM_CFGR2_IN1SEL_Pos)        /*!< 0x00000003 */
+#define LPTIM_CFGR2_IN1SEL           LPTIM_CFGR2_IN1SEL_Msk                  /*!< LPTIM input 1 selection */
+#define LPTIM_CFGR2_IN1SEL_0         (0x1U << LPTIM_CFGR2_IN1SEL_Pos)        /*!< 0x00000001 */
+#define LPTIM_CFGR2_IN1SEL_1         (0x2U << LPTIM_CFGR2_IN1SEL_Pos)        /*!< 0x00000002 */
+#define LPTIM_CFGR2_IN2SEL_Pos       (4U)
+#define LPTIM_CFGR2_IN2SEL_Msk       (0x3U << LPTIM_CFGR2_IN2SEL_Pos)        /*!< 0x00000030 */
+#define LPTIM_CFGR2_IN2SEL           LPTIM_CFGR2_IN2SEL_Msk                  /*!< LPTIM input 2 selection */
+#define LPTIM_CFGR2_IN2SEL_0         (0x1U << LPTIM_CFGR2_IN2SEL_Pos)        /*!< 0x00000010 */
+#define LPTIM_CFGR2_IN2SEL_1         (0x2U << LPTIM_CFGR2_IN2SEL_Pos)        /*!< 0x00000020 */
 #define LPTIM_CFGR2_IC1SEL_Pos       (16U)
 #define LPTIM_CFGR2_IC1SEL_Msk       (0x3U << LPTIM_CFGR2_IC1SEL_Pos)        /*!< 0x00030000 */
 #define LPTIM_CFGR2_IC1SEL           LPTIM_CFGR2_IC1SEL_Msk                  /*!< LPTIM input capture 1 selection */
@@ -9079,36 +9060,35 @@ typedef struct
 #define MDF_DFLTDR_DR_Msk                   (0xFFFFFFUL << MDF_DFLTDR_DR_Pos)       /*!< 0xFFFFFF00 */
 #define MDF_DFLTDR_DR                       MDF_DFLTDR_DR_Msk                       /*!<MCIC decimation counter*/
 
+
+
 /******************************************************************************/
 /*                                                                            */
-/*                         PWR                                                */
+/*                                    (PWR)                                   */
+/*                                                                            */
 /******************************************************************************/
-
-/* Bit fields for PWR_CR1 register */
-#define PWR_CR1_VDDIO3VMEN_Pos                  (0U)
-#define PWR_CR1_VDDIO3VMEN_Msk                  (0x1U << PWR_CR1_VDDIO3VMEN_Pos)
-#define PWR_CR1_VDDIO3VMEN                      PWR_CR1_VDDIO3VMEN_Msk
-#define PWR_CR1_VDDIO4VMEN_Pos                  (1U)
-#define PWR_CR1_VDDIO4VMEN_Msk                  (0x1U << PWR_CR1_VDDIO4VMEN_Pos)
-#define PWR_CR1_VDDIO4VMEN                      PWR_CR1_VDDIO4VMEN_Msk
-#define PWR_CR1_USB33VMEN_Pos                   (2U)
-#define PWR_CR1_USB33VMEN_Msk                   (0x1U << PWR_CR1_USB33VMEN_Pos)
-#define PWR_CR1_USB33VMEN                       PWR_CR1_USB33VMEN_Msk
-#define PWR_CR1_UCPDVMEN_Pos                    (3U)
-#define PWR_CR1_UCPDVMEN_Msk                    (0x1U << PWR_CR1_UCPDVMEN_Pos)
-#define PWR_CR1_UCPDVMEN                        PWR_CR1_UCPDVMEN_Msk
-#define PWR_CR1_AVMEN_Pos                       (4U)
-#define PWR_CR1_AVMEN_Msk                       (0x1U << PWR_CR1_AVMEN_Pos)
-#define PWR_CR1_AVMEN                           PWR_CR1_AVMEN_Msk
-#define PWR_CR1_VDDIO3SV_Pos                    (8U)
-#define PWR_CR1_VDDIO3SV_Msk                    (0x1U << PWR_CR1_VDDIO3SV_Pos)
-#define PWR_CR1_VDDIO3SV                        PWR_CR1_VDDIO3SV_Msk
-#define PWR_CR1_VDDIO4SV_Pos                    (9U)
-#define PWR_CR1_VDDIO4SV_Msk                    (0x1U << PWR_CR1_VDDIO4SV_Pos)
-#define PWR_CR1_VDDIO4SV                        PWR_CR1_VDDIO4SV_Msk
-#define PWR_CR1_USB33SV_Pos                    (10U)
-#define PWR_CR1_USB33SV_Msk                    (0x1U << PWR_CR1_USB33SV_Pos)
-#define PWR_CR1_USB33SV                        PWR_CR1_USB33SV_Msk
+/*******************  Bit definition for PWR_CR1 register  ********************/
+#define PWR_CR1_VDDIO3VMEN_Pos                 (0U)
+#define PWR_CR1_VDDIO3VMEN_Msk                 (0x1U << PWR_CR1_VDDIO3VMEN_Pos)
+#define PWR_CR1_VDDIO3VMEN                     PWR_CR1_VDDIO3VMEN_Msk
+#define PWR_CR1_VDDIO4VMEN_Pos                 (1U)
+#define PWR_CR1_VDDIO4VMEN_Msk                 (0x1U << PWR_CR1_VDDIO4VMEN_Pos)
+#define PWR_CR1_VDDIO4VMEN                     PWR_CR1_VDDIO4VMEN_Msk
+#define PWR_CR1_USB33VMEN_Pos                  (2U)
+#define PWR_CR1_USB33VMEN_Msk                  (0x1U << PWR_CR1_USB33VMEN_Pos)
+#define PWR_CR1_USB33VMEN                      PWR_CR1_USB33VMEN_Msk
+#define PWR_CR1_UCPDVMEN_Pos                   (3U)
+#define PWR_CR1_UCPDVMEN_Msk                   (0x1U << PWR_CR1_UCPDVMEN_Pos)
+#define PWR_CR1_UCPDVMEN                       PWR_CR1_UCPDVMEN_Msk
+#define PWR_CR1_AVMEN_Pos                      (4U)
+#define PWR_CR1_AVMEN_Msk                      (0x1U << PWR_CR1_AVMEN_Pos)
+#define PWR_CR1_AVMEN                          PWR_CR1_AVMEN_Msk
+#define PWR_CR1_VDDIO3SV_Pos                   (8U)
+#define PWR_CR1_VDDIO3SV_Msk                   (0x1U << PWR_CR1_VDDIO3SV_Pos)
+#define PWR_CR1_VDDIO3SV                       PWR_CR1_VDDIO3SV_Msk
+#define PWR_CR1_VDDIO4SV_Pos                   (9U)
+#define PWR_CR1_VDDIO4SV_Msk                   (0x1U << PWR_CR1_VDDIO4SV_Pos)
+#define PWR_CR1_VDDIO4SV                       PWR_CR1_VDDIO4SV_Msk
 #define PWR_CR1_UCPDSV_Pos                     (11U)
 #define PWR_CR1_UCPDSV_Msk                     (0x1U << PWR_CR1_UCPDSV_Pos)
 #define PWR_CR1_UCPDSV                         PWR_CR1_UCPDSV_Msk
@@ -9168,7 +9148,6 @@ typedef struct
 #define PWR_CR3_PVDO_Msk                       (0x1U << PWR_CR3_PVDO_Pos)
 #define PWR_CR3_PVDO                           PWR_CR3_PVDO_Msk  /*!< Programmable Voltage Detect OutputThis bit is set and cleared by hardware. It is valid only if PVD is enabled by the PVDEN bit.- 0: VDD or voltage level on PVD_IN is equal or higher than the PVD threshold selected with the PLS[2:0] bits.- 1: VDD or voltage level on PVD_IN is lower than the PVD threshold selected with the PLS[2:0] bits.The PVD is disabled in Standby mode and after a system reset. For this reason, this bit is equal to 0 after Standby and system reset. */
 
-/* Bit fields for PWR_CR4 register */
 
 /* Bit fields for PWR_CR5 register */
 #define PWR_CR5_VCOREMONEN_Pos                 (0U)
@@ -9187,7 +9166,7 @@ typedef struct
 #define PWR_CR6_VCPUMONEN                      PWR_CR6_VCPUMONEN_Msk  /*!< VDDCPU monitoring enable.When set, the VDDCPU supply monitoring is enabled.- 0: VDDCPU monitoring disabled.- 1: VDDCPU monitoring enabled. */
 #define PWR_CR6_VCPULLS_Pos                    (4U)
 #define PWR_CR6_VCPULLS_Msk                    (0x1U << PWR_CR6_VCPULLS_Pos)
-#define PWR_CR6_VCPULLS                        PWR_CR6_VCPULLS_Msk  /*!< VDDCPU Voltage Detector low level selection.This bit select the low voltage threshold detected by the monitoring.- 0: 0.72V (TBC in 16FF)- 1: 0.81V (TBC in 16FF) */
+#define PWR_CR6_VCPULLS                        PWR_CR6_VCPULLS_Msk  /*!< VDDCPU Voltage Detector low level selection.This bit select the low voltage threshold detected by the monitoring.*/
 #define PWR_CR6_VCPUL_Pos                      (8U)
 #define PWR_CR6_VCPUL_Msk                      (0x1U << PWR_CR6_VCPUL_Pos)
 #define PWR_CR6_VCPUL                          PWR_CR6_VCPUL_Msk  /*!< Monitored VDDCPU level above low threshold.- 0: VDDCPU level above low threshold level, or Monitor disabled.- 1: VDDCPU level equal or below low threshold level. */
@@ -9261,13 +9240,7 @@ typedef struct
 #define PWR_CR12_VDDGPURDY_Msk                 (0x1U << PWR_CR12_VDDGPURDY_Pos)
 #define PWR_CR12_VDDGPURDY                     PWR_CR12_VDDGPURDY_Msk  /*!< VDDGPU ready */
 
-/* Bit fields for PWR_UCPDR register */
-#define PWR_UCPDR_DBDIS_Pos                    (0U)
-#define PWR_UCPDR_DBDIS_Msk                    (0x1U << PWR_UCPDR_DBDIS_Pos)
-#define PWR_UCPDR_DBDIS                        PWR_UCPDR_DBDIS_Msk
-#define PWR_UCPDR_STBY_Pos                     (1U)
-#define PWR_UCPDR_STBY_Msk                     (0x1U << PWR_UCPDR_STBY_Pos)
-#define PWR_UCPDR_STBY                         PWR_UCPDR_STBY_Msk
+
 
 /* Bit fields for PWR_BDCR1 register */
 #define PWR_BDCR1_DBD3P_Pos                    (0U)
@@ -9278,6 +9251,7 @@ typedef struct
 #define PWR_BDCR2_DBP_Pos                      (0U)
 #define PWR_BDCR2_DBP_Msk                      (0x1U << PWR_BDCR2_DBP_Pos)
 #define PWR_BDCR2_DBP                          PWR_BDCR2_DBP_Msk  /*!< Disable backup domain write protection.In reset state, all registers in backup domain are protected against parasitic write access from D3 domain. This bit must be set to enable write access to these registers.- 0: Write access to backup domains disabled- 1: Write access to backup domains enabled */
+
 
 /* Bit fields for PWR_CPU1CR register */
 #define PWR_CPU1CR_PDDS_D2_Pos                 (0U)
@@ -9565,78 +9539,57 @@ typedef struct
 #define PWR_R0CIDCFGR_CFEN_Pos                 (0U)
 #define PWR_R0CIDCFGR_CFEN_Msk                 (0x1U << PWR_R0CIDCFGR_CFEN_Pos)
 #define PWR_R0CIDCFGR_CFEN                     PWR_R0CIDCFGR_CFEN_Msk  /*!< Compartment ID filter enable- 0: Compartment-based filtering is disabled for resource number x.- 1: Compartment-based filtering is enabled for resource number x. */
-#define PWR_R0CIDCFGR_CID_Pos                  (4U)
-#define PWR_R0CIDCFGR_CID_Msk                  (0x7U << PWR_R0CIDCFGR_CID_Pos)
-#define PWR_R0CIDCFGR_CID                      PWR_R0CIDCFGR_CID_Msk  /*!< Compartment identifierWhen CFEN=1, this field is used by the Trusted domain application to define which compartment has access to the local resource number x. */
-#define PWR_R0CIDCFGR_PRDEN_Pos                (14U)
-#define PWR_R0CIDCFGR_PRDEN_Msk                (0x1U << PWR_R0CIDCFGR_PRDEN_Pos)
-#define PWR_R0CIDCFGR_PRDEN                    PWR_R0CIDCFGR_PRDEN_Msk  /*!< Public read enable- 0: Read and write accesses to local resource x are granted only to allocated compartment, if security and privilege are sufficient.- 1: Any compartment can read local resource x registers, regardless of secure or privilege. Write to local resource x registers are only granted to allocated compartment, if security and privilege are sufficient.This bit is ignored if CFEN=0. */
-
+#define PWR_R0CIDCFGR_SCID_Pos                 (4U)
+#define PWR_R0CIDCFGR_SCID_Msk                 (0x7U << PWR_R0CIDCFGR_SCID_Pos)             /*!< 0x00000070 */
+#define PWR_R0CIDCFGR_SCID                     PWR_R0CIDCFGR_SCID_Msk                       /*!< Static compartment identifier */
+										       
 /* Bit fields for PWR_R1CIDCFGR register */
 #define PWR_R1CIDCFGR_CFEN_Pos                 (0U)
 #define PWR_R1CIDCFGR_CFEN_Msk                 (0x1U << PWR_R1CIDCFGR_CFEN_Pos)
 #define PWR_R1CIDCFGR_CFEN                     PWR_R1CIDCFGR_CFEN_Msk  /*!< Compartment ID filter enable- 0: Compartment-based filtering is disabled for resource number x.- 1: Compartment-based filtering is enabled for resource number x. */
-#define PWR_R1CIDCFGR_CID_Pos                  (4U)
-#define PWR_R1CIDCFGR_CID_Msk                  (0x7U << PWR_R1CIDCFGR_CID_Pos)
-#define PWR_R1CIDCFGR_CID                      PWR_R1CIDCFGR_CID_Msk  /*!< Compartment identifierWhen CFEN=1, this field is used by the Trusted domain application to define which compartment has access to the local resource number x. */
-#define PWR_R1CIDCFGR_PRDEN_Pos                (14U)
-#define PWR_R1CIDCFGR_PRDEN_Msk                (0x1U << PWR_R1CIDCFGR_PRDEN_Pos)
-#define PWR_R1CIDCFGR_PRDEN                    PWR_R1CIDCFGR_PRDEN_Msk  /*!< Public read enable- 0: Read and write accesses to local resource x are granted only to allocated compartment, if security and privilege are sufficient.- 1: Any compartment can read local resource x registers, regardless of secure or privilege. Write to local resource x registers are only granted to allocated compartment, if security and privilege are sufficient.This bit is ignored if CFEN=0. */
+#define PWR_R1CIDCFGR_SCID_Pos                 (4U)
+#define PWR_R1CIDCFGR_SCID_Msk                 (0x7U << PWR_R1CIDCFGR_SCID_Pos)             /*!< 0x00000070 */
+#define PWR_R1CIDCFGR_SCID                     PWR_R1CIDCFGR_SCID_Msk                       /*!< Static compartment identifier */
 
 /* Bit fields for PWR_R2CIDCFGR register */
 #define PWR_R2CIDCFGR_CFEN_Pos                 (0U)
 #define PWR_R2CIDCFGR_CFEN_Msk                 (0x1U << PWR_R2CIDCFGR_CFEN_Pos)
 #define PWR_R2CIDCFGR_CFEN                     PWR_R2CIDCFGR_CFEN_Msk  /*!< Compartment ID filter enable- 0: Compartment-based filtering is disabled for resource number x.- 1: Compartment-based filtering is enabled for resource number x. */
-#define PWR_R2CIDCFGR_CID_Pos                  (4U)
-#define PWR_R2CIDCFGR_CID_Msk                  (0x7U << PWR_R2CIDCFGR_CID_Pos)
-#define PWR_R2CIDCFGR_CID                      PWR_R2CIDCFGR_CID_Msk  /*!< Compartment identifierWhen CFEN=1, this field is used by the Trusted domain application to define which compartment has access to the local resource number x. */
-#define PWR_R2CIDCFGR_PRDEN_Pos                (14U)
-#define PWR_R2CIDCFGR_PRDEN_Msk                (0x1U << PWR_R2CIDCFGR_PRDEN_Pos)
-#define PWR_R2CIDCFGR_PRDEN                    PWR_R2CIDCFGR_PRDEN_Msk  /*!< Public read enable- 0: Read and write accesses to local resource x are granted only to allocated compartment, if security and privilege are sufficient.- 1: Any compartment can read local resource x registers, regardless of secure or privilege. Write to local resource x registers are only granted to allocated compartment, if security and privilege are sufficient.This bit is ignored if CFEN=0. */
+#define PWR_R2CIDCFGR_SCID_Pos                 (4U)
+#define PWR_R2CIDCFGR_SCID_Msk                 (0x7U << PWR_R2CIDCFGR_SCID_Pos)             /*!< 0x00000070 */
+#define PWR_R2CIDCFGR_SCID                     PWR_R2CIDCFGR_SCID_Msk                       /*!< Static compartment identifier */
 
 /* Bit fields for PWR_R3CIDCFGR register */
 #define PWR_R3CIDCFGR_CFEN_Pos                 (0U)
 #define PWR_R3CIDCFGR_CFEN_Msk                 (0x1U << PWR_R3CIDCFGR_CFEN_Pos)
 #define PWR_R3CIDCFGR_CFEN                     PWR_R3CIDCFGR_CFEN_Msk  /*!< Compartment ID filter enable- 0: Compartment-based filtering is disabled for resource number x.- 1: Compartment-based filtering is enabled for resource number x. */
-#define PWR_R3CIDCFGR_CID_Pos                  (4U)
-#define PWR_R3CIDCFGR_CID_Msk                  (0x7U << PWR_R3CIDCFGR_CID_Pos)
-#define PWR_R3CIDCFGR_CID                      PWR_R3CIDCFGR_CID_Msk  /*!< Compartment identifierWhen CFEN=1, this field is used by the Trusted domain application to define which compartment has access to the local resource number x. */
-#define PWR_R3CIDCFGR_PRDEN_Pos                (14U)
-#define PWR_R3CIDCFGR_PRDEN_Msk                (0x1U << PWR_R3CIDCFGR_PRDEN_Pos)
-#define PWR_R3CIDCFGR_PRDEN                    PWR_R3CIDCFGR_PRDEN_Msk  /*!< Public read enable- 0: Read and write accesses to local resource x are granted only to allocated compartment, if security and privilege are sufficient.- 1: Any compartment can read local resource x registers, regardless of secure or privilege. Write to local resource x registers are only granted to allocated compartment, if security and privilege are sufficient.This bit is ignored if CFEN=0. */
+#define PWR_R3CIDCFGR_SCID_Pos                 (4U)
+#define PWR_R3CIDCFGR_SCID_Msk                 (0x7U << PWR_R3CIDCFGR_SCID_Pos)             /*!< 0x00000070 */
+#define PWR_R3CIDCFGR_SCID                     PWR_R3CIDCFGR_SCID_Msk                       /*!< Static compartment identifier */
 
 /* Bit fields for PWR_R4CIDCFGR register */
 #define PWR_R4CIDCFGR_CFEN_Pos                 (0U)
 #define PWR_R4CIDCFGR_CFEN_Msk                 (0x1U << PWR_R4CIDCFGR_CFEN_Pos)
 #define PWR_R4CIDCFGR_CFEN                     PWR_R4CIDCFGR_CFEN_Msk  /*!< Compartment ID filter enable- 0: Compartment-based filtering is disabled for resource number x.- 1: Compartment-based filtering is enabled for resource number x. */
-#define PWR_R4CIDCFGR_CID_Pos                  (4U)
-#define PWR_R4CIDCFGR_CID_Msk                  (0x7U << PWR_R4CIDCFGR_CID_Pos)
-#define PWR_R4CIDCFGR_CID                      PWR_R4CIDCFGR_CID_Msk  /*!< Compartment identifierWhen CFEN=1, this field is used by the Trusted domain application to define which compartment has access to the local resource number x. */
-#define PWR_R4CIDCFGR_PRDEN_Pos                (14U)
-#define PWR_R4CIDCFGR_PRDEN_Msk                (0x1U << PWR_R4CIDCFGR_PRDEN_Pos)
-#define PWR_R4CIDCFGR_PRDEN                    PWR_R4CIDCFGR_PRDEN_Msk  /*!< Public read enable- 0: Read and write accesses to local resource x are granted only to allocated compartment, if security and privilege are sufficient.- 1: Any compartment can read local resource x registers, regardless of secure or privilege. Write to local resource x registers are only granted to allocated compartment, if security and privilege are sufficient.This bit is ignored if CFEN=0. */
+#define PWR_R4CIDCFGR_SCID_Pos                 (4U)
+#define PWR_R4CIDCFGR_SCID_Msk                 (0x7U << PWR_R4CIDCFGR_SCID_Pos)             /*!< 0x00000070 */
+#define PWR_R4CIDCFGR_SCID                     PWR_R4CIDCFGR_SCID_Msk                       /*!< Static compartment identifier */
 
 /* Bit fields for PWR_R5CIDCFGR register */
 #define PWR_R5CIDCFGR_CFEN_Pos                 (0U)
 #define PWR_R5CIDCFGR_CFEN_Msk                 (0x1U << PWR_R5CIDCFGR_CFEN_Pos)
 #define PWR_R5CIDCFGR_CFEN                     PWR_R5CIDCFGR_CFEN_Msk  /*!< Compartment ID filter enable- 0: Compartment-based filtering is disabled for resource number x.- 1: Compartment-based filtering is enabled for resource number x. */
-#define PWR_R5CIDCFGR_CID_Pos                  (4U)
-#define PWR_R5CIDCFGR_CID_Msk                  (0x7U << PWR_R5CIDCFGR_CID_Pos)
-#define PWR_R5CIDCFGR_CID                      PWR_R5CIDCFGR_CID_Msk  /*!< Compartment identifierWhen CFEN=1, this field is used by the Trusted domain application to define which compartment has access to the local resource number x. */
-#define PWR_R5CIDCFGR_PRDEN_Pos                (14U)
-#define PWR_R5CIDCFGR_PRDEN_Msk                (0x1U << PWR_R5CIDCFGR_PRDEN_Pos)
-#define PWR_R5CIDCFGR_PRDEN                    PWR_R5CIDCFGR_PRDEN_Msk  /*!< Public read enable- 0: Read and write accesses to local resource x are granted only to allocated compartment, if security and privilege are sufficient.- 1: Any compartment can read local resource x registers, regardless of secure or privilege. Write to local resource x registers are only granted to allocated compartment, if security and privilege are sufficient.This bit is ignored if CFEN=0. */
+#define PWR_R5CIDCFGR_SCID_Pos                 (4U)
+#define PWR_R5CIDCFGR_SCID_Msk                 (0x7U << PWR_R5CIDCFGR_SCID_Pos)             /*!< 0x00000070 */
+#define PWR_R5CIDCFGR_SCID                     PWR_R5CIDCFGR_SCID_Msk                       /*!< Static compartment identifier */
 
 /* Bit fields for PWR_R6CIDCFGR register */
 #define PWR_R6CIDCFGR_CFEN_Pos                 (0U)
 #define PWR_R6CIDCFGR_CFEN_Msk                 (0x1U << PWR_R6CIDCFGR_CFEN_Pos)
 #define PWR_R6CIDCFGR_CFEN                     PWR_R6CIDCFGR_CFEN_Msk  /*!< Compartment ID filter enable- 0: Compartment-based filtering is disabled for resource number x.- 1: Compartment-based filtering is enabled for resource number x. */
-#define PWR_R6CIDCFGR_CID_Pos                  (4U)
-#define PWR_R6CIDCFGR_CID_Msk                  (0x7U << PWR_R6CIDCFGR_CID_Pos)
-#define PWR_R6CIDCFGR_CID                      PWR_R6CIDCFGR_CID_Msk  /*!< Compartment identifierWhen CFEN=1, this field is used by the Trusted domain application to define which compartment has access to the local resource number x. */
-#define PWR_R6CIDCFGR_PRDEN_Pos                (14U)
-#define PWR_R6CIDCFGR_PRDEN_Msk                (0x1U << PWR_R6CIDCFGR_PRDEN_Pos)
-#define PWR_R6CIDCFGR_PRDEN                    PWR_R6CIDCFGR_PRDEN_Msk  /*!< Public read enable- 0: Read and write accesses to local resource x are granted only to allocated compartment, if security and privilege are sufficient.- 1: Any compartment can read local resource x registers, regardless of secure or privilege. Write to local resource x registers are only granted to allocated compartment, if security and privilege are sufficient.This bit is ignored if CFEN=0. */
+#define PWR_R6CIDCFGR_SCID_Pos                 (4U)
+#define PWR_R6CIDCFGR_SCID_Msk                 (0x7U << PWR_R6CIDCFGR_SCID_Pos)             /*!< 0x00000070 */
+#define PWR_R6CIDCFGR_SCID                     PWR_R6CIDCFGR_SCID_Msk                       /*!< Static compartment identifier */
 
 /* Bit fields for PWR_WIOSECCFGR register */
 #define PWR_WIOSECCFGR_WIOSEC1_Pos             (0U)
@@ -9688,9 +9641,6 @@ typedef struct
 #define PWR_WIO1CIDCFGR_SCID_Pos               (4U)
 #define PWR_WIO1CIDCFGR_SCID_Msk               (0x7U << PWR_WIO1CIDCFGR_SCID_Pos)
 #define PWR_WIO1CIDCFGR_SCID                   PWR_WIO1CIDCFGR_SCID_Msk  /*!< Static compartment identifierTrusted domain application uses this bitfield to statically define which compartment has accessto the peripheral x when SEM_EN=0.This bit field is ignored if SEM_EN=1 or CFEN=0. */
-#define PWR_WIO1CIDCFGR_PRDEN_Pos              (14U)
-#define PWR_WIO1CIDCFGR_PRDEN_Msk              (0x1U << PWR_WIO1CIDCFGR_PRDEN_Pos)
-#define PWR_WIO1CIDCFGR_PRDEN                  PWR_WIO1CIDCFGR_PRDEN_Msk  /*!< Public read enable- 0: Read and write accesses to Wakeup IO x are granted only to allocated compartment, if security and privilege are sufficient.- 1: Any compartment can read Wakeup IO x registers, regardless of secure or privilege. Write to Wakeup IO x registers are only granted to allocated compartment, if security and privilege are sufficient.This bit is ignored if CFEN=0. */
 #define PWR_WIO1CIDCFGR_SEMWLC0_Pos            (16U)
 #define PWR_WIO1CIDCFGR_SEMWLC0_Msk            (0x1U << PWR_WIO1CIDCFGR_SEMWLC0_Pos)
 #define PWR_WIO1CIDCFGR_SEMWLC0                PWR_WIO1CIDCFGR_SEMWLC0_Msk  /*!< Semaphore compartment ID 0 enable- 0: The Compartment ID 0 agent is disabled to take the semaphore- 1: The Compartment ID 0 agent is enabled to take the semaphore */
@@ -9739,9 +9689,6 @@ typedef struct
 #define PWR_WIO2CIDCFGR_SCID_Pos               (4U)
 #define PWR_WIO2CIDCFGR_SCID_Msk               (0x7U << PWR_WIO2CIDCFGR_SCID_Pos)
 #define PWR_WIO2CIDCFGR_SCID                   PWR_WIO2CIDCFGR_SCID_Msk  /*!< Static compartment identifierTrusted domain application uses this bitfield to statically define which compartment has accessto the peripheral x when SEM_EN=0.This bit field is ignored if SEM_EN=1 or CFEN=0. */
-#define PWR_WIO2CIDCFGR_PRDEN_Pos              (14U)
-#define PWR_WIO2CIDCFGR_PRDEN_Msk              (0x1U << PWR_WIO2CIDCFGR_PRDEN_Pos)
-#define PWR_WIO2CIDCFGR_PRDEN                  PWR_WIO2CIDCFGR_PRDEN_Msk  /*!< Public read enable- 0: Read and write accesses to Wakeup IO x are granted only to allocated compartment, if security and privilege are sufficient.- 1: Any compartment can read Wakeup IO x registers, regardless of secure or privilege. Write to Wakeup IO x registers are only granted to allocated compartment, if security and privilege are sufficient.This bit is ignored if CFEN=0. */
 #define PWR_WIO2CIDCFGR_SEMWLC0_Pos            (16U)
 #define PWR_WIO2CIDCFGR_SEMWLC0_Msk            (0x1U << PWR_WIO2CIDCFGR_SEMWLC0_Pos)
 #define PWR_WIO2CIDCFGR_SEMWLC0                PWR_WIO2CIDCFGR_SEMWLC0_Msk  /*!< Semaphore compartment ID 0 enable- 0: The Compartment ID 0 agent is disabled to take the semaphore- 1: The Compartment ID 0 agent is enabled to take the semaphore */
@@ -9785,9 +9732,6 @@ typedef struct
 #define PWR_WIO3CIDCFGR_SCID_Pos               (4U)
 #define PWR_WIO3CIDCFGR_SCID_Msk               (0x7U << PWR_WIO3CIDCFGR_SCID_Pos)
 #define PWR_WIO3CIDCFGR_SCID                   PWR_WIO3CIDCFGR_SCID_Msk  /*!< Static compartment identifierTrusted domain application uses this bitfield to statically define which compartment has accessto the peripheral x when SEM_EN=0.This bit field is ignored if SEM_EN=1 or CFEN=0. */
-#define PWR_WIO3CIDCFGR_PRDEN_Pos              (14U)
-#define PWR_WIO3CIDCFGR_PRDEN_Msk              (0x1U << PWR_WIO3CIDCFGR_PRDEN_Pos)
-#define PWR_WIO3CIDCFGR_PRDEN                  PWR_WIO3CIDCFGR_PRDEN_Msk  /*!< Public read enable- 0: Read and write accesses to Wakeup IO x are granted only to allocated compartment, if security and privilege are sufficient.- 1: Any compartment can read Wakeup IO x registers, regardless of secure or privilege. Write to Wakeup IO x registers are only granted to allocated compartment, if security and privilege are sufficient.This bit is ignored if CFEN=0. */
 #define PWR_WIO3CIDCFGR_SEMWLC0_Pos            (16U)
 #define PWR_WIO3CIDCFGR_SEMWLC0_Msk            (0x1U << PWR_WIO3CIDCFGR_SEMWLC0_Pos)
 #define PWR_WIO3CIDCFGR_SEMWLC0                PWR_WIO3CIDCFGR_SEMWLC0_Msk  /*!< Semaphore compartment ID 0 enable- 0: The Compartment ID 0 agent is disabled to take the semaphore- 1: The Compartment ID 0 agent is enabled to take the semaphore */
@@ -9831,9 +9775,6 @@ typedef struct
 #define PWR_WIO4CIDCFGR_SCID_Pos               (4U)
 #define PWR_WIO4CIDCFGR_SCID_Msk               (0x7U << PWR_WIO4CIDCFGR_SCID_Pos)
 #define PWR_WIO4CIDCFGR_SCID                   PWR_WIO4CIDCFGR_SCID_Msk  /*!< Static compartment identifierTrusted domain application uses this bitfield to statically define which compartment has accessto the peripheral x when SEM_EN=0.This bit field is ignored if SEM_EN=1 or CFEN=0. */
-#define PWR_WIO4CIDCFGR_PRDEN_Pos              (14U)
-#define PWR_WIO4CIDCFGR_PRDEN_Msk              (0x1U << PWR_WIO4CIDCFGR_PRDEN_Pos)
-#define PWR_WIO4CIDCFGR_PRDEN                  PWR_WIO4CIDCFGR_PRDEN_Msk  /*!< Public read enable- 0: Read and write accesses to Wakeup IO x are granted only to allocated compartment, if security and privilege are sufficient.- 1: Any compartment can read Wakeup IO x registers, regardless of secure or privilege. Write to Wakeup IO x registers are only granted to allocated compartment, if security and privilege are sufficient.This bit is ignored if CFEN=0. */
 #define PWR_WIO4CIDCFGR_SEMWLC0_Pos            (16U)
 #define PWR_WIO4CIDCFGR_SEMWLC0_Msk            (0x1U << PWR_WIO4CIDCFGR_SEMWLC0_Pos)
 #define PWR_WIO4CIDCFGR_SEMWLC0                PWR_WIO4CIDCFGR_SEMWLC0_Msk  /*!< Semaphore compartment ID 0 enable- 0: The Compartment ID 0 agent is disabled to take the semaphore- 1: The Compartment ID 0 agent is enabled to take the semaphore */
@@ -9877,9 +9818,6 @@ typedef struct
 #define PWR_WIO5CIDCFGR_SCID_Pos               (4U)
 #define PWR_WIO5CIDCFGR_SCID_Msk               (0x7U << PWR_WIO5CIDCFGR_SCID_Pos)
 #define PWR_WIO5CIDCFGR_SCID                   PWR_WIO5CIDCFGR_SCID_Msk  /*!< Static compartment identifierTrusted domain application uses this bitfield to statically define which compartment has accessto the peripheral x when SEM_EN=0.This bit field is ignored if SEM_EN=1 or CFEN=0. */
-#define PWR_WIO5CIDCFGR_PRDEN_Pos              (14U)
-#define PWR_WIO5CIDCFGR_PRDEN_Msk              (0x1U << PWR_WIO5CIDCFGR_PRDEN_Pos)
-#define PWR_WIO5CIDCFGR_PRDEN                  PWR_WIO5CIDCFGR_PRDEN_Msk  /*!< Public read enable- 0: Read and write accesses to Wakeup IO x are granted only to allocated compartment, if security and privilege are sufficient.- 1: Any compartment can read Wakeup IO x registers, regardless of secure or privilege. Write to Wakeup IO x registers are only granted to allocated compartment, if security and privilege are sufficient.This bit is ignored if CFEN=0. */
 #define PWR_WIO5CIDCFGR_SEMWLC0_Pos            (16U)
 #define PWR_WIO5CIDCFGR_SEMWLC0_Msk            (0x1U << PWR_WIO5CIDCFGR_SEMWLC0_Pos)
 #define PWR_WIO5CIDCFGR_SEMWLC0                PWR_WIO5CIDCFGR_SEMWLC0_Msk  /*!< Semaphore compartment ID 0 enable- 0: The Compartment ID 0 agent is disabled to take the semaphore- 1: The Compartment ID 0 agent is enabled to take the semaphore */
@@ -9923,9 +9861,6 @@ typedef struct
 #define PWR_WIO6CIDCFGR_SCID_Pos               (4U)
 #define PWR_WIO6CIDCFGR_SCID_Msk               (0x7U << PWR_WIO6CIDCFGR_SCID_Pos)
 #define PWR_WIO6CIDCFGR_SCID                   PWR_WIO6CIDCFGR_SCID_Msk  /*!< Static compartment identifierTrusted domain application uses this bitfield to statically define which compartment has accessto the peripheral x when SEM_EN=0.This bit field is ignored if SEM_EN=1 or CFEN=0. */
-#define PWR_WIO6CIDCFGR_PRDEN_Pos              (14U)
-#define PWR_WIO6CIDCFGR_PRDEN_Msk              (0x1U << PWR_WIO6CIDCFGR_PRDEN_Pos)
-#define PWR_WIO6CIDCFGR_PRDEN                  PWR_WIO6CIDCFGR_PRDEN_Msk  /*!< Public read enable- 0: Read and write accesses to Wakeup IO x are granted only to allocated compartment, if security and privilege are sufficient.- 1: Any compartment can read Wakeup IO x registers, regardless of secure or privilege. Write to Wakeup IO x registers are only granted to allocated compartment, if security and privilege are sufficient.This bit is ignored if CFEN=0. */
 #define PWR_WIO6CIDCFGR_SEMWLC0_Pos            (16U)
 #define PWR_WIO6CIDCFGR_SEMWLC0_Msk            (0x1U << PWR_WIO6CIDCFGR_SEMWLC0_Pos)
 #define PWR_WIO6CIDCFGR_SEMWLC0                PWR_WIO6CIDCFGR_SEMWLC0_Msk  /*!< Semaphore compartment ID 0 enable- 0: The Compartment ID 0 agent is disabled to take the semaphore- 1: The Compartment ID 0 agent is enabled to take the semaphore */
@@ -9963,9 +9898,6 @@ typedef struct
 #define PWR_CPU1D1SR_HOLD_BOOT_Pos             (0U)
 #define PWR_CPU1D1SR_HOLD_BOOT_Msk             (0x1U << PWR_CPU1D1SR_HOLD_BOOT_Pos)
 #define PWR_CPU1D1SR_HOLD_BOOT                 PWR_CPU1D1SR_HOLD_BOOT_Msk  /*!< CPU1 HOLD_BOOT status flag.Set by hardware to indicate when the CPU1 is in HOLD_BOOT state.- 0: CPU1 is allowed to boot.- 1: CPU1 is maintained in HOLD_BOOT state by hardware.Refer to RCC specification for details on HOLD_BOOT processor state. */
-#define PWR_CPU1D1SR_WFBEN_Pos                 (1U)
-#define PWR_CPU1D1SR_WFBEN_Msk                 (0x1U << PWR_CPU1D1SR_WFBEN_Pos)
-#define PWR_CPU1D1SR_WFBEN                     PWR_CPU1D1SR_WFBEN_Msk  /*!< CPU1 Wait for boot enable status flag.Set by hardware to indicate when the CPU1 is in wait for boot enable state. Only applicable in Wakeup event mode.- 0: CPU1 is not in wait for boot enable state. Set at â0â in legacy boot mode.- 1: CPU1 is in wait for boot enable state. It will start once an event assign to him will be raised.Refer to RCC specification for details on HOLD_BOOT processor state. */
 #define PWR_CPU1D1SR_CSTATE_Pos                (2U)
 #define PWR_CPU1D1SR_CSTATE_Msk                (0x3U << PWR_CPU1D1SR_CSTATE_Pos)
 #define PWR_CPU1D1SR_CSTATE                    PWR_CPU1D1SR_CSTATE_Msk  /*!< CPU1 cluster state status.Set by hardware to indicate when the CPU1 is in CRun, CSleep or CStop modes.- 00: CPU1 is in reset (Hold_boot or Wfben).- 01: CPU1 is in CRun state.- 10: CPU1 is in CSleep state.- 11: CPU1 is in CStop state. */
@@ -11870,6 +11802,7 @@ typedef struct
 #define RISC_REGCFGR_PRIV_Msk         (0x1U << RISC_REGCFGR_PRIV_Pos)           /*!< 0x00000200 */
 #define RISC_REGCFGR_PRIV             RISC_REGCFGR_PRIV_Msk
 
+
 /******************************************************************************/
 /*                                                                            */
 /*                           Real-Time Clock (RTC)                            */
@@ -12604,6 +12537,7 @@ typedef struct
 #define RTC_SIDR_SID_Msk               (0xFFFFFFFFUL << RTC_SIDR_SID_Pos)               /*!< 0xFFFFFFFF */
 #define RTC_SIDR_SID                   RTC_SIDR_SID_Msk                                 /*!< RTC Size ID */
 
+
 /**********************************************************************************/
 /*                                                                                */
 /*     Serial Peripheral Interface and Integrated Interchip Sound  (SPI/I2S)      */
@@ -13041,6 +12975,9 @@ typedef struct
 #define TAMP_CR1_ITAMP3E_Pos         (18U)
 #define TAMP_CR1_ITAMP3E_Msk         (0x1U << TAMP_CR1_ITAMP3E_Pos)                     /*!< 0x00040000U */
 #define TAMP_CR1_ITAMP3E             TAMP_CR1_ITAMP3E_Msk
+#define TAMP_CR1_ITAMP4E_Pos         (19U)
+#define TAMP_CR1_ITAMP4E_Msk         (0x1U << TAMP_CR1_ITAMP4E_Pos)                     /*!< 0x00080000U */
+#define TAMP_CR1_ITAMP4E             TAMP_CR1_ITAMP4E_Msk
 #define TAMP_CR1_ITAMP5E_Pos         (20U)
 #define TAMP_CR1_ITAMP5E_Msk         (0x1U << TAMP_CR1_ITAMP5E_Pos)                     /*!< 0x00100000U */
 #define TAMP_CR1_ITAMP5E             TAMP_CR1_ITAMP5E_Msk
@@ -13062,6 +12999,15 @@ typedef struct
 #define TAMP_CR1_ITAMP11E_Pos        (26U)
 #define TAMP_CR1_ITAMP11E_Msk        (0x1U << TAMP_CR1_ITAMP11E_Pos)                    /*!< 0x04000000U */
 #define TAMP_CR1_ITAMP11E            TAMP_CR1_ITAMP11E_Msk
+#define TAMP_CR1_ITAMP12E_Pos        (27U)
+#define TAMP_CR1_ITAMP12E_Msk        (0x1U << TAMP_CR1_ITAMP12E_Pos)                    /*!< 0x08000000U */
+#define TAMP_CR1_ITAMP12E            TAMP_CR1_ITAMP12E_Msk
+#define TAMP_CR1_ITAMP14E_Pos        (29U)
+#define TAMP_CR1_ITAMP14E_Msk        (0x1U << TAMP_CR1_ITAMP14E_Pos)                    /*!< 0x20000000U */
+#define TAMP_CR1_ITAMP14E            TAMP_CR1_ITAMP14E_Msk
+#define TAMP_CR1_ITAMP15E_Pos        (30U)
+#define TAMP_CR1_ITAMP15E_Msk        (0x1U << TAMP_CR1_ITAMP15E_Pos)                    /*!< 0x40000000U */
+#define TAMP_CR1_ITAMP15E            TAMP_CR1_ITAMP15E_Msk
 
 /********************  Bits definition for TAMP_CR2 register  *****************/
 #define TAMP_CR2_TAMP1NOER_Pos       (0U)
@@ -13135,6 +13081,9 @@ typedef struct
 #define TAMP_CR3_ITAMP3NOER_Pos      (2U)
 #define TAMP_CR3_ITAMP3NOER_Msk      (0x1U << TAMP_CR3_ITAMP3NOER_Pos)                  /*!< 0x00000004U */
 #define TAMP_CR3_ITAMP3NOER          TAMP_CR3_ITAMP3NOER_Msk
+#define TAMP_CR3_ITAMP4NOER_Pos      (3U)
+#define TAMP_CR3_ITAMP4NOER_Msk      (0x1U << TAMP_CR3_ITAMP4NOER_Pos)                  /*!< 0x00000008U */
+#define TAMP_CR3_ITAMP4NOER          TAMP_CR3_ITAMP4NOER_Msk
 #define TAMP_CR3_ITAMP5NOER_Pos      (4U)
 #define TAMP_CR3_ITAMP5NOER_Msk      (0x1U << TAMP_CR3_ITAMP5NOER_Pos)                  /*!< 0x00000010U */
 #define TAMP_CR3_ITAMP5NOER          TAMP_CR3_ITAMP5NOER_Msk
@@ -13142,10 +13091,10 @@ typedef struct
 #define TAMP_CR3_ITAMP6NOER_Msk      (0x1U << TAMP_CR3_ITAMP6NOER_Pos)                  /*!< 0x00000020U */
 #define TAMP_CR3_ITAMP6NOER          TAMP_CR3_ITAMP6NOER_Msk
 #define TAMP_CR3_ITAMP7NOER_Pos      (6U)
-#define TAMP_CR3_ITAMP7NOER_Msk      (0x1U << TAMP_CR3_ITAMP7NOER)
+#define TAMP_CR3_ITAMP7NOER_Msk      (0x1U << TAMP_CR3_ITAMP7NOER)                      /*!< 0x00000040U */
 #define TAMP_CR3_ITAMP7NOER          TAMP_CR3_ITAMP7NOER_Msk
 #define TAMP_CR3_ITAMP8NOER_Pos      (7U)
-#define TAMP_CR3_ITAMP8NOER_Msk      (0x1U << TAMP_CR3_ITAMP8NOER_Pos)                  /*!< 0x00000040U */
+#define TAMP_CR3_ITAMP8NOER_Msk      (0x1U << TAMP_CR3_ITAMP8NOER_Pos)                  /*!< 0x00000080U */
 #define TAMP_CR3_ITAMP8NOER          TAMP_CR3_ITAMP8NOER_Msk
 #define TAMP_CR3_ITAMP9NOER_Pos      (8U)
 #define TAMP_CR3_ITAMP9NOER_Msk      (0x1U << TAMP_CR3_ITAMP9NOER_Pos)                  /*!< 0x00000100U */
@@ -13156,6 +13105,15 @@ typedef struct
 #define TAMP_CR3_ITAMP11NOER_Pos     (10U)
 #define TAMP_CR3_ITAMP11NOER_Msk     (0x1U << TAMP_CR3_ITAMP11NOER_Pos)                 /*!< 0x00000400U */
 #define TAMP_CR3_ITAMP11NOER         TAMP_CR3_ITAMP11NOER_Msk
+#define TAMP_CR3_ITAMP12NOER_Pos     (11U)
+#define TAMP_CR3_ITAMP12NOER_Msk     (0x1U << TAMP_CR3_ITAMP12NOER_Pos)                 /*!< 0x00000800U */
+#define TAMP_CR3_ITAMP12NOER         TAMP_CR3_ITAMP12NOER_Msk
+#define TAMP_CR3_ITAMP14NOER_Pos     (13U)
+#define TAMP_CR3_ITAMP14NOER_Msk     (0x1U << TAMP_CR3_ITAMP14NOER_Pos)                 /*!< 0x00002000U */
+#define TAMP_CR3_ITAMP14NOER         TAMP_CR3_ITAMP14NOER_Msk
+#define TAMP_CR3_ITAMP15NOER_Pos     (14U)
+#define TAMP_CR3_ITAMP15NOER_Msk     (0x1U << TAMP_CR3_ITAMP15NOER_Pos)                 /*!< 0x00004000U */
+#define TAMP_CR3_ITAMP15NOER         TAMP_CR3_ITAMP15NOER_Msk
 
 /********************  Bits definition for TAMP_FLTCR register  ***************/
 #define TAMP_FLTCR_TAMPFREQ_Pos      (0U)
@@ -13229,8 +13187,9 @@ typedef struct
 #define TAMP_ATCR1_ATCKSEL_0         (0x1U << TAMP_ATCR1_ATCKSEL_Pos)                   /*!< 0x00010000U */
 #define TAMP_ATCR1_ATCKSEL_1         (0x2U << TAMP_ATCR1_ATCKSEL_Pos)                   /*!< 0x00020000U */
 #define TAMP_ATCR1_ATCKSEL_2         (0x4U << TAMP_ATCR1_ATCKSEL_Pos)                   /*!< 0x00040000U */
+#define TAMP_ATCR1_ATCKSEL_3         (0x8U << TAMP_ATCR1_ATCKSEL_Pos)                   /*!< 0x00080000U */
 #define TAMP_ATCR1_ATPER_Pos         (24U)
-#define TAMP_ATCR1_ATPER_Msk         (0x7U<<TAMP_ATCR1_ATPER_Pos)                       /*!< 0x07000000U */
+#define TAMP_ATCR1_ATPER_Msk         (0xFU<<TAMP_ATCR1_ATPER_Pos)                       /*!< 0x0F000000U */
 #define TAMP_ATCR1_ATPER              TAMP_ATCR1_ATPER_Msk
 #define TAMP_ATCR1_ATPER_0           (0x1U << TAMP_ATCR1_ATPER_Pos)                     /*!< 0x01000000U */
 #define TAMP_ATCR1_ATPER_1           (0x2U << TAMP_ATCR1_ATPER_Pos)                     /*!< 0x02000000U */
@@ -13403,6 +13362,9 @@ typedef struct
 #define TAMP_IER_ITAMP3IE_Pos        (18U)
 #define TAMP_IER_ITAMP3IE_Msk        (0x1U << TAMP_IER_ITAMP3IE_Pos)                   /*!< 0x00040000U */
 #define TAMP_IER_ITAMP3IE            TAMP_IER_ITAMP3IE_Msk
+#define TAMP_IER_ITAMP4IE_Pos        (19U)
+#define TAMP_IER_ITAMP4IE_Msk        (0x1U << TAMP_IER_ITAMP4IE_Pos)                   /*!< 0x00040000U */
+#define TAMP_IER_ITAMP4IE            TAMP_IER_ITAMP4IE_Msk
 #define TAMP_IER_ITAMP5IE_Pos        (20U)
 #define TAMP_IER_ITAMP5IE_Msk        (0x1U << TAMP_IER_ITAMP5IE_Pos)                   /*!< 0x00100000U */
 #define TAMP_IER_ITAMP5IE            TAMP_IER_ITAMP5IE_Msk
@@ -13424,6 +13386,15 @@ typedef struct
 #define TAMP_IER_ITAMP11IE_Pos       (26U)
 #define TAMP_IER_ITAMP11IE_Msk       (0x1U << TAMP_IER_ITAMP11IE_Pos)                  /*!< 0x04000000U */
 #define TAMP_IER_ITAMP11IE           TAMP_IER_ITAMP11IE_Msk
+#define TAMP_IER_ITAMP12IE_Pos       (27U)
+#define TAMP_IER_ITAMP12IE_Msk       (0x1U << TAMP_IER_ITAMP12IE_Pos)                  /*!< 0x08000000U */
+#define TAMP_IER_ITAMP12IE           TAMP_IER_ITAMP12IE_Msk
+#define TAMP_IER_ITAMP14IE_Pos       (29U)
+#define TAMP_IER_ITAMP14IE_Msk       (0x1U << TAMP_IER_ITAMP14IE_Pos)                  /*!< 0x20000000U */
+#define TAMP_IER_ITAMP14IE           TAMP_IER_ITAMP14IE_Msk
+#define TAMP_IER_ITAMP15IE_Pos       (30U)
+#define TAMP_IER_ITAMP15IE_Msk       (0x1U << TAMP_IER_ITAMP15IE_Pos)                  /*!< 0x40000000U */
+#define TAMP_IER_ITAMP15IE           TAMP_IER_ITAMP15IE_Msk
 
 /********************  Bits definition for TAMP_SR register  *****************/
 #define TAMP_SR_TAMP1F_Pos           (0U)
@@ -13459,6 +13430,9 @@ typedef struct
 #define TAMP_SR_ITAMP3F_Pos          (18U)
 #define TAMP_SR_ITAMP3F_Msk          (0x1U << TAMP_SR_ITAMP3F_Pos)                     /*!< 0x00040000U */
 #define TAMP_SR_ITAMP3F              TAMP_SR_ITAMP3F_Msk
+#define TAMP_SR_ITAMP4F_Pos          (19U)
+#define TAMP_SR_ITAMP4F_Msk          (0x1U << TAMP_SR_ITAMP4F_Pos)                     /*!< 0x00040000U */
+#define TAMP_SR_ITAMP4F              TAMP_SR_ITAMP4F_Msk
 #define TAMP_SR_ITAMP5F_Pos          (20U)
 #define TAMP_SR_ITAMP5F_Msk          (0x1U << TAMP_SR_ITAMP5F_Pos)                     /*!< 0x00100000U */
 #define TAMP_SR_ITAMP5F              TAMP_SR_ITAMP5F_Msk
@@ -13480,6 +13454,15 @@ typedef struct
 #define TAMP_SR_ITAMP11F_Pos         (26U)
 #define TAMP_SR_ITAMP11F_Msk         (0x1U << TAMP_SR_ITAMP11F_Pos)                    /*!< 0x04000000U */
 #define TAMP_SR_ITAMP11F             TAMP_SR_ITAMP11F_Msk
+#define TAMP_SR_ITAMP12F_Pos         (27U)
+#define TAMP_SR_ITAMP12F_Msk         (0x1U << TAMP_SR_ITAMP12F_Pos)                    /*!< 0x08000000U */
+#define TAMP_SR_ITAMP12F             TAMP_SR_ITAMP12F_Msk
+#define TAMP_SR_ITAMP14F_Pos         (29U)
+#define TAMP_SR_ITAMP14F_Msk         (0x1U << TAMP_SR_ITAMP14F_Pos)                    /*!< 0x20000000U */
+#define TAMP_SR_ITAMP14F             TAMP_SR_ITAMP14F_Msk
+#define TAMP_SR_ITAMP15F_Pos         (30U)
+#define TAMP_SR_ITAMP15F_Msk         (0x1U << TAMP_SR_ITAMP15F_Pos)                    /*!< 0x40000000U */
+#define TAMP_SR_ITAMP15F             TAMP_SR_ITAMP15F_Msk
 
 /********************  Bits definition for TAMP_MISR register  ****************/
 #define TAMP_MISR_TAMP1MF_Pos        (0U)
@@ -13515,6 +13498,9 @@ typedef struct
 #define TAMP_MISR_ITAMP3MF_Pos       (18U)
 #define TAMP_MISR_ITAMP3MF_Msk       (0x1U << TAMP_MISR_ITAMP3MF_Pos)                  /*!< 0x00040000U */
 #define TAMP_MISR_ITAMP3MF           TAMP_MISR_ITAMP3MF_Msk
+#define TAMP_MISR_ITAMP4MF_Pos       (19U)
+#define TAMP_MISR_ITAMP4MF_Msk       (0x1U << TAMP_MISR_ITAMP4MF_Pos)                  /*!< 0x00080000U */
+#define TAMP_MISR_ITAMP4MF           TAMP_MISR_ITAMP4MF_Msk
 #define TAMP_MISR_ITAMP5MF_Pos       (20U)
 #define TAMP_MISR_ITAMP5MF_Msk       (0x1U << TAMP_MISR_ITAMP5MF_Pos)                  /*!< 0x00100000U */
 #define TAMP_MISR_ITAMP5MF           TAMP_MISR_ITAMP5MF_Msk
@@ -13536,6 +13522,15 @@ typedef struct
 #define TAMP_MISR_ITAMP11MF_Pos      (26U)
 #define TAMP_MISR_ITAMP11MF_Msk      (0x1U << TAMP_MISR_ITAMP11MF_Pos)                 /*!< 0x04000000U */
 #define TAMP_MISR_ITAMP11MF          TAMP_MISR_ITAMP11MF_Msk
+#define TAMP_MISR_ITAMP12MF_Pos      (27U)
+#define TAMP_MISR_ITAMP12MF_Msk      (0x1U << TAMP_MISR_ITAMP12MF_Pos)                 /*!< 0x08000000U */
+#define TAMP_MISR_ITAMP12MF          TAMP_MISR_ITAMP12MF_Msk
+#define TAMP_MISR_ITAMP14MF_Pos      (29U)
+#define TAMP_MISR_ITAMP14MF_Msk      (0x1U << TAMP_MISR_ITAMP14MF_Pos)                 /*!< 0x20000000U */
+#define TAMP_MISR_ITAMP14MF          TAMP_MISR_ITAMP14MF_Msk
+#define TAMP_MISR_ITAMP15MF_Pos      (30U)
+#define TAMP_MISR_ITAMP15MF_Msk      (0x1U << TAMP_MISR_ITAMP15MF_Pos)                 /*!< 0x40000000U */
+#define TAMP_MISR_ITAMP15MF          TAMP_MISR_ITAMP15MF_Msk
 
 /********************  Bits definition for TAMP_SMISR register  ************ *****/
 #define TAMP_SMISR_TAMP1MF_Pos       (0U)
@@ -13571,6 +13566,9 @@ typedef struct
 #define TAMP_SMISR_ITAMP3MF_Pos      (18U)
 #define TAMP_SMISR_ITAMP3MF_Msk      (0x1U << TAMP_SMISR_ITAMP3MF_Pos)                 /*!< 0x00040000U */
 #define TAMP_SMISR_ITAMP3MF          TAMP_SMISR_ITAMP3MF_Msk
+#define TAMP_SMISR_ITAMP4MF_Pos      (19U)
+#define TAMP_SMISR_ITAMP4MF_Msk      (0x1U << TAMP_SMISR_ITAMP4MF_Pos)                 /*!< 0x00080000U */
+#define TAMP_SMISR_ITAMP4MF          TAMP_SMISR_ITAMP4MF_Msk
 #define TAMP_SMISR_ITAMP5MF_Pos      (20U)
 #define TAMP_SMISR_ITAMP5MF_Msk      (0x1U << TAMP_SMISR_ITAMP5MF_Pos)                 /*!< 0x00100000U */
 #define TAMP_SMISR_ITAMP5MF          TAMP_SMISR_ITAMP5MF_Msk
@@ -13592,6 +13590,15 @@ typedef struct
 #define TAMP_SMISR_ITAMP11MF_Pos     (26U)
 #define TAMP_SMISR_ITAMP11MF_Msk     (0x1U << TAMP_SMISR_ITAMP11MF_Pos)                /*!< 0x020400000U */
 #define TAMP_SMISR_ITAMP11MF         TAMP_SMISR_ITAMP11MF_Msk
+#define TAMP_SMISR_ITAMP12MF_Pos     (27U)
+#define TAMP_SMISR_ITAMP12MF_Msk     (0x1U << TAMP_SMISR_ITAMP12MF_Pos)                /*!< 0x080000000U */
+#define TAMP_SMISR_ITAMP12MF         TAMP_SMISR_ITAMP12MF_Msk
+#define TAMP_SMISR_ITAMP14MF_Pos     (29U)
+#define TAMP_SMISR_ITAMP14MF_Msk     (0x1U << TAMP_SMISR_ITAMP14MF_Pos)                /*!< 0x200000000U */
+#define TAMP_SMISR_ITAMP14MF         TAMP_SMISR_ITAMP14MF_Msk
+#define TAMP_SMISR_ITAMP15MF_Pos     (30U)
+#define TAMP_SMISR_ITAMP15MF_Msk     (0x1U << TAMP_SMISR_ITAMP15MF_Pos)                /*!< 0x400000000U */
+#define TAMP_SMISR_ITAMP15MF         TAMP_SMISR_ITAMP15MF_Msk
 
 /********************  Bits definition for TAMP_SCR register  *****************/
 #define TAMP_SCR_CTAMP1F_Pos         (0U)
@@ -13627,6 +13634,9 @@ typedef struct
 #define TAMP_SCR_CITAMP3F_Pos        (18U)
 #define TAMP_SCR_CITAMP3F_Msk        (0x1U << TAMP_SCR_CITAMP3F_Pos)                   /*!< 0x00040000U */
 #define TAMP_SCR_CITAMP3F            TAMP_SCR_CITAMP3F_Msk
+#define TAMP_SCR_CITAMP4F_Pos        (19U)
+#define TAMP_SCR_CITAMP4F_Msk        (0x1U << TAMP_SCR_CITAMP4F_Pos)                   /*!< 0x00080000U */
+#define TAMP_SCR_CITAMP4F            TAMP_SCR_CITAMP4F_Msk
 #define TAMP_SCR_CITAMP5F_Pos        (20U)
 #define TAMP_SCR_CITAMP5F_Msk        (0x1U << TAMP_SCR_CITAMP5F_Pos)                   /*!< 0x00100000U */
 #define TAMP_SCR_CITAMP5F            TAMP_SCR_CITAMP5F_Msk
@@ -13643,11 +13653,20 @@ typedef struct
 #define TAMP_SCR_CITAMP9F_Msk        (0x1U << TAMP_SCR_CITAMP9F_Pos)                   /*!< 0x01000000U */
 #define TAMP_SCR_CITAMP9F            TAMP_SCR_CITAMP9F_Msk
 #define TAMP_SCR_CITAMP10F_Pos       (25U)
-#define TAMP_SCR_CITAMP10F_Msk       (0x1U << TAMP_SCR_CITAMP10F_Pos)                  /*!< 0x00200000U */
+#define TAMP_SCR_CITAMP10F_Msk       (0x1U << TAMP_SCR_CITAMP10F_Pos)                  /*!< 0x02000000U */
 #define TAMP_SCR_CITAMP10F           TAMP_SCR_CITAMP10F_Msk
 #define TAMP_SCR_CITAMP11F_Pos       (26U)
-#define TAMP_SCR_CITAMP11F_Msk       (0x1U << TAMP_SCR_CITAMP11F_Pos)                  /*!< 0x00200000U */
+#define TAMP_SCR_CITAMP11F_Msk       (0x1U << TAMP_SCR_CITAMP11F_Pos)                  /*!< 0x04000000U */
 #define TAMP_SCR_CITAMP11F           TAMP_SCR_CITAMP11F_Msk
+#define TAMP_SCR_CITAMP12F_Pos       (27U)
+#define TAMP_SCR_CITAMP12F_Msk       (0x1U << TAMP_SCR_CITAMP12F_Pos)                  /*!< 0x08000000U */
+#define TAMP_SCR_CITAMP12F           TAMP_SCR_CITAMP12F_Msk
+#define TAMP_SCR_CITAMP14F_Pos       (29U)
+#define TAMP_SCR_CITAMP14F_Msk       (0x1U << TAMP_SCR_CITAMP14F_Pos)                  /*!< 0x20000000U */
+#define TAMP_SCR_CITAMP14F           TAMP_SCR_CITAMP14F_Msk
+#define TAMP_SCR_CITAMP15F_Pos       (30U)
+#define TAMP_SCR_CITAMP15F_Msk       (0x1U << TAMP_SCR_CITAMP15F_Pos)                  /*!< 0x40000000U */
+#define TAMP_SCR_CITAMP15F           TAMP_SCR_CITAMP15F_Msk
 
 /*******************  Bits definition for TAMP_COUNT1R register  **************/
 #define TAMP_COUNT1R_Pos              (0U)
@@ -14473,6 +14492,7 @@ typedef struct
 #define WWDG_SIDR_SID_Msk       (0xFFFFFFFFU << WWDG_SIDR_SID_Pos)/*!< 0xFFFFFFFF */
 #define WWDG_SIDR_SID           WWDG_SIDR_SID_Msk                 /*!< The address decoding range is 1 Kbyte */
 
+
 /**
   * @}
   */
@@ -14499,6 +14519,11 @@ typedef struct
                                      ((INSTANCE) == LPDMA_Channel3))
 
 #define IS_DMA_2D_ADDRESSING_INSTANCE(INSTANCE) (0 == 1)
+
+#define IS_DMA_PFREQ_INSTANCE(INSTANCE) (((INSTANCE) == LPDMA_Channel0)   || \
+                                         ((INSTANCE) == LPDMA_Channel1)   || \
+                                         ((INSTANCE) == LPDMA_Channel2)   || \
+                                         ((INSTANCE) == LPDMA_Channel3))
 
 /******************************** EXTI Instances **********************************/
 #define IS_EXTI_ALL_INSTANCE(INSTANCE)  ((INSTANCE) == EXTI2)
@@ -14538,6 +14563,9 @@ typedef struct
                                        ((INSTANCE) == I3C4))
 /******************************** I2C Instances *******************************/
 #define IS_I2C_ALL_INSTANCE(INSTANCE) ((INSTANCE) == I2C8)
+
+/******************* I2C Instances : Group belongingness *********************/
+#define IS_I2C_GRP1_INSTANCE(INSTANCE) IS_I2C_ALL_INSTANCE(INSTANCE)
 
 /************** I2C Instances : wakeup capability from stop modes *************/
 #define IS_I2C_WAKEUP_FROMSTOP_INSTANCE(INSTANCE) IS_I2C_ALL_INSTANCE(INSTANCE)
@@ -14642,11 +14670,6 @@ typedef struct
 /******************************* WWDG Instances *******************************/
 #define IS_WWDG_ALL_INSTANCE(INSTANCE) ((INSTANCE) == WWDG2)
 
-#if $MP2_CRYPTO$ && (defined (CORE_CA35) || defined (CORE_CM33))
-/******************************* CRYP VERSION ********************************/
-#define CRYP_VERSION(__INSTANCE__) ((__INSTANCE__)->VERR)
-
-#endif /* MP2_CRYPTO && (CORE_CA35 || CORE_CM33) */
 /******************************* DMA VERSION ********************************/
 #define DMA_VERSION(__INSTANCE__) ((__INSTANCE__)->VERR)
 

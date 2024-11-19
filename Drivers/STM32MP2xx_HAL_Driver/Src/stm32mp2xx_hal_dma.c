@@ -113,6 +113,8 @@
               For circular transfer, this API returns an HAL_ERROR with HAL_DMA_ERROR_NOT_SUPPORTED error code.
 
           (+) Use HAL_DMA_Abort() function to abort any ongoing DMA transfer in blocking mode.
+              When Terminate and Drain FIFO feature is available, The DMA FIFO is drained when
+              the transfer direction is memory to memory or peripheral to memory.
               This API returns HAL_ERROR when there is no ongoing transfer or timeout is reached when disabling the DMA
               channel. (This API should not be called from an interrupt service routine)
 
@@ -137,7 +139,10 @@
           (+) Use HAL_DMA_IRQHandler() called under DMA_IRQHandler() interrupt subroutine to handle any DMA interrupt.
 
           (+) Use HAL_DMA_Abort_IT() function to abort any on-going DMA transfer in non-blocking mode.
-              This API will suspend immediately the DMA channel execution. When the transfer is effectively suspended,
+              When Terminate and Drain FIFO feature is available, This API suspends the DMA channel execution
+              and drains the DMA FIFO.
+              The DMA FIFO is drained when the transfer direction is memory to memory or peripheral to memory.
+              When the transfer is effectively suspended,
               an interrupt is generated and HAL_DMA_IRQHandler() will reset the channel and execute the callback
               XferAbortCallback. (This API could be called from an interrupt service routine)
 
@@ -214,7 +219,6 @@ static void DMA_SetConfig(DMA_HandleTypeDef const *const hdma,
                           uint32_t DstAddress,
                           uint32_t SrcDataSize);
 static void DMA_Init(DMA_HandleTypeDef const *const hdma);
-
 /* Exported functions ------------------------------------------------------------------------------------------------*/
 
 /** @addtogroup DMA_Exported_Functions DMA Exported Functions
@@ -617,11 +621,19 @@ HAL_StatusTypeDef HAL_DMA_Start_IT(DMA_HandleTypeDef *const hdma,
   *         is suspended while a data transfer is on-going, the current data will be transferred and the channel will be
   *         effectively suspended only after the transfer of any on-going data is finished.
   * @retval HAL status.
+  * @note   When Terminate and Drain FIFO feature is available,
+            The DMA internal FIFO is systematically drained before the channel stops.
+            Please refer to channel terminate and drain FIFO section of the reference manual for more information.
   */
 HAL_StatusTypeDef HAL_DMA_Abort(DMA_HandleTypeDef *const hdma)
 {
   /* Get tick number */
   uint32_t tickstart =  HAL_GetTick();
+
+#if defined(DMA_CSR_DRAININGF)
+  uint32_t pollingflag     = DMA_CSR_TCF;
+  uint32_t abortcommandbit = (DMA_CCR_DRAINFIFO | DMA_CCR_SUSP);
+#endif /* DMA_CSR_DRAININGF */
 
   /* Check the DMA peripheral handle parameter */
   if (hdma == NULL)
@@ -642,14 +654,29 @@ HAL_StatusTypeDef HAL_DMA_Abort(DMA_HandleTypeDef *const hdma)
   }
   else
   {
+#if defined(DMA_CSR_DRAININGF)
+    if (hdma->Init.Direction == DMA_MEMORY_TO_PERIPH)
+    {
+      pollingflag     = DMA_CSR_SUSPF;
+      abortcommandbit = DMA_CCR_SUSP;
+    }
+    /* Suspend the channel and, when applicable, drain the FIFO */
+    hdma->Instance->CCR |= abortcommandbit;
+#else
     /* Suspend the channel */
     hdma->Instance->CCR |= DMA_CCR_SUSP;
+#endif /* DMA_CSR_DRAININGF */
 
     /* Update the DMA channel state */
     hdma->State = HAL_DMA_STATE_SUSPEND;
 
+#if defined(DMA_CSR_DRAININGF)
+    /* Check if the DMA Channel is suspended/TransferCompleteFlag */
+    while ((hdma->Instance->CSR & pollingflag) == 0U)
+#else
     /* Check if the DMA Channel is suspended */
     while ((hdma->Instance->CSR & DMA_CSR_SUSPF) == 0U)
+#endif /* DMA_CSR_DRAININGF */
     {
       /* Check for the Timeout */
       if ((HAL_GetTick() - tickstart) > HAL_TIMEOUT_DMA_ABORT)
@@ -709,6 +736,9 @@ HAL_StatusTypeDef HAL_DMA_Abort(DMA_HandleTypeDef *const hdma)
   * @param  hdma : Pointer to a DMA_HandleTypeDef structure that contains the configuration information for the
   *                specified DMA Channel.
   * @retval HAL status.
+  * @note  When Terminate and Drain FIFO feature is available,
+           The DMA internal FIFO is systematically drained before the channel stops.
+           Please refer to channel terminate and drain FIFO section of the reference manual for more information.
   */
 HAL_StatusTypeDef HAL_DMA_Abort_IT(DMA_HandleTypeDef *const hdma)
 {
@@ -730,9 +760,25 @@ HAL_StatusTypeDef HAL_DMA_Abort_IT(DMA_HandleTypeDef *const hdma)
   {
     /* Update the DMA channel state */
     hdma->State = HAL_DMA_STATE_ABORT;
+#if defined(DMA_CSR_DRAININGF)
+    if (hdma->Init.Direction == DMA_MEMORY_TO_PERIPH)
+    {
+      /* Suspend the channel and activate suspend interrupt */
+      hdma->Instance->CCR |= (DMA_CCR_SUSP | DMA_CCR_SUSPIE);
+    }
+    else
+    {
+      /* Suspend the channel, drain the FIFO and activate the transfer complete interrupt flag*/
+      hdma->Instance->CCR |= (DMA_CCR_DRAINFIFO | DMA_CCR_SUSP | DMA_CCR_TCIE);
 
+      /* Reset the channel */
+      hdma->Instance->CCR |= DMA_CCR_RESET;
+    }
+
+#else
     /* Suspend the channel and activate suspend interrupt */
     hdma->Instance->CCR |= (DMA_CCR_SUSP | DMA_CCR_SUSPIE);
+#endif /* DMA_CSR_DRAININGF */
   }
 
   return HAL_OK;
@@ -1075,32 +1121,60 @@ void HAL_DMA_IRQHandler(DMA_HandleTypeDef *const hdma)
     /* Check if interrupt source is enabled */
     if (__HAL_DMA_GET_IT_SOURCE(hdma, DMA_IT_TC) != 0U)
     {
-      /* Check DMA channel transfer mode */
-      if ((hdma->Mode & DMA_LINKEDLIST) == DMA_LINKEDLIST)
+#if defined(DMA_CSR_DRAININGF)
+      /* Check DMA channel state */
+      if ((hdma->State == HAL_DMA_STATE_ABORT) && ((hdma->Instance->CSR & DMA_CSR_SUSPF) == DMA_CSR_SUSPF))
       {
-        /* If linked-list transfer */
-        if (hdma->Instance->CLLR == 0U)
+
+        /* Clear the block transfer complete flag */
+        __HAL_DMA_CLEAR_FLAG(hdma, DMA_FLAG_SUSP);
+
+        /* Reset the channel internal state and reset the FIFO */
+        hdma->Instance->CCR |= DMA_CCR_RESET;
+
+        /* Update the DMA channel state */
+        hdma->State = HAL_DMA_STATE_READY;
+
+        /* Check transfer abort callback */
+        if (hdma->XferAbortCallback != NULL)
         {
+          /* Transfer abort callback */
+          hdma->XferAbortCallback(hdma);
+        }
+
+        return;
+      }
+      else if ((hdma->Instance->CSR & DMA_CSR_IDLEF) != 0U)
+#else
+      if ((hdma->Instance->CSR & DMA_CSR_IDLEF) != 0U)
+#endif /* DMA_CSR_DRAININGF */
+      {
+        /* Check DMA channel transfer mode */
+        if ((hdma->Mode & DMA_LINKEDLIST) == DMA_LINKEDLIST)
+        {
+          /* If linked-list transfer */
+          if (hdma->Instance->CLLR == 0U)
+          {
+            if (hdma->Instance->CBR1 == 0U)
+            {
+              /* Update the DMA channel state */
+              hdma->State = HAL_DMA_STATE_READY;
+
+              /* Update the linked-list queue state */
+              hdma->LinkedListQueue->State = HAL_DMA_QUEUE_STATE_READY;
+            }
+          }
+        }
+        else
+        {
+          /* If normal transfer */
           if (hdma->Instance->CBR1 == 0U)
           {
             /* Update the DMA channel state */
             hdma->State = HAL_DMA_STATE_READY;
-
-            /* Update the linked-list queue state */
-            hdma->LinkedListQueue->State = HAL_DMA_QUEUE_STATE_READY;
           }
         }
       }
-      else
-      {
-        /* If normal transfer */
-        if (hdma->Instance->CBR1 == 0U)
-        {
-          /* Update the DMA channel state */
-          hdma->State = HAL_DMA_STATE_READY;
-        }
-      }
-
       /* Clear TC and HT transfer flags */
       __HAL_DMA_CLEAR_FLAG(hdma, (DMA_FLAG_TC | DMA_FLAG_HT));
 
@@ -1822,6 +1896,8 @@ static void DMA_Init(DMA_HandleTypeDef const *const hdma)
   /* Write DMA Channel linked-list address register (CLLR) ************************************************************/
   WRITE_REG(hdma->Instance->CLLR, 0U);
 }
+
+
 /**
   * @}
   */

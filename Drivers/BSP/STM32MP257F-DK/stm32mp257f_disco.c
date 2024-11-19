@@ -436,7 +436,10 @@ int32_t  BSP_PB_Init(Button_TypeDef Button, ButtonMode_TypeDef ButtonMode)
   }
 
   /* Enable the BUTTON clock*/
-  BUTTON_USER2_GPIO_CLK_ENABLE();
+  if (RESMGR_STATUS_ACCESS_OK == ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(92)))
+  {
+	  BUTTON_USER2_GPIO_CLK_ENABLE();
+  }
   gpio_init_structure.Pin = BUTTON_PIN [Button];
   gpio_init_structure.Pull = GPIO_NOPULL;
   gpio_init_structure.Speed = GPIO_SPEED_FREQ_HIGH;

@@ -23,6 +23,9 @@ try:
     from Cryptodome.PublicKey import RSA
     from Cryptodome.Signature import DSS
     from Cryptodome.PublicKey import ECC
+    from Cryptodome.Cipher import AES
+    from cryptography.hazmat.primitives.ciphers.aead import utils
+    from Cryptodome.Random import get_random_bytes
 except ImportError:
     print("""
             ***
@@ -81,14 +84,17 @@ TLV_TYPES = {
         'NUM_IMG':  0x00000003,   # number of images to load
         'IMGTYPE':  0x00000004,   # array of type of images to load
         'IMGSIZE':  0x00000005,   # array of the size of the images to load
+        'ENCTYPE':  0x00000006,  # algorithm used for the encryption
         'HASHTABLE': 0x000000010,  # segment hash table for authentication
         'PKEYINFO': 0x0000000011,  # information to retrieve signature key
+        'ENCTABLE': 0x000000012,  # encrypted segment table for authentication
+                                  # and decryption
 }
 
 # Platform type definitions
 PLAT_TLV_TYPES = {
-        'BOOTADDR': 0x00010001, # boot address of the remoteproc firmware
-        'BOOTSEC': 0x00010002, # boot mode: secure or non-secure
+        'BOOTADDR': 0x00010001,  # boot address of the remoteproc firmware
+        'BOOTSEC': 0x00010002,   # boot mode: secure or non-secure
 }
 
 GENERIC_TLV_TYPE_RANGE = range(0x00000000, 0x00010000)
@@ -107,8 +113,13 @@ ENUM_SIGNATURE_TYPE = dict(
     ECC=2,
 )
 
+ENUM_ENCRYPT_TYPE = dict(
+    AES_CBC=1,  # CBC encryption with AES key
+)
+
 ENUM_BINARY_TYPE = dict(
-    ELF=1,
+    ELF=1,      # standard ELF format
+    ENC_ELF=2,  # ELF format with encrypted segments
 )
 
 
@@ -268,6 +279,79 @@ class SegmentHash(object):
         return self.buf
 
 
+class EncryptedElf:
+    def __init__(self, img, bin_img, key):
+        self.img = img
+        self._num_segments = img.num_segments()
+        self.bin = bytearray(bin_img)
+        self.key = key
+        self.iv_table = []
+        self.enc_elf = bytearray()
+        self._offset = 0
+
+    def compute_enc_segment(self, seg, segment_data):
+        # Generate a random IV (Initialization Vector)
+        iv = get_random_bytes(16)
+        self.iv_table.append(iv)
+
+        # Create AES cipher in CBC mode
+        cipher = AES.new(self.key, AES.MODE_CBC, iv)
+
+        # Encrypt the padded segment data
+        ciphertext = cipher.encrypt(segment_data)
+
+        # Compute hash of the encrypted segment
+        h = SHA256.new()
+        h.update(ciphertext)
+        return ciphertext, iv, h.digest()
+
+    def add_to_enc_table(self, seg, hash, iv):
+        # Create a table element that containing for each segment:
+        #    - the segment header
+        #    - a hash of the encrypted segment (algorithm defined by TLV
+        #      HASHTYPE)
+        #    - the IV used for encryption (algorithm defined by TLV ENCTYPE)
+
+        struct.pack_into('<I', self._bufview_, self._offset,
+                         ENUM_P_TYPE_ARM[seg.header.p_type])
+        self._offset += 4
+        struct.pack_into('<7I', self._bufview_, self._offset,
+                         seg.header.p_offset, seg.header.p_vaddr,
+                         seg.header.p_paddr, seg.header.p_filesz,
+                         seg.header.p_memsz, seg.header.p_flags,
+                         seg.header.p_align)
+        self._offset += 28
+        struct.pack_into('<32B', self._bufview_, self._offset, *hash)
+        self._offset += 32
+        struct.pack_into('<16B', self._bufview_, self._offset, *iv)
+        self._offset += 16
+
+    # Encrypt ELF segment and compute associated encryption segment table
+    # return a copy of the original ELF file with segments encrypted.
+    def encrypt_segments(self):
+        h = SHA256.new()
+        self.size = (h.digest_size + 16 + 32) * self._num_segments
+        self.buf = bytearray(self.size)
+        self._bufview_ = memoryview(self.buf)
+        for seg in self.img.iter_segments():
+            if seg['p_type'] == 'PT_LOAD':
+                if seg['p_filesz'] % 16 != 0:
+                    raise ValueError(f"Segment {seg.header.p_offset:x} "
+                                     f"must be 16 bytes aligned for encryption: "
+                                     f"{seg['p_filesz']}")
+                encrypted_data, iv, hash = self.compute_enc_segment(seg,
+                                                                    seg.data())
+                start = seg['p_offset']
+                end = start + len(encrypted_data)
+                self.bin[start:end] = encrypted_data
+                # Store hash and iv in the encryption segment table
+                self.add_to_enc_table(seg, hash, iv)
+        return self.bin
+
+    def get_table(self):
+        return self.buf
+
+
 class ImageHeader(object):
     '''
         Image header
@@ -343,6 +427,9 @@ def get_args(logger):
                              'interpreted as a string. Option can be used '
                              'multiple times to add multiple TLVs.',
                         default=[], dest='plat_tlv')
+    parser.add_argument('--enc_key', required=False,
+                        help='AES-256 encryption key (32 bytes)',
+                        dest='enc_key')
 
     parsed = parser.parse_args()
 
@@ -407,14 +494,31 @@ def main():
     key = get_key(args.key_file)
 
     if not key.has_private():
-        logger.error('Provided key cannot be used for signing, ')
+        print('Provided key cannot be used for signing, ')
         sys.exit(1)
 
     tlv.add('SIGNTYPE', sign_type.to_bytes(1, 'little'))
 
     images_type = []
-    hash_tlv = bytearray()
+    seg_table_tlv = bytearray()
     images_size = []
+
+    if args.enc_key:
+        # Read the AES key from the file
+        try:
+            with open(args.enc_key, 'r') as key_file:
+                key_hex = key_file.read().strip()
+                enc_key = bytes.fromhex(key_hex)
+                utils._check_byteslike("key", enc_key)
+        except Exception as e:
+            print(f"Error reading AES key file: {e}")
+            sys.exit(1)
+        if len(enc_key) not in (16, 24, 32):
+            print("Error: AES key must be 128, 192, or 256 bits")
+            sys.exit(1)
+        enc_type = ENUM_ENCRYPT_TYPE['AES_CBC']
+        tlv.add('ENCTYPE', enc_type.to_bytes(1, 'little'))
+        logging.info("Firmware encryption with AES CBC algorithm")
 
     # Firmware image
     for inputf in args.in_file:
@@ -429,6 +533,34 @@ def main():
         # Need to reopen the file to get the raw data
         with open(inputf, 'rb') as f:
             bin_img = f.read()
+        f.close()
+
+        if args.enc_key:
+            logging.debug("Segment encryption")
+            bin_type = ENUM_BINARY_TYPE['ENC_ELF']
+            encryptor = EncryptedElf(img, bin_img, enc_key)
+            bin_img = encryptor.encrypt_segments()
+            size = len(bin_img)
+            align_64b = size % 8
+            if align_64b:
+                size += 8 - align_64b
+            seg_table_tlv.extend(encryptor.get_table())
+        else:
+            # Store image type information
+            bin_type = ENUM_BINARY_TYPE['ELF']
+
+            # Compute the hash table and add it to TLV blob
+            hash_table = SegmentHash(img)
+            seg_table_tlv.extend(hash_table.get_table())
+
+        # Store temporary file. This file is a copy of the input ELF file, but
+        # in the case of encryption the ELF segments as been encrypted.
+        base_name, extension = os.path.splitext(inputf)
+        file_name = f"{base_name}.tmp"
+        with open(file_name, 'wb') as ftmp:
+            ftmp.write(bin_img)
+        ftmp.close()
+
         size = len(bin_img)
         align_64b = size % 8
         if align_64b:
@@ -436,15 +568,19 @@ def main():
 
         images_size.extend(size.to_bytes(4, 'little'))
         s_header.img_length += size
-        f.close()
-
-        # Store image type information
-        bin_type = ENUM_BINARY_TYPE['ELF']
         images_type += bin_type.to_bytes(1, 'little')
 
-        # Compute the hash table and add it to TLV blob
-        hash_table = SegmentHash(img)
-        hash_tlv.extend(hash_table.get_table())
+    if args.enc_key:
+        # Add encryption table information in TLV blob.
+        # The ENCTABLE TLV contains a byte array containing all the ELF
+        # encrypted segments with associated hash for authentication and IV
+        # for decryption.
+        tlv.add('ENCTABLE', seg_table_tlv)
+    else:
+        # Add hash table information in TLV blob
+        # The HASHTABLE TLV contains a byte array containing all the ELF
+        # segments with associated hash.
+        tlv.add('HASHTABLE', seg_table_tlv)
 
     # Add image information
     # The 'IMGTYPE' contains a byte array of the image type (ENUM_BINARY_TYPE).
@@ -457,11 +593,6 @@ def main():
     # The 'HASHTYPE' TLV contains a byte associated to ENUM_HASH_TYPE.
     hash_type = ENUM_HASH_TYPE['SHA256']
     tlv.add('HASHTYPE', hash_type.to_bytes(1, 'little'))
-
-    # Add hash table information in TLV blob
-    # The HASHTABLE TLV contains a byte array containing all the ELF segment
-    # with associated hash.
-    tlv.add('HASHTABLE', hash_tlv)
 
     # Add optional key information to TLV
     if args.key_info:
@@ -514,10 +645,13 @@ def main():
         if align_64b:
             f.write(bytearray(8 - align_64b))
         for inputf in args.in_file:
-            with open(inputf, 'rb') as fin:
-                bin_img = fin.read()
-            f.write(bin_img)
-            fin.close()
+            base_name, extension = os.path.splitext(inputf)
+            file_name = f"{base_name}.tmp"
+            with open(file_name, 'rb') as ftmp:
+                bin_img = ftmp.read()
+                f.write(bin_img)
+            ftmp.close()
+            os.remove(file_name)
             align_64b = len(bin_img) % 8
             if align_64b:
                 f.write(bytearray(8 - align_64b))

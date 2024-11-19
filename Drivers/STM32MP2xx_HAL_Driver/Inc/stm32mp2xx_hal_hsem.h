@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -337,5 +337,3 @@ HAL_StatusTypeDef HAL_HSEM_GetConfigAttributes(uint32_t Item, uint32_t *pAttribu
 #endif
 
 #endif /* STM32MP2xx_HAL_HSEM_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

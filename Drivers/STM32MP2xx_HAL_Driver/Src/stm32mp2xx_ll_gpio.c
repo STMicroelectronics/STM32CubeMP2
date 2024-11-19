@@ -163,16 +163,20 @@ ErrorStatus LL_GPIO_DeInit(const GPIO_TypeDef *GPIOx)
     LL_RCC_GPIOI_ForceReset();
     LL_RCC_GPIOI_ReleaseReset();
   }
+#if defined (GPIOJ)
   else if (GPIOx == GPIOJ)
   {
     LL_RCC_GPIOJ_ForceReset();
     LL_RCC_GPIOJ_ReleaseReset();
   }
+#endif /* GPIOJ */
+#if defined (GPIOK)
   else if (GPIOx == GPIOK)
   {
     LL_RCC_GPIOK_ForceReset();
     LL_RCC_GPIOK_ReleaseReset();
   }
+#endif /* GPOIK */
   else if (GPIOx == GPIOZ)
   {
     LL_RCC_GPIOZ_ForceReset();

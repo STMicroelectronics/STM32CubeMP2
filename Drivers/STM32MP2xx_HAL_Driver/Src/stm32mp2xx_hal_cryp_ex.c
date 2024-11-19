@@ -49,25 +49,6 @@
   * @{
   */
 
-#define CRYP_PHASE_INIT                 0x00000000U
-#define CRYP_PHASE_HEADER               CRYP_CR_GCM_CCMPH_0
-#define CRYP_PHASE_PAYLOAD              CRYP_CR_GCM_CCMPH_1
-#define CRYP_PHASE_FINAL                CRYP_CR_GCM_CCMPH
-
-#if !defined(USE_HAL_SAES_ONLY) || (USE_HAL_SAES_ONLY == 1)
-#if defined(SAES_CR_CPHASE)
-#define SAES_PHASE_INIT                  0x00000000U             /*!< GCM/GMAC (or CCM) init phase */
-#define SAES_PHASE_HEADER                SAES_CR_CPHASE_0        /*!< GCM/GMAC or CCM header phase */
-#define SAES_PHASE_PAYLOAD               SAES_CR_CPHASE_1        /*!< GCM(/CCM) payload phase      */
-#define SAES_PHASE_FINAL                 SAES_CR_CPHASE        /*!< GCM/GMAC or CCM  final phase */
-#else
-#define SAES_PHASE_INIT                  0x00000000U             /*!< GCM/GMAC (or CCM) init phase */
-#define SAES_PHASE_HEADER                SAES_CR_GCMPH_0         /*!< GCM/GMAC or CCM header phase */
-#define SAES_PHASE_PAYLOAD               SAES_CR_GCMPH_1         /*!< GCM(/CCM) payload phase      */
-#define SAES_PHASE_FINAL                 SAES_CR_GCMPH           /*!< GCM/GMAC or CCM  final phase */
-#endif /* SAES_CR_CPHASE */
-#endif /* USE_HAL_SAES_ONLY */
-
 #define  CRYPEx_PHASE_PROCESS       0x02U     /*!< CRYP peripheral is in processing phase */
 #define  CRYPEx_PHASE_FINAL         0x03U     /*!< CRYP peripheral is in final phase this is relevant 
                                                    only with CCM and GCM modes */
@@ -243,11 +224,7 @@ HAL_StatusTypeDef HAL_CRYPEx_AESGCM_GenerateAuthTAG(CRYP_HandleTypeDef *hcryp, c
 
       /* Wait for CCF flag to be raised */
       tickstart = HAL_GetTick();
-#if !defined(SAES_SR_CCF)
       while (HAL_IS_BIT_CLR(((SAES_TypeDef *)(hcryp->Instance))->ISR, SAES_ISR_CCF))
-#else
-      while (HAL_IS_BIT_CLR(((SAES_TypeDef *)(hcryp->Instance))->SR, SAES_SR_CCF))
-#endif /* SAES_SR_CCF */
       {
         /* Check for the Timeout */
         if (Timeout != HAL_MAX_DELAY)
@@ -427,11 +404,7 @@ HAL_StatusTypeDef HAL_CRYPEx_AESCCM_GenerateAuthTAG(CRYP_HandleTypeDef *hcryp, c
 
       /* Wait for CCF flag to be raised */
       tickstart = HAL_GetTick();
-#if !defined(SAES_SR_CCF)
       while (HAL_IS_BIT_CLR(((SAES_TypeDef *)(hcryp->Instance))->ISR, SAES_ISR_CCF))
-#else
-      while (HAL_IS_BIT_CLR(((SAES_TypeDef *)(hcryp->Instance))->SR, SAES_SR_CCF))
-#endif /* SAES_SR_CCF */
       {
         /* Check for the Timeout */
         if (Timeout != HAL_MAX_DELAY)
@@ -668,7 +641,7 @@ HAL_StatusTypeDef HAL_CRYPEx_EncryptSharedKey(CRYP_HandleTypeDef *hcryp, uint32_
 
 #if defined (SAES_CR_WRAPEN)
     /* Set the operating mode*/
-    MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_WRAPEN | SAES_CR_WRAPID, SAES_KEYMODE_WRAPPED | ID);
+    MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_WRAPEN | SAES_CR_WRAPID, SAES_CR_WRAPEN | ID);
 #else
     MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_KMOD | SAES_CR_KSHAREID, CRYP_KEYMODE_SHARED | ID);
 #endif /* SAES_CR_WRAPEN */
@@ -724,7 +697,7 @@ HAL_StatusTypeDef HAL_CRYPEx_DecryptSharedKey(CRYP_HandleTypeDef *hcryp, uint32_
     __HAL_CRYP_DISABLE(hcryp);
 #if defined (SAES_CR_WRAPEN)
     /* Set the operating mode*/
-    MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_WRAPEN | SAES_CR_WRAPID, CRYP_KEYMODE_WRAPPED | ID);
+    MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_WRAPEN | SAES_CR_WRAPID, SAES_CR_WRAPEN | ID);
 #else
     MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_KMOD | SAES_CR_KSHAREID, CRYP_KEYMODE_SHARED | ID);
 #endif /* SAES_CR_WRAPEN */
@@ -762,7 +735,7 @@ static HAL_StatusTypeDef CRYPEx_KeyDecrypt(CRYP_HandleTypeDef *hcryp, uint32_t T
   uint32_t tickstart;
 
   /* key preparation for decryption, operating mode 2*/
-  MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_MODE, CRYP_MODE_KEY_DERIVATION);
+  MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_OPERATION_MODE, CRYP_MODE_KEY_DERIVATION);
 
   /*It is strongly recommended to select hardware secret keys*/
   if (hcryp->Init.KeySelect == CRYP_KEYSEL_NORMAL)
@@ -775,11 +748,7 @@ static HAL_StatusTypeDef CRYPEx_KeyDecrypt(CRYP_HandleTypeDef *hcryp, uint32_t T
 
   /* Wait for CCF flag to be raised */
   tickstart = HAL_GetTick();
-#if !defined(SAES_SR_CCF)
   while (HAL_IS_BIT_CLR(((SAES_TypeDef *)(hcryp->Instance))->ISR, SAES_ISR_CCF))
-#else
-  while (HAL_IS_BIT_CLR(((SAES_TypeDef *)(hcryp->Instance))->SR, SAES_SR_CCF))
-#endif /* SAES_SR_CCF */
   {
     /* Check for the Timeout */
     if (Timeout != HAL_MAX_DELAY)
@@ -804,7 +773,7 @@ static HAL_StatusTypeDef CRYPEx_KeyDecrypt(CRYP_HandleTypeDef *hcryp, uint32_t T
 
   /*  End of Key preparation for ECB/CBC */
   /* Return to decryption operating mode(Mode 3)*/
-  MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_MODE, CRYP_MODE_DECRYPT);
+  MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_OPERATION_MODE, CRYP_MODE_DECRYPT);
 
 
   if (hcryp->Init.Algorithm != CRYP_AES_ECB)
@@ -843,11 +812,7 @@ static HAL_StatusTypeDef CRYPEx_KeyDecrypt(CRYP_HandleTypeDef *hcryp, uint32_t T
 
     /* Wait for CCF flag to be raised */
     tickstart = HAL_GetTick();
-#if !defined(SAES_SR_CCF)
     while (HAL_IS_BIT_CLR(((SAES_TypeDef *)(hcryp->Instance))->ISR, SAES_ISR_CCF))
-#else
-    while (HAL_IS_BIT_CLR(((SAES_TypeDef *)(hcryp->Instance))->SR, SAES_SR_CCF))
-#endif /* SAES_SR_CCF */
     {
       /* Check for the Timeout */
       if (Timeout != HAL_MAX_DELAY)
@@ -890,7 +855,7 @@ static HAL_StatusTypeDef CRYPEx_KeyEncrypt(CRYP_HandleTypeDef *hcryp, uint32_t T
   uint32_t tickstart;
   uint32_t temp;  /* Temporary CrypOutBuff */
 
-  MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_CR_MODE, CRYP_OPERATINGMODE_ENCRYPT);
+  MODIFY_REG(((SAES_TypeDef *)(hcryp->Instance))->CR, SAES_OPERATION_MODE, CRYP_OPERATINGMODE_ENCRYPT);
 
   if (hcryp->Init.Algorithm != CRYP_AES_ECB)
   {
@@ -954,11 +919,7 @@ static HAL_StatusTypeDef CRYPEx_KeyEncrypt(CRYP_HandleTypeDef *hcryp, uint32_t T
 
     /* Wait for CCF flag to be raised */
     tickstart = HAL_GetTick();
-#if !defined(SAES_SR_CCF)
     while (HAL_IS_BIT_CLR(((SAES_TypeDef *)(hcryp->Instance))->ISR, SAES_ISR_CCF))
-#else
-    while (HAL_IS_BIT_CLR(((SAES_TypeDef *)(hcryp->Instance))->SR, SAES_SR_CCF))
-#endif /* SAES_SR_CCF */
     {
       /* Check for the Timeout */
       if (Timeout != HAL_MAX_DELAY)

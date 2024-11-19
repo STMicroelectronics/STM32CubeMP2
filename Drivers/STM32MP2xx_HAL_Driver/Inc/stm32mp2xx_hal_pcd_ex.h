@@ -3,10 +3,12 @@
   * @file    stm32mp2xx_hal_pcd_ex.h
   * @author  MCD Application Team
   * @brief   Header file of PCD HAL Extension module.
+  *          This file includes the relevant driver file for firmware
+  *
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software component is licensed by ST under BSD 3-Clause license,
@@ -17,57 +19,10 @@
   ******************************************************************************
   */
 
-/* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef STM32MP2xx_HAL_PCD_EX_H
-#define STM32MP2xx_HAL_PCD_EX_H
-
-#ifdef __cplusplus
-extern "C" {
-#endif /* __cplusplus */
-
 /* Includes ------------------------------------------------------------------*/
-#include "stm32mp2xx_hal_def.h"
+#if defined(STM32MP257Cxx)
+#include "stm32mp2xx_hal_pcd_drd_ex.h"
+#else
+#include "stm32mp2xx_hal_pcd_otg_ex.h"
+#endif /*STM32MP257Cxx*/
 
-/** @addtogroup STM32MP2xx_HAL_Driver
-  * @{
-  */
-
-/** @addtogroup PCDEx
-  * @{
-  */
-/* Exported types ------------------------------------------------------------*/
-
-
-/* Exported constants --------------------------------------------------------*/
-/* Exported macros -----------------------------------------------------------*/
-/* Exported functions --------------------------------------------------------*/
-/** @addtogroup PCDEx_Exported_Functions PCDEx Exported Functions
-  * @{
-  */
-/** @addtogroup PCDEx_Exported_Functions_Group1 Peripheral Control functions
-  * @{
-  */
-HAL_StatusTypeDef HAL_PCDEx_SetTxFiFo(const PCD_HandleTypeDef *hpcd, uint8_t fifo, uint16_t size);
-HAL_StatusTypeDef HAL_PCDEx_SetRxFiFo(const PCD_HandleTypeDef *hpcd, uint16_t size);
-
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-#ifdef __cplusplus
-}
-#endif
-
-
-#endif /* STM32MP2xx_HAL_PCD_EX_H */
-/**
-  * @}
-  */
-
-/**
-  * @}
-  */
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

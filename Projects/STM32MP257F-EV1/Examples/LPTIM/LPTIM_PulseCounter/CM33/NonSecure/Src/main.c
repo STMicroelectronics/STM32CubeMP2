@@ -281,7 +281,7 @@ void SystemClock_Config(void) {
 
 }
 
-/* LPTIM1 init function */
+/* LPTIM4 init function */
 static void MX_LPTIM4_Init(void)
 {
   /* Acquire LPTIM4 using Resource manager */

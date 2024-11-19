@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -766,5 +766,3 @@ void HAL_PWREx_WKUP_Callback(__attribute__((unused))uint16_t line);
 
 
 #endif /* __STM32MP2xx_HAL_PWR_EX_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

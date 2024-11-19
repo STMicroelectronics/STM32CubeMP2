@@ -19,7 +19,6 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32mp2xx_ll_rtc.h"
-#include "stm32mp2xx_ll_cortex.h"
 #ifdef  USE_FULL_ASSERT
 #include "stm32_assert.h"
 #else   /* USE_FULL_ASSERT */
@@ -757,7 +756,7 @@ ErrorStatus LL_RTC_EnterInitMode(RTC_TypeDef *RTCx)
 {
   __IO uint32_t timeout = RTC_INITMODE_TIMEOUT;
   ErrorStatus status = SUCCESS;
-  uint32_t tmp;
+  uint32_t tmp = 0U;
 
   /* Check the parameter */
   assert_param(IS_RTC_ALL_INSTANCE(RTCx));
@@ -828,7 +827,7 @@ ErrorStatus LL_RTC_WaitForSynchro(RTC_TypeDef *RTCx)
 {
   __IO uint32_t timeout = RTC_SYNCHRO_TIMEOUT;
   ErrorStatus status = SUCCESS;
-  uint32_t tmp;
+  uint32_t tmp = 0U;
 
   /* Check the parameter */
   assert_param(IS_RTC_ALL_INSTANCE(RTCx));
@@ -891,5 +890,3 @@ ErrorStatus LL_RTC_WaitForSynchro(RTC_TypeDef *RTCx)
   */
 
 #endif /* USE_FULL_LL_DRIVER */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -402,16 +402,22 @@ HAL_StatusTypeDef HAL_LPTIM_Init(LPTIM_HandleTypeDef *hlptim)
   hlptim->Instance->CFGR = tmpcfgr;
 
   /* Configure LPTIM input sources */
+#if defined (CORE_CA35) || defined (CORE_CM33)
   if (hlptim->Instance == LPTIM1)
+#endif /* CORE_CA35 || CORE_CM33 */
   {
+#if defined (CORE_CA35) || defined (CORE_CM33)
     /* Check LPTIM Input1 and Input2 sources */
     assert_param(IS_LPTIM_INPUT1_SOURCE(hlptim->Instance, hlptim->Init.Input1Source));
     assert_param(IS_LPTIM_INPUT2_SOURCE(hlptim->Instance, hlptim->Init.Input2Source));
 
     /* Configure LPTIM Input1 and Input2 sources */
     hlptim->Instance->CFGR2 = (hlptim->Init.Input1Source | hlptim->Init.Input2Source);
+#endif /* CORE_CA35 || CORE_CM33 */
   }
+#if defined (CORE_CA35) || defined (CORE_CM33)
   else
+#endif /* CORE_CA35 || CORE_CM33 */
   {
     /* Check LPTIM2 Input1 source */
     assert_param(IS_LPTIM_INPUT1_SOURCE(hlptim->Instance, hlptim->Init.Input1Source));

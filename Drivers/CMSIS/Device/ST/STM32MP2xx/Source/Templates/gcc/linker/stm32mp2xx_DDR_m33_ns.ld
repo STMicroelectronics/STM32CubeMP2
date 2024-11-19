@@ -48,10 +48,9 @@ MEMORY
 {
   NS_VECTOR_TBL (xrw)   : ORIGIN = 0x80100000,	LENGTH = 0x00000600
   FLASH         (rx)    : ORIGIN = 0x80100600,  LENGTH = 8M - LENGTH(NS_VECTOR_TBL)
-  ROM           (rx)   : ORIGIN = 0x80A00000,  LENGTH = 4M
-  RAM           (rwx)   : ORIGIN = 0x80E00000,  LENGTH = 4M
-  IPC_SHMEM_1   (rw)    : ORIGIN = 0x81200000,  LENGTH = 1M - _virtio_shmem_size
-  VIRTIO_SHMEM  (rw)    : ORIGIN = ORIGIN(IPC_SHMEM_1) + LENGTH(IPC_SHMEM_1), LENGTH = _virtio_shmem_size
+  RAM           (rx)   : ORIGIN = 0x80A00000,  LENGTH = 4M
+  VIRTIO_SHMEM  (rw)    : ORIGIN = 0x812F8000,	LENGTH = 32K
+  IPC_SHMEM_1   (rw)    : ORIGIN = 0x81200000,	LENGTH = 8M - LENGTH(VIRTIO_SHMEM)
 }
 
  /* Symbols needed for OpenAMP to enable rpmsg */
@@ -61,31 +60,42 @@ __OPENAMP_region_end__ = ORIGIN(VIRTIO_SHMEM)+LENGTH(VIRTIO_SHMEM);
 /* Library configurations */
 GROUP(libgcc.a libc.a libm.a libnosys.a)
 
+LINKER_DEFAULT_ALIGNMENT = 16;
 
 SECTIONS
 {
+  /*
+   * To support firmware image encryption by OP-TEE (TF-M running on a coprocessor),
+   * we need to align all sections to have a modulo 16 size. This size is the atomic block size to
+   * encrypt. Use TFM_LINKER_DEFAULT_ALIGNMENT that is set to 32 bytes.
+   * Each section declared should respect this template:
+   *
+   * section_name : ALIGN(LINKER_DEFAULT_ALIGNMENT)
+   * {
+   *     ...
+   *     ALIGN(LINKER_DEFAULT_ALIGNMENT)
+   * }
+   */
+
   /* The startup code into "NS_VECTOR_TBL" Ram type memory
    * Do not update the ".isr_vectors" section name. the name
    * is used by the Linux kernel to retrieve the address
    * of the vector table*/
-   .isr_vectors :
+   .isr_vectors : ALIGN(LINKER_DEFAULT_ALIGNMENT)
     {
-        . = ALIGN(4);
         KEEP(*(.isr_vectors))
-        . = ALIGN(4);
+        . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
     } >NS_VECTOR_TBL
 
-    .resource_table :
+    .resource_table : ALIGN(LINKER_DEFAULT_ALIGNMENT)
     {
-        . = ALIGN(4);
         KEEP (*(.resource_table*))
-        . = ALIGN(4);
+        . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
     } >IPC_SHMEM_1
 
   /* The program code and other data into "RAM" Ram type memory */
-  .text :
+  .text : ALIGN(LINKER_DEFAULT_ALIGNMENT)
   {
-    . = ALIGN(8);
     *(.text)           /* .text sections (code) */
     *(.text*)          /* .text* sections (code) */
     *(.glue_7)         /* glue arm to thumb code */
@@ -95,79 +105,74 @@ SECTIONS
     KEEP (*(.init))
     KEEP (*(.fini))
 
-    . = ALIGN(8);
-  } >ROM
-
-  /* Constant data into "RAM" Ram type memory */
-  .rodata :
-  {
-    . = ALIGN(8);
-    *(.rodata)         /* .rodata sections (constants, strings, etc.) */
-    *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
-    . = ALIGN(8);
-  } >ROM
-
-  .ARM.extab   : {
-    . = ALIGN(8);
-    *(.ARM.extab* .gnu.linkonce.armextab.*)
-    . = ALIGN(8);
+    . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
   } >FLASH
 
-  .ARM : {
-    . = ALIGN(8);
+  /* Constant data into "RAM" Ram type memory */
+  .rodata : ALIGN(LINKER_DEFAULT_ALIGNMENT)
+  {
+    *(.rodata)         /* .rodata sections (constants, strings, etc.) */
+    *(.rodata*)        /* .rodata* sections (constants, strings, etc.) */
+    . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
+  } >FLASH
+
+  .ARM.extab : ALIGN(LINKER_DEFAULT_ALIGNMENT)
+  {
+    *(.ARM.extab* .gnu.linkonce.armextab.*)
+    . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
+  } >FLASH
+
+  .ARM : ALIGN(LINKER_DEFAULT_ALIGNMENT)
+  {
     __exidx_start = .;
     *(.ARM.exidx*)
     __exidx_end = .;
-    . = ALIGN(8);
+    . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
   } >FLASH
 
-  .preinit_array     :
+  .preinit_array : ALIGN(LINKER_DEFAULT_ALIGNMENT)
   {
-    . = ALIGN(8);
+    . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
     PROVIDE_HIDDEN (__preinit_array_start = .);
     KEEP (*(.preinit_array*))
     PROVIDE_HIDDEN (__preinit_array_end = .);
-    . = ALIGN(8);
+    . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
   } >RAM
 
-  .init_array :
+  .init_array : ALIGN(LINKER_DEFAULT_ALIGNMENT)
   {
-    . = ALIGN(8);
     PROVIDE_HIDDEN (__init_array_start = .);
     KEEP (*(SORT(.init_array.*)))
     KEEP (*(.init_array*))
     PROVIDE_HIDDEN (__init_array_end = .);
-    . = ALIGN(8);
+    . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
   } >RAM
 
-  .fini_array :
+  .fini_array : ALIGN(LINKER_DEFAULT_ALIGNMENT)
   {
-    . = ALIGN(8);
     PROVIDE_HIDDEN (__fini_array_start = .);
     KEEP (*(SORT(.fini_array.*)))
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
-    . = ALIGN(8);
+    . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
   } >RAM
 
   /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
 
   /* Initialized data sections into "RAM" Ram type memory */
-  .data :
+  .data : ALIGN(LINKER_DEFAULT_ALIGNMENT)
   {
-    . = ALIGN(8);
     _sdata = .;        /* create a global symbol at data start */
     *(.data)           /* .data sections */
     *(.data*)          /* .data* sections */
 
-    . = ALIGN(8);
     _edata = .;        /* define a global symbol at data end */
+    . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
   } >RAM
 
   /* Uninitialized data section into "RAM" Ram type memory */
-  . = ALIGN(8);
-  .bss :
+  .bss : ALIGN(LINKER_DEFAULT_ALIGNMENT)
   {
     /* This is used by the startup in order to initialize the .bss section */
     _sbss = .;         /* define a global symbol at bss start */
@@ -176,20 +181,19 @@ SECTIONS
     *(.bss*)
     *(COMMON)
 
-    . = ALIGN(8);
     _ebss = .;         /* define a global symbol at bss end */
     __bss_end__ = _ebss;
+    . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
   } >RAM
 
   /* User_heap_stack section, used to check that there is enough "RAM" Ram  type memory left */
-  ._user_heap_stack :
+  ._user_heap_stack : ALIGN(LINKER_DEFAULT_ALIGNMENT)
   {
-    . = ALIGN(8);
     PROVIDE ( end = . );
     PROVIDE ( _end = . );
     . = . + _Min_Heap_Size;
     . = . + _Min_Stack_Size;
-    . = ALIGN(8);
+    . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
   } >RAM
 
   /* Remove information from the compiler libraries */

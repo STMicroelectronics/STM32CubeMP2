@@ -418,7 +418,7 @@
 //   <o.30> 30  EXTI2_13_IRQn         Secure state
 //   <o.31> 31  EXTI2_14_IRQn         Secure state
 */
-#define NVIC_INIT_ITNS0_VAL      0x00003000
+#define NVIC_INIT_ITNS0_VAL      0x00000000
 
 /*
 //   </e>
@@ -645,7 +645,7 @@
 //   <o.31> 191 MDF1_FLT7_IRQn        Secure state
 */
 
-#define NVIC_INIT_ITNS5_VAL      0x00019800
+#define NVIC_INIT_ITNS5_VAL      0x00000000
 
 /*
 //   <e>Initialize ITNS 6 (Interrupts 192..223)
@@ -688,7 +688,7 @@
 //   <o.31> 223 SAI4_IRQn             Secure state
 */
 
-#define NVIC_INIT_ITNS6_VAL      0x00000080
+#define NVIC_INIT_ITNS6_VAL      0x00000000
 
 /*
 //   <e>Initialize ITNS 7 (Interrupts 224..255)

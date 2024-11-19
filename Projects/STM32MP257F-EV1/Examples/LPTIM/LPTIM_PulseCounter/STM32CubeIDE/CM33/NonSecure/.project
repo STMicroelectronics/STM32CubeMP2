@@ -32,14 +32,14 @@
 	</natures>
 	<linkedResources>
 		<link>
-			<name>Doc/readme.txt</name>
+			<name>Doc/readme_cm33.txt</name>
 			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/readme.txt</locationURI>
+			<locationURI>PARENT-3-PROJECT_LOC/readme_cm33.txt</locationURI>
 		</link>
 		<link>
-			<name>Application/User/syscalls.c</name>
+			<name>Utilities/copro_sync.c</name>
 			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/CM33/NonSecure/Src/syscalls.c</locationURI>
+			<locationURI>PARENT-8-PROJECT_LOC/Utilities/CoproSync/copro_sync.c</locationURI>
 		</link>
 		<link>
 			<name>Utilities/res_mgr.c</name>
@@ -65,6 +65,11 @@
 			<name>Application/User/stm32mp2xx_it.c</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/CM33/NonSecure/Src/stm32mp2xx_it.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/syscalls.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/CM33/NonSecure/Src/syscalls.c</locationURI>
 		</link>
 		<link>
 			<name>Drivers/BSP/stm32mp257f_eval.c</name>
@@ -112,6 +117,11 @@
 			<locationURI>PARENT-8-PROJECT_LOC/Drivers/STM32MP2xx_HAL_Driver/Src/stm32mp2xx_hal_hsem.c</locationURI>
 		</link>
 		<link>
+			<name>Drivers/STM32MP2xx_HAL_Driver/stm32mp2xx_hal_ipcc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-8-PROJECT_LOC/Drivers/STM32MP2xx_HAL_Driver/Src/stm32mp2xx_hal_ipcc.c</locationURI>
+		</link>
+		<link>
 			<name>Drivers/STM32MP2xx_HAL_Driver/stm32mp2xx_hal_lptim.c</name>
 			<type>1</type>
 			<locationURI>PARENT-8-PROJECT_LOC/Drivers/STM32MP2xx_HAL_Driver/Src/stm32mp2xx_hal_lptim.c</locationURI>
@@ -135,16 +145,6 @@
 			<name>Drivers/STM32MP2xx_HAL_Driver/stm32mp2xx_hal_rcc_ex.c</name>
 			<type>1</type>
 			<locationURI>PARENT-8-PROJECT_LOC/Drivers/STM32MP2xx_HAL_Driver/Src/stm32mp2xx_hal_rcc_ex.c</locationURI>
-		</link>
-		<link>
-			<name>Utilities/copro_sync.c</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Utilities/CoproSync/copro_sync.c</locationURI>
-		</link>
-		<link>
-			<name>Drivers/STM32MP2xx_HAL_Driver/stm32mp2xx_hal_ipcc.c</name>
-			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Drivers/STM32MP2xx_HAL_Driver/Src/stm32mp2xx_hal_ipcc.c</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

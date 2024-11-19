@@ -962,7 +962,9 @@ typedef struct
 /** @defgroup DMA_LL_EC_LINKEDLIST_NODE_TYPE Linked list node type
   * @{
   */
+#if  defined(LPDMA)
 #define LL_DMA_LPDMA_LINEAR_NODE 0x00U /*!< LPDMA node : linear addressing node      */
+#endif /* LPDMA */
 #define LL_DMA_HPDMA_LINEAR_NODE 0x04U /*!< HPDMA node : linear addressing node      */
 #define LL_DMA_HPDMA_2D_NODE     0x08U /*!< HPDMA node : 2 dimension addressing node */
 
@@ -997,6 +999,7 @@ typedef struct
   * @{
   */
 /* HPDMA requests */
+#if defined (LPDMA)
 #define LL_HPDMA_REQUEST_FMC_TXRX   (0U)   /*!< HPDMA HW request is FMC_TXRX      */
 #define LL_HPDMA_REQUEST_FMC_BCH    (1U)   /*!< HPDMA HW request is FMC_BCH       */
 #define LL_HPDMA_REQUEST_OCTOSPI1   (2U)   /*!< HPDMA HW request is OCTOSPI1      */
@@ -1205,6 +1208,155 @@ typedef struct
 #define LL_LPDMA_REQUEST_I3C4_CMD   (17U)  /*!< LPDMA HW request is I3C4_CMD      */
 #define LL_LPDMA_REQUEST_I3C4_STAT  (18U)  /*!< LPDMA HW request is I3C4_STAT     */
 
+#else
+
+#define LL_HPDMA_REQUEST_FMC_TXRX   (0U)   /*!< HPDMA HW request is FMC_TXRX      */
+#define LL_HPDMA_REQUEST_FMC_BCH    (1U)   /*!< HPDMA HW request is FMC_BCH       */
+#define LL_HPDMA_REQUEST_OCTOSPI1   (2U)   /*!< HPDMA HW request is OCTOSPI1      */
+#define LL_HPDMA_REQUEST_RESERVED3  (3U)   /*!< RESERVED                          */
+#define LL_HPDMA_REQUEST_CRYP1_IN   (4U)   /*!< HPDMA HW request is CRYP1_IN      */
+#define LL_HPDMA_REQUEST_CRYP1_OUT  (5U)   /*!< HPDMA HW request is CRYP1_OUT     */
+#define LL_HPDMA_REQUEST_HASH1      (6U)   /*!< HPDMA HW request is HASH1          */
+#define LL_HPDMA_REQUEST_SAES_OUT   (7U)   /*!< HPDMA HW request is SAES_OUT      */
+#define LL_HPDMA_REQUEST_SAES_IN    (8U)   /*!< HPDMA HW request is SAES_IN       */
+#define LL_HPDMA_REQUEST_USART1_RX  (9U)   /*!< HPDMA HW request is USART1_RX     */
+#define LL_HPDMA_REQUEST_USART1_TX  (10U)  /*!< HPDMA HW request is USART1_TX     */
+#define LL_HPDMA_REQUEST_USART2_RX  (11U)  /*!< HPDMA HW request is USART2_RX     */
+#define LL_HPDMA_REQUEST_USART2_TX  (12U)  /*!< HPDMA HW request is USART2_TX     */
+#define LL_HPDMA_REQUEST_USART3_RX  (13U)  /*!< HPDMA HW request is USART3_RX     */
+#define LL_HPDMA_REQUEST_USART3_TX  (14U)  /*!< HPDMA HW request is USART3_TX     */
+#define LL_HPDMA_REQUEST_UART4_RX   (15U)  /*!< HPDMA HW request is UART4_RX      */
+#define LL_HPDMA_REQUEST_UART4_TX   (16U)  /*!< HPDMA HW request is UART4_TX      */
+#define LL_HPDMA_REQUEST_UART5_RX   (17U)  /*!< HPDMA HW request is UART5_RX      */
+#define LL_HPDMA_REQUEST_UART5_TX   (18U)  /*!< HPDMA HW request is UART5_TX      */
+#define LL_HPDMA_REQUEST_USART6_RX  (19U)  /*!< HPDMA HW request is USART6_RX     */
+#define LL_HPDMA_REQUEST_USART6_TX  (20U)  /*!< HPDMA HW request is USART6_TX     */
+#define LL_HPDMA_REQUEST_UART7_RX   (21U)  /*!< HPDMA HW request is UART7_RX      */
+#define LL_HPDMA_REQUEST_UART7_TX   (22U)  /*!< HPDMA HW request is UART7_TX      */
+#define LL_HPDMA_REQUEST_I2C1_RX    (23U)  /*!< HPDMA HW request is I2C1_RX       */
+#define LL_HPDMA_REQUEST_I2C1_TX    (24U)  /*!< HPDMA HW request is I2C1_TX       */
+#define LL_HPDMA_REQUEST_I2C1_EVC   (25U)  /*!< HPDMA HW request is I2C1_EVC      */
+#define LL_HPDMA_REQUEST_I2C2_RX    (26U)  /*!< HPDMA HW request is I2C2_RX       */
+#define LL_HPDMA_REQUEST_I2C2_TX    (27U)  /*!< HPDMA HW request is I2C2_TX       */
+#define LL_HPDMA_REQUEST_I2C2_EVC   (28U)  /*!< HPDMA HW request is I2C2_EVC      */
+#define LL_HPDMA_REQUEST_I2C3_RX    (29U)  /*!< HPDMA HW request is I2C3_RX       */
+#define LL_HPDMA_REQUEST_I2C3_TX    (30U)  /*!< HPDMA HW request is I2C3_TX       */
+#define LL_HPDMA_REQUEST_I2C3_EVC   (31U)  /*!< HPDMA HW request is I2C3_EVC      */
+#define LL_HPDMA_REQUEST_SPI1_RX    (32U)  /*!< HPDMA HW request is SPI1_RX       */
+#define LL_HPDMA_REQUEST_SPI1_TX    (33U)  /*!< HPDMA HW request is SPI1_TX       */
+#define LL_HPDMA_REQUEST_SPI2_RX    (34U)  /*!< HPDMA HW request is SPI2_RX       */
+#define LL_HPDMA_REQUEST_SPI2_TX    (35U)  /*!< HPDMA HW request is SPI2_TX       */
+#define LL_HPDMA_REQUEST_SPI3_RX    (36U)  /*!< HPDMA HW request is SPI3_RX       */
+#define LL_HPDMA_REQUEST_SPI3_TX    (37U)  /*!< HPDMA HW request is SPI3_TX       */
+#define LL_HPDMA_REQUEST_SPI4_RX    (38U)  /*!< HPDMA HW request is SPI4_RX       */
+#define LL_HPDMA_REQUEST_SPI4_TX    (39U)  /*!< HPDMA HW request is SPI4_TX       */
+#define LL_HPDMA_REQUEST_SPI5_RX    (40U)  /*!< HPDMA HW request is SPI5_RX       */
+#define LL_HPDMA_REQUEST_SPI5_TX    (41U)  /*!< HPDMA HW request is SPI5_TX       */
+#define LL_HPDMA_REQUEST_SPI6_RX    (42U)  /*!< HPDMA HW request is SPI6_RX       */
+#define LL_HPDMA_REQUEST_SPI6_TX    (43U)  /*!< HPDMA HW request is SPI6_TX       */
+#define LL_HPDMA_REQUEST_MDF1_FLT0  (44U)  /*!< HPDMA HW request is MDF1_FLT0     */
+#define LL_HPDMA_REQUEST_MDF1_FLT1  (45U)  /*!< HPDMA HW request is MDF1_FLT1     */
+#define LL_HPDMA_REQUEST_MDF1_FLT2  (46U)  /*!< HPDMA HW request is MDF1_FLT2     */
+#define LL_HPDMA_REQUEST_MDF1_FLT3  (47U)  /*!< HPDMA HW request is MDF1_FLT3     */
+#define LL_HPDMA_REQUEST_SPDIFRX_DT (48U)  /*!< HPDMA HW request is SPDIFRX_DT    */
+#define LL_HPDMA_REQUEST_SPDIFRX_CS (49U)  /*!< HPDMA HW request is SPDIFRX_CS    */
+#define LL_HPDMA_REQUEST_SAI1_A     (50U)  /*!< HPDMA HW request is SAI1_A        */
+#define LL_HPDMA_REQUEST_SAI1_B     (51U)  /*!< HPDMA HW request is SAI1_B        */
+#define LL_HPDMA_REQUEST_SAI2_A     (52U)  /*!< HPDMA HW request is SAI2_A        */
+#define LL_HPDMA_REQUEST_SAI2_B     (53U)  /*!< HPDMA HW request is SAI2_B        */
+#define LL_HPDMA_REQUEST_SAI3_A     (54U)  /*!< HPDMA HW request is SAI3_A        */
+#define LL_HPDMA_REQUEST_SAI3_B     (55U)  /*!< HPDMA HW request is SAI3_B        */
+#define LL_HPDMA_REQUEST_SAI4_A     (56U)  /*!< HPDMA HW request is SAI4_A        */
+#define LL_HPDMA_REQUEST_SAI4_B     (57U)  /*!< HPDMA HW request is SAI4_B        */
+#define LL_HPDMA_REQUEST_ADC1       (58U)  /*!< HPDMA HW request is ADC1          */
+#define LL_HPDMA_REQUEST_ADC2       (59U)  /*!< HPDMA HW request is ADC2          */
+#define LL_HPDMA_REQUEST_TIM1_CH1   (60U)  /*!< HPDMA HW request is TIM1_CH1      */
+#define LL_HPDMA_REQUEST_TIM1_CH2   (61U)  /*!< HPDMA HW request is TIM1_CH2      */
+#define LL_HPDMA_REQUEST_TIM1_CH3   (62U)  /*!< HPDMA HW request is TIM1_CH3      */
+#define LL_HPDMA_REQUEST_TIM1_CH4   (63U)  /*!< HPDMA HW request is TIM1_CH4      */
+#define LL_HPDMA_REQUEST_TIM1_UP    (64U)  /*!< HPDMA HW request is TIM1_UP       */
+#define LL_HPDMA_REQUEST_TIM1_TRIG  (65U)  /*!< HPDMA HW request is TIM1_TRIG     */
+#define LL_HPDMA_REQUEST_TIM1_COM   (66U)  /*!< HPDMA HW request is TIM1_COM      */
+#define LL_HPDMA_REQUEST_TIM2_CH1   (67U)  /*!< HPDMA HW request is TIM2_CH1      */
+#define LL_HPDMA_REQUEST_TIM2_CH2   (68U)  /*!< HPDMA HW request is TIM2_CH2      */
+#define LL_HPDMA_REQUEST_TIM2_CH3   (69U)  /*!< HPDMA HW request is TIM2_CH3      */
+#define LL_HPDMA_REQUEST_TIM2_CH4   (70U)  /*!< HPDMA HW request is TIM2_CH4      */
+#define LL_HPDMA_REQUEST_TIM2_UP    (71U)  /*!< HPDMA HW request is TIM2_UP       */
+#define LL_HPDMA_REQUEST_TIM3_CH1   (72U)  /*!< HPDMA HW request is TIM3_CH1      */
+#define LL_HPDMA_REQUEST_TIM3_CH2   (73U)  /*!< HPDMA HW request is TIM3_CH2      */
+#define LL_HPDMA_REQUEST_TIM3_CH3   (74U)  /*!< HPDMA HW request is TIM3_CH3      */
+#define LL_HPDMA_REQUEST_TIM3_CH4   (75U)  /*!< HPDMA HW request is TIM3_CH4      */
+#define LL_HPDMA_REQUEST_TIM3_UP    (76U) /*!< HPDMA HW request is TIM3_UP       */
+#define LL_HPDMA_REQUEST_TIM3_TRIG  (77U) /*!< HPDMA HW request is TIM3_TRIG     */
+#define LL_HPDMA_REQUEST_TIM4_CH1   (78U) /*!< HPDMA HW request is TIM4_CH1      */
+#define LL_HPDMA_REQUEST_TIM4_CH2   (79U) /*!< HPDMA HW request is TIM4_CH2      */
+#define LL_HPDMA_REQUEST_TIM4_CH3   (80U) /*!< HPDMA HW request is TIM4_CH3      */
+#define LL_HPDMA_REQUEST_TIM4_UP    (81U) /*!< HPDMA HW request is TIM4_UP       */
+#define LL_HPDMA_REQUEST_TIM5_CH1   (82U) /*!< HPDMA HW request is TIM5_CH1      */
+#define LL_HPDMA_REQUEST_TIM5_CH2   (83U) /*!< HPDMA HW request is TIM5_CH2      */
+#define LL_HPDMA_REQUEST_TIM5_CH3   (84U) /*!< HPDMA HW request is TIM5_CH3      */
+#define LL_HPDMA_REQUEST_TIM5_CH4   (85U) /*!< HPDMA HW request is TIM5_CH4      */
+#define LL_HPDMA_REQUEST_TIM5_UP    (86U) /*!< HPDMA HW request is TIM5_UP       */
+#define LL_HPDMA_REQUEST_TIM5_TRIG  (87U) /*!< HPDMA HW request is TIM5_TRIG     */
+#define LL_HPDMA_REQUEST_TIM6_UP    (88U) /*!< HPDMA HW request is TIM6_UP       */
+#define LL_HPDMA_REQUEST_TIM7_UP    (89U) /*!< HPDMA HW request is TIM7_UP       */
+#define LL_HPDMA_REQUEST_TIM8_CH1   (90U) /*!< HPDMA HW request is TIM8_CH1      */
+#define LL_HPDMA_REQUEST_TIM8_CH2   (91U) /*!< HPDMA HW request is TIM8_CH2      */
+#define LL_HPDMA_REQUEST_TIM8_CH3   (92U) /*!< HPDMA HW request is TIM8_CH3      */
+#define LL_HPDMA_REQUEST_TIM8_CH4   (93U) /*!< HPDMA HW request is TIM8_CH4      */
+#define LL_HPDMA_REQUEST_TIM8_UP    (94U) /*!< HPDMA HW request is TIM8_UP       */
+#define LL_HPDMA_REQUEST_TIM8_TRIG  (95U) /*!< HPDMA HW request is TIM8_TRIG     */
+#define LL_HPDMA_REQUEST_TIM8_COM   (96U) /*!< HPDMA HW request is TIM8_COM      */
+#define LL_HPDMA_REQUEST_TIM15_CH1  (97U) /*!< HPDMA HW request is TIM15_CH1     */
+#define LL_HPDMA_REQUEST_TIM15_UP   (98U) /*!< HPDMA HW request is TIM15_UP      */
+#define LL_HPDMA_REQUEST_TIM15_TRIG (99U) /*!< HPDMA HW request is TIM15_TRIG    */
+#define LL_HPDMA_REQUEST_TIM15_COM  (100U) /*!< HPDMA HW request is TIM15_COM     */
+#define LL_HPDMA_REQUEST_TIM16_CH1  (101U) /*!< HPDMA HW request is TIM16_CH1     */
+#define LL_HPDMA_REQUEST_TIM16_UP   (102U) /*!< HPDMA HW request is TIM16_UP      */
+#define LL_HPDMA_REQUEST_TIM17_CH1  (103U) /*!< HPDMA HW request is TIM17_CH1     */
+#define LL_HPDMA_REQUEST_TIM17_UP   (104U) /*!< HPDMA HW request is TIM17_UP      */
+#define LL_HPDMA_REQUEST_DCMI       (105U) /*!< HPDMA HW request is DCMI          */
+#define LL_HPDMA_REQUEST_RESERVED106 (106U)   /*!< RESERVED                        */
+#define LL_HPDMA_REQUEST_RESERVED107 (107U)   /*!< RESERVED                         */
+#define LL_HPDMA_REQUEST_CRYP2_IN   (108U) /*!< HPDMA HW request is CRYP2_IN      */
+#define LL_HPDMA_REQUEST_CRYP2_OUT  (109U) /*!< HPDMA HW request is CRYP2_OUT     */
+#define LL_HPDMA_REQUEST_TIM4_CH4   (110U) /*!< HPDMA HW request is TIM4_CH4      */
+#define LL_HPDMA_REQUEST_LPTIM1_IC1 (111U) /*!< HPDMA HW request is LPTIM1_IC1    */
+#define LL_HPDMA_REQUEST_LPTIM1_IC2 (112U) /*!< HPDMA HW request is LPTIM1_IC2    */
+#define LL_HPDMA_REQUEST_LPTIM1_UE  (113U) /*!< HPDMA HW request is LPTIM1_UE     */
+#define LL_HPDMA_REQUEST_LPTIM2_IC1 (115U) /*!< HPDMA HW request is LPTIM2_IC1    */
+#define LL_HPDMA_REQUEST_LPTIM2_IC2 (115U) /*!< HPDMA HW request is LPTIM2_IC2    */
+#define LL_HPDMA_REQUEST_LPTIM2_UE  (116U) /*!< HPDMA HW request is LPTIM2_UE     */
+#define LL_HPDMA_REQUEST_TIM2_TRIG  (117U) /*!< HPDMA HW request is TIM2_TRIG     */
+#define LL_HPDMA_REQUEST_TIM4_TRIG  (118U) /*!< HPDMA HW request is TIM4_TRIG     */
+#define LL_HPDMA_REQUEST_TIM15_CH2  (119U) /*!< HPDMA HW request is TIM15_CH2     */
+#define LL_HPDMA_REQUEST_TIM16_COM  (120U) /*!< HPDMA HW request is TIM16_COM     */
+#define LL_HPDMA_REQUEST_TIM17_COM  (121U) /*!< HPDMA HW request is TIM17_COM     */
+#define LL_HPDMA_REQUEST_I3C1_RX    (122U) /*!< HPDMA HW request is I3C1_RX       */
+#define LL_HPDMA_REQUEST_I3C1_TX    (123U) /*!< HPDMA HW request is I3C1_TX       */
+#define LL_HPDMA_REQUEST_I3C1_CMD   (124U) /*!< HPDMA HW request is I3C1_CMD      */
+#define LL_HPDMA_REQUEST_I3C1_STAT  (125U) /*!< HPDMA HW request is I3C1_STAT     */
+#define LL_HPDMA_REQUEST_I3C2_RX    (126U) /*!< HPDMA HW request is I3C2_RX       */
+#define LL_HPDMA_REQUEST_I3C2_TX    (127U) /*!< HPDMA HW request is I3C2_TX       */
+#define LL_HPDMA_REQUEST_I3C2_CMD   (128U) /*!< HPDMA HW request is I3C2_CMD      */
+#define LL_HPDMA_REQUEST_I3C2_STAT  (129U) /*!< HPDMA HW request is I3C2_STAT     */
+#define LL_HPDMA_REQUEST_I3C3_RX    (130U) /*!< HPDMA HW request is I3C3_RX       */
+#define LL_HPDMA_REQUEST_I3C3_TX    (131U) /*!< HPDMA HW request is I3C3_TX       */
+#define LL_HPDMA_REQUEST_I3C3_CMD   (132U) /*!< HPDMA HW request is I3C3_CMD      */
+#define LL_HPDMA_REQUEST_I3C3_STAT  (133U) /*!< HPDMA HW request is I3C3_STAT     */
+#define LL_HPDMA_REQUEST_LPUART1_RX (134U) /*!< HPDMA HW request is LPUART1_RX    */
+#define LL_HPDMA_REQUEST_LPUART1_TX (135U) /*!< HPDMA HW request is LPUART1_TX    */
+#define LL_HPDMA_REQUEST_LPTIM3_IC1 (136U) /*!< HPDMA HW request is LPTIM3_IC1    */
+#define LL_HPDMA_REQUEST_LPTIM3_IC2 (137U) /*!< HPDMA HW request is LPTIM3_IC2    */
+#define LL_HPDMA_REQUEST_LPTIM3_UE  (138U) /*!< HPDMA HW request is LPTIM3_UE     */
+#define LL_HPDMA_REQUEST_LPTIM4_IC1 (139U) /*!< HPDMA HW request is LPTIM4_IC1    */
+#define LL_HPDMA_REQUEST_LPTIM4_IC2 (140U) /*!< HPDMA HW request is LPTIM4_IC2    */
+#define LL_HPDMA_REQUEST_LPTIM4_UE  (141U) /*!< HPDMA HW request is LPTIM4_UE     */
+#define LL_HPDMA_REQUEST_HASH2      (142U) /*!< HPDMA HW request is HASH1          */
+
+#endif /* LPDMA */
+
+
 /**
   * @}
   */
@@ -1213,6 +1365,7 @@ typedef struct
   * @{
   */
 /* HPDMA triggers */
+#if defined(LPDMA)
 #define LL_HPDMA_TRIGGER_EXTI_LINE0      (0U)  /*!< HPDMA HW Trigger signal is EXTI_LINE0      */
 #define LL_HPDMA_TRIGGER_EXTI_LINE1      (1U)  /*!< HPDMA HW Trigger signal is EXTI_LINE1      */
 #define LL_HPDMA_TRIGGER_EXTI_LINE2      (2U)  /*!< HPDMA HW Trigger signal is EXTI_LINE2      */
@@ -1327,6 +1480,89 @@ typedef struct
 #define LL_LPDMA_TRIGGER_HPDMA3_CH12_TCF (27U) /*!< LPDMA HW Trigger signal is HPDMA3_CH12_TCF */
 #define LL_LPDMA_TRIGGER_TIM2_TRGO       (28U) /*!< LPDMA HW Trigger signal is TIM2_TRGO       */
 #define LL_LPDMA_TRIGGER_TIM15_TRGO      (29U) /*!< LPDMA HW Trigger signal is TIM15_TRGO      */
+
+#else
+
+#define LL_HPDMA_TRIGGER_EXTI_LINE0      (0U)  /*!< HPDMA HW Trigger signal is EXTI_LINE0      */
+#define LL_HPDMA_TRIGGER_EXTI_LINE1      (1U)  /*!< HPDMA HW Trigger signal is EXTI_LINE1      */
+#define LL_HPDMA_TRIGGER_EXTI_LINE2      (2U)  /*!< HPDMA HW Trigger signal is EXTI_LINE2      */
+#define LL_HPDMA_TRIGGER_EXTI_LINE3      (3U)  /*!< HPDMA HW Trigger signal is EXTI_LINE3      */
+#define LL_HPDMA_TRIGGER_EXTI_LINE4      (4U)  /*!< HPDMA HW Trigger signal is EXTI_LINE4      */
+#define LL_HPDMA_TRIGGER_EXTI_LINE5      (5U)  /*!< HPDMA HW Trigger signal is EXTI_LINE5      */
+#define LL_HPDMA_TRIGGER_EXTI_LINE6      (6U)  /*!< HPDMA HW Trigger signal is EXTI_LINE6      */
+#define LL_HPDMA_TRIGGER_EXTI_LINE7      (7U)  /*!< HPDMA HW Trigger signal is EXTI_LINE7      */
+#define LL_HPDMA_TRIGGER_EXTI_LINE8      (8U)  /*!< HPDMA HW Trigger signal is EXTI_LINE8      */
+#define LL_HPDMA_TRIGGER_EXTI_LINE9      (9U)  /*!< HPDMA HW Trigger signal is EXTI_LINE9      */
+#define LL_HPDMA_TRIGGER_EXTI_LINE10     (10U) /*!< HPDMA HW Trigger signal is EXTI_LINE10     */
+#define LL_HPDMA_TRIGGER_EXTI_LINE11     (11U) /*!< HPDMA HW Trigger signal is EXTI_LINE11     */
+#define LL_HPDMA_TRIGGER_EXTI_LINE12     (12U) /*!< HPDMA HW Trigger signal is EXTI_LINE12     */
+#define LL_HPDMA_TRIGGER_EXTI_LINE13     (13U) /*!< HPDMA HW Trigger signal is EXTI_LINE13     */
+#define LL_HPDMA_TRIGGER_EXTI_LINE14     (14U) /*!< HPDMA HW Trigger signal is EXTI_LINE14     */
+#define LL_HPDMA_TRIGGER_EXTI_LINE15     (15U) /*!< HPDMA HW Trigger signal is EXTI_LINE15     */
+#define LL_HPDMA_TRIGGER_LPTIM1_CH1      (16U) /*!< HPDMA HW Trigger signal is LPTIM1_CH1      */
+#define LL_HPDMA_TRIGGER_LPTIM2_CH1      (17U) /*!< HPDMA HW Trigger signal is LPTIM2_CH1      */
+#define LL_HPDMA_TRIGGER_LPTIM3_CH1      (18U) /*!< HPDMA HW Trigger signal is LPTIM3_CH1      */
+#define LL_HPDMA_TRIGGER_LPTIM4_CH1      (19U) /*!< HPDMA HW Trigger signal is LPTIM4_CH1      */
+#define LL_HPDMA_TRIGGER_LPTIM5_CH1      (20U) /*!< HPDMA HW Trigger signal is LPTIM5_CH1      */
+#define LL_HPDMA_TRIGGER_RTC_ALRA_TRG    (21U) /*!< HPDMA HW Trigger signal is RTC_ALRA_TRG    */
+#define LL_HPDMA_TRIGGER_RTC_ALRB_TRG    (22U) /*!< HPDMA HW Trigger signal is RTC_ALRB_TRG    */
+#define LL_HPDMA_TRIGGER_RTC_WUT_TRG     (23U) /*!< HPDMA HW Trigger signal is RTC_WUT_TRG     */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH0_TCF  (24U) /*!< HPDMA HW Trigger signal is HPDMA1_CH0_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH1_TCF  (25U) /*!< HPDMA HW Trigger signal is HPDMA1_CH1_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH2_TCF  (26U) /*!< HPDMA HW Trigger signal is HPDMA1_CH2_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH3_TCF  (27U) /*!< HPDMA HW Trigger signal is HPDMA1_CH3_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH4_TCF  (28U) /*!< HPDMA HW Trigger signal is HPDMA1_CH4_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH5_TCF  (29U) /*!< HPDMA HW Trigger signal is HPDMA1_CH5_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH6_TCF  (30U) /*!< HPDMA HW Trigger signal is HPDMA1_CH6_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH7_TCF  (31U) /*!< HPDMA HW Trigger signal is HPDMA1_CH7_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH8_TCF  (32U) /*!< HPDMA HW Trigger signal is HPDMA1_CH8_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH9_TCF  (33U) /*!< HPDMA HW Trigger signal is HPDMA1_CH9_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH10_TCF (34U) /*!< HPDMA HW Trigger signal is HPDMA1_CH10_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH11_TCF (35U) /*!< HPDMA HW Trigger signal is HPDMA1_CH11_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH12_TCF (36U) /*!< HPDMA HW Trigger signal is HPDMA1_CH12_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH13_TCF (37U) /*!< HPDMA HW Trigger signal is HPDMA1_CH13_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH14_TCF (38U) /*!< HPDMA HW Trigger signal is HPDMA1_CH14_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA1_CH15_TCF (39U) /*!< HPDMA HW Trigger signal is HPDMA1_CH15_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH0_TCF  (40U) /*!< HPDMA HW Trigger signal is HPDMA2_CH0_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH1_TCF  (41U) /*!< HPDMA HW Trigger signal is HPDMA2_CH1_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH2_TCF  (42U) /*!< HPDMA HW Trigger signal is HPDMA2_CH2_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH3_TCF  (43U) /*!< HPDMA HW Trigger signal is HPDMA2_CH3_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH4_TCF  (44U) /*!< HPDMA HW Trigger signal is HPDMA2_CH4_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH5_TCF  (45U) /*!< HPDMA HW Trigger signal is HPDMA2_CH5_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH6_TCF  (46U) /*!< HPDMA HW Trigger signal is HPDMA2_CH6_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH7_TCF  (47U) /*!< HPDMA HW Trigger signal is HPDMA2_CH7_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH8_TCF  (48U) /*!< HPDMA HW Trigger signal is HPDMA2_CH8_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH9_TCF  (49U) /*!< HPDMA HW Trigger signal is HPDMA2_CH9_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH10_TCF (50U) /*!< HPDMA HW Trigger signal is HPDMA2_CH10_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH11_TCF (51U) /*!< HPDMA HW Trigger signal is HPDMA2_CH11_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH12_TCF (52U) /*!< HPDMA HW Trigger signal is HPDMA2_CH12_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH13_TCF (53U) /*!< HPDMA HW Trigger signal is HPDMA2_CH13_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH14_TCF (54U) /*!< HPDMA HW Trigger signal is HPDMA2_CH14_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA2_CH15_TCF (55U) /*!< HPDMA HW Trigger signal is HPDMA2_CH15_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH0_TCF  (56U) /*!< HPDMA HW Trigger signal is HPDMA3_CH0_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH1_TCF  (57U) /*!< HPDMA HW Trigger signal is HPDMA3_CH1_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH2_TCF  (58U) /*!< HPDMA HW Trigger signal is HPDMA3_CH2_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH3_TCF  (59U) /*!< HPDMA HW Trigger signal is HPDMA3_CH3_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH4_TCF  (60U) /*!< HPDMA HW Trigger signal is HPDMA3_CH4_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH5_TCF  (61U) /*!< HPDMA HW Trigger signal is HPDMA3_CH5_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH6_TCF  (62U) /*!< HPDMA HW Trigger signal is HPDMA3_CH6_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH7_TCF  (63U) /*!< HPDMA HW Trigger signal is HPDMA3_CH7_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH8_TCF  (64U) /*!< HPDMA HW Trigger signal is HPDMA3_CH8_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH9_TCF  (65U) /*!< HPDMA HW Trigger signal is HPDMA3_CH9_TCF  */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH10_TCF (66U) /*!< HPDMA HW Trigger signal is HPDMA3_CH10_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH11_TCF (67U) /*!< HPDMA HW Trigger signal is HPDMA3_CH11_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH12_TCF (68U) /*!< HPDMA HW Trigger signal is HPDMA3_CH12_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH13_TCF (69U) /*!< HPDMA HW Trigger signal is HPDMA3_CH13_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH14_TCF (70U) /*!< HPDMA HW Trigger signal is HPDMA3_CH14_TCF */
+#define LL_HPDMA_TRIGGER_HPDMA3_CH15_TCF (71U) /*!< HPDMA HW Trigger signal is HPDMA3_CH15_TCF */
+#define LL_HPDMA_TRIGGER_TIM2_TRGO       (72U) /*!< HPDMA HW Trigger signal is TIM2_TRGO       */
+#define LL_HPDMA_TRIGGER_TIM15_TRGO      (73U) /*!< HPDMA HW Trigger signal is TIM15_TRGO      */
+#define LL_HPDMA_TRIGGER_DCMIPP_P2_HSYNC (74U) /*!< HPDMA HW Trigger signal is DCMIPP_P2_HSYNC */
+#define LL_HPDMA_TRIGGER_DCMIPP_P2_VSYNC (75U) /*!< HPDMA HW Trigger signal is DCMIPP_P2_VSYNC */
+#define LL_HPDMA_TRIGGER_DCMIPP_P2_LEND  (76U) /*!< HPDMA HW Trigger signal is DCMIPP_P2_LEND  */
+#define LL_HPDMA_TRIGGER_DCMIPP_P2_FEND  (77U) /*!< HPDMA HW Trigger signal is DCMIPP_P2_FEND  */
+
+#endif /* LPDMA */
 /**
   * @}
   */
@@ -1372,6 +1608,7 @@ typedef struct
   * @param  __CHANNEL_INSTANCE__ DMAx_Channely.
   * @retval DMAx.
   */
+#if defined(LPDMA)
 #define LL_DMA_GET_INSTANCE(__CHANNEL_INSTANCE__) \
   ((((uint32_t)(__CHANNEL_INSTANCE__) < ((uint32_t)HPDMA2_Channel0))) \
    ? HPDMA1 :                                                         \
@@ -1379,19 +1616,28 @@ typedef struct
    ? HPDMA2 :                                                         \
    (((uint32_t)(__CHANNEL_INSTANCE__) < ((uint32_t)LPDMA_Channel0)))  \
    ? HPDMA3 : LPDMA)
-
+#else
+#define LL_DMA_GET_INSTANCE(__CHANNEL_INSTANCE__) \
+  ((((uint32_t)(__CHANNEL_INSTANCE__) < ((uint32_t)HPDMA2_Channel0))) \
+   ? HPDMA1 :                                                         \
+   (((uint32_t)(__CHANNEL_INSTANCE__) < ((uint32_t)HPDMA3_Channel0))) \
+   ? HPDMA2 : HPDMA3)
+#endif
 /**
   * @brief  Convert DMAx_Channely into LL_DMA_CHANNEL_y.
   * @param  __CHANNEL_INSTANCE__ DMAx_Channely.
   * @retval LL_DMA_CHANNEL_y.
   */
 #if defined(CORE_CM0PLUS)
+#if defined(LPDMA)
 #define LL_DMA_GET_CHANNEL(__CHANNEL_INSTANCE__) \
   (((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)LPDMA_Channel0))   ? LL_DMA_CHANNEL_0  : \
    ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)LPDMA_Channel1))   ? LL_DMA_CHANNEL_1  : \
    ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)LPDMA_Channel2))   ? LL_DMA_CHANNEL_2  : \
    LL_DMA_CHANNEL_3)
+#endif /* LPDMA */
 #else
+#if defined(LPDMA)
 #define LL_DMA_GET_CHANNEL(__CHANNEL_INSTANCE__) \
   (((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel0))  ? LL_DMA_CHANNEL_0  : \
    ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel0))  ? LL_DMA_CHANNEL_0  : \
@@ -1443,6 +1689,55 @@ typedef struct
    ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel14)) ? LL_DMA_CHANNEL_14 : \
    ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel14)) ? LL_DMA_CHANNEL_14 : \
    LL_DMA_CHANNEL_15)
+#else
+#define LL_DMA_GET_CHANNEL(__CHANNEL_INSTANCE__) \
+  (((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel0))  ? LL_DMA_CHANNEL_0  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel0))  ? LL_DMA_CHANNEL_0  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel0))  ? LL_DMA_CHANNEL_0  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel1))  ? LL_DMA_CHANNEL_1  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel1))  ? LL_DMA_CHANNEL_1  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel1))  ? LL_DMA_CHANNEL_1  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel2))  ? LL_DMA_CHANNEL_2  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel2))  ? LL_DMA_CHANNEL_2  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel2))  ? LL_DMA_CHANNEL_2  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel3))  ? LL_DMA_CHANNEL_3  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel3))  ? LL_DMA_CHANNEL_3  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel3))  ? LL_DMA_CHANNEL_3  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel4))  ? LL_DMA_CHANNEL_4  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel4))  ? LL_DMA_CHANNEL_4  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel4))  ? LL_DMA_CHANNEL_4  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel5))  ? LL_DMA_CHANNEL_5  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel5))  ? LL_DMA_CHANNEL_5  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel5))  ? LL_DMA_CHANNEL_5  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel6))  ? LL_DMA_CHANNEL_6  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel6))  ? LL_DMA_CHANNEL_6  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel6))  ? LL_DMA_CHANNEL_6  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel7))  ? LL_DMA_CHANNEL_7  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel7))  ? LL_DMA_CHANNEL_7  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel7))  ? LL_DMA_CHANNEL_7  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel8))  ? LL_DMA_CHANNEL_8  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel8))  ? LL_DMA_CHANNEL_8  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel8))  ? LL_DMA_CHANNEL_8  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel9))  ? LL_DMA_CHANNEL_9  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel9))  ? LL_DMA_CHANNEL_9  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel9))  ? LL_DMA_CHANNEL_9  : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel10)) ? LL_DMA_CHANNEL_10 : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel10)) ? LL_DMA_CHANNEL_10 : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel10)) ? LL_DMA_CHANNEL_10 : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel11)) ? LL_DMA_CHANNEL_11 : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel11)) ? LL_DMA_CHANNEL_11 : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel11)) ? LL_DMA_CHANNEL_11 : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel12)) ? LL_DMA_CHANNEL_12 : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel12)) ? LL_DMA_CHANNEL_12 : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel12)) ? LL_DMA_CHANNEL_12 : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel13)) ? LL_DMA_CHANNEL_13 : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel13)) ? LL_DMA_CHANNEL_13 : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel13)) ? LL_DMA_CHANNEL_13 : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA1_Channel14)) ? LL_DMA_CHANNEL_14 : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA2_Channel14)) ? LL_DMA_CHANNEL_14 : \
+   ((uint32_t)(__CHANNEL_INSTANCE__) == ((uint32_t)HPDMA3_Channel14)) ? LL_DMA_CHANNEL_14 : \
+   LL_DMA_CHANNEL_15)
+#endif /* LPDMA */
 #endif /* ! CORE_CM0PLUS */
 
 /**
@@ -1452,6 +1747,7 @@ typedef struct
   * @retval DMAx_Channely.
   */
 #if defined(CORE_CM0PLUS)
+#if defined(LPDMA)
 #define LL_DMA_GET_CHANNEL_INSTANCE(__DMA_INSTANCE__, __CHANNEL__) \
   ((((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)LPDMA))  && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_0))) \
    ? LPDMA_Channel0   :                                                                                                \
@@ -1459,7 +1755,9 @@ typedef struct
    ? LPDMA_Channel1   :                                                                                                \
    (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)LPDMA))  && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_2))) \
    ? LPDMA_Channel2   :  LPDMA_Channel3)
+#endif /* LPDMA */
 #else
+#if defined(LPDMA)
 #define LL_DMA_GET_CHANNEL_INSTANCE(__DMA_INSTANCE__, __CHANNEL__) \
   ((((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_0))) \
    ? HPDMA1_Channel0  :                                                                                                \
@@ -1563,6 +1861,103 @@ typedef struct
    ? HPDMA1_Channel15 :                                                                                                \
    (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_15)))\
    ? HPDMA2_Channel15 :  HPDMA3_Channel15)
+#else
+#define LL_DMA_GET_CHANNEL_INSTANCE(__DMA_INSTANCE__, __CHANNEL__) \
+  ((((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_0))) \
+   ? HPDMA1_Channel0  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_0))) \
+   ? HPDMA2_Channel0  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA3)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_0))) \
+   ? HPDMA3_Channel0  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_1))) \
+   ? HPDMA1_Channel1  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_1))) \
+   ? HPDMA2_Channel1  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA3)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_1))) \
+   ? HPDMA3_Channel1  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_2))) \
+   ? HPDMA1_Channel2  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_2))) \
+   ? HPDMA2_Channel2  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA3)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_2))) \
+   ? HPDMA3_Channel2  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_3))) \
+   ? HPDMA1_Channel3  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_3))) \
+   ? HPDMA2_Channel3  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA3)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_3))) \
+   ? HPDMA3_Channel3  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_4))) \
+   ? HPDMA1_Channel4  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_4))) \
+   ? HPDMA2_Channel4  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA3)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_4))) \
+   ? HPDMA3_Channel4  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_5))) \
+   ? HPDMA1_Channel5  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_5))) \
+   ? HPDMA2_Channel5  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA3)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_5))) \
+   ? HPDMA3_Channel5  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_6))) \
+   ? HPDMA1_Channel6  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_6))) \
+   ? HPDMA2_Channel6  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA3)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_6))) \
+   ? HPDMA3_Channel6  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_7))) \
+   ? HPDMA1_Channel7  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_7))) \
+   ? HPDMA2_Channel7  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA3)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_7))) \
+   ? HPDMA3_Channel7  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_8))) \
+   ? HPDMA1_Channel8  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_8))) \
+   ? HPDMA2_Channel8  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA3)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_8))) \
+   ? HPDMA3_Channel8  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_9))) \
+   ? HPDMA1_Channel9  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_9))) \
+   ? HPDMA2_Channel9  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA3)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_9))) \
+   ? HPDMA3_Channel9  :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_10)))\
+   ? HPDMA1_Channel10 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_10)))\
+   ? HPDMA2_Channel10 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA3)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_10)))\
+   ? HPDMA3_Channel10 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_11)))\
+   ? HPDMA1_Channel11 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_11)))\
+   ? HPDMA2_Channel11 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA3)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_11)))\
+   ? HPDMA3_Channel11 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_12)))\
+   ? HPDMA1_Channel12 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_12)))\
+   ? HPDMA2_Channel12 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA3)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_12)))\
+   ? HPDMA3_Channel12 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_13)))\
+   ? HPDMA1_Channel13 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_13)))\
+   ? HPDMA2_Channel13 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA3)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_13)))\
+   ? HPDMA3_Channel13 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_14)))\
+   ? HPDMA1_Channel14 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_14)))\
+   ? HPDMA2_Channel14 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA3)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_14)))\
+   ? HPDMA3_Channel14 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA1)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_15)))\
+   ? HPDMA1_Channel15 :                                                                                                \
+   (((uint32_t)(__DMA_INSTANCE__) == ((uint32_t)HPDMA2)) && ((uint32_t)(__CHANNEL__) == ((uint32_t)LL_DMA_CHANNEL_15)))\
+   ? HPDMA2_Channel15 :  HPDMA3_Channel15)
+#endif /* LPDMA */
 #endif /* ! CORE_CM0PLUS */
 
 /**

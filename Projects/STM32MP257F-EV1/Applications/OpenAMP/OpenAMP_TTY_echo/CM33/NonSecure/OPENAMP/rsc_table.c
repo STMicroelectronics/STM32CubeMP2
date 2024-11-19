@@ -85,7 +85,7 @@ extern char system_log_buf[];
 #if !defined (__CC_ARM) && !defined (LINUX_RPROC_MASTER)
 
 /* Since GCC is not initializing the resource_table at startup, it is declared as volatile to avoid compiler optimization
- * for the CM4 (see resource_table_init() below)
+ * for the CM33 (see resource_table_init() below)
  */
 volatile struct shared_resource_table __resource __attribute__((used))  resource_table;
 #else
@@ -121,7 +121,7 @@ __root CONST struct shared_resource_table resource_table @ ".resource_table" = {
 #if defined (__LOG_TRACE_IO_)
 	.cm_trace = {
 		RSC_TRACE,
-		(uint32_t)system_log_buf, SYSTEM_TRACE_BUF_SZ, 0, "cm4_log",
+		(uint32_t)system_log_buf, SYSTEM_TRACE_BUF_SZ, 0, "cm33_log",
 	},
 #endif
 } ;

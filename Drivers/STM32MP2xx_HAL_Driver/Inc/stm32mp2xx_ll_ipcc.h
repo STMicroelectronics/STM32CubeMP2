@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -83,22 +83,22 @@ extern "C" {
 /** @defgroup IPCC_LL_EC_Channel Channel
   * @{
   */
-#define LL_IPCC_CHANNEL_1 (0x00000001U) /*!< IPCC Channel 1 */
-#define LL_IPCC_CHANNEL_2 (0x00000002U) /*!< IPCC Channel 2 */
-#define LL_IPCC_CHANNEL_3 (0x00000004U) /*!< IPCC Channel 3 */
-#define LL_IPCC_CHANNEL_4 (0x00000008U) /*!< IPCC Channel 4 */
-#define LL_IPCC_CHANNEL_5 (0x00000010U) /*!< IPCC Channel 5 */
-#define LL_IPCC_CHANNEL_6 (0x00000020U) /*!< IPCC Channel 6 */
-#define LL_IPCC_CHANNEL_7 (0x00000040U) /*!< IPCC Channel 7 */
-#define LL_IPCC_CHANNEL_8 (0x00000080U) /*!< IPCC Channel 8 */
-#define LL_IPCC_CHANNEL_9 (0x00000100U) /*!< IPCC Channel 9 */
-#define LL_IPCC_CHANNEL_10 (0x00000200U) /*!< IPCC Channel 10 */
-#define LL_IPCC_CHANNEL_11 (0x00000400U) /*!< IPCC Channel 11 */
-#define LL_IPCC_CHANNEL_12 (0x00000800U) /*!< IPCC Channel 12 */
-#define LL_IPCC_CHANNEL_13 (0x00001000U) /*!< IPCC Channel 13 */
-#define LL_IPCC_CHANNEL_14 (0x00002000U) /*!< IPCC Channel 14 */
-#define LL_IPCC_CHANNEL_15 (0x00004000U) /*!< IPCC Channel 15 */
-#define LL_IPCC_CHANNEL_16 (0x00008000U) /*!< IPCC Channel 16 */
+#define LL_IPCC_CHANNEL_1    (0x00000001U) /*!< IPCC Channel 1  */
+#define LL_IPCC_CHANNEL_2    (0x00000002U) /*!< IPCC Channel 2  */
+#define LL_IPCC_CHANNEL_3    (0x00000004U) /*!< IPCC Channel 3  */
+#define LL_IPCC_CHANNEL_4    (0x00000008U) /*!< IPCC Channel 4  */
+#define LL_IPCC_CHANNEL_5    (0x00000010U) /*!< IPCC Channel 5  */
+#define LL_IPCC_CHANNEL_6    (0x00000020U) /*!< IPCC Channel 6  */
+#define LL_IPCC_CHANNEL_7    (0x00000040U) /*!< IPCC Channel 7  */
+#define LL_IPCC_CHANNEL_8    (0x00000080U) /*!< IPCC Channel 8  */
+#define LL_IPCC_CHANNEL_9    (0x00000100U) /*!< IPCC Channel 9  */
+#define LL_IPCC_CHANNEL_10   (0x00000200U) /*!< IPCC Channel 10 */
+#define LL_IPCC_CHANNEL_11   (0x00000400U) /*!< IPCC Channel 11 */
+#define LL_IPCC_CHANNEL_12   (0x00000800U) /*!< IPCC Channel 12 */
+#define LL_IPCC_CHANNEL_13   (0x00001000U) /*!< IPCC Channel 13 */
+#define LL_IPCC_CHANNEL_14   (0x00002000U) /*!< IPCC Channel 14 */
+#define LL_IPCC_CHANNEL_15   (0x00004000U) /*!< IPCC Channel 15 */
+#define LL_IPCC_CHANNEL_16   (0x00008000U) /*!< IPCC Channel 16 */
 /**
   * @}
   */
@@ -1031,5 +1031,3 @@ __STATIC_INLINE uint32_t LL_IPCC_GetChannelNumber(IPCC_TypeDef *IPCCx)
 #endif
 
 #endif /* STM32MP2xx_LL_IPCC_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

@@ -93,6 +93,46 @@ extern "C" {
 #define HAL_USART_MODULE_ENABLED
 #define HAL_WWDG_MODULE_ENABLED
 
+/* ########################## Register Callbacks selection ############################## */
+/**
+  * @brief This is the list of modules where register callback can be used
+  */
+#define USE_HAL_ADC_REGISTER_CALLBACKS         	0U
+#define USE_HAL_CRYP_REGISTER_CALLBACKS         0U
+#define USE_HAL_DCMI_REGISTER_CALLBACKS         0U
+#define USE_HAL_DCMIPP_REGISTER_CALLBACKS       0U
+#define USE_HAL_DSI_REGISTER_CALLBACKS          0U
+#define USE_HAL_HASH_REGISTER_CALLBACKS         0U
+#define USE_HAL_I2C_REGISTER_CALLBACKS          0U
+#define USE_HAL_I2S_REGISTER_CALLBACKS          0U
+#define USE_HAL_I3C_REGISTER_CALLBACKS          0U
+#define USE_HAL_IRDA_REGISTER_CALLBACKS         0U
+#define USE_HAL_IWDG_REGISTER_CALLBACKS         0U
+#define USE_HAL_LPTIM_REGISTER_CALLBACKS        0U
+#define USE_HAL_LTDC_REGISTER_CALLBACKS         0U
+#define USE_HAL_MDF_REGISTER_CALLBACKS          0U
+#define USE_HAL_MMC_REGISTER_CALLBACKS          0U
+#define USE_HAL_NAND_REGISTER_CALLBACKS         0U
+#define USE_HAL_NOR_REGISTER_CALLBACKS          0U
+#define USE_HAL_OSPI_REGISTER_CALLBACKS         0U
+#define USE_HAL_OTFDEC_REGISTER_CALLBACKS       0U
+#define USE_HAL_PKA_REGISTER_CALLBACKS          0U
+#define USE_HAL_RAMCFG_REGISTER_CALLBACKS       0U
+#define USE_HAL_RNG_REGISTER_CALLBACKS          0U
+#define USE_HAL_RTC_REGISTER_CALLBACKS          0U
+#define USE_HAL_SAI_REGISTER_CALLBACKS          0U
+#define USE_HAL_SD_REGISTER_CALLBACKS           0U
+#define USE_HAL_SMARTCARD_REGISTER_CALLBACKS    0U
+#define USE_HAL_SMBUS_REGISTER_CALLBACKS        0U
+#define USE_HAL_SPDIFRX_REGISTER_CALLBACKS      0U
+#define USE_HAL_SPI_REGISTER_CALLBACKS          0U
+#define USE_HAL_SRAM_REGISTER_CALLBACKS         0U
+#define USE_HAL_TIM_REGISTER_CALLBACKS          0U
+#define USE_HAL_UART_REGISTER_CALLBACKS         0U
+#define USE_HAL_USART_REGISTER_CALLBACKS        0U
+#define USE_HAL_WWDG_REGISTER_CALLBACKS         0U
+#define USE_HAL_ETH_REGISTER_CALLBACKS          0U
+
 /* ######################### Oscillator Values adaptation ################### */
 /**
   * @brief Adjust the value of External High Speed oscillator (HSE) used in your application.

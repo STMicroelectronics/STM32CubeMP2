@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -522,7 +522,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_VBATH(void)
   return ((READ_BIT(PWR->CR2, PWR_CR2_VBATH) == (PWR_CR2_VBATH)) ? 1UL : 0UL);
 }
 
-
+#if defined (PWR_CR5_VCOREMONEN)
 /**
   * @brief  Enable/Disable monitoring of VDDcore
   * @rmtoll CR5    PWR_CR5_VCOREMONEN       LL_PWREx_EnableVDDcoreMonitoring/LL_PWREx_DisableVDDcoreMonitoring
@@ -563,8 +563,9 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_VCOREH(void)
 {
   return ((READ_BIT(PWR->CR5, PWR_CR5_VCOREH) == (PWR_CR5_VCOREH)) ? 1UL : 0UL);
 }
+#endif /* PWR_CR5_VCOREMONEN */
 
-
+#if defined (PWR_CR6_VCPUMONEN)
 /**
   * @brief  Enable/Disable monitoring of VDDcpu
   * @rmtoll CR6    PWR_CR6_VCPUMONEN       LL_PWREx_EnableVDDcpuMonitoring/LL_PWREx_DisableVDDcpuMonitoring
@@ -629,7 +630,7 @@ __STATIC_INLINE uint32_t LL_PWR_IsActiveFlag_VCPUH(void)
 {
   return ((READ_BIT(PWR->CR6, PWR_CR6_VCPUH) == (PWR_CR6_VCPUH)) ? 1UL : 0UL);
 }
-
+#endif /* PWR_CR6_VCPUMONEN */
 
 #if defined(PWR_CR12_VDDGPURDY)
 /**
@@ -1418,7 +1419,7 @@ __STATIC_INLINE void LL_PWR_SetAuthorisedCidNSharable(uint16_t nsRessource, uint
   __IO uint32_t *regaddr;
 
   regaddr = &PWR->RxCIDCFGR[0] + (R_CID_CFG_ADD_OFFSET * nsRessource);
-  MODIFY_REG(*regaddr, PWR_R0CIDCFGR_CID, ((uint32_t)cid << PWR_R0CIDCFGR_CID_Pos));
+  MODIFY_REG(*regaddr, PWR_R0CIDCFGR_SCID, ((uint32_t)cid << PWR_R0CIDCFGR_SCID_Pos));
 }
 
 
@@ -1434,7 +1435,7 @@ __STATIC_INLINE uint32_t LL_PWR_GetAuthorisedCidNSharable(uint16_t nsRessource)
   const __IO uint32_t *regaddr;
 
   regaddr = &PWR->RxCIDCFGR[0] + (R_CID_CFG_ADD_OFFSET * nsRessource);
-  return ((READ_REG(*regaddr) & (PWR_R0CIDCFGR_CID)) >> PWR_R0CIDCFGR_CID_Pos) ;
+  return ((READ_REG(*regaddr) & (PWR_R0CIDCFGR_SCID)) >> PWR_R0CIDCFGR_SCID_Pos) ;
 }
 
 
@@ -1713,5 +1714,3 @@ ErrorStatus LL_PWR_DeInit(void);
 #endif
 
 #endif /* STM32MP2xx_LL_PWR_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

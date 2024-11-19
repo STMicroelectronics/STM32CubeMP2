@@ -243,6 +243,7 @@ extern "C" {
   * @}
   */
 
+#if defined(SYSCFG_IOCR_HSLVEN_TRACE)
 /** @defgroup SYSCFG_Analog_Switch_Config SYSCFG Analog Switch Config
   * @{
   */
@@ -288,7 +289,7 @@ extern "C" {
 /**
   * @}
   */
-
+#endif /* SYSCFG_IOCR_HSLVEN_TRACE */
 
 /** @defgroup SYSCFG_Lock_items SYSCFG Lock items
   * @brief SYSCFG items to set lock on

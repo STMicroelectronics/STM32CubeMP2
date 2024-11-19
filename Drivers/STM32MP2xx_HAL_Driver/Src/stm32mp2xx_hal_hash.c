@@ -796,8 +796,13 @@ HAL_StatusTypeDef HAL_HASH_ProcessSuspend(HASH_HandleTypeDef *hhash)
       /* DMA3 used, DMA_CBR1_BNDT in bytes, DMA_CSR_FIFOL in words */
       remainingwords = ((((DMA_Channel_TypeDef *)hhash->hdmain->Instance)->CBR1) \
                         & DMA_CBR1_BNDT) / 4U;
+#if defined(DMA_VER_V1_6)
+      remainingwords += (((((DMA_Channel_TypeDef *)hhash->hdmain->Instance)->CSR) \
+                          & DMA_CSR_FIFOL) >> DMA_CSR_FIFOL_Pos) / 4U;
+#else
       remainingwords += ((((DMA_Channel_TypeDef *)hhash->hdmain->Instance)->CSR) \
                          & DMA_CSR_FIFOL) >> DMA_CSR_FIFOL_Pos;
+#endif /* DMA_VER_V1_6 */
 
       if (remainingwords <= nbbytePartialHash)
       {

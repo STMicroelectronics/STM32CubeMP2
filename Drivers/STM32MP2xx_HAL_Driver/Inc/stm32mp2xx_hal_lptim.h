@@ -1172,6 +1172,13 @@ HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(const LPTIM_HandleTypeDef *hlptim);
 
 #define IS_LPTIM_REPETITION(__REPETITION__)     ((__REPETITION__) <= 0x000000FFUL)
 
+#if defined(CORE_CM0PLUS)
+#define IS_LPTIM_INPUT1_SOURCE(__INSTANCE__, __SOURCE__) \
+  ((((__INSTANCE__) == LPTIM3) || \
+    ((__INSTANCE__) == LPTIM4) || \
+    ((__INSTANCE__) == LPTIM5)) && \
+   ((__SOURCE__) == LPTIM_INPUT1SOURCE_GPIO))
+#else /* CORE_CM0PLUS */
 #define IS_LPTIM_INPUT1_SOURCE(__INSTANCE__, __SOURCE__) \
   ((((__INSTANCE__) == LPTIM1) || \
     ((__INSTANCE__) == LPTIM2) || \
@@ -1179,6 +1186,7 @@ HAL_LPTIM_StateTypeDef HAL_LPTIM_GetState(const LPTIM_HandleTypeDef *hlptim);
     ((__INSTANCE__) == LPTIM4) || \
     ((__INSTANCE__) == LPTIM5)) && \
    ((__SOURCE__) == LPTIM_INPUT1SOURCE_GPIO))
+#endif /* else CORE_CM0PLUS */
 
 #if defined(CORE_CM0PLUS)
 #define IS_LPTIM_INPUT2_SOURCE(__INSTANCE__, __SOURCE__) \

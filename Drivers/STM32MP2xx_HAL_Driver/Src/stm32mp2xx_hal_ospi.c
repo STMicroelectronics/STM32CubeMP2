@@ -174,7 +174,7 @@
      (+) MspInitCallback    : OSPI MspInit.
      (+) MspDeInitCallback  : OSPI MspDeInit.
     [..]
-   This function takes as parameters the HAL peripheral handle, the Callback ID
+     This function takes as parameters the HAL peripheral handle, the Callback ID
      and a pointer to the user callback function.
 
     [..]
@@ -222,7 +222,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -377,8 +377,8 @@ HAL_StatusTypeDef HAL_OSPI_Init(OSPI_HandleTypeDef *hospi)
       /* Configure the default timeout for the OSPI memory access */
       (void)HAL_OSPI_SetTimeout(hospi, HAL_OSPI_TIMEOUT_DEFAULT_VALUE);
 
-      /* Configure memory type, device size, chip select high time, delay block bypass,
-        free running clock, clock mode */
+      /* Configure memory type, device size, chip select high time, delay block bypass, free running clock,
+         clock mode */
       MODIFY_REG(hospi->Instance->DCR1,
                  (OCTOSPI_DCR1_MTYP | OCTOSPI_DCR1_DEVSIZE | OCTOSPI_DCR1_CSHT | OCTOSPI_DCR1_DLYBYP |
                   OCTOSPI_DCR1_FRCK | OCTOSPI_DCR1_CKMODE),
@@ -390,8 +390,8 @@ HAL_StatusTypeDef HAL_OSPI_Init(OSPI_HandleTypeDef *hospi)
       MODIFY_REG(hospi->Instance->DCR2, OCTOSPI_DCR2_WRAPSIZE, hospi->Init.WrapSize);
 
       /* Configure chip select boundary and maximum transfer */
-      hospi->Instance->DCR3 = ((hospi->Init.ChipSelectBoundary << OCTOSPI_DCR3_CSBOUND_Pos)
-                               | (hospi->Init.MaxTran << OCTOSPI_DCR3_MAXTRAN_Pos));
+      hospi->Instance->DCR3 = ((hospi->Init.ChipSelectBoundary << OCTOSPI_DCR3_CSBOUND_Pos) |
+                               (hospi->Init.MaxTran << OCTOSPI_DCR3_MAXTRAN_Pos));
 
       /* Configure refresh */
       hospi->Instance->DCR4 = hospi->Init.Refresh;
@@ -2473,6 +2473,8 @@ uint32_t HAL_OSPI_GetState(const OSPI_HandleTypeDef *hospi)
   * @}
   */
 
+#if   !defined(OCTOSPIM)
+#else
 /** @defgroup OSPI_Exported_Functions_Group4 IO Manager configuration function
   *  @brief   OSPI IO Manager configuration function
   *
@@ -2532,7 +2534,7 @@ HAL_StatusTypeDef HAL_OSPIM_Config(const OSPIM_CfgTypeDef *cfg, uint32_t Timeout
     }
 
     MODIFY_REG(OCTOSPIM->CR, (OCTOSPIM_CR_MUXEN | OCTOSPIM_CR_MODE | OCTOSPIM_CR_CSSEL_OVR_EN
-                              | OCTOSPIM_CR_CSSEL_OVR_01 | OCTOSPIM_CR_CSSEL_OVR_02),
+                              | OCTOSPIM_CR_CSSEL_OVR_O1 | OCTOSPIM_CR_CSSEL_OVR_O2),
                (cfg->MuxEn | cfg->Mode | cfg->CSOvrEn | cfg->CS1Ovr | cfg->CS2Ovr));
 
     /******* Re-enable both OctoSPI after configure OctoSPI IO Manager ********/
@@ -2553,6 +2555,7 @@ HAL_StatusTypeDef HAL_OSPIM_Config(const OSPIM_CfgTypeDef *cfg, uint32_t Timeout
 /**
   * @}
   */
+#endif /* GENERATOR_IOMNG_NOT_AVAILABLE */
 
 /**
   @cond 0
@@ -2921,5 +2924,3 @@ static HAL_StatusTypeDef OSPI_ConfigCmd(OSPI_HandleTypeDef *hospi, OSPI_RegularC
   */
 
 #endif /* OCTOSPI || OCTOSPI1 || OCTOSPI2 */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

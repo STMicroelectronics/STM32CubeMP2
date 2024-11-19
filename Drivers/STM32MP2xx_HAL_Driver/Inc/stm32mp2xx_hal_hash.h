@@ -367,13 +367,13 @@ typedef  void (*pHASH_CallbackTypeDef)(HASH_HandleTypeDef *hhash);  /*!< pointer
   * @note   This bit is set when hashing large files when multiple DMA transfers are needed.
   * @retval None
   */
-#define __HAL_HASH_SET_MDMAT()          SET_BIT(HASH->CR, HASH_CR_MDMAT)
+#define __HAL_HASH_SET_MDMAT(__HANDLE__)          SET_BIT((__HANDLE__)->Instance->CR, HASH_CR_MDMAT)
 
 /**
   * @brief  Disable the multi-buffer DMA transfer mode.
   * @retval None
   */
-#define __HAL_HASH_RESET_MDMAT()        CLEAR_BIT(HASH->CR, HASH_CR_MDMAT)
+#define __HAL_HASH_RESET_MDMAT(__HANDLE__)        CLEAR_BIT((__HANDLE__)->Instance->CR, HASH_CR_MDMAT)
 
 /**
   * @brief  HAL HASH driver version.

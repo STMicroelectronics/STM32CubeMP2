@@ -12,7 +12,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -995,32 +995,30 @@ void IPCC_Reset_Register(IPCC_HandleTypeDef *hipcc)
   */
 IPCC_CommonTypeDef *IPCC_GetCurrentInstance(const IPCC_HandleTypeDef *hipcc)
 {
-  IPCC_CommonTypeDef *instance;
-#if !defined(IPCC1)
-#if defined (CORE_CA35) || defined(CORE_CM33)
-  instance = IPCC2_C2;
-#else   /* (CORE_CA35) || (CORE_CM33) */
-  instance = IPCC2_C1;
-#endif  /* (CORE_CA35) || (CORE_CM33) */
-#else /* !IPCC1 */
+
+#if defined(IPCC1)
   if (hipcc->Instance == IPCC1)
   {
 #if defined(CORE_CM33)
-    instance = IPCC1_C2;
+    return IPCC1_C2;
 #else   /* CORE_CM33 */
-    instance = IPCC1_C1;
+    return IPCC1_C1;
 #endif  /* CORE_CM33 */
   }
-  else
+#endif /* IPCC1 */
+
+#if  defined(IPCC2)
+  if (hipcc->Instance == IPCC2)
   {
 #if defined (CORE_CA35) || defined(CORE_CM33)
-    instance = IPCC2_C2;
+    return IPCC2_C2;
 #else   /* (CORE_CA35) || (CORE_CM33) */
-    instance = IPCC2_C1;
+    return IPCC2_C1;
 #endif  /* (CORE_CA35) || (CORE_CM33) */
   }
-#endif /* !IPCC1 */
-  return instance;
+#endif /* IPCC2 */
+
+  return NULL;
 }
 
 /**
@@ -1029,38 +1027,31 @@ IPCC_CommonTypeDef *IPCC_GetCurrentInstance(const IPCC_HandleTypeDef *hipcc)
   */
 IPCC_CommonTypeDef *IPCC_GetOtherInstance(const IPCC_HandleTypeDef *hipcc)
 {
-  const IPCC_CommonTypeDef *currentInstance;
-  IPCC_CommonTypeDef *otherInstance;
+  const IPCC_CommonTypeDef *currentInstance = IPCC_GetCurrentInstance(hipcc);
 
-  currentInstance = IPCC_GetCurrentInstance(hipcc);
-#if !defined (IPCC1)
-  if (currentInstance == IPCC2_C1)
-  {
-    otherInstance = IPCC2_C2;
-  }
-  else
-  {
-    otherInstance = IPCC2_C1;
-  }
-#else /* !IPCC1 */
+#if defined (IPCC1)
   if (currentInstance == IPCC1_C1)
   {
-    otherInstance = IPCC1_C2;
-  }
-  else if (currentInstance == IPCC1_C2)
-  {
-    otherInstance = IPCC1_C1;
-  }
-  else if (currentInstance == IPCC2_C1)
-  {
-    otherInstance = IPCC2_C2;
+    return  IPCC1_C2;
   }
   else
   {
-    otherInstance = IPCC2_C1;
+    return IPCC1_C1;
   }
-#endif /* !IPCC1 */
-  return otherInstance;
+#endif /* IPCC1 */
+
+#if defined (IPCC2)
+  if (currentInstance == IPCC2_C1)
+  {
+    return IPCC2_C2;
+  }
+  else
+  {
+    return IPCC2_C1;
+  }
+#endif /* IPCC2 */
+
+  return NULL;
 }
 
 /**
@@ -1077,4 +1068,3 @@ IPCC_CommonTypeDef *IPCC_GetOtherInstance(const IPCC_HandleTypeDef *hipcc)
   * @}
   */
 #endif /* IPCC || IPCC1 || IPCC2 */
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

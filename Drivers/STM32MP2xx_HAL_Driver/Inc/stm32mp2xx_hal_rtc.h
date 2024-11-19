@@ -208,31 +208,37 @@ typedef struct
   __IO HAL_RTCStateTypeDef  State;      /*!< Time communication state */
 
 #if (USE_HAL_RTC_REGISTER_CALLBACKS == 1)
-  void (* AlarmAEventCallback)(struct __RTC_HandleTypeDef *hrtc);                    /*!< RTC Alarm A Event callback            */
-  void (* AlarmBEventCallback)(struct __RTC_HandleTypeDef *hrtc);                    /*!< RTC Alarm B Event callback            */
-  void (* TimeStampEventCallback)(struct __RTC_HandleTypeDef *hrtc);                 /*!< RTC TimeStamp Event callback          */
-  void (* WakeUpTimerEventCallback)(struct __RTC_HandleTypeDef *hrtc);               /*!< RTC WakeUpTimer Event callback        */
-  void (* SSRUEventCallback)(struct __RTC_HandleTypeDef *hrtc);                      /*!< RTC SSRU Event callback               */
-  void (* Tamper1EventCallback)(struct __RTC_HandleTypeDef *hrtc);                   /*!< RTC Tamper 1 Event callback           */
-  void (* Tamper2EventCallback)(struct __RTC_HandleTypeDef *hrtc);                   /*!< RTC Tamper 2 Event callback           */
-  void (* Tamper3EventCallback)(struct __RTC_HandleTypeDef *hrtc);                   /*!< RTC Tamper 3 Event callback           */
-  void (* Tamper4EventCallback)(struct __RTC_HandleTypeDef *hrtc);                   /*!< RTC Tamper 4 Event callback           */
-  void (* Tamper5EventCallback)(struct __RTC_HandleTypeDef *hrtc);                   /*!< RTC Tamper 5 Event callback           */
-  void (* Tamper6EventCallback)(struct __RTC_HandleTypeDef *hrtc);                   /*!< RTC Tamper 6 Event callback           */
-  void (* Tamper7EventCallback)(struct __RTC_HandleTypeDef *hrtc);                   /*!< RTC Tamper 7 Event callback           */
-  void (* Tamper8EventCallback)(struct __RTC_HandleTypeDef *hrtc);                   /*!< RTC Tamper 8 Event callback           */
-  void (* InternalTamper1EventCallback)(struct __RTC_HandleTypeDef *hrtc);           /*!< RTC Internal Tamper 1 Event callback  */
-  void (* InternalTamper2EventCallback)(struct __RTC_HandleTypeDef *hrtc);           /*!< RTC Internal Tamper 2 Event callback  */
-  void (* InternalTamper3EventCallback)(struct __RTC_HandleTypeDef *hrtc);           /*!< RTC Internal Tamper 3 Event callback  */
-  void (* InternalTamper5EventCallback)(struct __RTC_HandleTypeDef *hrtc);           /*!< RTC Internal Tamper 5 Event callback  */
-  void (* InternalTamper6EventCallback)(struct __RTC_HandleTypeDef *hrtc);           /*!< RTC Internal Tamper 6 Event callback  */
-  void (* InternalTamper7EventCallback)(struct __RTC_HandleTypeDef *hrtc);           /*!< RTC Internal Tamper 7 Event callback  */
-  void (* InternalTamper8EventCallback)(struct __RTC_HandleTypeDef *hrtc);           /*!< RTC Internal Tamper 8 Event callback  */
-  void (* InternalTamper9EventCallback)(struct __RTC_HandleTypeDef *hrtc);           /*!< RTC Internal Tamper 9 Event callback  */
-  void (* InternalTamper10EventCallback)(struct __RTC_HandleTypeDef *hrtc);           /*!< RTC Internal Tamper 10 Event callback  */
-  void (* InternalTamper11EventCallback)(struct __RTC_HandleTypeDef *hrtc);           /*!< RTC Internal Tamper 11 Event callback  */
-  void (* MspInitCallback)(struct __RTC_HandleTypeDef *hrtc);                        /*!< RTC Msp Init callback                 */
-  void (* MspDeInitCallback)(struct __RTC_HandleTypeDef *hrtc);                      /*!< RTC Msp DeInit callback               */
+  void (* AlarmAEventCallback)           (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Alarm A Event callback            */
+  void (* AlarmBEventCallback)           (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Alarm B Event callback            */
+  void (* TimeStampEventCallback)        (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC TimeStamp Event callback          */
+  void (* WakeUpTimerEventCallback)      (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC WakeUpTimer Event callback        */
+  void (* SSRUEventCallback)             (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC SSRU Event callback               */
+  void (* Tamper1EventCallback)          (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Tamper 1 Event callback           */
+  void (* Tamper2EventCallback)          (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Tamper 2 Event callback           */
+  void (* Tamper3EventCallback)          (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Tamper 3 Event callback           */
+  void (* Tamper4EventCallback)          (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Tamper 4 Event callback           */
+  void (* Tamper5EventCallback)          (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Tamper 5 Event callback           */
+  void (* Tamper6EventCallback)          (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Tamper 6 Event callback           */
+  void (* Tamper7EventCallback)          (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Tamper 7 Event callback           */
+  void (* Tamper8EventCallback)          (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Tamper 8 Event callback           */
+  void (* InternalTamper1EventCallback)  (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper  1 Event callback */
+  void (* InternalTamper2EventCallback)  (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper  2 Event callback */
+  void (* InternalTamper3EventCallback)  (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper  3 Event callback */
+  void (* InternalTamper4EventCallback)  (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper  4 Event callback */
+  void (* InternalTamper5EventCallback)  (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper  5 Event callback */
+  void (* InternalTamper6EventCallback)  (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper  6 Event callback */
+  void (* InternalTamper7EventCallback)  (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper  7 Event callback */
+  void (* InternalTamper8EventCallback)  (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper  8 Event callback */
+  void (* InternalTamper9EventCallback)  (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper  9 Event callback */
+  void (* InternalTamper10EventCallback) (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper 10 Event callback */
+  void (* InternalTamper11EventCallback) (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper 11 Event callback */
+  void (* InternalTamper12EventCallback) (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper 12 Event callback */
+  void (* InternalTamper13EventCallback) (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper 13 Event callback */
+  void (* InternalTamper14EventCallback) (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper 14 Event callback */
+  void (* InternalTamper15EventCallback) (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper 15 Event callback */
+  void (* InternalTamper16EventCallback) (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Internal Tamper 16 Event callback */
+  void (* MspInitCallback)               (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Msp Init callback                 */
+  void (* MspDeInitCallback)             (struct __RTC_HandleTypeDef *hrtc);   /*!< RTC Msp DeInit callback               */
 
 #endif /* (USE_HAL_RTC_REGISTER_CALLBACKS) */
 
@@ -244,25 +250,36 @@ typedef struct
   */
 typedef enum
 {
-  HAL_RTC_ALARM_A_EVENT_CB_ID            = 0U,     /*!< RTC Alarm A Event Callback ID      */
-  HAL_RTC_ALARM_B_EVENT_CB_ID            = 1U,     /*!< RTC Alarm B Event Callback ID      */
-  HAL_RTC_TIMESTAMP_EVENT_CB_ID          = 2U,     /*!< RTC TimeStamp Event Callback ID    */
-  HAL_RTC_WAKEUPTIMER_EVENT_CB_ID        = 3U,     /*!< RTC WakeUp Timer Event Callback ID */
-  HAL_RTC_TAMPER1_EVENT_CB_ID            = 4U,     /*!< RTC Tamper 1 Callback ID           */
-  HAL_RTC_TAMPER2_EVENT_CB_ID            = 5U,     /*!< RTC Tamper 2 Callback ID           */
-  HAL_RTC_TAMPER3_EVENT_CB_ID            = 6U,     /*!< RTC Tamper 3 Callback ID           */
-  HAL_RTC_TAMPER4_EVENT_CB_ID            = 7U,     /*!< RTC Tamper 4 Callback ID           */
-  HAL_RTC_TAMPER5_EVENT_CB_ID            = 8U,     /*!< RTC Tamper 5 Callback ID           */
-  HAL_RTC_TAMPER6_EVENT_CB_ID            = 9U,     /*!< RTC Tamper 6 Callback ID           */
-  HAL_RTC_TAMPER7_EVENT_CB_ID            = 10U,    /*!< RTC Tamper 7 Callback ID           */
-  HAL_RTC_TAMPER8_EVENT_CB_ID            = 11U,    /*!< RTC Tamper 8 Callback ID           */
-  HAL_RTC_INTERNAL_TAMPER1_EVENT_CB_ID   = 12U,    /*!< RTC Internal Tamper 1 Callback ID  */
-  HAL_RTC_INTERNAL_TAMPER2_EVENT_CB_ID   = 13U,    /*!< RTC Internal Tamper 2 Callback ID  */
-  HAL_RTC_INTERNAL_TAMPER3_EVENT_CB_ID   = 14U,    /*!< RTC Internal Tamper 3 Callback ID  */
-  HAL_RTC_INTERNAL_TAMPER5_EVENT_CB_ID   = 15U,    /*!< RTC Internal Tamper 5 Callback ID  */
-  HAL_RTC_INTERNAL_TAMPER8_EVENT_CB_ID   = 16U,    /*!< RTC Internal Tamper 8 Callback ID  */
-  HAL_RTC_MSPINIT_CB_ID                  = 34U,    /*!< RTC Msp Init callback ID           */
-  HAL_RTC_MSPDEINIT_CB_ID                = 35U     /*!< RTC Msp DeInit callback ID         */
+  HAL_RTC_ALARM_A_EVENT_CB_ID            =  0U,   /*!< RTC Alarm A Event Callback ID      */
+  HAL_RTC_ALARM_B_EVENT_CB_ID            =  1U,   /*!< RTC Alarm B Event Callback ID      */
+  HAL_RTC_TIMESTAMP_EVENT_CB_ID          =  2U,   /*!< RTC TimeStamp Event Callback ID    */
+  HAL_RTC_WAKEUPTIMER_EVENT_CB_ID        =  3U,   /*!< RTC WakeUp Timer Event Callback ID */
+  HAL_RTC_TAMPER1_EVENT_CB_ID            =  4U,   /*!< RTC Tamper 1 Callback ID           */
+  HAL_RTC_TAMPER2_EVENT_CB_ID            =  5U,   /*!< RTC Tamper 2 Callback ID           */
+  HAL_RTC_TAMPER3_EVENT_CB_ID            =  6U,   /*!< RTC Tamper 3 Callback ID           */
+  HAL_RTC_TAMPER4_EVENT_CB_ID            =  7U,   /*!< RTC Tamper 4 Callback ID           */
+  HAL_RTC_TAMPER5_EVENT_CB_ID            =  8U,   /*!< RTC Tamper 5 Callback ID           */
+  HAL_RTC_TAMPER6_EVENT_CB_ID            =  9U,   /*!< RTC Tamper 6 Callback ID           */
+  HAL_RTC_TAMPER7_EVENT_CB_ID            = 10U,   /*!< RTC Tamper 7 Callback ID           */
+  HAL_RTC_TAMPER8_EVENT_CB_ID            = 11U,   /*!< RTC Tamper 8 Callback ID           */
+  HAL_RTC_INTERNAL_TAMPER1_EVENT_CB_ID   = 12U,   /*!< RTC Internal Tamper  1 Callback ID */
+  HAL_RTC_INTERNAL_TAMPER2_EVENT_CB_ID   = 13U,   /*!< RTC Internal Tamper  2 Callback ID */
+  HAL_RTC_INTERNAL_TAMPER3_EVENT_CB_ID   = 14U,   /*!< RTC Internal Tamper  3 Callback ID */
+  HAL_RTC_INTERNAL_TAMPER4_EVENT_CB_ID   = 15U,   /*!< RTC Internal Tamper  4 Callback ID */
+  HAL_RTC_INTERNAL_TAMPER5_EVENT_CB_ID   = 16U,   /*!< RTC Internal Tamper  5 Callback ID */
+  HAL_RTC_INTERNAL_TAMPER6_EVENT_CB_ID   = 17U,   /*!< RTC Internal Tamper  6 Callback ID */
+  HAL_RTC_INTERNAL_TAMPER7_EVENT_CB_ID   = 18U,   /*!< RTC Internal Tamper  7 Callback ID */
+  HAL_RTC_INTERNAL_TAMPER8_EVENT_CB_ID   = 19U,   /*!< RTC Internal Tamper  8 Callback ID */
+  HAL_RTC_INTERNAL_TAMPER9_EVENT_CB_ID   = 20U,   /*!< RTC Internal Tamper  9 Callback ID */
+  HAL_RTC_INTERNAL_TAMPER10_EVENT_CB_ID  = 21U,   /*!< RTC Internal Tamper 10 Callback ID */
+  HAL_RTC_INTERNAL_TAMPER11_EVENT_CB_ID  = 22U,   /*!< RTC Internal Tamper 11 Callback ID */
+  HAL_RTC_INTERNAL_TAMPER12_EVENT_CB_ID  = 23U,   /*!< RTC Internal Tamper 12 Callback ID */
+  HAL_RTC_INTERNAL_TAMPER13_EVENT_CB_ID  = 24U,   /*!< RTC Internal Tamper 13 Callback ID */
+  HAL_RTC_INTERNAL_TAMPER14_EVENT_CB_ID  = 25U,   /*!< RTC Internal Tamper 14 Callback ID */
+  HAL_RTC_INTERNAL_TAMPER15_EVENT_CB_ID  = 26U,   /*!< RTC Internal Tamper 15 Callback ID */
+  HAL_RTC_INTERNAL_TAMPER16_EVENT_CB_ID  = 27U,   /*!< RTC Internal Tamper 16 Callback ID */
+  HAL_RTC_MSPINIT_CB_ID                  = 34U,   /*!< RTC Msp Init callback ID           */
+  HAL_RTC_MSPDEINIT_CB_ID                = 35U    /*!< RTC Msp DeInit callback ID         */
 } HAL_RTC_CallbackIDTypeDef;
 
 /**
@@ -775,25 +792,25 @@ typedef  void (*pRTC_CallbackTypeDef)(RTC_HandleTypeDef *hrtc);  /*!< pointer to
   * @brief  Enable interrupt on the RTC Alarm associated Exti line.
   * @retval None
   */
-#define __HAL_RTC_ALARM_EXTI_ENABLE_IT()            (EXTI1->C2IMR1 |= RTC_EXTI_LINE_ALARM_EVENT)
+#define __HAL_RTC_ALARM_EXTI_ENABLE_IT()            (EXTI2->C2IMR1 |= RTC_EXTI_LINE_ALARM_EVENT)
 
 /**
   * @brief  Disable interrupt on the RTC Alarm associated Exti line.
   * @retval None
   */
-#define __HAL_RTC_ALARM_EXTI_DISABLE_IT()           (EXTI1->C2IMR1 &= ~(RTC_EXTI_LINE_ALARM_EVENT))
+#define __HAL_RTC_ALARM_EXTI_DISABLE_IT()           (EXTI2->C2IMR1 &= ~(RTC_EXTI_LINE_ALARM_EVENT))
 
 /**
   * @brief  Enable event on the RTC Alarm associated Exti line.
   * @retval None
   */
-#define __HAL_RTC_ALARM_EXTI_ENABLE_EVENT()         (EXTI1->C2EMR1 |= RTC_EXTI_LINE_ALARM_EVENT)
+#define __HAL_RTC_ALARM_EXTI_ENABLE_EVENT()         (EXTI2->C2EMR1 |= RTC_EXTI_LINE_ALARM_EVENT)
 
 /**
   * @brief  Disable event on the RTC Alarm associated Exti line.
   * @retval None
   */
-#define __HAL_RTC_ALARM_EXTI_DISABLE_EVENT()         (EXTI1->C2EMR1 &= ~(RTC_EXTI_LINE_ALARM_EVENT))
+#define __HAL_RTC_ALARM_EXTI_DISABLE_EVENT()         (EXTI2->C2EMR1 &= ~(RTC_EXTI_LINE_ALARM_EVENT))
 
 /**
   * @}
@@ -1077,5 +1094,3 @@ uint8_t            RTC_Bcd2ToByte(uint8_t Value);
 #endif
 
 #endif /* __STM32MP2xx_HAL_RTC_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

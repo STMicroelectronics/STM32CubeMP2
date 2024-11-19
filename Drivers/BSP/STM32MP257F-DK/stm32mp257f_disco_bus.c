@@ -22,7 +22,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32mp257f_disco_bus.h"
 #include "stm32mp257f_disco_errno.h"
-
+#include "res_mgr.h"
 /** @addtogroup BSP
   * @{
   */

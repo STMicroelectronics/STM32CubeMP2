@@ -123,7 +123,79 @@ typedef struct
 #define I2C_GRP1_RTC_ALRA_TRG           (uint32_t)(I2C_TRIG_GRP1 | (0x9U << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is RTC_WUT_TRG     */
 #define I2C_GRP1_RTC_WUT_TRG            (uint32_t)(I2C_TRIG_GRP1 | (0xAU << I2C_AUTOCR_TRIGSEL_Pos))
+#else
+#if   defined(I2C1) && !defined(I2C8)
+#define I2C_TRIG_GRP1                   (0x10000000U)         /*!< Trigger Group for I2C8 */
+/* HW Trigger signal is EXTI4_TRG         */
+#define I2C_GRP1_EXTI4_TRG                (uint32_t)(I2C_TRIG_GRP1 | (0x4U << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is EXTI5_TRG         */
+#define I2C_GRP1_EXTI5_TRG                (uint32_t)(I2C_TRIG_GRP1 | (0x5U << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is LPTIM3_CH1_TRG    */
+#define I2C_GRP1_LPTIM3_CH1_TRG           (uint32_t)(I2C_TRIG_GRP1 | (0x7U << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is LPTIM4_CH1_TRG    */
+#define I2C_GRP1_LPTIM4_CH1_TRG           (uint32_t)(I2C_TRIG_GRP1 | (0x8U << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is LPTIM5_OUT_TRG    */
+#define I2C_GRP1_LPTIM5_OUT_TRG           (uint32_t)(I2C_TRIG_GRP1 | (0x9U << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is RTC_ALRA_TRG      */
+#define I2C_GRP1_RTC_ALRA_TRG             (uint32_t)(I2C_TRIG_GRP1 | (0xAU << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is RTC_WUT_TRG       */
+#define I2C_GRP1_RTC_WUT_TRG              (uint32_t)(I2C_TRIG_GRP1 | (0xBU << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is EXTI6_TRG         */
+#define I2C_GRP1_EXTI6_TRG                (uint32_t)(I2C_TRIG_GRP1 | (0xCU << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is EXTI7_TRG         */
+#define I2C_GRP1_EXTI7_TRG                (uint32_t)(I2C_TRIG_GRP1 | (0xDU << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is LPTIM1_CH1_TRG    */
+#define I2C_GRP1_LPTIM1_CH1_TRG           (uint32_t)(I2C_TRIG_GRP1 | (0xEU << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is LPTIM2_CH1_TRG    */
+#define I2C_GRP1_LPTIM2_CH1_TRG           (uint32_t)(I2C_TRIG_GRP1 | (0xFU << I2C_AUTOCR_TRIGSEL_Pos))
+#endif /* I2C1 */
+
+#if   defined(I2C2) && !defined(I2C8)
+#define I2C_TRIG_GRP2                   (0x20000000U)        /*!< Trigger Group for I2C2 */
+/* HW Trigger signal is EXTI4_TRG         */
+#define I2C_GRP2_EXTI4_TRG                (uint32_t)(I2C_TRIG_GRP2 | (0x4U << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is EXTI5_TRG         */
+#define I2C_GRP2_EXTI5_TRG                (uint32_t)(I2C_TRIG_GRP2 | (0x5U << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is LPTIM3_CH1_TRG    */
+#define I2C_GRP2_LPTIM3_CH1_TRG           (uint32_t)(I2C_TRIG_GRP2 | (0x7U << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is LPTIM4_CH1_TRG    */
+#define I2C_GRP2_LPTIM4_CH1_TRG           (uint32_t)(I2C_TRIG_GRP2 | (0x8U << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is LPTIM5_OUT_TRG    */
+#define I2C_GRP2_LPTIM5_OUT_TRG           (uint32_t)(I2C_TRIG_GRP2 | (0x9U << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is RTC_ALRA_TRG      */
+#define I2C_GRP2_RTC_ALRA_TRG             (uint32_t)(I2C_TRIG_GRP2 | (0xAU << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is RTC_WUT_TRG       */
+#define I2C_GRP2_RTC_WUT_TRG              (uint32_t)(I2C_TRIG_GRP2 | (0xBU << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is EXTI6_TRG         */
+#define I2C_GRP2_EXTI6_TRG                (uint32_t)(I2C_TRIG_GRP2 | (0xCU << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is EXTI7_TRG         */
+#define I2C_GRP2_EXTI7_TRG                (uint32_t)(I2C_TRIG_GRP2 | (0xDU << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is LPTIM1_CH1_TRG    */
+#define I2C_GRP2_LPTIM1_CH1_TRG           (uint32_t)(I2C_TRIG_GRP2 | (0xEU << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is LPTIM2_CH1_TRG    */
+#define I2C_GRP2_LPTIM2_CH1_TRG           (uint32_t)(I2C_TRIG_GRP2 | (0xFU << I2C_AUTOCR_TRIGSEL_Pos))
+#endif /* I2C2 */
+
+#if   defined(I2C3) && !defined(I2C8)
+#define I2C_TRIG_GRP3                   (0x30000000U)         /*!< Trigger Group for I2C3 */
+/* HW Trigger signal is EXTI4_TRG         */
+#define I2C_GRP3_EXTI4_TRG                (uint32_t)(I2C_TRIG_GRP3 | (0x4U << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is EXTI5_TRG         */
+#define I2C_GRP3_EXTI5_TRG                (uint32_t)(I2C_TRIG_GRP3 | (0x5U << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is LPTIM3_CH1_TRG    */
+#define I2C_GRP3_LPTIM3_CH1_TRG           (uint32_t)(I2C_TRIG_GRP3 | (0x7U << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is LPTIM4_CH1_TRG    */
+#define I2C_GRP3_LPTIM4_CH1_TRG           (uint32_t)(I2C_TRIG_GRP3 | (0x8U << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is LPTIM5_OUT_TRG    */
+#define I2C_GRP3_LPTIM5_OUT_TRG           (uint32_t)(I2C_TRIG_GRP3 | (0x9U << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is RTC_ALRA_TRG      */
+#define I2C_GRP3_RTC_ALRA_TRG             (uint32_t)(I2C_TRIG_GRP3 | (0xAU << I2C_AUTOCR_TRIGSEL_Pos))
+/* HW Trigger signal is RTC_WUT_TRG       */
+#define I2C_GRP3_RTC_WUT_TRG              (uint32_t)(I2C_TRIG_GRP3 | (0xBU << I2C_AUTOCR_TRIGSEL_Pos))
+#endif /* I2C3 */
+
 #endif /* I2C8 */
+
 /**
   * @}
   */
@@ -235,10 +307,66 @@ HAL_StatusTypeDef HAL_I2CEx_ClearConfigAutonomousMode(I2C_HandleTypeDef *hi2c);
                                               ((__SOURCE__) == I2C_GRP1_LPTIM5_OUT_TRG     ) || \
                                               ((__SOURCE__) == I2C_GRP1_RTC_ALRA_TRG       ) || \
                                               ((__SOURCE__) == I2C_GRP1_RTC_WUT_TRG        ))
+#else
+#define IS_I2C_TRIG_SOURCE(__INSTANCE__, __SOURCE__)  (((__INSTANCE__) == I2C3) ? \
+                                                       IS_I2C_GRP3_TRIG_SOURCE(__SOURCE__) : \
+                                                       ((__INSTANCE__) == I2C2) ? \
+                                                       IS_I2C_GRP2_TRIG_SOURCE(__SOURCE__) : \
+                                                       IS_I2C_GRP1_TRIG_SOURCE(__SOURCE__))
+
+#define IS_I2C_GRP1_TRIG_SOURCE(__SOURCE__)  (((__SOURCE__) == I2C_GRP1_EXTI4_TRG          ) || \
+                                              ((__SOURCE__) == I2C_GRP1_EXTI5_TRG          ) || \
+                                              ((__SOURCE__) == I2C_GRP1_LPTIM3_CH1_TRG     ) || \
+                                              ((__SOURCE__) == I2C_GRP1_LPTIM4_CH1_TRG     ) || \
+                                              ((__SOURCE__) == I2C_GRP1_LPTIM5_OUT_TRG     ) || \
+                                              ((__SOURCE__) == I2C_GRP1_RTC_ALRA_TRG       ) || \
+                                              ((__SOURCE__) == I2C_GRP1_RTC_WUT_TRG        ) || \
+                                              ((__SOURCE__) == I2C_GRP1_EXTI6_TRG          ) || \
+                                              ((__SOURCE__) == I2C_GRP1_EXTI7_TRG          ) || \
+                                              ((__SOURCE__) == I2C_GRP1_LPTIM1_CH1_TRG     ) || \
+                                              ((__SOURCE__) == I2C_GRP1_LPTIM2_CH1_TRG     ))
+
+#define IS_I2C_GRP2_TRIG_SOURCE(__SOURCE__)  (((__SOURCE__) == I2C_GRP2_EXTI4_TRG          ) || \
+                                              ((__SOURCE__) == I2C_GRP2_EXTI5_TRG          ) || \
+                                              ((__SOURCE__) == I2C_GRP2_LPTIM3_CH1_TRG     ) || \
+                                              ((__SOURCE__) == I2C_GRP2_LPTIM4_CH1_TRG     ) || \
+                                              ((__SOURCE__) == I2C_GRP2_LPTIM5_OUT_TRG     ) || \
+                                              ((__SOURCE__) == I2C_GRP2_RTC_ALRA_TRG       ) || \
+                                              ((__SOURCE__) == I2C_GRP2_RTC_WUT_TRG        ) || \
+                                              ((__SOURCE__) == I2C_GRP2_EXTI6_TRG          ) || \
+                                              ((__SOURCE__) == I2C_GRP2_EXTI7_TRG          ) || \
+                                              ((__SOURCE__) == I2C_GRP2_LPTIM1_CH1_TRG     ) || \
+                                              ((__SOURCE__) == I2C_GRP2_LPTIM2_CH1_TRG     ))
+
+#define IS_I2C_GRP3_TRIG_SOURCE(__SOURCE__)  (((__SOURCE__) == I2C_GRP3_EXTI4_TRG          ) || \
+                                              ((__SOURCE__) == I2C_GRP3_EXTI5_TRG          ) || \
+                                              ((__SOURCE__) == I2C_GRP3_LPTIM3_CH1_TRG     ) || \
+                                              ((__SOURCE__) == I2C_GRP3_LPTIM4_CH1_TRG     ) || \
+                                              ((__SOURCE__) == I2C_GRP3_LPTIM5_OUT_TRG     ) || \
+                                              ((__SOURCE__) == I2C_GRP3_RTC_ALRA_TRG       ) || \
+                                              ((__SOURCE__) == I2C_GRP3_RTC_WUT_TRG        ))
 #endif /* I2C8 */
 
+#if defined(I2C_TRIG_GRP3)
+#if defined(I2C_TRIG_GRP2)
+#if defined(I2C_TRIG_GRP1)
+#define IS_I2C_TRIG_INPUT_INSTANCE(__INSTANCE__)    (IS_I2C_GRP1_INSTANCE(__INSTANCE__) || \
+                                                     IS_I2C_GRP2_INSTANCE(__INSTANCE__) || \
+                                                     IS_I2C_GRP3_INSTANCE(__INSTANCE__))
+#endif /* I2C_TRIG_GRP1 */
+#else
 #define IS_I2C_TRIG_INPUT_INSTANCE(__INSTANCE__)    IS_I2C_GRP1_INSTANCE(__INSTANCE__)
-
+#endif /* I2C_TRIG_GRP2 */
+#else
+#if defined(I2C_TRIG_GRP2)
+#if defined(I2C_TRIG_GRP1)
+#define IS_I2C_TRIG_INPUT_INSTANCE(__INSTANCE__)    (IS_I2C_GRP1_INSTANCE(__INSTANCE__) || \
+                                                     IS_I2C_GRP2_INSTANCE(__INSTANCE__))
+#endif /* I2C_TRIG_GRP1 */
+#else
+#define IS_I2C_TRIG_INPUT_INSTANCE(__INSTANCE__)    IS_I2C_GRP1_INSTANCE(__INSTANCE__)
+#endif /* I2C_TRIG_GRP2 */
+#endif /* I2C_TRIG_GRP3 */
 #define IS_I2C_AUTO_MODE_TRG_POL(__POLARITY__)      (((__POLARITY__) == I2C_TRIG_POLARITY_RISING) || \
                                                      ((__POLARITY__) == I2C_TRIG_POLARITY_FALLING))
 /**

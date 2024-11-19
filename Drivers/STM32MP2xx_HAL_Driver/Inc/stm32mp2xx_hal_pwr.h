@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -221,14 +221,14 @@ typedef struct
 #define NS_RESOURCE_NSEC                     (NS_RESOURCE_ATTR_SEC_SELECT)                                 /*!< Resource is non-secure   */
 #endif /* __ARM_SECURE_STATE */
 
-#define NS_RESOURCE_CID_STATIC_0     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (0<<PWR_R0CIDCFGR_CID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID0 */
-#define NS_RESOURCE_CID_STATIC_1     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (1<<PWR_R0CIDCFGR_CID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID1 */
-#define NS_RESOURCE_CID_STATIC_2     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (2<<PWR_R0CIDCFGR_CID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID2 */
-#define NS_RESOURCE_CID_STATIC_3     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (3<<PWR_R0CIDCFGR_CID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID3 */
-#define NS_RESOURCE_CID_STATIC_4     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (4<<PWR_R0CIDCFGR_CID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID4 */
-#define NS_RESOURCE_CID_STATIC_5     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (5<<PWR_R0CIDCFGR_CID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID5 */
-#define NS_RESOURCE_CID_STATIC_6     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (6<<PWR_R0CIDCFGR_CID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID6 */
-#define NS_RESOURCE_CID_STATIC_7     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (7<<PWR_R0CIDCFGR_CID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID7 */
+#define NS_RESOURCE_CID_STATIC_0     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (0<<PWR_R0CIDCFGR_SCID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID0 */
+#define NS_RESOURCE_CID_STATIC_1     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (1<<PWR_R0CIDCFGR_SCID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID1 */
+#define NS_RESOURCE_CID_STATIC_2     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (2<<PWR_R0CIDCFGR_SCID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID2 */
+#define NS_RESOURCE_CID_STATIC_3     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (3<<PWR_R0CIDCFGR_SCID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID3 */
+#define NS_RESOURCE_CID_STATIC_4     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (4<<PWR_R0CIDCFGR_SCID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID4 */
+#define NS_RESOURCE_CID_STATIC_5     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (5<<PWR_R0CIDCFGR_SCID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID5 */
+#define NS_RESOURCE_CID_STATIC_6     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (6<<PWR_R0CIDCFGR_SCID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID6 */
+#define NS_RESOURCE_CID_STATIC_7     (NS_RESOURCE_ATTR_CID_STATIC_SELECT | (7<<PWR_R0CIDCFGR_SCID_Pos))   /*!< Enable CID filtering (static mode) and give pin control  to CID7 */
 
 
 #define WIO_RESOURCE_POS   NON_SHAREABLE_RESOURCE_NB

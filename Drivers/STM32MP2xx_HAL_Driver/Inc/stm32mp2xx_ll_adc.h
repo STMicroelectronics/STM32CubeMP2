@@ -724,6 +724,8 @@ typedef struct
 
 #define LL_ADC_CLOCK_CK_ICN_LS_CSU    (0x00000000UL)        /*!< ADC clock source ICN_LS_MCU for ADC12/3 */
 #define LL_ADC_CLOCK_KER_ADC12        (0x00000000UL)        /*!< ADC clock source KER_ADC12  for ADC12/3 */
+#define LL_ADC_CLOCK_KER_ADC1         (0x00000000UL)        /*!< ADC clock source KER_ADC1   for ADC1    */
+#define LL_ADC_CLOCK_KER_ADC2         (0x00000000UL)        /*!< ADC clock source KER_ADC2   for ADC2    */
 #define LL_ADC_CLOCK_KER_ADC3         (0x00000000UL)        /*!< ADC clock source KER_ADC3   for ADC3    */
 /**
   * @}
@@ -1900,6 +1902,7 @@ typedef struct
   * @param  __ADCx__ ADC instance
   * @retval ADC common register instance
   */
+#if defined(ADC12_COMMON)
 #if defined (ADC3)
 #define __LL_ADC_COMMON_INSTANCE(__ADCx__)                                     \
   ((((__ADCx__) == ADC1) || ((__ADCx__) == ADC2))                              \
@@ -1911,9 +1914,21 @@ typedef struct
     (ADC3_COMMON)                                                           \
    )\
   )
-#else
+#else /* ADC3 */
 #define __LL_ADC_COMMON_INSTANCE(__ADCx__)    (ADC12_COMMON)
 #endif /* ADC3 */
+#else /* ADC12_COMMON */
+#define __LL_ADC_COMMON_INSTANCE(__ADCx__)                                     \
+  ((((__ADCx__) == ADC1))                                                      \
+   ? (\
+      (ADC1_COMMON)                                                          \
+     )\
+   :                                                                        \
+   (\
+    (ADC2_COMMON)                                                           \
+   )\
+  )
+#endif /* ADC12_COMMON */
 
 /**
   * @brief  Helper macro to check if all ADC instances sharing the same

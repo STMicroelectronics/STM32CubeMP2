@@ -13,7 +13,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -264,6 +264,24 @@ static void Pipe_Config(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, const DCMI
     /* Configure Pixel Pipe Pitch */
     MODIFY_REG(hdcmipp->Instance->P1PPM0PR, DCMIPP_P1PPM0PR_PITCH,
                pPipeConfig->PixelPipePitch << DCMIPP_P1PPM0PR_PITCH_Pos);
+
+    if ((pPipeConfig->PixelPackerFormat == DCMIPP_PIXEL_PACKER_FORMAT_YUV422_2) ||
+        (pPipeConfig->PixelPackerFormat == DCMIPP_PIXEL_PACKER_FORMAT_YUV420_2))
+    {
+      /* Configure Pixel Pipe Pitch */
+      MODIFY_REG(hdcmipp->Instance->P1PPM1PR, DCMIPP_P1PPM1PR_PITCH,
+                 pPipeConfig->PixelPipePitch << DCMIPP_P1PPM1PR_PITCH_Pos);
+    }
+    else if (pPipeConfig->PixelPackerFormat == DCMIPP_PIXEL_PACKER_FORMAT_YUV420_3)
+    {
+      /* Configure Pixel Pipe Pitch */
+      MODIFY_REG(hdcmipp->Instance->P1PPM1PR, DCMIPP_P1PPM1PR_PITCH,
+                 ((pPipeConfig->PixelPipePitch) / 2U) << DCMIPP_P1PPM1PR_PITCH_Pos);
+    }
+    else
+    {
+      /* Do nothing */
+    }
   }
   else
   {
@@ -420,9 +438,6 @@ static void DCMIPP_EnableCapture(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe)
   }
   else if (Pipe == DCMIPP_PIPE1)
   {
-    /* Update the DCMIPP pipe State */
-    hdcmipp->PipeState[Pipe] = HAL_DCMIPP_PIPE_STATE_BUSY;
-
     /* Activate the Pipe */
     SET_BIT(hdcmipp->Instance->P1FSCR, DCMIPP_P1FSCR_PIPEN);
 
@@ -703,6 +718,10 @@ HAL_StatusTypeDef HAL_DCMIPP_Init(DCMIPP_HandleTypeDef *hdcmipp)
     hdcmipp->PIPE_VsyncEventCallback = HAL_DCMIPP_PIPE_VsyncEventCallback;
     hdcmipp->PIPE_LineEventCallback  = HAL_DCMIPP_PIPE_LineEventCallback;
     hdcmipp->PIPE_LimitEventCallback = HAL_DCMIPP_PIPE_LimitEventCallback;
+#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+    hdcmipp->PIPE_HistogramEventCallback = HAL_DCMIPP_PIPE_HistogramEventCallback;
+    hdcmipp->PIPE_HistogramErrorCallback = HAL_DCMIPP_PIPE_HistogramErrorCallback;
+#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
     hdcmipp->PIPE_ErrorCallback      = HAL_DCMIPP_PIPE_ErrorCallback;
     hdcmipp->ErrorCallback           = HAL_DCMIPP_ErrorCallback;
     hdcmipp->LineErrorCallback         = HAL_DCMIPP_CSI_LineErrorCallback;
@@ -1543,6 +1562,22 @@ HAL_StatusTypeDef HAL_DCMIPP_SetIPPlugConfig(DCMIPP_HandleTypeDef *hdcmipp,
                                    (pIPPlugConfig->DPREGEnd << DCMIPP_IPC5R3_DPREGEND_Pos));
       break;
     }
+#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+    case DCMIPP_CLIENT6:
+    {
+      /* Set Traffic : Burst size and Maximum Outstanding transactions */
+      hdcmipp->Instance->IPC6R1 = (pIPPlugConfig->Traffic |
+                                   (pIPPlugConfig->MaxOutstandingTransactions << DCMIPP_IPC6R1_OTR_Pos));
+
+      /* Set End word and Start Word of the FIFO of the Clientx */
+      hdcmipp->Instance->IPC6R2 = (pIPPlugConfig->WLRURatio << DCMIPP_IPC6R2_WLRU_Pos);
+
+      /* Set End word and Start Word of the FIFO of the Clientx */
+      hdcmipp->Instance->IPC6R3 = ((pIPPlugConfig->DPREGStart << DCMIPP_IPC6R3_DPREGSTART_Pos) |
+                                   (pIPPlugConfig->DPREGEnd << DCMIPP_IPC6R3_DPREGEND_Pos));
+      break;
+    }
+#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
     default:
       break;
   }
@@ -1759,6 +1794,105 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_Stop(DCMIPP_HandleTypeDef *hdcmipp, uint32_t P
 }
 
 /**
+  * @brief  Start the DCMIPP capture on the specified pipe for semi-planar
+  * @param  hdcmipp               Pointer to DCMIPP handle
+  * @param  Pipe                  Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
+  * @param  pSemiPlanarDstAddress Pointer to the destination addresses
+  * @param  CaptureMode DCMIPP capture mode for the pipe can be a value from @ref DCMIPP_Capture_Mode.
+  * @note   Only DCMIPP_PIPE1 allows semi-planar buffer
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_DCMIPP_PIPE_SemiPlanarStart(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                                  DCMIPP_SemiPlanarDstAddressTypeDef *pSemiPlanarDstAddress,
+                                                  uint32_t CaptureMode)
+{
+  assert_param(IS_DCMIPP_PIPE(Pipe));
+  assert_param(IS_DCMIPP_CAPTURE_MODE(CaptureMode));
+
+  /* Check pointer validity */
+  if ((hdcmipp == NULL) || ((pSemiPlanarDstAddress->UVAddress & 0xFU) != 0U) || \
+      ((pSemiPlanarDstAddress->YAddress & 0xFU) != 0U))
+  {
+    return HAL_ERROR;
+  }
+
+  if (Pipe == DCMIPP_PIPE1)
+  {
+    /* Check DCMIPP pipe state */
+    if (hdcmipp->PipeState[Pipe]  != HAL_DCMIPP_PIPE_STATE_READY)
+    {
+      return HAL_ERROR;
+    }
+    /* Set Capture Mode and Destination address for the selected pipe */
+    DCMIPP_SetConfig(hdcmipp, Pipe, pSemiPlanarDstAddress->YAddress, CaptureMode);
+
+    /* Set Auxiliary Destination addresses */
+    /* Set the destination address */
+    WRITE_REG(hdcmipp->Instance->P1PPM1AR1, pSemiPlanarDstAddress->UVAddress);
+
+    /* Enable Capture for the selected Pipe */
+    DCMIPP_EnableCapture(hdcmipp, Pipe);
+  }
+  else
+  {
+    return HAL_ERROR;
+  }
+
+  return HAL_OK;
+}
+
+/**
+  * @brief  Start the DCMIPP capture on the specified pipe for semi-planar
+  * @param  hdcmipp               Pointer to DCMIPP handle
+  * @param  Pipe                  Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
+  * @param  pFullPlanarDstAddress Pointer to the destination addresses
+  * @param  CaptureMode DCMIPP capture mode for the pipe can be a value from @ref DCMIPP_Capture_Mode.
+  * @note   Only DCMIPP_PIPE1 allows Full-planar buffer
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_DCMIPP_PIPE_FullPlanarStart(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                                  DCMIPP_FullPlanarDstAddressTypeDef *pFullPlanarDstAddress,
+                                                  uint32_t CaptureMode)
+{
+  assert_param(IS_DCMIPP_PIPE(Pipe));
+  assert_param(IS_DCMIPP_CAPTURE_MODE(CaptureMode));
+
+  /* Check pointer validity */
+  if ((hdcmipp == NULL) || ((pFullPlanarDstAddress->YAddress & 0xFU) != 0U) ||
+      ((pFullPlanarDstAddress->UAddress & 0xFU) != 0U) ||
+      ((pFullPlanarDstAddress->VAddress & 0xFU) != 0U))
+  {
+    return HAL_ERROR;
+  }
+
+  if (Pipe == DCMIPP_PIPE1)
+  {
+    /* Check DCMIPP pipe state */
+    if (hdcmipp->PipeState[Pipe]  != HAL_DCMIPP_PIPE_STATE_READY)
+    {
+      return HAL_ERROR;
+    }
+
+    /* Set Capture Mode and Destination address for the selected pipe */
+    DCMIPP_SetConfig(hdcmipp, Pipe, pFullPlanarDstAddress->YAddress, CaptureMode);
+
+    /* Set Auxiliary Destination addresses */
+    /* Set the destination address */
+    WRITE_REG(hdcmipp->Instance->P1PPM1AR1, pFullPlanarDstAddress->UAddress);
+
+    WRITE_REG(hdcmipp->Instance->P1PPM2AR1, pFullPlanarDstAddress->VAddress);
+
+    /* Enable Capture for the selected Pipe */
+    DCMIPP_EnableCapture(hdcmipp, Pipe);
+  }
+  else
+  {
+    return HAL_ERROR;
+  }
+
+  return HAL_OK;
+}
+/**
   * @brief  Start DCMIPP capture on the specified pipe and the specified Virtual Channel in Serial Mode
   * @param  hdcmipp        Pointer to DCMIPP handle
   * @param  Pipe           Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
@@ -1848,6 +1982,123 @@ HAL_StatusTypeDef HAL_DCMIPP_CSI_PIPE_Stop(DCMIPP_HandleTypeDef *hdcmipp, uint32
   return status;
 }
 
+/**
+  * @brief  Start the DCMIPP capture on the specified pipe for semi-planar in Serial Mode
+  * @param  hdcmipp               Pointer to DCMIPP handle
+  * @param  Pipe                  Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
+  * @param  VirtualChannel        Virtual Channel to be started can be a value from @ref DCMIPP_Virtual_Channel
+  * @param  pSemiPlanarDstAddress Pointer to the destination addresses
+  * @param  CaptureMode DCMIPP capture mode for the pipe can be a value from @ref DCMIPP_Capture_Mode.
+  * @note   Only DCMIPP_PIPE1 allows semi-planar buffer
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_DCMIPP_CSI_PIPE_SemiPlanarStart(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                                      uint32_t VirtualChannel,
+                                                      DCMIPP_SemiPlanarDstAddressTypeDef *pSemiPlanarDstAddress,
+                                                      uint32_t CaptureMode)
+{
+  assert_param(IS_DCMIPP_PIPE(Pipe));
+  assert_param(IS_DCMIPP_VCID(VirtualChannel));
+  assert_param(IS_DCMIPP_CAPTURE_MODE(CaptureMode));
+
+  /* Check pointer validity */
+  if ((hdcmipp == NULL) || ((pSemiPlanarDstAddress->UVAddress & 0xFU) != 0U) || \
+      ((pSemiPlanarDstAddress->YAddress & 0xFU) != 0U))
+  {
+    return HAL_ERROR;
+  }
+
+  if (Pipe == DCMIPP_PIPE1)
+  {
+    /* Check DCMIPP pipe state */
+    if (hdcmipp->PipeState[Pipe] != HAL_DCMIPP_PIPE_STATE_READY)
+    {
+      return HAL_ERROR;
+    }
+
+    /* Set Virtual Channel for the selected Pipe */
+    if (DCMIPP_CSI_SetVCConfig(hdcmipp, Pipe, VirtualChannel) != HAL_OK)
+    {
+      return HAL_ERROR;
+    }
+
+    /* Set Capture Mode and Destination address for the selected pipe */
+    DCMIPP_SetConfig(hdcmipp, Pipe, pSemiPlanarDstAddress->YAddress, CaptureMode);
+
+    /* Set Auxiliary Destination addresses */
+    /* Set the destination address */
+    WRITE_REG(hdcmipp->Instance->P1PPM1AR1, pSemiPlanarDstAddress->UVAddress);
+
+    /* Enable Capture for the selected Pipe */
+    DCMIPP_EnableCapture(hdcmipp, Pipe);
+  }
+  else
+  {
+    return HAL_ERROR;
+  }
+
+  return HAL_OK;
+}
+/**
+  * @brief  Start the DCMIPP capture on the specified pipe for semi-planar in Serial Mode
+  * @param  hdcmipp               Pointer to DCMIPP handle
+  * @param  Pipe                  Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
+  * @param  VirtualChannel        Virtual Channel to be started can be a value from @ref DCMIPP_Virtual_Channel
+  * @param  pFullPlanarDstAddress Pointer to the destination addresses
+  * @param  CaptureMode DCMIPP    capture mode for the pipe can be a value from @ref DCMIPP_Capture_Mode.
+  * @note   Only DCMIPP_PIPE1 allows Full-planar buffer
+  * @retval HAL status
+  */
+HAL_StatusTypeDef HAL_DCMIPP_CSI_PIPE_FullPlanarStart(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                                      uint32_t VirtualChannel,
+                                                      DCMIPP_FullPlanarDstAddressTypeDef *pFullPlanarDstAddress,
+                                                      uint32_t CaptureMode)
+{
+  assert_param(IS_DCMIPP_PIPE(Pipe));
+  assert_param(IS_DCMIPP_VCID(VirtualChannel));
+  assert_param(IS_DCMIPP_CAPTURE_MODE(CaptureMode));
+
+  /* Check pointer validity */
+  if ((hdcmipp == NULL) || ((pFullPlanarDstAddress->YAddress & 0xFU) != 0U) ||
+      ((pFullPlanarDstAddress->UAddress & 0xFU) != 0U) ||
+      ((pFullPlanarDstAddress->VAddress & 0xFU) != 0U))
+  {
+    return HAL_ERROR;
+  }
+
+  if (Pipe == DCMIPP_PIPE1)
+  {
+    /* Check DCMIPP pipe state */
+    if (hdcmipp->PipeState[Pipe]  != HAL_DCMIPP_PIPE_STATE_READY)
+    {
+      return HAL_ERROR;
+    }
+
+    /* Set Virtual Channel for the selected Pipe */
+    if (DCMIPP_CSI_SetVCConfig(hdcmipp, Pipe, VirtualChannel) != HAL_OK)
+    {
+      return HAL_ERROR;
+    }
+
+    /* Set Capture Mode and Destination address for the selected pipe */
+    DCMIPP_SetConfig(hdcmipp, Pipe, pFullPlanarDstAddress->YAddress, CaptureMode);
+
+    /* Set Auxiliary Destination addresses */
+    /* Set the destination address */
+    WRITE_REG(hdcmipp->Instance->P1PPM1AR1, pFullPlanarDstAddress->UAddress);
+
+    WRITE_REG(hdcmipp->Instance->P1PPM2AR1, pFullPlanarDstAddress->VAddress);
+
+    /* Enable Capture for the selected Pipe */
+    DCMIPP_EnableCapture(hdcmipp, Pipe);
+  }
+  else
+  {
+    return HAL_ERROR;
+  }
+
+  return HAL_OK;
+}
 /**
   * @brief  Suspend DCMIPP capture on the specified pipe
   * @param  hdcmipp  Pointer to DCMIPP handle
@@ -2254,7 +2505,72 @@ void HAL_DCMIPP_IRQHandler(DCMIPP_HandleTypeDef *hdcmipp)
 #endif /* USE_HAL_DCMIPP_REGISTER_CALLBACKS */
     }
   }
+#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+  /* ========================= PIPE1 Histogram INTERRUPTS ==================== */
+  /* Histogram Capture Complete on the PIPE1 ********************************************/
+  if ((cmsr2flags & DCMIPP_FLAG_PIPE1_STATS) != 0U)
+  {
+    if ((cmierflags & DCMIPP_IT_PIPE1_STATS) != 0U)
+    {
+      /* Clear the Limit error flag */
+      __HAL_DCMIPP_CLEAR_FLAG(hdcmipp, DCMIPP_FLAG_PIPE1_STATS);
 
+#if (USE_HAL_DCMIPP_REGISTER_CALLBACKS == 1)
+      hdcmipp->PIPE_HistogramEventCallback(hdcmipp, DCMIPP_PIPE1);
+#else
+      HAL_DCMIPP_PIPE_HistogramEventCallback(hdcmipp, DCMIPP_PIPE1);
+#endif /* USE_HAL_DCMIPP_REGISTER_CALLBACKS */
+    }
+  }
+  /* Histogram Capture Overrun on the PIPE1 ********************************************/
+  if ((cmsr2flags & DCMIPP_FLAG_PIPE1_STATS_OVR) != 0U)
+  {
+    if ((cmierflags & DCMIPP_IT_PIPE1_STATS_OVR) != 0U)
+    {
+      /* Disable Overrun Error Interrupt for pipe1 */
+      __HAL_DCMIPP_DISABLE_IT(hdcmipp, DCMIPP_IT_PIPE1_STATS_OVR);
+
+      /* Update error code */
+      hdcmipp->ErrorCode |= HAL_DCMIPP_ERROR_PIPE1_HISTO_OVR;
+
+      /* Stop histogram Capture */
+      CLEAR_BIT(hdcmipp->Instance->P1HSCR, DCMIPP_P1HSCR_EN);
+
+      /* Clear the Limit error flag */
+      __HAL_DCMIPP_CLEAR_FLAG(hdcmipp, DCMIPP_FLAG_PIPE1_STATS_OVR);
+
+#if (USE_HAL_DCMIPP_REGISTER_CALLBACKS == 1)
+      hdcmipp->PIPE_HistogramErrorCallback(hdcmipp, DCMIPP_PIPE1, HAL_DCMIPP_ERROR_PIPE1_HISTO_OVR);
+#else
+      HAL_DCMIPP_PIPE_HistogramErrorCallback(hdcmipp, DCMIPP_PIPE1, HAL_DCMIPP_ERROR_PIPE1_HISTO_OVR);
+#endif /* USE_HAL_DCMIPP_REGISTER_CALLBACKS */
+    }
+  }
+  /* Histogram Capture Bad Configuration on the PIPE1 ********************************************/
+  if ((cmsr2flags & DCMIPP_FLAG_PIPE1_STATS_BAD_CFG) != 0U)
+  {
+    if ((cmierflags & DCMIPP_IT_PIPE1_STATS_BAD_CFG) != 0U)
+    {
+      /* Disable Overrun Error Interrupt for pipe1 */
+      __HAL_DCMIPP_DISABLE_IT(hdcmipp, DCMIPP_IT_PIPE1_STATS_BAD_CFG);
+
+      /* Update error code */
+      hdcmipp->ErrorCode |= HAL_DCMIPP_ERROR_PIPE1_HISTO_BADCFG;
+
+      /* Stop histogram Capture */
+      CLEAR_BIT(hdcmipp->Instance->P1HSCR, DCMIPP_P1HSCR_EN);
+
+      /* Clear the Limit error flag */
+      __HAL_DCMIPP_CLEAR_FLAG(hdcmipp, DCMIPP_FLAG_PIPE1_STATS_BAD_CFG);
+
+#if (USE_HAL_DCMIPP_REGISTER_CALLBACKS == 1)
+      hdcmipp->PIPE_HistogramErrorCallback(hdcmipp, DCMIPP_PIPE1, HAL_DCMIPP_ERROR_PIPE1_HISTO_BADCFG);
+#else
+      HAL_DCMIPP_PIPE_HistogramErrorCallback(hdcmipp, DCMIPP_PIPE1, HAL_DCMIPP_ERROR_PIPE1_HISTO_BADCFG);
+#endif /* USE_HAL_DCMIPP_REGISTER_CALLBACKS */
+    }
+  }
+#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
   /* ========================= PIPE2 INTERRUPTS ==================== */
   if ((cmsr2flags & DCMIPP_FLAG_PIPE2_LINE) != 0U)
   {
@@ -3244,6 +3560,41 @@ __weak void HAL_DCMIPP_PIPE_LimitEventCallback(DCMIPP_HandleTypeDef *hdcmipp, ui
   UNUSED(hdcmipp);
 }
 
+#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+/**
+  * @brief  Histogram Capture Complete callback on the Pipe
+  * @param  hdcmipp  Pointer to DCMIPP handle
+  * @param  Pipe     Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
+  * @retval None
+  */
+__weak void HAL_DCMIPP_PIPE_HistogramEventCallback(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe)
+{
+  /* NOTE : This function Should not be modified, when the callback is needed,
+            the HAL_DCMIPP_PIPE_HistogramEventCallback could be implemented in the user file
+   */
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(Pipe);
+  UNUSED(hdcmipp);
+}
+
+/**
+  * @brief  Histogram Event callback on the Pipe
+  * @param  hdcmipp  Pointer to DCMIPP handle
+  * @param  Pipe     Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
+  * @param  Error    Specifies the DCMIPP Pipe Histogram Error.
+  * @retval None
+  */
+__weak void HAL_DCMIPP_PIPE_HistogramErrorCallback(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint32_t Error)
+{
+  /* NOTE : This function Should not be modified, when the callback is needed,
+            the HAL_DCMIPP_PIPE_HistogramErrorCallback could be implemented in the user file
+   */
+  /* Prevent unused argument(s) compilation warning */
+  UNUSED(Pipe);
+  UNUSED(hdcmipp);
+  UNUSED(Error);
+}
+#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
 /**
   * @brief  Error callback on the pipe
   * @param  hdcmipp  Pointer to DCMIPP handle
@@ -3549,6 +3900,8 @@ HAL_StatusTypeDef HAL_DCMIPP_UnRegisterCallback(DCMIPP_HandleTypeDef *hdcmipp, H
   *          @arg @ref  HAL_DCMIPP_PIPE_LINE_EVENT_CB_ID DCMIPP Pipe Line event callback ID
   *          @arg @ref  HAL_DCMIPP_PIPE_LIMIT_EVENT_CB_ID DCMIPP Pipe Limit event callback ID
   *          @arg @ref  HAL_DCMIPP_PIPE_ERROR_CB_ID DCMIPP Pipe Error callback ID
+  *          @arg @ref  HAL_DCMIPP_PIPE_HISTOGRAM_CB_ID DCMIPP Pipe1 Histogram Event callback ID
+  *          @arg @ref  HAL_DCMIPP_PIPE_HISTOGRAM_ERROR_CB_ID DCMIPP Pipe1 Histogram Error callback ID
   * @param pCallback pointer to the Pipe Callback function
   * @retval status
   */
@@ -3588,6 +3941,14 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_RegisterCallback(DCMIPP_HandleTypeDef *hdcmipp
       case HAL_DCMIPP_PIPE_ERROR_CB_ID :
         hdcmipp->PIPE_ErrorCallback = pCallback;
         break;
+#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+      case HAL_DCMIPP_PIPE_HISTOGRAM_CB_ID:
+        hdcmipp->PIPE_HistogramEventCallback = pCallback;
+        break;
+      case HAL_DCMIPP_PIPE_HISTOGRAM_ERROR_CB_ID:
+        hdcmipp->PIPE_HistogramErrorCallback = pCallback;
+        break;
+#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
 
       default :
         /* Update the error code */
@@ -3619,6 +3980,8 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_RegisterCallback(DCMIPP_HandleTypeDef *hdcmipp
   *          @arg @ref  HAL_DCMIPP_PIPE_LINE_EVENT_CB_ID DCMIPP Pipe Line event callback ID
   *          @arg @ref  HAL_DCMIPP_PIPE_LIMIT_EVENT_CB_ID DCMIPP Pipe Limit event callback ID
   *          @arg @ref  HAL_DCMIPP_PIPE_ERROR_CB_ID DCMIPP Pipe Error callback ID
+  *          @arg @ref  HAL_DCMIPP_PIPE_HISTOGRAM_CB_ID DCMIPP Pipe1 Histogram Event callback ID
+  *          @arg @ref  HAL_DCMIPP_PIPE_HISTOGRAM_ERROR_CB_ID DCMIPP Pipe1 Histogram Error callback ID
   * @retval status
   */
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_UnRegisterCallback(DCMIPP_HandleTypeDef *hdcmipp,
@@ -3649,6 +4012,14 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_UnRegisterCallback(DCMIPP_HandleTypeDef *hdcmi
       case HAL_DCMIPP_PIPE_ERROR_CB_ID :
         hdcmipp->PIPE_ErrorCallback = HAL_DCMIPP_PIPE_ErrorCallback;
         break;
+#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+      case HAL_DCMIPP_PIPE_HISTOGRAM_CB_ID:
+        hdcmipp->PIPE_HistogramEventCallback = HAL_DCMIPP_PIPE_HistogramEventCallback;
+        break;
+      case HAL_DCMIPP_PIPE_HISTOGRAM_ERROR_CB_ID:
+        hdcmipp->PIPE_HistogramErrorCallback = HAL_DCMIPP_PIPE_HistogramErrorCallback;
+        break;
+#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
 
       default :
         /* Update the error code */
@@ -5184,7 +5555,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetYUVConversionConfig(DCMIPP_HandleTypeDef *h
   if (Pipe == DCMIPP_PIPE1)
   {
     /* Set Clamp and Type */
-    p1yuvcr_reg = (((uint32_t)pColorConversionConfig->OutputSamplesType << DCMIPP_P1YUVCR_TYPE_Pos) | \
+    p1yuvcr_reg = (((uint32_t)pColorConversionConfig->OutputSamplesType) | \
                    ((uint32_t)pColorConversionConfig->ClampOutputSamples << DCMIPP_P1YUVCR_CLAMP_Pos));
 
     MODIFY_REG(hdcmipp->Instance->P1YUVCR, DCMIPP_P1YUVCR_CLAMP | DCMIPP_P1YUVCR_TYPE, p1yuvcr_reg);
@@ -5928,6 +6299,9 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableISPCtrlContrast(DCMIPP_HandleTypeDef *h
       (+) HAL_DCMIPP_PIPE_EnableRedBlueSwap                : Enable RED BLUE swap
       (+) HAL_DCMIPP_PIPE_DisableYUVSwap                   : Disable YUV swap
       (+) HAL_DCMIPP_PIPE_EnableYUVSwap                    : Enable YUV swap
+      (+) HAL_DCMIPP_PIPE_SetHistogramConfig               : Configure Histogram
+      (+) HAL_DCMIPP_PIPE_HistogramEnable                  : Histogram Enable
+      (+) HAL_DCMIPP_PIPE_HistogramDisable                 : Histogram Disable
 @endverbatim
   * @{
   */
@@ -6487,6 +6861,116 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_DisableYUVSwap(DCMIPP_HandleTypeDef *hdcmipp, 
 
   return HAL_OK;
 }
+#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+/**
+  * @brief  Configure Histogram for the specified DCMIPP pipe.
+  * @param  hdcmipp       Pointer to DCMIPP handle
+  * @param  Pipe          Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
+  * @param  pHistoConfig  Pointer to Histogram Config
+  * @retval HAL status.
+  */
+HAL_StatusTypeDef HAL_DCMIPP_PIPE_SetHistogramConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                                     DCMIPP_Histogram_ConfigTypeDef *pHistoConfig)
+{
+  if ((hdcmipp == NULL) || (pHistoConfig == NULL))
+  {
+    return HAL_ERROR;
+  }
+
+  assert_param(IS_DCMIPP_PIPE(Pipe));
+  assert_param(IS_DCMIPP_HISTO_BINS(pHistoConfig->Bin));
+  assert_param(IS_DCMIPP_HISTO_COMP(pHistoConfig->Components));
+  assert_param(IS_DCMIPP_HISTO_HDEC(pHistoConfig->HDec));
+  assert_param(IS_DCMIPP_HISTO_VDEC(pHistoConfig->VDec));
+  assert_param(IS_DCMIPP_HISTO_PXL_DYN(pHistoConfig->PixelDynamic));
+  assert_param(IS_DCMIPP_HISTO_VREG(pHistoConfig->VReg));
+  assert_param(IS_DCMIPP_HISTO_HREG(pHistoConfig->HReg));
+  assert_param(IS_DCMIPP_HISTO_SRC(pHistoConfig->Source));
+  assert_param(IS_DCMIPP_HISTO_VSTART(pHistoConfig->VStart));
+  assert_param(IS_DCMIPP_HISTO_HSTART(pHistoConfig->HStart));
+  assert_param(IS_DCMIPP_HISTO_VSIZE(pHistoConfig->VSize));
+  assert_param(IS_DCMIPP_HISTO_HSIZE(pHistoConfig->HSize));
+
+  if (((pHistoConfig->MemoryAddress) & 0xFU) != 0U)
+  {
+    return HAL_ERROR;
+  }
+
+  if (Pipe == DCMIPP_PIPE1)
+  {
+    WRITE_REG(hdcmipp->Instance->P1HSCR, (pHistoConfig->Bin << DCMIPP_P1HSCR_BIN_Pos) | \
+              (pHistoConfig->PixelDynamic << DCMIPP_P1HSCR_DYN_Pos) | \
+              (pHistoConfig->Components << DCMIPP_P1HSCR_COMP_Pos) | (pHistoConfig->VDec << DCMIPP_P1HSCR_VDEC_Pos) | \
+              (pHistoConfig->HDec << DCMIPP_P1HSCR_HDEC_Pos) | \
+              (pHistoConfig->VReg << DCMIPP_P1HSCR_VREG_Pos) | (pHistoConfig->HReg << DCMIPP_P1HSCR_HREG_Pos) | \
+              (pHistoConfig->Source << DCMIPP_P1HSCR_SRC_Pos));
+
+    WRITE_REG(hdcmipp->Instance->P1HSSTR, (pHistoConfig->VStart << DCMIPP_P1HSSTR_VSTART_Pos) | \
+              (pHistoConfig->HStart << DCMIPP_P1HSSTR_HSTART_Pos));
+
+    WRITE_REG(hdcmipp->Instance->P1HSSZR, (pHistoConfig->VSize << DCMIPP_P1HSSZR_VSIZE_Pos) | \
+              (pHistoConfig->HSize << DCMIPP_P1HSSZR_HSIZE_Pos));
+
+    WRITE_REG(hdcmipp->Instance->P1HSMAR1, pHistoConfig->MemoryAddress);
+  }
+  else
+  {
+    return HAL_ERROR;
+  }
+
+  return HAL_OK;
+}
+/**
+  * @brief  Enable Histogram for the specified DCMIPP pipe.
+  * @param  hdcmipp  Pointer to DCMIPP handle
+  * @param  Pipe     Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
+  * @retval HAL status.
+  */
+HAL_StatusTypeDef  HAL_DCMIPP_PIPE_HistogramEnable(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe)
+{
+  assert_param(IS_DCMIPP_PIPE(Pipe));
+  if (hdcmipp == NULL)
+  {
+    return HAL_ERROR;
+  }
+
+  if (Pipe == DCMIPP_PIPE1)
+  {
+    SET_BIT(hdcmipp->Instance->P1HSCR, DCMIPP_P1HSCR_EN);
+  }
+  else
+  {
+    return HAL_ERROR;
+  }
+
+  return HAL_OK;
+}
+/**
+  * @brief  Disable Histogram for the specified DCMIPP pipe.
+  * @param  hdcmipp  Pointer to DCMIPP handle
+  * @param  Pipe     Specifies the DCMIPP pipe, can be a value from @ref DCMIPP_Pipes
+  * @retval HAL status.
+  */
+HAL_StatusTypeDef  HAL_DCMIPP_PIPE_HistogramDisable(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe)
+{
+  assert_param(IS_DCMIPP_PIPE(Pipe));
+  if (hdcmipp == NULL)
+  {
+    return HAL_ERROR;
+  }
+
+  if (Pipe == DCMIPP_PIPE1)
+  {
+    CLEAR_BIT(hdcmipp->Instance->P1HSCR, DCMIPP_P1HSCR_EN);
+  }
+  else
+  {
+    return HAL_ERROR;
+  }
+
+  return HAL_OK;
+}
+#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
 /**
   * @}
   */
@@ -7483,6 +7967,58 @@ void HAL_DCMIPP_PIPE_GetISPRemovalStatisticConfig(const DCMIPP_HandleTypeDef *hd
     *NbLastLines = (tmp & DCMIPP_P1SRCR_LASTLINE);
   }
 }
+#if defined(DCMIPPP_P1HISTOGRAM_AVAILABLE)
+void HAL_DCMIPP_PIPE_GetHistogramConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                        DCMIPP_Histogram_ConfigTypeDef *pHistogramConfig)
+{
+  uint32_t tmp;
+
+  /* Check parameters */
+  assert_param(IS_DCMIPP_PIPE(Pipe));
+
+  if (Pipe == DCMIPP_PIPE1)
+  {
+    tmp = READ_REG(hdcmipp->Instance->P1CHSCR);
+    pHistogramConfig->HDec = ((tmp & DCMIPP_P1CHSCR_HDEC) >> DCMIPP_P1CHSCR_HDEC_Pos);
+    pHistogramConfig->VDec = ((tmp & DCMIPP_P1CHSCR_VDEC) >> DCMIPP_P1CHSCR_VDEC_Pos);
+    pHistogramConfig->Components = ((tmp & DCMIPP_P1CHSCR_COMP) >> DCMIPP_P1CHSCR_COMP_Pos);
+    pHistogramConfig->VReg = ((tmp & DCMIPP_P1CHSCR_VREG) >> DCMIPP_P1CHSCR_VREG_Pos);
+    pHistogramConfig->HReg = ((tmp & DCMIPP_P1CHSCR_HREG) >> DCMIPP_P1CHSCR_HREG_Pos);
+    pHistogramConfig->Source  = ((tmp & DCMIPP_P1CHSCR_SRC) >> DCMIPP_P1CHSCR_SRC_Pos);
+    pHistogramConfig->Bin = ((tmp & DCMIPP_P1CHSCR_BIN) >> DCMIPP_P1CHSCR_BIN_Pos);
+    pHistogramConfig->PixelDynamic  = ((tmp & DCMIPP_P1CHSCR_DYN) >> DCMIPP_P1CHSCR_DYN_Pos);
+
+    tmp = READ_REG(hdcmipp->Instance->P1CHSSTR);
+    pHistogramConfig->VStart  = ((tmp & DCMIPP_P1CHSSTR_VSTART) >> DCMIPP_P1CHSSTR_VSTART_Pos);
+    pHistogramConfig->HStart  = ((tmp & DCMIPP_P1CHSSTR_HSTART) >> DCMIPP_P1CHSSTR_HSTART_Pos);
+
+    tmp = READ_REG(hdcmipp->Instance->P1CHSSZR);
+    pHistogramConfig->VSize = ((tmp & DCMIPP_P1CHSSZR_VSIZE) >> DCMIPP_P1CHSSZR_VSIZE_Pos);
+    pHistogramConfig->HSize = ((tmp & DCMIPP_P1CHSSZR_HSIZE) >> DCMIPP_P1CHSSZR_HSIZE_Pos);
+
+    tmp = READ_REG(hdcmipp->Instance->P1CHSMAR1);
+    pHistogramConfig->MemoryAddress = ((tmp & DCMIPP_P1CHSMAR1_MA) >> DCMIPP_P1CHSMAR1_MA_Pos);
+  }
+}
+
+void HAL_DCMIPP_PIPE_GetLastHistogramAddress(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe,
+                                             uint32_t *pAddress)
+{
+  /* Check parameters */
+  assert_param(IS_DCMIPP_PIPE(Pipe));
+
+  /* Check handle validity */
+  if ((hdcmipp == NULL) || (pAddress == NULL))
+  {
+    return;
+  }
+
+  if (Pipe == DCMIPP_PIPE1)
+  {
+    *pAddress =  hdcmipp->Instance->P1HSSMAR;
+  }
+}
+#endif /* DCMIPPP_P1HISTOGRAM_AVAILABLE */
 /**
   * @brief  Check if the ISP Statistic Removal is enabled or not
   * @param  hdcmipp  Pointer to DCMIPP handle

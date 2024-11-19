@@ -217,6 +217,7 @@ uint32_t HAL_RIF_GetPeriphGLock()
   return HAL_RIF_IS_RISC_GLOCK();
 }
 
+#if defined(RIF_LPSRAM1) && defined(RIF_LPSRAM2) && defined(RIF_LPSRAM3)
 /**
   * @}
   */
@@ -559,7 +560,7 @@ HAL_StatusTypeDef HAL_RISAL_GetConfigMemAttributes(uint32_t Instance, uint32_t S
 /**
   * @}
   */
-
+#endif /* RISAL1 && RISAL2 && RISAL3 */
 
 /** @defgroup RIF_Exported_Functions_Group3 RIMC functions
   * @{
@@ -1669,5 +1670,3 @@ __weak void HAL_IAC_Callback(uint32_t PeriphId)
   */
 
 #endif /* STM32MP2xx_HAL_RIF_C */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

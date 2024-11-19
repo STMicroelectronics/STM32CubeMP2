@@ -49,8 +49,8 @@
 
 #define MASTER_CPU_ID       0
 #define REMOTE_CPU_ID       1
-#define IPCC_CPU_A7         MASTER_CPU_ID
-#define IPCC_CPU_M4         REMOTE_CPU_ID
+#define IPCC_CPU_A35         MASTER_CPU_ID
+#define IPCC_CPU_M33         REMOTE_CPU_ID
 
 #define MBOX_NO_MSG           0
 #define MBOX_NEW_MSG          1
@@ -226,7 +226,7 @@ int MAILBOX_Notify(void *priv, uint32_t id)
     while (HAL_IPCC_GetChannelStatus(&hipcc, channel, IPCC_CHANNEL_DIR_TX) == IPCC_CHANNEL_STATUS_OCCUPIED);
   }
 
-  /* Inform A7 (either new message, or buf free) */
+  /* Inform A35 (either new message, or buf free) */
   HAL_IPCC_NotifyCPU(&hipcc, channel, IPCC_CHANNEL_DIR_TX);
 
   /* USER CODE BEGIN POST_MAILBOX_NOTIFY */
@@ -248,7 +248,7 @@ void IPCC_channel1_callback(IPCC_HandleTypeDef * hipcc,
 
   /* USER CODE END  PRE_MAILBOX_CHANNEL1_CALLBACK */
 
-  /* Inform A7 that we have received the 'buff free' msg */
+  /* Inform A35 that we have received the 'buff free' msg */
   HAL_IPCC_NotifyCPU(hipcc, ChannelIndex, IPCC_CHANNEL_DIR_RX);
   /* USER CODE BEGIN POST_MAILBOX_CHANNEL1_CALLBACK */
 
@@ -264,7 +264,7 @@ void IPCC_channel2_callback(IPCC_HandleTypeDef * hipcc,
 
   /* USER CODE END  PRE_MAILBOX_CHANNEL2_CALLBACK */
 
-  /* Inform A7 that we have received the new msg */
+  /* Inform A35 that we have received the new msg */
   HAL_IPCC_NotifyCPU(hipcc, ChannelIndex, IPCC_CHANNEL_DIR_RX);
 
   osSemaphoreRelease(ipcc_semaphore);

@@ -6325,12 +6325,12 @@ static void I2C_ITMasterSeqCplt(I2C_HandleTypeDef *hi2c)
   */
 static void I2C_ITSlaveSeqCplt(I2C_HandleTypeDef *hi2c)
 {
-  uint32_t tmpcr1value = READ_REG(hi2c->Instance->CR1);
 
   /* Reset I2C handle mode */
   hi2c->Mode = HAL_I2C_MODE_NONE;
 
 #if defined(HAL_DMA_MODULE_ENABLED)
+  uint32_t tmpcr1value = READ_REG(hi2c->Instance->CR1);
   /* If a DMA is ongoing, Update handle size context */
   if (I2C_CHECK_IT_SOURCE(tmpcr1value, I2C_CR1_TXDMAEN) != RESET)
   {

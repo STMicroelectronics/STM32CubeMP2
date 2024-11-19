@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="_htmresc/mini-st.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h2 id="cm0plus-demo-applications-description"><b>CM0PLUS Demo
+Applications Description</b></h2>
+<h3 id="how-to-use-cm0plus-demo-application">How to use CM0PLUS Demo
+application</h3>
+<h4 id="the-main-use-case-is">The main use case is:</h4>
+<ul>
+<li>Run CM0PLUS applications and check logs traces on LPUART1</li>
+</ul>
+<h4 id="stm32cubeide-build-configs">STM32CubeIDE Build configs</h4>
+<ul>
+<li>CM0plus application with Console on LPUART1
+<ul>
+<li>CA35TDCID_m0plus : non signed firmware</li>
+<li>CA35TDCID_m0plus_sign : signed firmware</li>
+</ul></li>
+</ul>
+<h4 id="stm32cubeide-debug-configuration-specifics">STM32CubeIDE Debug
+configuration specifics</h4>
+<ul>
+<li>M0Plus debug configuration Create debug configuration on CM0Plus
+application
+<ol type="1">
+<li>Debug configuration-&gt;Startup-&gt;Initialization Commands Ensure
+“mon reset” and “mon halt” are present For Semihosting configurations,
+add “mon arm semihosting enable”</li>
+<li>If you want to use MP2 Validation OpenOCD scripts, you shall select
+the .cfg file to use in you debug configuration Ensure you have launched
+STM32CubeIDE with STM32CUBEIDE_RESOURCES environment variable pointing
+to <mp2_master>32CubeIDE_Patches_Patch32CubeIDE</li>
+<li>Enable LPUART predefined configuration for CM0PLUS (as CM0PLUS has
+no access to RCC so need to configure in from OpenOCD) OpenOCD Options:
+-bc “set mp2_preset_file MP2_PRESET_LPUART1_M0P.cfg” application</li>
+</ol></li>
+</ul>
+<h4 id="notes"><b>Notes</b></h4>
+<h3 id="keywords"><b>Keywords</b></h3>
+<h3 id="directory-contents"><b>Directory contents</b></h3>
+<h3 id="hardware-and-software-environment"><b>Hardware and Software
+environment</b></h3>
+<h3 id="hardware-and-software-environment-1"><b>Hardware and Software
+environment</b></h3>
+<ul>
+<li><p>This application runs on M0Plus</p></li>
+<li><p>This application has been tested with STMicroelectronics on
+STM32MP257F-EV1 board board and can be easily tailored to any other
+supported devices and development board.</p></li>
+</ul>
+</body>
+</html>

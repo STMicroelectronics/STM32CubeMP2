@@ -6,7 +6,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2020 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -279,7 +279,159 @@ typedef struct
 /** @defgroup RCCEx_Periph_Clock_Selection  RCCEx Periph Clock Selection
   * @{
   */
-#if !defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
+#if defined(RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING)
+#define RCC_PERIPHCLK_LPTIM1_2          7U
+#define RCC_PERIPHCLK_UART2_4           8U
+#define RCC_PERIPHCLK_UART3_5           9U
+#define RCC_PERIPHCLK_SPI2              10U
+#define RCC_PERIPHCLK_SPI3              11U
+#define RCC_PERIPHCLK_SPDIFRX           12U
+#define RCC_PERIPHCLK_I2C1_2            13U
+#define RCC_PERIPHCLK_I3C1_2            14U
+#define RCC_RESERVED0                   15U
+#define RCC_PERIPHCLK_SPI1              16U
+#define RCC_PERIPHCLK_SPI4_5            17U
+#define RCC_PERIPHCLK_USART1            18U
+#define RCC_PERIPHCLK_USART6            19U
+#define RCC_PERIPHCLK_UART7             20U
+#define RCC_PERIPHCLK_MDF1              21U
+#define RCC_PERIPHCLK_SAI1              22U
+#define RCC_PERIPHCLK_SAI2              23U
+#define RCC_PERIPHCLK_SAI3              24U
+#define RCC_PERIPHCLK_SAI4              25U
+#define RCC_PERIPHCLK_FDCAN             26U
+#define RCC_PERIPHCLK_LTDC              27U
+#define RCC_RESERVED1                   28U
+#define RCC_PERIPHCLK_DCMIPP            29U
+#define RCC_PERIPHCLK_CSITXESC          30U
+#define RCC_PERIPHCLK_CSIPHY            31U
+#define RCC_RESERVED2                   32U
+#define RCC_PERIPHCLK_STGEN             33U
+#define RCC_RESERVED3                   34U
+#define RCC_RESERVED4                   35U
+#define RCC_PERIPHCLK_I3C3              36U
+#define RCC_PERIPHCLK_SPI6              37U
+#define RCC_PERIPHCLK_I2C3              38U
+#define RCC_PERIPHCLK_LPUART1           39U
+#define RCC_PERIPHCLK_LPTIM3            40U
+#define RCC_PERIPHCLK_LPTIM4            41U
+#define RCC_PERIPHCLK_LPTIM5            42U
+#define RCC_PERIPHCLK_TSDBG             43U
+#define RCC_PERIPHCLK_TPIU              44U
+#define RCC_PERIPHCLK_ATB               45U
+#define RCC_PERIPHCLK_ADC1              46U
+#define RCC_PERIPHCLK_ADC2              47U
+#define RCC_PERIPHCLK_OSPI1             48U
+#define RCC_RESERVED5                   49U
+#define RCC_PERIPHCLK_FMC               50U
+#define RCC_PERIPHCLK_SDMMC1            51U
+#define RCC_PERIPHCLK_SDMMC2            52U
+#define RCC_PERIPHCLK_SDMMC3            53U
+#define RCC_PERIPHCLK_ETH1              54U
+#define RCC_PERIPHCLK_ETH2              55U
+#define RCC_PERIPHCLK_ETH1PTP_ETH2PTP   56U
+#define RCC_PERIPHCLK_USB2PHY1          57U
+#define RCC_PERIPHCLK_USB2PHY2          58U
+#define RCC_RESERVED6                   59U
+#define RCC_RESERVED7                   60U
+#define RCC_PERIPHCLK_MCO1              61U
+#define RCC_PERIPHCLK_MCO2              62U
+#define RCC_PERIPHCLK_CPU1_EXT2F        63U
+#define RCC_PERIPHCLK_TIM1              64U
+#define RCC_PERIPHCLK_TIM2              65U
+#define RCC_PERIPHCLK_TIM3              66U
+#define RCC_PERIPHCLK_TIM4              67U
+#define RCC_PERIPHCLK_TIM5              68U
+#define RCC_PERIPHCLK_TIM6              69U
+#define RCC_PERIPHCLK_TIM7              70U
+#define RCC_PERIPHCLK_TIM8              71U
+#define RCC_PERIPHCLK_TIM10             72U
+#define RCC_PERIPHCLK_TIM11             73U
+#define RCC_PERIPHCLK_TIM12             74U
+#define RCC_PERIPHCLK_TIM13             75U
+#define RCC_PERIPHCLK_TIM14             76U
+#define RCC_PERIPHCLK_TIM15             77U
+#define RCC_PERIPHCLK_TIM16             78U
+#define RCC_PERIPHCLK_TIM17             79U
+#define RCC_RESERVED8                   80U
+#elif defined(RCC_DERIVATIVE2_FLEXGEN_CHANNEL_MAPPING)
+#define RCC_PERIPHCLK_LPTIM1_2          7U
+#define RCC_PERIPHCLK_UART2_4           8U
+#define RCC_PERIPHCLK_UART3_5           9U
+#define RCC_PERIPHCLK_SPI2_3            10U
+#define RCC_PERIPHCLK_SPDIFRX           11U
+#define RCC_PERIPHCLK_I2C1_2            12U
+#define RCC_PERIPHCLK_I3C1_2            12U
+#define RCC_RESERVED0                   13U
+#define RCC_RESERVED1                   13U
+#define RCC_RESERVED2                   14U
+#define RCC_PERIPHCLK_I2C7              15U
+#define RCC_PERIPHCLK_SPI1              16U
+#define RCC_PERIPHCLK_SPI4_5            17U
+#define RCC_RESERVED3                   18U
+#define RCC_PERIPHCLK_USART1            19U
+#define RCC_PERIPHCLK_USART6            20U
+#define RCC_PERIPHCLK_UART7             21U
+#define RCC_RESERVED4                   22U
+#define RCC_PERIPHCLK_SAI1_MDF1         23U
+#define RCC_PERIPHCLK_SAI2              24U
+#define RCC_PERIPHCLK_SAI3_4            25U
+#define RCC_PERIPHCLK_FDCAN             26U
+#define RCC_PERIPHCLK_LTDC              27U
+#define RCC_PERIPHCLK_DSIPHY            28U
+#define RCC_PERIPHCLK_DCMIPP            29U
+#define RCC_PERIPHCLK_CSITXESC          30U
+#define RCC_PERIPHCLK_CSIPHY            31U
+#define RCC_PERIPHCLK_LVDSPHY           32U
+#define RCC_PERIPHCLK_STGEN             33U
+#define RCC_PERIPHCLK_USB3PCIEPHY       34U
+#define RCC_PERIPHCLK_USBTC             35U
+#define RCC_PERIPHCLK_I3C4              36U
+#define RCC_PERIPHCLK_SPI8              37U
+#define RCC_PERIPHCLK_I2C8              38U
+#define RCC_PERIPHCLK_LPUART1           39U
+#define RCC_PERIPHCLK_LPTIM3            40U
+#define RCC_PERIPHCLK_LPTIM4_5          41U
+#define RCC_RESERVED5                   42U
+#define RCC_PERIPHCLK_TSDBG             43U
+#define RCC_PERIPHCLK_TPIU              44U
+#define RCC_PERIPHCLK_ATB               45U
+#define RCC_PERIPHCLK_ADC12             46U
+#define RCC_PERIPHCLK_ADC3              47U
+#define RCC_PERIPHCLK_OSPI1             48U
+#define RCC_PERIPHCLK_OSPI2             49U
+#define RCC_PERIPHCLK_FMC               50U
+#define RCC_PERIPHCLK_SDMMC1            51U
+#define RCC_PERIPHCLK_SDMMC2            52U
+#define RCC_PERIPHCLK_SDMMC3            53U
+#define RCC_PERIPHCLK_ETH1_ETHSW        54U
+#define RCC_PERIPHCLK_ETH2              55U
+#define RCC_PERIPHCLK_ETH1PTP_ETH2PTP   56U
+#define RCC_PERIPHCLK_USB2PHY1          57U
+#define RCC_PERIPHCLK_USB2PHY2          58U
+#define RCC_PERIPHCLK_ICN_M_GPU         59U
+#define RCC_PERIPHCLK_ETHSWREF          60U
+#define RCC_PERIPHCLK_MCO1              61U
+#define RCC_PERIPHCLK_MCO2              62U
+#define RCC_PERIPHCLK_CPU1_EXT2F        63U
+#define RCC_PERIPHCLK_TIM1              64U
+#define RCC_PERIPHCLK_TIM2              65U
+#define RCC_PERIPHCLK_TIM3              66U
+#define RCC_PERIPHCLK_TIM4              67U
+#define RCC_PERIPHCLK_TIM5              68U
+#define RCC_PERIPHCLK_TIM6              69U
+#define RCC_PERIPHCLK_TIM7              70U
+#define RCC_PERIPHCLK_TIM8              71U
+#define RCC_PERIPHCLK_TIM10             72U
+#define RCC_PERIPHCLK_TIM11             73U
+#define RCC_PERIPHCLK_TIM12             74U
+#define RCC_PERIPHCLK_TIM13             75U
+#define RCC_PERIPHCLK_TIM14             76U
+#define RCC_PERIPHCLK_TIM15             77U
+#define RCC_PERIPHCLK_TIM16             78U
+#define RCC_PERIPHCLK_TIM17             79U
+#define RCC_RESERVED6                   80U
+#else
 #define RCC_PERIPHCLK_LPTIM1_2          7U
 #define RCC_PERIPHCLK_UART2_4           8U
 #define RCC_PERIPHCLK_UART3_5           9U
@@ -356,80 +508,6 @@ typedef struct
 #define RCC_PERIPHCLK_TIM16             78U
 #define RCC_PERIPHCLK_TIM17             79U
 #define RCC_PERIPHCLK_TIM20             80U
-#else
-#define RCC_PERIPHCLK_LPTIM1_2          7U
-#define RCC_PERIPHCLK_UART2_4           8U
-#define RCC_PERIPHCLK_UART3_5           9U
-#define RCC_PERIPHCLK_SPI2              10U
-#define RCC_PERIPHCLK_SPI3              11U
-#define RCC_PERIPHCLK_SPDIFRX           12U
-#define RCC_PERIPHCLK_I2C1_2            13U
-#define RCC_PERIPHCLK_I3C1_2            14U
-#define RCC_RESERVED0                   15U
-#define RCC_PERIPHCLK_SPI1              16U
-#define RCC_PERIPHCLK_SPI4_5            17U
-#define RCC_PERIPHCLK_USART1            18U
-#define RCC_PERIPHCLK_USART6            19U
-#define RCC_PERIPHCLK_UART7             20U
-#define RCC_PERIPHCLK_MDF1              21U
-#define RCC_PERIPHCLK_SAI1              22U
-#define RCC_PERIPHCLK_SAI2              23U
-#define RCC_PERIPHCLK_SAI3              24U
-#define RCC_PERIPHCLK_SAI4              25U
-#define RCC_PERIPHCLK_FDCAN             26U
-#define RCC_PERIPHCLK_LTDC              27U
-#define RCC_RESERVED1                   28U
-#define RCC_PERIPHCLK_DCMIPP            29U
-#define RCC_PERIPHCLK_CSITXESC          30U
-#define RCC_PERIPHCLK_CSIPHY            31U
-#define RCC_RESERVED2                   32U
-#define RCC_PERIPHCLK_STGEN             33U
-#define RCC_RESERVED3                   34U
-#define RCC_RESERVED4                   35U
-#define RCC_PERIPHCLK_I3C3              36U
-#define RCC_PERIPHCLK_SPI6              37U
-#define RCC_PERIPHCLK_I2C3              38U
-#define RCC_PERIPHCLK_LPUART1           39U
-#define RCC_PERIPHCLK_LPTIM3            40U
-#define RCC_PERIPHCLK_LPTIM4            41U
-#define RCC_PERIPHCLK_LPTIM5            42U
-#define RCC_PERIPHCLK_TSDBG             43U
-#define RCC_PERIPHCLK_TPIU              44U
-#define RCC_PERIPHCLK_ATB               45U
-#define RCC_PERIPHCLK_ADC1              46U
-#define RCC_PERIPHCLK_ADC2              47U
-#define RCC_PERIPHCLK_OSPI1             48U
-#define RCC_RESERVED5                   49U
-#define RCC_PERIPHCLK_FMC               50U
-#define RCC_PERIPHCLK_SDMMC1            51U
-#define RCC_PERIPHCLK_SDMMC2            52U
-#define RCC_PERIPHCLK_SDMMC3            53U
-#define RCC_PERIPHCLK_ETH1              54U
-#define RCC_PERIPHCLK_ETH2              55U
-#define RCC_PERIPHCLK_ETH1PTP_ETH2PTP   56U
-#define RCC_PERIPHCLK_USB2PHY1          57U
-#define RCC_PERIPHCLK_USB2PHY2          58U
-#define RCC_RESERVED6                   59U
-#define RCC_RESERVED7                   60U
-#define RCC_PERIPHCLK_MCO1              61U
-#define RCC_PERIPHCLK_MCO2              62U
-#define RCC_PERIPHCLK_CPU1_EXT2F        63U
-#define RCC_PERIPHCLK_TIM1              64U
-#define RCC_PERIPHCLK_TIM2              65U
-#define RCC_PERIPHCLK_TIM3              66U
-#define RCC_PERIPHCLK_TIM4              67U
-#define RCC_PERIPHCLK_TIM5              68U
-#define RCC_PERIPHCLK_TIM6              69U
-#define RCC_PERIPHCLK_TIM7              70U
-#define RCC_PERIPHCLK_TIM8              71U
-#define RCC_PERIPHCLK_TIM10             72U
-#define RCC_PERIPHCLK_TIM11             73U
-#define RCC_PERIPHCLK_TIM12             74U
-#define RCC_PERIPHCLK_TIM13             75U
-#define RCC_PERIPHCLK_TIM14             76U
-#define RCC_PERIPHCLK_TIM15             77U
-#define RCC_PERIPHCLK_TIM16             78U
-#define RCC_PERIPHCLK_TIM17             79U
 #endif /* RCC_DERIVATIVE1_FLEXGEN_CHANNEL_MAPPING */
 /**
   * @}
@@ -683,5 +761,3 @@ void              HAL_RCCEx_ConfigureClockObserver(uint32_t PeriphClk, RCC_Obser
 #endif
 
 #endif /* STM32MP2xx_HAL_RCC_EX_H */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

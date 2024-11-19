@@ -135,17 +135,30 @@ struct scmi_voltage_describe_levels_p2a {
  * ABI for VOLTAGE_CONFIG_SET message payload
  */
 
-#define SCMI_VOLTAGE_CONFIG_MODE(_arch)	((_arch) ? BIT(3) : 0)
+enum scmi_voltd_mode_type {
+    SCMI_VOLTD_MODE_TYPE_ARCH = 0x0U,
+    SCMI_VOLTD_MODE_TYPE_IMPL = 0x08U,
+};
+
+enum scmi_voltd_mode_id {
+    SCMI_VOLTD_MODE_ID_OFF = 0x0U,
+    SCMI_VOLTD_MODE_ID_ON = 0x07U,
+};
+
+#define SCMI_VOLTAGE_CONFIG_MODE(_arch)	((_arch) ? \
+                                         SCMI_VOLTD_MODE_TYPE_IMPL : \
+					 SCMI_VOLTD_MODE_TYPE_ARCH)
 
 #define SCMI_VOLTAGE_CONFIG_MODE_ID_MASK	GENMASK(2, 0)
 
-#define SCMI_VOLTAGE_CONFIG_MODE_ID_ENABLE(_enable) \
-	((_enable) ? SCMI_VOLTAGE_CONFIG_MODE_ID_MASK : 0)
+#define SCMI_VOLTAGE_CONFIG_MODE_ID_ENABLE(_enable) ((_enable) ? \
+                                                     SCMI_VOLTD_MODE_ID_ON : \
+						     SCMI_VOLTD_MODE_ID_OFF)
 #define TEST(_enable) \
 	((_enable) ? TES_TEST : 0)
 
 #define SCMI_VOLTAGE_CONFIG_SET_CONFIG(_arch, _enable) \
-	(SCMI_VOLTAGE_CONFIG_MODE_ID_ENABLE(_enable) || \
+	(SCMI_VOLTAGE_CONFIG_MODE_ID_ENABLE(_enable) | \
 	 SCMI_VOLTAGE_CONFIG_MODE(_arch))
 
 struct scmi_voltage_config_set_a2p {
@@ -237,6 +250,7 @@ static int scmi_pm_gate(struct scmi_channel *channel,
 		.response_size = sizeof(response),
 	};
 	int ret = 0;
+
 
 	ret = scmi_process_message(&a2p);
 	if (ret)

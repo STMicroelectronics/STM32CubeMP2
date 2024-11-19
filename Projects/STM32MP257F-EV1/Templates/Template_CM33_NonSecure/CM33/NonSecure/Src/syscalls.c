@@ -46,7 +46,7 @@ extern int __io_putchar(int ch) __attribute__((weak));
 extern int __io_getchar(void) __attribute__((weak));
 
 
-#ifdef A7_DUAL_CORE_SMP
+#ifdef A35_DUAL_CORE_SMP
 #define locked   1
 #define unlocked 0
 extern void lock_mutex(void *mutex);
@@ -115,7 +115,7 @@ caddr_t _sbrk(int incr)
   extern char end asm("end");
   static char *heap_end;
   char *prev_heap_end;
-#ifdef A7_DUAL_CORE_SMP
+#ifdef A35_DUAL_CORE_SMP
   static int mutex = unlocked;
   lock_mutex(&mutex);
 #endif
@@ -130,14 +130,14 @@ caddr_t _sbrk(int incr)
 //    write(1, "Heap and stack collision\n", 25);
 //    abort();
     errno = ENOMEM;
-#ifdef A7_DUAL_CORE_SMP
+#ifdef A35_DUAL_CORE_SMP
     unlock_mutex(&mutex);
 #endif
     return (caddr_t) -1;
   }
 
   heap_end += incr;
-#ifdef A7_DUAL_CORE_SMP
+#ifdef A35_DUAL_CORE_SMP
   unlock_mutex(&mutex);
 #endif
   return (caddr_t) prev_heap_end;
