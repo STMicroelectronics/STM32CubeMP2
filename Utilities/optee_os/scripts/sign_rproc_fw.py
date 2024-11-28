@@ -24,7 +24,7 @@ try:
     from Cryptodome.Signature import DSS
     from Cryptodome.PublicKey import ECC
     from Cryptodome.Cipher import AES
-    from cryptography.hazmat.primitives.ciphers.aead import utils
+    from cryptography import utils
     from Cryptodome.Random import get_random_bytes
 except ImportError:
     print("""
