@@ -1061,3 +1061,7 @@ static void USART_MspDeInit(UART_HandleTypeDef *huart)
 /**
   * @}
   */
+  
+/**
+  * @}
+  */

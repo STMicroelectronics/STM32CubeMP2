@@ -26,22 +26,24 @@ analog input in Differential Mode, difference between external voltage on VinN a
 
 At the beginning of the main program the HAL_Init() function is called to reset 
 all the peripherals, initialize the Flash interface and the systick.
-The SystemClock_Config() function is used to configure the system clock for STM32H743xx Devices :
+The SystemClock_Config() function is used to configure the system clock for STM32 Device :
 The CPU at 400MHz 
 The HCLK for D1 Domain AXI and AHB3 peripherals , D2 Domain AHB1/AHB2 peripherals and D3 Domain AHB4  peripherals at 200MHz.
 The APB clock dividers for D1 Domain APB3 peripherals, D2 Domain APB1 and APB2 peripherals and D3 Domain APB4 peripherals to  run at 100MHz
 
-The ADC is configured to convert continuously ADC_CHANNEL_6 (VinP) connected to PF.11
+The ADC3 is configured to convert continuously ADC_CHANNEL_6 (VinP) connected to PF.11
 and its correspanding VinN connected to VSSA (internally).
 
 User can connect ADC_CHANNEL_6 pin PF.11 (Pin 7 in CN5 Connector)
-to external power supply and vary voltage between -1V8 to 1V8.
+to external power supply and vary voltage between 0 to 1V8, -1V8 could be measured using
+some other channel but due to limited pins exposed in the board, it is not possible to do so.
 
 uwConvertedValue variable contains the 32-bit conversion result and 
-swInputVoltage yields the signed input voltage in mV.
+uwInputVoltage yields the signed input voltage in mV.
+The converted value is monitored through debugger: uwConvertedValue and uwInputVoltage variables.
 
-LED3 is ON and example is stopped(using infinite loop) when there is an error
-during process.
+STM32 board LED can be used to monitor the conversion:
+  - LED3 is ON when there is an error during process.
 
 @note Care must be taken when using HAL_Delay(), this function provides accurate delay (in milliseconds)
       based on variable incremented in SysTick ISR. This implies that if HAL_Delay() is called from
@@ -69,7 +71,7 @@ Analog, ADC, Analog to Digital, Differential Mode, Continuous conversion, Measur
 
 @par Hardware and Software environment
 
-  - This example runs on STM32MP2xx devices.
+  - This example runs on STM32MP25xx devices.
   - This example has been tested with STM32MP257F-EV1 board and can be
     easily tailored to any other supported device and development board.
 

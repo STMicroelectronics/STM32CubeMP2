@@ -20,7 +20,7 @@
 				<cmake_build_type/>
 				<cmake_export_compile_commands/>
 				<cmake_toolchain_file/>
-				<misc_command>-DTFM_PLATFORM=stm/stm32mp257f_ev1 -DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake -DTFM_PROFILE=profile_medium -DCMAKE_BUILD_TYPE=debug -DNS=OFF</misc_command>
+				<misc_command>-DTFM_PLATFORM=stm/stm32mp257f_ev1 -DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake -DTFM_PROFILE=profile_medium -DCMAKE_BUILD_TYPE=debug -DNS=OFF -DDTS_EXT_DIR=../../../../../../../../../Firmware/Utilities/dt-stm32mp -DDTS_BOARD_NS=stm32mp2/a35-td/tfm/stm32mp257f-ev1-ca35tdcid-ostl-ns.dts -DDTS_BOARD_S=stm32mp2/a35-td/tfm/stm32mp257f-ev1-ca35tdcid-ostl-s.dts</misc_command>
 			</storageModule>
 			<storageModule moduleId="cdtBuildSystem" version="4.0.0">
 				<configuration artifactExtension="elf" buildArtefactType="org.eclipse.cdt.build.core.buildArtefactType.exe" buildProperties="org.eclipse.cdt.build.core.buildArtefactType=org.eclipse.cdt.build.core.buildArtefactType.exe,org.eclipse.cdt.build.core.buildType=org.eclipse.cdt.build.core.buildType.debug" cleanCommand="rm -rf" description="" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1000438794" name="config_default" parent="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug">

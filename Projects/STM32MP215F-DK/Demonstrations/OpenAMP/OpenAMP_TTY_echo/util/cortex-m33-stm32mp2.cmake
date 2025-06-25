@@ -1,4 +1,4 @@
-set(LINKER_SCRIPT "${BASE_DIR}/../../../../../Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/gcc/linker/stm32mp21xx_DDR_m33_ns.ld")
+set(LINKER_SCRIPT "${BASE_DIR}/../../../../../Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/gcc/linker/stm32mp2xx_DDR_m33_ns.ld")
 set(WARNING_FLAGS "-Wall")
 set(CPU_OPTIONS -mthumb -mcpu=cortex-m33)
 set(CPU "cortex-m33")

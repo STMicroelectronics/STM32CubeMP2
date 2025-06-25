@@ -124,13 +124,13 @@ MEMORY
   /* M33 Secure application memory mapping */
   m_text (rx)       : ORIGIN = ORIGIN(RETRAM_APP),                             LENGTH = 100K
   m_data (rwx)      : ORIGIN = ORIGIN(RETRAM_APP) + LENGTH(m_text),            LENGTH = LENGTH(RETRAM_APP) - LENGTH(m_text)
-  m_text_nsc(rx)    : ORIGIN = ORIGIN(RETRAM_APP) + LENGTH(RETRAM) - NSC_SIZE, LENGTH = NSC_SIZE
+  /* m_text_nsc(rx)    : ORIGIN = ORIGIN(RETRAM_APP) + LENGTH(RETRAM) - NSC_SIZE, LENGTH = NSC_SIZE */
 /*  m_ipc_shm (rw)    : ORIGIN = ORIGIN(SRAM) + LENGTH(SRAM) - IPC_SHM_SIZE,     LENGTH = IPC_SHM_SIZE  */
 }
 
 REGION_ALIAS("TEXT", m_text);
 REGION_ALIAS("DATA", m_data);
-REGION_ALIAS("NSC", m_text_nsc);
+/* REGION_ALIAS("NSC", m_text_nsc); */
 
 /* Symbols needed for OpenAMP to enable rpmsg */
 /*
@@ -219,9 +219,12 @@ SECTIONS
 
   __etext = .;
 
+    /* Used by the startup to initialize data */
+    _sidata = LOADADDR(.data);
   .data : AT (__etext)
   {
     __data_start__ = .;
+    _sdata = .;        /* create a global symbol at data start */
     *(vtable)
     *(.data*)
 
@@ -249,23 +252,28 @@ SECTIONS
     . = ALIGN(4);
     /* All data end */
     __data_end__ = .;
+    _edata = .;        /* define a global symbol at data end */
   } > DATA
 
+ /* Secure Gateway stubs */
+ /*
   .gnu.sgstubs :
   {
     . = ALIGN(4);
-    *(.gnu.sgstubs*)   /* Secure Gateway stubs */
+    *(.gnu.sgstubs*)  
     . = ALIGN(4);
   } > NSC
-
+*/
   .bss :
   {
     . = ALIGN(4);
-    __bss_start__ = .;
+   _sbss = .;         /* define a global symbol at bss start */
+   __bss_start__ = _sbss;
     *(.bss*)
     *(COMMON)
     . = ALIGN(4);
-    __bss_end__ = .;
+    _ebss = .;         /* define a global symbol at bss end */
+    __bss_end__ = _ebss;  
   } > DATA
 
   .heap (COPY):
@@ -290,6 +298,7 @@ SECTIONS
   __StackTop = ORIGIN(DATA) + LENGTH(DATA);
   __StackLimit = __StackTop - SIZEOF(.stack_dummy);
   PROVIDE(__stack = __StackTop);
+  PROVIDE(_estack = __StackTop);
 
   /* Check if data + heap + stack exceeds RAM limit */
   ASSERT(__StackLimit >= __HeapLimit, "region RAM overflowed with stack")

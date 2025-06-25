@@ -34,7 +34,7 @@
 /** @defgroup STM32MP257F_DK_BUS BUS
   * @{
   */
-
+extern void Error_Handler(void);
 /** @defgroup STM32MP257F_DK_BUS_Private_Constants BUS Private Constants
   * @{
   */

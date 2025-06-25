@@ -30,6 +30,8 @@
 
 /* USER CODE BEGIN Includes */
 #include "stm32mp257f_eval.h"
+#include "scmi.h"
+#include "mbox_scmi.h"
 
 /* USER CODE END Includes */
 /* Exported types ------------------------------------------------------------*/
@@ -57,6 +59,16 @@ void Error_Handler(void);
 #define DEFAULT_IRQ_PRIO      1U
 
 /* USER CODE BEGIN Private defines */
+
+#define TIMx                            TIM3
+#define TIMx_IRQn                       TIM3_IRQn
+#define __HAL_RCC_TIMx_CLK_ENABLE()   __HAL_RCC_TIM3_CLK_ENABLE()
+#define __HAL_RCC_TIMx_CLK_DISABLE()  __HAL_RCC_TIM3_CLK_DISABLE();
+#define STM32MP25_RIFSC_TIMx_ID         STM32MP25_RIFSC_TIM3_ID
+
+/* Compute the prescaler value to have TIMx counter clock equal to 10000 Hz */
+#define PRESCALER_VALUE (uint32_t)((SystemCoreClock / 10000) - 1)
+#define PERIOD_VALUE    (20000 - 1);
 
 /* USER CODE END Private defines */
 

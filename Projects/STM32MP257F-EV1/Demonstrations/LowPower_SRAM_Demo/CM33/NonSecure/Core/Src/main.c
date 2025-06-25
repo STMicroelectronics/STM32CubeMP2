@@ -43,6 +43,7 @@ RCC_PeriphCLKInitTypeDef  PeriphClk;
 uint16_t Shutdown_Req = 0;
 __IO FlagStatus AlarmStatus = RESET;
 #define MSG_STOP "*stop"
+#define MSG_LPSTOP "*lpstop"
 //#define MSG_STANDBY "*standby"
 #define MSG_DELAY "*delay"
 
@@ -219,6 +220,8 @@ void VIRT_UART0_RxCpltCallback(VIRT_UART_HandleTypeDef *huart)
     VirtUart0RxMsg = SET;
 }
 
+static int lp_mode = PWR_REGULATOR_LP_OFF;
+
 void Check_Delayed_Sleep(uint8_t *BuffRx, uint16_t BuffSize)
 {
   FlagStatus Stop_Flag = RESET;
@@ -258,9 +261,15 @@ void Check_Delayed_Sleep(uint8_t *BuffRx, uint16_t BuffSize)
      HAL_Delay(delay);
      return;
   }
+  else if (!strncmp((char *)BuffRx, MSG_LPSTOP, strlen(MSG_LPSTOP)))
+  {
+    lp_mode = PWR_REGULATOR_LP_ON_LV_OFF;
+    delay = 20;
+  }
   else if (!strncmp((char *)BuffRx, MSG_STOP, strlen(MSG_STOP)))
   {
-	 delay = 20;
+    lp_mode = PWR_REGULATOR_LP_OFF;
+    delay = 20;
   }
   else
   {
@@ -279,7 +288,7 @@ void Check_Delayed_Sleep(uint8_t *BuffRx, uint16_t BuffSize)
     /* Clear the Low Power MPU flags before going into CSTOP */
    __HAL_PWR_CLEAR_FLAG();
 
-   PWR_EnterSTOPMode(PWR_REGULATOR_LP_ON_LV_OFF, PWR_STOPENTRY_WFI);
+   HAL_PWR_EnterSTOPMode(lp_mode, PWR_STOPENTRY_WFI);
 
     /* Leaving CStop mode */
 

@@ -34,6 +34,7 @@
 /** @defgroup BUS BUS
   * @{
   */
+extern void Error_Handler(void);
 
 /** @defgroup BUS_Private_Constants BUS Private Constants
   * @{

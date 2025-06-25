@@ -26,8 +26,8 @@ OpenAMP, RPMsg, TFM, IPCC, Inter-Processor Communication
 
 ### <b>Hardware and Software environment</b>
 
-  - This example runs on STM32MP21xx devices
-  - This example has been tested with STMicroelectronics STM32MP215F-EV1.
+  - This example runs on STM32MP21xxxx devices
+  - This example has been tested with STMicroelectronics STM32MP215F-DK.
     and can be easily tailored to any other supported device and development board.
 
   - Connect ST-Link cable to the PC USB port to display trace

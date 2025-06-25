@@ -10,7 +10,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -64,20 +64,20 @@ volatile uint8_t debug = 1;
 #endif /* DEBUG */
 
 /* Buffer used for transmission */
-ALIGN_32BYTES (uint8_t aTxBuffer[]) = " ****I2C_TwoBoards communication based on DMA****  ****I2C_TwoBoards communication based on DMA****  ****I2C_TwoBoards communication based on DMA**** ";
+ALIGN_32BYTES(uint8_t aTxBuffer[]) = " ****I2C_TwoBoards communication based on DMA****  ****I2C_TwoBoards communication based on DMA****  ****I2C_TwoBoards communication based on DMA**** ";
 
 /* Buffer used for reception */
-ALIGN_32BYTES (uint8_t aRxBuffer[RXBUFFERSIZE]);
+ALIGN_32BYTES(uint8_t aRxBuffer[RXBUFFERSIZE]);
 
 /* Buffer used by HAL to compute control data for the Private Communication */
 uint32_t aControlBuffer[0xF];
 
 /* Descriptor for private data transmit */
 I3C_PrivateTypeDef aPrivateDescriptor[2] = \
-                                          {
-                                            {DEVICE_STA_ADDR, {aTxBuffer, TXBUFFERSIZE}, {NULL, 0}, HAL_I3C_DIRECTION_WRITE},
-                                            {DEVICE_STA_ADDR, {NULL, 0}, {aRxBuffer, RXBUFFERSIZE}, HAL_I3C_DIRECTION_READ}
-                                          };
+{
+  {DEVICE_STA_ADDR, {aTxBuffer, TXBUFFERSIZE}, {NULL, 0}, HAL_I3C_DIRECTION_WRITE},
+  {DEVICE_STA_ADDR, {NULL, 0}, {aRxBuffer, RXBUFFERSIZE}, HAL_I3C_DIRECTION_READ}
+};
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -87,7 +87,7 @@ static void MX_DMA_Init(void);
 static void MX_I3C1_Init(void);
 static void MX_IPCC_Init(void);
 static void MX_I3C1_DeInit(void);
-void HAL_I3C_MspPostInit(I3C_HandleTypeDef* hi3c);
+void HAL_I3C_MspPostInit(I3C_HandleTypeDef *hi3c);
 /* USER CODE BEGIN PFP */
 static uint16_t Buffercmp(uint8_t *pBuffer1, uint8_t *pBuffer2, uint16_t BufferLength);
 /* USER CODE END PFP */
@@ -103,11 +103,8 @@ static uint16_t Buffercmp(uint8_t *pBuffer1, uint8_t *pBuffer2, uint16_t BufferL
   */
 int main(void)
 {
-#ifdef DEBUG
-//  while(debug);
-#endif /* DEBUG */
+  /* MCU Configuration--------------------------------------------------------*/
   uint32_t status;
-  /* USER CODE BEGIN 1 */
   /* STM32MP2xx HAL library initialization:
        - Systick timer is configured by default as source of time base, but user
              can eventually implement his proper time base source (a general purpose
@@ -117,9 +114,9 @@ int main(void)
        - Set NVIC Group Priority to 4
        - Low Level Initialization
      */
-  /* USER CODE END 1 */
-
-  /* MCU Configuration--------------------------------------------------------*/
+#ifdef DEBUG
+  while (debug);
+#endif /* DEBUG */
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
@@ -131,38 +128,33 @@ int main(void)
   /* Configure the system clock */
   if (IS_DEVELOPER_BOOT_MODE())
   {
-	  SystemClock_Config();
-  }
+    /* Configure the system clock */
+    SystemClock_Config();
 
-  /* USER CODE BEGIN SysInit */
-#if 1
-  HAL_PWR_EnableBkUpAccess();
-  status = BSP_PMIC_Init();
-  if (status)
-  {
-     printf("error :  BSP PMIC init fail\r\n");
-  }
+    status = BSP_PMIC_Init();
+    if (status)
+    {
+      Error_Handler();
+    }
 
-  status = BSP_PMIC_Power_Mode_Init();
-  if (status)
-  {
-    printf("error :  BSP PMIC Mode init fail\r\n");
+    status = BSP_PMIC_Power_Mode_Init();
+    if (status)
+    {
+      Error_Handler();
+    }
   }
-#endif
-  /* USER CODE END SysInit */
 
   /* Configure LED3 */
   BSP_LED_Init(LED3);
 
-  if(!IS_DEVELOPER_BOOT_MODE())
+  if (!IS_DEVELOPER_BOOT_MODE())
   {
-	/* IPCC initialization */
-	MX_IPCC_Init();
-
-	/*Corpo Sync Initialization*/
-	CoproSync_Init();
+    /* IPCC initialization */
+    MX_IPCC_Init();
+    /*Corpo Sync Initialization*/
+    CoproSync_Init();
   }
-  
+
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();
@@ -242,7 +234,7 @@ int main(void)
                              &aPrivateDescriptor[I3C_IDX_FRAME_2],
                              &aContextBuffers[I3C_IDX_FRAME_2],
                              aContextBuffers[I3C_IDX_FRAME_2].CtrlBuf.Size,
-							 I2C_PRIVATE_WITHOUT_ARB_STOP) != HAL_OK)
+                             I2C_PRIVATE_WITHOUT_ARB_STOP) != HAL_OK)
   {
     /* Error_Handler() function is called when error occurs. */
     Error_Handler();
@@ -281,8 +273,8 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-	BSP_LED_Toggle(LED3);
-	HAL_Delay(500);
+    BSP_LED_Toggle(LED3);
+    HAL_Delay(500);
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -444,11 +436,29 @@ void SystemClock_Config(void)
   */
 static void MX_DMA_Init(void)
 {
-	/* HPDMA3 clock enable */
-	if(ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(85)) == RESMGR_STATUS_ACCESS_OK)
-	{
-		__HAL_RCC_HPDMA3_CLK_ENABLE();
-	}
+  /* HPDMA3 clock enable */
+  if (ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(85)) == RESMGR_STATUS_ACCESS_OK)
+  {
+    __HAL_RCC_HPDMA3_CLK_ENABLE();
+  }
+
+  /* Acquire HPDMA3 Channel 0 using Resource manager */
+  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_HPDMA3, RESMGR_HPDMA_CHANNEL(0)))
+  {
+    Error_Handler();
+  }
+
+  /* Acquire HPDMA3 Channel 1 using Resource manager */
+  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_HPDMA3, RESMGR_HPDMA_CHANNEL(1)))
+  {
+    Error_Handler();
+  }
+
+  /* Acquire HPDMA3 Channel 2 using Resource manager */
+  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_HPDMA3, RESMGR_HPDMA_CHANNEL(2)))
+  {
+    Error_Handler();
+  }
 }
 
 /**
@@ -471,46 +481,27 @@ static void MX_I3C1_Init(void)
   /* USER CODE END I3C1_Init 1 */
 
   /* Acquire I3C1 using Resource manager */
-//  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIFSC, RESMGR_RIFSC_I3C1_ID))
-//  {
-//	  Error_Handler();
-//  }
-//
-//  /* Acquire HPDMA3 Channel 0 using Resource manager */
-//  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_HPDMA3, RESMGR_HPDMA_CHANNEL(0)))
-//  {
-//	  Error_Handler();
-//  }
-//
-//  /* Acquire HPDMA3 Channel 1 using Resource manager */
-//  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_HPDMA3, RESMGR_HPDMA_CHANNEL(1)))
-//  {
-//	  Error_Handler();
-//  }
-//
-//  /* Acquire HPDMA3 Channel 2 using Resource manager */
-//  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_HPDMA3, RESMGR_HPDMA_CHANNEL(2)))
-//  {
-//	  Error_Handler();
-//  }
-//
-//  /* Acquire GPIOA2 using Resource manager */
-//  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOA, RESMGR_GPIO_PIN(2)))
-//  {
-//	  Error_Handler();
-//  }
-//
-//  /* Acquire GPIOG13 using Resource manager */
-//  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOG, RESMGR_GPIO_PIN(13)))
-//  {
-//	  Error_Handler();
-//  }
+  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIFSC, RESMGR_RIFSC_I3C1_ID))
+  {
+    Error_Handler();
+  }
+  /* Acquire GPIOA2 using Resource manager */
+  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOA, RESMGR_GPIO_PIN(2)))
+  {
+    Error_Handler();
+  }
+
+  /* Acquire GPIOG13 using Resource manager */
+  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOG, RESMGR_GPIO_PIN(13)))
+  {
+    Error_Handler();
+  }
 
   /* Enable GPIOs power supplies */
   if (RESMGR_STATUS_ACCESS_OK == ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(101)))
   {
-	  __HAL_RCC_GPIOA_CLK_ENABLE();
-	  __HAL_RCC_GPIOG_CLK_ENABLE();
+    __HAL_RCC_GPIOA_CLK_ENABLE();
+    __HAL_RCC_GPIOG_CLK_ENABLE();
   }
 
   hi3c1.Instance = I3C1;
@@ -568,13 +559,13 @@ static void MX_I3C1_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
-/* USER CODE BEGIN MX_GPIO_Init_1 */
-/* USER CODE END MX_GPIO_Init_1 */
+  /* USER CODE BEGIN MX_GPIO_Init_1 */
+  /* USER CODE END MX_GPIO_Init_1 */
 
   /* GPIO Ports Clock Enable */
 
-/* USER CODE BEGIN MX_GPIO_Init_2 */
-/* USER CODE END MX_GPIO_Init_2 */
+  /* USER CODE BEGIN MX_GPIO_Init_2 */
+  /* USER CODE END MX_GPIO_Init_2 */
 }
 
 /* USER CODE BEGIN 4 */
@@ -591,32 +582,32 @@ void HAL_I3C_CtrlTxCpltCallback(I3C_HandleTypeDef *hi3c)
 }
 
 /**
-  * @brief 	I3C1 DeInitialization Function
-  * @param 	None
+  * @brief  I3C1 DeInitialization Function
+  * @param  None
   * @retval None
   */
 void MX_I3C1_DeInit(void)
 {
-	/* Deinitialize the I3C peripheral */
-	HAL_I3C_DeInit(&hi3c1);
-	
-	/* Release GPIOZ3 using Resource manager */
-	ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOZ, RESMGR_GPIO_PIN(3));
+  /* Deinitialize the I3C peripheral */
+  HAL_I3C_DeInit(&hi3c1);
 
-	/* Release GPIOZ4 using Resource manager */
-	ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOZ, RESMGR_GPIO_PIN(4));
+  /* Release GPIOZ3 using Resource manager */
+  ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOZ, RESMGR_GPIO_PIN(3));
 
-	/* Release HPDMA3 Channel 0 using Resource manager */
-	ResMgr_Release(RESMGR_RESOURCE_RIF_HPDMA3, RESMGR_HPDMA_CHANNEL(0));
+  /* Release GPIOZ4 using Resource manager */
+  ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOZ, RESMGR_GPIO_PIN(4));
 
-	/* Release HPDMA3 Channel 1 using Resource manager */
-	ResMgr_Release(RESMGR_RESOURCE_RIF_HPDMA3, RESMGR_HPDMA_CHANNEL(1));
+  /* Release HPDMA3 Channel 0 using Resource manager */
+  ResMgr_Release(RESMGR_RESOURCE_RIF_HPDMA3, RESMGR_HPDMA_CHANNEL(0));
 
-	/* Release HPDMA3 Channel 2 using Resource manager */
-	ResMgr_Release(RESMGR_RESOURCE_RIF_HPDMA3, RESMGR_HPDMA_CHANNEL(2));
+  /* Release HPDMA3 Channel 1 using Resource manager */
+  ResMgr_Release(RESMGR_RESOURCE_RIF_HPDMA3, RESMGR_HPDMA_CHANNEL(1));
 
-	/* Release I3C1 using Resource manager */
-	ResMgr_Release(RESMGR_RESOURCE_RIFSC, RESMGR_RIFSC_I3C1_ID);
+  /* Release HPDMA3 Channel 2 using Resource manager */
+  ResMgr_Release(RESMGR_RESOURCE_RIF_HPDMA3, RESMGR_HPDMA_CHANNEL(2));
+
+  /* Release I3C1 using Resource manager */
+  ResMgr_Release(RESMGR_RESOURCE_RIFSC, RESMGR_RIFSC_I3C1_ID);
 
 }
 
@@ -677,7 +668,7 @@ static void MX_IPCC_Init(void)
   hipcc.Instance = IPCC1;
   if (HAL_IPCC_Init(&hipcc) != HAL_OK)
   {
-     Error_Handler();
+    Error_Handler();
   }
   /* IPCC interrupt Init */
   HAL_NVIC_SetPriority(IPCC1_RX_IRQn, DEFAULT_IRQ_PRIO, 0);
@@ -691,7 +682,7 @@ static void MX_IPCC_Init(void)
   * @param  ChannelDir Channel direction
   * @retval None
   */
-void CoproSync_ShutdownCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir)
+void CoproSync_ShutdownCb(IPCC_HandleTypeDef *hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir)
 {
   /* Deinitialize the I3C1 peripheral and resources*/
   MX_I3C1_DeInit();
@@ -703,7 +694,7 @@ void CoproSync_ShutdownCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPC
   HAL_IPCC_NotifyCPU(hipcc, ChannelIndex, IPCC_CHANNEL_DIR_RX);
 
   /* Wait for complete shutdown */
-  while(1);
+  while (1);
 }
 
 /**

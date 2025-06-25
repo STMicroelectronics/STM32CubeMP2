@@ -126,6 +126,8 @@ STM32 Projects                STMicroelectronics                                
 STM32 Utilities               STMicroelectronics                                                                         [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
 Utilities lcd                 STMicroelectronics                                                                         [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
 Utilities Fonts               STMicroelectronics                                                                         [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
+Trusted Firmware-M            ARM Limited                                                                                [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
+scmiagent                     ARM Limited                                                                                [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
 
 </div>
 :::

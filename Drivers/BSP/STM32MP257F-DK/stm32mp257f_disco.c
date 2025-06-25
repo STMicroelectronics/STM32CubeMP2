@@ -693,6 +693,7 @@ int32_t BSP_COM_Init(COM_TypeDef COM, COM_InitTypeDef *COM_Init)
     /* Set the COM Instance */
     hcom_uart[COM].Instance = COM_USART[COM];
 
+#if defined (CORE_CM33)
     if (!IS_DEVELOPER_BOOT_MODE() && COM == COM_VCP_CM33)
     {
       if (ResMgr_Request(COM_CM33_RIF_RES_TYP_TX_PIN, COM_CM33_RIF_RES_NUM_TX_PIN) != RESMGR_STATUS_ACCESS_OK
@@ -702,6 +703,7 @@ int32_t BSP_COM_Init(COM_TypeDef COM, COM_InitTypeDef *COM_Init)
         return BSP_ERROR_MSP_FAILURE;
       }
     }
+#endif /* defined (CORE_CM33) */
 
     /* Init the UART Msp */
 #if (USE_HAL_UART_REGISTER_CALLBACKS == 0)
@@ -776,17 +778,8 @@ __weak HAL_StatusTypeDef MX_USART_Init(UART_HandleTypeDef *huart, MX_UART_InitTy
   huart->Init.StopBits     = (uint32_t)COM_Init->StopBits;
   huart->Init.HwFlowCtl    = (uint32_t)COM_Init->HwFlowCtl;
   huart->Init.OverSampling = UART_OVERSAMPLING_8;
-#if !defined (CORE_CM0PLUS)
   ErrorCode = HAL_UART_Init(huart);
-#else
-  /* Initialize the number of data to process during RX/TX ISR execution */
-  huart->NbTxDataToProcess = 1;
-  huart->NbRxDataToProcess = 1;
-  /* Initialize the UART State */
-  huart->gState = HAL_UART_STATE_READY;
-  huart->RxState = HAL_UART_STATE_READY;
-  ErrorCode = HAL_OK;
-#endif /* !defined (CORE_CM0PLUS) */
+
   return ErrorCode;
 }
 

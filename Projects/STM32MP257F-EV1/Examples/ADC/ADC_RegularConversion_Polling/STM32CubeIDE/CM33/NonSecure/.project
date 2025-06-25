@@ -32,6 +32,11 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>stm32mp2xx_DDR_m33_ns.ld</name>
+			<type>1</type>
+			<locationURI>PARENT-8-PROJECT_LOC/Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/gcc/linker/stm32mp2xx_DDR_m33_ns.ld</locationURI>
+		</link>
+		<link>
 			<name>Doc/readme.txt</name>
 			<type>1</type>
 			<locationURI>PARENT-3-PROJECT_LOC/readme.txt</locationURI>
@@ -49,7 +54,7 @@
 		<link>
 			<name>Application/Startup/startup_stm32mp257cxx_m33.s</name>
 			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/startup_stm32mp257cxx_m33.s</locationURI>
+			<locationURI>PARENT-8-PROJECT_LOC/Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/gcc/startup_stm32mp257cxx_m33.s</locationURI>
 		</link>
 		<link>
 			<name>Application/User/main.c</name>
@@ -145,6 +150,41 @@
 			<name>Drivers/STM32MP2xx_HAL_Driver/stm32mp2xx_hal_rcc_ex.c</name>
 			<type>1</type>
 			<locationURI>PARENT-8-PROJECT_LOC/Drivers/STM32MP2xx_HAL_Driver/Src/stm32mp2xx_hal_rcc_ex.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32MP2xx_HAL_Driver/stm32mp2xx_hal_tim.c</name>
+			<type>1</type>
+			<locationURI>PARENT-8-PROJECT_LOC/Drivers/STM32MP2xx_HAL_Driver/Src/stm32mp2xx_hal_tim.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32MP2xx_HAL_Driver/stm32mp2xx_hal_tim_ex.c</name>
+			<type>1</type>
+			<locationURI>PARENT-8-PROJECT_LOC/Drivers/STM32MP2xx_HAL_Driver/Src/stm32mp2xx_hal_tim_ex.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32MP2xx_HAL_Driver/stm32mp2xx_hal_uart.c</name>
+			<type>1</type>
+			<locationURI>PARENT-8-PROJECT_LOC/Drivers/STM32MP2xx_HAL_Driver/Src/stm32mp2xx_hal_uart.c</locationURI>
+		</link>
+		<link>
+			<name>Drivers/STM32MP2xx_HAL_Driver/stm32mp2xx_hal_uart_ex.c</name>
+			<type>1</type>
+			<locationURI>PARENT-8-PROJECT_LOC/Drivers/STM32MP2xx_HAL_Driver/Src/stm32mp2xx_hal_uart_ex.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/scmiagent/mbox_scmi.c</name>
+			<type>1</type>
+			<locationURI>PARENT-8-PROJECT_LOC/Middlewares/ST/scmiagent/mbox_scmi.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/scmiagent/scmi_helpers.c</name>
+			<type>1</type>
+			<locationURI>PARENT-8-PROJECT_LOC/Middlewares/ST/scmiagent/scmi_helpers.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/scmiagent/scmi_regu.c</name>
+			<type>1</type>
+			<locationURI>PARENT-8-PROJECT_LOC/Middlewares/ST/scmiagent/scmi_regu.c</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

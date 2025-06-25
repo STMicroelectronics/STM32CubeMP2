@@ -27,7 +27,7 @@ interrupt mode using AES with Combined Cipher Machine (CCM) then generate the au
 
 At the beginning of the main program the HAL_Init() function is called to reset 
 all the peripherals, initialize the Flash interface and the systick.
-The SystemClock_Config() function is used to configure the system clock for STM32MP257FAIx Devices :
+The SystemClock_Config() function is used to configure the system clock for STM32MP21xxxx Devices :
 The CPU at 400MHz 
 The HCLK for D1 Domain AXI and AHB3 peripherals , D2 Domain AHB1/AHB2 peripherals and D3 Domain AHB4  peripherals at 200MHz.
 The APB clock dividers for D1 Domain APB3 peripherals, D2 Domain APB1 and APB2 peripherals and D3 Domain APB4 peripherals to  run at 100MHz.
@@ -107,7 +107,7 @@ Security, CRYP, GCM , NIST Special Publication 800-38d, hardware CRYP,
      
 @par Hardware and Software environment
 
-  - This example runs on STM32MP215Fxx devices.
+  - This example runs on STM32MP21xxxx devices.
   
   - This example has been tested with an STMicroelectronics STM32MP215F-DK
     board and can be easily tailored to any other supported device 

@@ -80,13 +80,13 @@ set(OPENAMP_SRC_GEN_FILES ${OPENAMP_SRC_GEN_FILES}
 
 # Set application source files
 set(APPLICATION_SRC ${APPLICATION_SRC} ${HAL_SRC_FILES} ${BSP_SRC_FILES} ${UTILS_SRC_FILES} ${MW_SRC_FILES} ${OPENAMP_SRC_GEN_FILES}
-						${BASE_DIR}/CM33/NonSecure/Core/Src/main.c /
-						${BASE_DIR}/CM33/NonSecure/Core/Src/syscalls.c /
-						${BASE_DIR}/CM33/NonSecure/Core/Src/stm32mp2xx_hal_msp.c /
-						${BASE_DIR}/CM33/NonSecure/Core/Src/stm32mp2xx_it.c /
-						${BASE_DIR}/CM33/NonSecure/Startup/startup_stm32mp257cxx_m33.s /
-						${BASE_DIR}/CM33/NonSecure/CMSIS/system_stm32mp2xx.c /
-						${BASE_DIR}/CM33/NonSecure/OPENAMP/mbox_ipcc.c /
+						${BASE_DIR}/CM33/NonSecure/Core/Src/main.c
+						${BASE_DIR}/CM33/NonSecure/Core/Src/syscalls.c
+						${BASE_DIR}/CM33/NonSecure/Core/Src/stm32mp2xx_hal_msp.c
+						${BASE_DIR}/CM33/NonSecure/Core/Src/stm32mp2xx_it.c
+						${BASE_DIR}/CM33/NonSecure/Startup/startup_stm32mp257cxx_m33.s
+						${BASE_DIR}/CM33/NonSecure/CMSIS/system_stm32mp2xx.c
+						${BASE_DIR}/CM33/NonSecure/OPENAMP/mbox_ipcc.c
 						${BASE_DIR}/CM33/NonSecure/OPENAMP/openamp.c
 						${BASE_DIR}/CM33/NonSecure/OPENAMP/openamp_log.c
 						${BASE_DIR}/CM33/NonSecure/OPENAMP/rsc_table.c

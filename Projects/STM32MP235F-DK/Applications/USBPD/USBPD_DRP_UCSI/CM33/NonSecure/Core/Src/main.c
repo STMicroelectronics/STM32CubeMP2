@@ -81,6 +81,13 @@ int main(void)
 
   loc_printf("\n\n Starting UCSI project(%s: %s) \r\n", __DATE__, __TIME__);
 
+  if(!IS_DEVELOPER_BOOT_MODE())
+  {
+     /* IPCC initialization */
+     MX_IPCC_Init();
+  }
+  MAILBOX_SCMI_Init();
+
   MX_UCPD1_Init();
   /* Call PreOsInit function */
   USBPD_PreInitOs();
@@ -91,12 +98,6 @@ int main(void)
   /* Initialize LEDs */
   BSP_LED_Init(LED_ORANGE);
   BSP_LED_On(LED_ORANGE);
-
-  if(!IS_DEVELOPER_BOOT_MODE())
-  {
-     /* IPCC initialization */
-     MX_IPCC_Init();
-  }
 
   /* Start freeRTOS */
   osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
@@ -266,6 +267,8 @@ static void MX_HPDMA3_Init(void)
   */
 void MX_UCPD1_Deinit(void)
 {
+  int ret = 0;
+
   NVIC_DisableIRQ(UCPD1_IRQn);
 
   LL_DMA_DeInit(HPDMA3, LL_DMA_CHANNEL_0);
@@ -273,6 +276,18 @@ void MX_UCPD1_Deinit(void)
   LL_DMA_DeInit(HPDMA3, LL_DMA_CHANNEL_3);
   ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(35));
   ResMgr_Release(RESMGR_RESOURCE_RIF_PWR, RESMGR_PWR_RESOURCE(0));
+
+  /* Disable UCPD regulator */
+  if(ResMgr_Request(RESMGR_RESOURCE_RIF_PWR, RESMGR_PWR_RESOURCE(0)) == RESMGR_STATUS_ACCESS_OK)
+  {
+    PWR->CR1 |= PWR_CR1_UCPDSV; /* Disconnect UCPD from supply */
+  }
+  else
+  {
+    ret = scmi_voltage_domain_disable(&scmi_channel, VOLTD_SCMI_UCPD);
+    if (ret)
+      loc_printf("Failed to disable VOLTD_SCMI_UCPD (error code %d)\r\n", ret);
+  }
 
   /* Peripheral clock disable */
   LL_RCC_UCPD1_DisableClock();
@@ -285,6 +300,8 @@ void MX_UCPD1_Deinit(void)
   */
 static void MX_UCPD1_Init(void)
 {
+  int ret = 0;
+
   LL_DMA_InitTypeDef DMA_InitStruct = {0};
 
   RCC_PeriphCLKInitTypeDef PeriphClkInit = {0};
@@ -292,18 +309,21 @@ static void MX_UCPD1_Init(void)
   /* Peripheral clock enable */
   LL_RCC_UCPD1_EnableClock();
 
-  if(ResMgr_Request(RESMGR_RESOURCE_RIF_PWR, RESMGR_PWR_RESOURCE(0)) == RESMGR_STATUS_ACCESS_OK) {
-	  loc_printf("Get PWR resource OK\n");
-	  	PWR->CR1 |= 0x8;                            /* VDD33UCPD independent UCPD voltage monitor enable */
-	    while ((PWR->CR1 & 0x80000) != 0x80000) {}; /* Wait for VDD33UCPD ready */
-	    PWR->CR1 |= 0x800;                          /* VDD33UCPD independent supply valid */
-
-  } else {
-	  /* VDD33UCPD already enabled?*/
-	  if(!READ_BIT(PWR->CR1, 0x800)) {
-		  loc_printf("Get PWR resource for PWR->CR1\n");
-		  Error_Handler();
-	  }
+  /* Enable UCPD regulator */
+  if(ResMgr_Request(RESMGR_RESOURCE_RIF_PWR, RESMGR_PWR_RESOURCE(0)) == RESMGR_STATUS_ACCESS_OK)
+  {
+    loc_printf("Enable UCPD regulator directly\r\n");
+    PWR->CR1 |= PWR_CR1_UCPDVMEN;                            /* UCPD voltage monitor enable */
+    while ((PWR->CR1 & PWR_CR1_UCPDRDY) != PWR_CR1_UCPDRDY); /* Wait for UCPD ready */
+    PWR->CR1 |= PWR_CR1_UCPDSV;                              /* Connect UCPD to supply */
+    PWR->CR1 &= ~PWR_CR1_UCPDVMEN;                           /* UCPD voltage monitor disable */
+  }
+  else
+  {
+    loc_printf("Enable UCPD regulator with SCMI\r\n");
+    ret = scmi_voltage_domain_enable(&scmi_channel, VOLTD_SCMI_UCPD);
+    if (ret)
+      loc_printf("Failed to enable VOLTD_SCMI_UCPD (error code %d)\r\n", ret);
   }
 
   if(ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(35)) == RESMGR_STATUS_ACCESS_OK) {

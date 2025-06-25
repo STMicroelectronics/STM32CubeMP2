@@ -46,7 +46,7 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   HAL_StatusTypeDef     status;
 
   /* Acquire TIM6 using Resource manager */
-  if (RESMGR_STATUS_ACCESS_OK == ResMgr_Request(RESMGR_RESOURCE_RIFSC, STM32MP25_RIFSC_TIM6_ID))
+  if (RESMGR_STATUS_ACCESS_OK == ResMgr_Request(RESMGR_RESOURCE_RIFSC, RESMGR_RIFSC_TIM6_ID))
   {
     /* Compute TIM6 clock */
     uwTimclock = HAL_RCCEx_GetTimerCLKFreq(RCC_PERIPHCLK_TIM6);
@@ -107,7 +107,7 @@ void HAL_DeInitTick(void)
   HAL_TIM_Base_DeInit(&htim6);
   HAL_NVIC_DisableIRQ(TIM6_IRQn);
   /* Release TIM6 using Resource manager */
-  (void)ResMgr_Release(RESMGR_RESOURCE_RIFSC, STM32MP25_RIFSC_TIM6_ID);
+  (void)ResMgr_Release(RESMGR_RESOURCE_RIFSC, RESMGR_RIFSC_TIM6_ID);
 }
 
 /**

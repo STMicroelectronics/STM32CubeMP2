@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="_htmresc/mini-st.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h2 id="FreeRTOS_ThreadCreation-application-description"><b>Description of the FreeRTOS Thread Creation application</b></h2>
+<p>How to implement thread creation using CMSIS RTOS API.</p>
+<p>At the beginning of the main program the HAL_Init() function is called to reset all the peripherals and initialize
+the Flash interface. The HAL initializes the TIM6 to generate an interrupt each 1ms, it will be used as timebase for
+the HAL drivers.</p>
+<p>This application uses FreeRTOS, the RTOS initializes the systick to generate an interrupt each 1ms. The systick is
+then used for FreeRTOS timebase.</p>
+<p>The SystemClock_Config() function is used to configure the system clock for STM32MP215FANx Devices :</p>
+<ul>
+<li>The CPU at 400MHz.</li>
+<li>The HCLK for D1 Domain AXI and AHB3 peripherals , D2 Domain AHB1/AHB2 peripherals and D3 Domain AHB4  peripherals
+at 200MHz.</li>
+<li>The APB clock dividers for D1 Domain APB3 peripherals, D2 Domain APB1 and APB2 peripherals and D3 Domain APB4
+peripherals to  run at 100MHz.</p>
+</li>
+</ul>
+<p>This application creates two threads with the same priority, which execute in a periodic cycle of 15 seconds.</p>
+<ul>
+<li>In the first 5 seconds, the thread 1 toggles LED3 each 200 ms and the thread 2 toggles LED3 each 500 ms.</li>
+<li>In the following 5 seconds, the thread 1 suspends itself and the thread 2 continue toggling LED3.</li>
+<li>In the last 5 seconds, the thread 2 resumes execution of thread 1 then suspends itself, the thread 1 toggles the
+LED3 each 500 ms.</li>
+</ul>
+<h3 id="error_behaviour"><b>Error Behaviour</b></h3>
+<p>LED3 turns ON if any error occurs.</p>
+<h3 id="freertos-usage-hints"><b>FreeRTOS usage hints</b></h3>
+<ul>
+<li>Care must be taken when using HAL_Delay(), this function provides accurate delay (in milliseconds) based on
+variable incremented in HAL time base ISR. This implies that if HAL_Delay() is called from a peripheral ISR process,
+then the HAL time base interrupt must have higher priority (numerically lower) than the peripheral interrupt.
+Otherwise the caller ISR process will be blocked. To change the HAL time base interrupt priority you have to use
+HAL_NVIC_SetPriority() function.</li>
+<li>The application needs to ensure that the HAL time base is always set to 1 millisecond to have correct
+HAL operation.</li>
+<li>The FreeRTOS heap size configTOTAL_HEAP_SIZE defined in FreeRTOSConfig.h is set accordingly to the OS resources
+memory requirements of the application with +10% margin and rounded to the upper Kbyte boundary.</li>
+<li>For more details about FreeRTOS implementation on STM32Cube, please refer to UM1722 "Developing Applications on
+STM32Cube with RTOS".</li>
+</ul>
+<h3 id="keywords"><b>Keywords</b></h3>
+<p>RTOS, FreeRTOS, Threading, LED</p>
+<style>
+td {
+  padding-left: 40px;
+}
+</style>
+<h3 id="directory_contents"><b>Directory contents</b></h3>
+<table class="spaced-table">
+    <tr>
+        <td>FreeRTOS/FreeRTOS_ThreadCreation/Src/main.c</td>
+        <td>Main program</td>
+    </tr>
+    <tr>
+        <td>FreeRTOS/FreeRTOS_ThreadCreation/Src/stm32mp2xx_hal_timebase_tim.c</td>
+        <td>HAL timebase file</td>
+    </tr>
+    <tr>
+        <td>FreeRTOS/FreeRTOS_ThreadCreation/Src/stm32mp2xx_it.c</td>
+        <td>Interrupt handlers</td>
+    </tr>
+    <tr>
+        <td>FreeRTOS/FreeRTOS_ThreadCreation/Src/stm32mp2xx_hal_msp.c</td>
+        <td>MSP Initialization file</td>
+    </tr>
+    <tr>
+        <td>FreeRTOS/FreeRTOS_ThreadCreation/Inc/main.h</td>
+        <td>Main program header file</td>
+    </tr>
+    <tr>
+        <td>FreeRTOS/FreeRTOS_ThreadCreation/Inc/stm32mp2xx_hal_conf.h</td>
+        <td>HAL Library Configuration file</td>
+    </tr>
+    <tr>
+        <td>FreeRTOS/FreeRTOS_ThreadCreation/Inc/stm32mp2xx_it.h</td>
+        <td>Interrupt handlers header file</td>
+    </tr>
+    <tr>
+        <td>FreeRTOS/FreeRTOS_ThreadCreation/Inc/FreeRTOSConfig.h</td>
+        <td>FreeRTOS Configuration file</td>
+    </tr>
+    <tr>
+        <td>FreeRTOS/FreeRTOS_ThreadCreation/Inc/stm32mp215f_disco_conf.h</td>
+        <td>BSP configuration file</td>
+    </tr>
+</table>
+<h3 id="hardware-and-software-environment"><b>Hardware and Software
+environment</b></h3>
+<ul>
+<li>This application runs on STM32MP215FANx devices.</li>
+<li>This application has been tested with STM32MP215F-DK board and can be easily tailored to any other supported device
+and development board.</li>
+</ul>
+<h3 id="how-to-use-it"><b>How to use it ?</b></h3>
+<p>In order to make the program work, you must do the following :</p>
+<ul>
+<li>Open STM32CubeIDE</li>
+<li>Build with config: CA35TDCID_m33_ns_sign</li>
+<li>ssh root@192.168.7.1 'mkdir -p /home/root/FreeRTOS_ThreadCreation/lib/firmware'</li>
+<li>scp the signed firmware FreeRTOS_ThreadCreation_CM33_NonSecure_sign.bin to root@192.168.7.1:
+/home/root/FreeRTOS_ThreadCreation/lib/firmware</li>
+<li>scp the script Firmware/Utilities/scripts/fw_cortex_m33.sh to root@192.168.7.1:
+/home/root/FreeRTOS_ThreadCreation/</li>
+<li>To run the example on target:</li>
+<p>On target shell run:</p>
+<ul>
+    <li>cd /home/root/FreeRTOS_ThreadCreation</li>
+    <li>./fw_cortex_m33.sh start</li>
+</ul>
+</ul>
+</body>
+</html>

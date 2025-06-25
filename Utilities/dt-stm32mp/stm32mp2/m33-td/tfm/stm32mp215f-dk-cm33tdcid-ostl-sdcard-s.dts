@@ -1,0 +1,371 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+/*
+ * Copyright (C) STMicroelectronics 2023 - All Rights Reserved
+ */
+
+/dts-v1/;
+
+#include <dt-bindings/clock/stm32mp21-clksrc.h>
+#include <dt-bindings/ipcc/stm32mp25-ipcc.h>
+#include <dt-bindings/power/stm32mp25-power.h>
+#include <dt-bindings/reset/st,stm32mp21-rcc.h>
+#include <dt-bindings/regulator/stm32mp21-regulator.h>
+#include <dt-bindings/rif/stm32mp25-rif.h>
+#include <dt-bindings/rif/stm32mp21-rifsc.h>
+#include <dt-bindings/rif/stm32mp2-risaf.h>
+#include <dt-bindings/rif/stm32mp25-risab.h>
+
+#include "stm32mp215.dtsi"
+#include "stm32mp215f-dk-cm33tdcid-ostl-resmem.dtsi"
+#include "stm32mp215f-dk-cm33tdcid-ostl-rcc.dtsi"
+#include "stm32mp215f-dk-cm33tdcid-ostl-scmi.dtsi"
+#include "stm32mp215f-dk-cm33tdcid-ostl-s-rif.dtsi"
+#include "stm32mp215f-dk-cm33tdcid-ostl-s-rif-ca35-sdcard.dtsi"
+#include "stm32mp21-pinctrl.dtsi"
+#include "stm32mp21xxan-pinctrl.dtsi"
+
+/ {
+	model = "STMicroelectronics STM32MP215F-DK OSTL A35_SDCARD Discovery Board";
+	compatible = "st,stm32mp215f-dk-cm33tdcid-ostl-sdcard", "st,stm32mp215f-dk", "st,stm32mp215";
+	aliases {
+		serial0 = &uart4;
+	};
+
+	chosen {
+		stdout-device = &uart4;
+		tfm,entropy = &rng1;
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x80000000 0x80000000>;
+	};
+};
+
+&iac {
+	status = "okay";
+};
+
+&serc {
+	status = "okay";
+};
+
+&uart4 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart4_pins_a>;
+	clocks = <&rcc CK_KER_UART4>;
+	current-speed = <115200>;
+	status = "okay";
+};
+
+&systick {
+	clocks = <&rcc CK_ICN_HS_MCU>;
+	clock-frequency = <1000000>; /* tick at 1us */
+	status = "okay";
+};
+
+&tim2 {
+	status = "okay";
+};
+
+&i2c3 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c3_pins_a>;
+	i2c-scl-rising-time-ns = <185>;
+	i2c-scl-falling-time-ns = <20>;
+	clock-frequency = <100000>;
+	status = "okay";
+
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	pmic2: pmic@33 {
+		// compatible = "st,stpmic2l";
+		compatible = "st,stpmic2";
+
+
+		reg = <0x33>;
+		status = "okay";
+
+		regulators {
+			compatible = "st,stpmic2-regulators";
+
+			vddcore: buck1 {
+				regulator-name = "vddcore";
+				regulator-min-microvolt = <820000>;
+				regulator-max-microvolt = <820000>;
+				regulator-always-on;
+			};
+			vdd2_ddr: buck2 {
+				regulator-name = "vdd2_ddr";
+				regulator-min-microvolt = <1100000>;
+				regulator-max-microvolt = <1100000>;
+			};
+			vddcpu: buck3 {
+				regulator-name = "vddcpu";
+				regulator-min-microvolt = <800000>;
+				regulator-max-microvolt = <910000>;
+				regulator-always-on;
+			};
+			vdda1v8_aon: ldo1 {
+				regulator-name = "vdda1v8_aon";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+				regulator-always-on;
+				//st,mask-reset;
+			};
+			vddio_pmic: ldo2 {
+				regulator-name = "vddio_pmic";
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-always-on;
+				//st,mask-reset;
+			};
+			vdd1_ddr: ldo3 {
+				regulator-name = "vdd1_ddr";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+				regulator-enable-ramp-delay = <1000>;
+			};
+			vdd3v3_usb: ldo4 {
+				regulator-name = "vdd3v3_usb";
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3300000>;
+			};
+			vdd_flash: ldo5 {
+				regulator-name = "vdd_flash";
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3300000>;
+			};
+			vdda_1v8: ldo6 {
+				regulator-name = "vdda_1v8";
+				regulator-min-microvolt = <1800000>;
+				regulator-max-microvolt = <1800000>;
+				regulator-always-on;
+			};
+			v3v3: gpo1 {
+				regulator-name = "v3v3";
+				regulator-min-microvolt = <3300000>;
+				regulator-max-microvolt = <3300000>;
+				regulator-always-on;
+			};
+		};
+	};
+};
+
+&ipcc1 {
+	status = "okay";
+};
+
+&bsec {
+	memory-region = <&bsec_mirror>;
+	status = "okay";
+
+	board_id: board_id@3d8 {
+		#nvmem-cell-cells = <0>;
+		reg = <0x3d8 0x4>;
+	};
+};
+
+&pwr {
+	status = "okay";
+
+	vdda18adc {
+		status = "okay";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <1800000>;
+		vin-supply = <&vdda_1v8>;
+	};
+
+	vddio1 {
+		status = "okay";
+		vin-supply = <&vddio_pmic>;
+	};
+
+	vddio2 {
+		status = "okay";
+		vin-supply = <&vdda_1v8>;
+	};
+
+	vddio3 {
+		status = "okay";
+		vin-supply = <&vddio_pmic>;
+	};
+
+	vddio {
+		status = "okay";
+		vin-supply = <&vddio_pmic>;
+	};
+};
+
+&scmi_ca35 {
+	status = "okay";
+	memory-region = <&scmi_cid1_ns>;
+	mboxes = <&ipcc1 IPCC_CHANNEL(16)>;
+	regu-list = <&scmi_vddcore>, <&scmi_vdd3v3_usb>, <&scmi_vdd_flash> , <&scmi_vdda_1v8>,
+		     <&scmi_v3v3>, <&scmi_vddio1>, <&scmi_vddio2>, <&scmi_vddio3>, <&scmi_vdda18adc>;
+	regu-id-max = <STMP21_VOLTD_SCMI_MAX>;
+
+	rst-list = <&scmi_rst_fmc>;
+	rst-id-max = <STM32MP21_RST_SCMI_MAX>;
+	clk-list = <&scmi_clk_icn_sdmmc>, <&scmi_clk_icn_ddr>,
+         <&scmi_clk_icn_display>, <&scmi_clk_icn_hsl>,
+         <&scmi_clk_icn_nic>,
+         <&scmi_clk_flexgen_07>, <&scmi_clk_flexgen_08>,
+	 <&scmi_clk_flexgen_09>, <&scmi_clk_flexgen_10>,
+         <&scmi_clk_flexgen_11>, <&scmi_clk_flexgen_12>,
+         <&scmi_clk_flexgen_13>, <&scmi_clk_flexgen_14>,
+         <&scmi_clk_flexgen_15>, <&scmi_clk_flexgen_16>,
+         <&scmi_clk_flexgen_17>, <&scmi_clk_flexgen_18>,
+         <&scmi_clk_flexgen_19>, <&scmi_clk_flexgen_20>,
+         <&scmi_clk_flexgen_21>, <&scmi_clk_flexgen_22>,
+         <&scmi_clk_flexgen_23>, <&scmi_clk_flexgen_24>,
+         <&scmi_clk_flexgen_25>, <&scmi_clk_flexgen_26>,
+         <&scmi_clk_flexgen_27>, <&scmi_clk_flexgen_28>,
+         <&scmi_clk_flexgen_29>, <&scmi_clk_flexgen_30>,
+         <&scmi_clk_flexgen_31>, <&scmi_clk_flexgen_32>,
+         <&scmi_clk_flexgen_33>, <&scmi_clk_flexgen_34>,
+         <&scmi_clk_flexgen_35>, <&scmi_clk_flexgen_36>,
+         <&scmi_clk_flexgen_37>, <&scmi_clk_flexgen_38>,
+         <&scmi_clk_flexgen_39>, <&scmi_clk_flexgen_40>,
+         <&scmi_clk_flexgen_41>, <&scmi_clk_flexgen_42>,
+         <&scmi_clk_flexgen_43>, <&scmi_clk_flexgen_44>,
+         <&scmi_clk_flexgen_45>, <&scmi_clk_flexgen_46>,
+         <&scmi_clk_flexgen_47>, <&scmi_clk_flexgen_48>,
+         <&scmi_clk_flexgen_49>, <&scmi_clk_flexgen_50>,
+         <&scmi_clk_flexgen_51>, <&scmi_clk_flexgen_52>,
+         <&scmi_clk_flexgen_53>, <&scmi_clk_flexgen_54>,
+         <&scmi_clk_flexgen_55>, <&scmi_clk_flexgen_56>,
+         <&scmi_clk_flexgen_57>, <&scmi_clk_flexgen_58>,
+         <&scmi_clk_flexgen_59>, <&scmi_clk_flexgen_60>,
+         <&scmi_clk_flexgen_61>, <&scmi_clk_flexgen_62>,
+         <&scmi_clk_flexgen_63>,
+
+         <&scmi_clk_gpioa>, <&scmi_clk_gpiob>,
+         <&scmi_clk_gpioc>, <&scmi_clk_gpiod>,
+         <&scmi_clk_gpioe>, <&scmi_clk_gpiof>,
+         <&scmi_clk_gpiog>, <&scmi_clk_gpioh>,
+         <&scmi_clk_gpioi>,
+         <&scmi_clk_gpioz>,
+
+         <&scmi_clk_icn_ls_mcu>, <&scmi_clk_hse>,
+         <&scmi_clk_lse>, <&scmi_clk_hsi>, <&scmi_clk_lsi>,
+         <&scmi_clk_msi>, <&scmi_clk_rtcck>,
+         <&scmi_clk_icn_apb1>, <&scmi_clk_icn_apb2>,
+         <&scmi_clk_icn_apb3>, <&scmi_clk_icn_apb4>,  <&scmi_clk_icn_apb5>,
+         <&scmi_clk_icn_apbdbg>, <&scmi_clk_timg1>,
+         <&scmi_clk_timg2>, <&scmi_clk_bkpsram>,
+         <&scmi_clk_bsec>, <&scmi_clk_bus_etr>,
+         <&scmi_clk_fmc>, <&scmi_clk_hpdma1>,
+         <&scmi_clk_hpdma2>, <&scmi_clk_hpdma3>,
+         <&scmi_clk_ipcc1>,
+         <&scmi_clk_retram>,
+         <&scmi_clk_rtc>, <&scmi_clk_sram1>,
+         <&scmi_clk_syscpu1>,
+         <&scmi_clk_cpu1>, <&scmi_clk_hse_div2>,
+         <&scmi_clk_pll2>,
+         <&scmi_clk_sysram>, <&scmi_clk_ospi1>,
+         <&scmi_clk_tpiu>,
+         <&scmi_clk_sysdbg>, <&scmi_clk_sysatb>,
+         <&scmi_clk_tsdbg>, <&scmi_clk_etr>,
+         <&scmi_clk_bus_stm>, <&scmi_clk_hsi_ker_ck>,
+         <&scmi_clk_hse_ker_ck>, <&scmi_clk_msi_ker_ck>;
+
+	clk-id-max = <STM32MP21_CK_SCMI_MAX>;
+
+	// pd-list = <&scmi_pd_gpu>;
+	// pd-id-max = <STM32MP25_PD_SCMI_MAX>;
+};
+
+&scmi_m33 {
+	status = "okay";
+	regu-list = <&scmi_vddcore>, <&scmi_vdd3v3_usb>, <&scmi_vdd_flash> , <&scmi_vdda_1v8>,
+		     <&scmi_v3v3>;
+	regu-id-max = <STMP21_VOLTD_SCMI_MAX>;
+
+	rst-list = <&scmi_rst_fmc>;
+	rst-id-max = <STM32MP21_RST_SCMI_MAX>;
+	clk-list = <&scmi_clk_icn_display>, <&scmi_clk_gpiob>, <&scmi_clk_flexgen_27>,
+		      <&scmi_clk_flexgen_07>, <&scmi_clk_flexgen_08>,
+		      <&scmi_clk_flexgen_09>, <&scmi_clk_flexgen_10>;
+	clk-id-max = <STM32MP21_CK_SCMI_MAX>;
+};
+
+&scmi_bl31 {
+	status = "okay";
+	memory-region = <&scmi_cid1_s>;
+	mboxes = <&ipcc1 IPCC_CHANNEL(15)>;
+	regu-list = <&scmi_vddcpu>;
+	regu-id-max = <(VOLTD_SCMI_STPMIC_BUCK3+1)>;
+};
+
+&psa_mbox {
+	status = "okay";
+	mboxes = <&ipcc1 IPCC_CHANNEL(14)>;
+	memory-region = <&psa_buffer_cid1_s>;
+};
+
+&rtc {
+	status = "okay";
+};
+
+&hpdma1 {
+	status = "okay";
+};
+
+&hpdma2 {
+	status = "okay";
+};
+
+&hpdma3 {
+	status = "okay";
+};
+
+&exti1 {
+	status = "okay";
+};
+
+&exti2 {
+	status = "okay";
+};
+
+&tamp {
+	status = "okay";
+};
+
+&hconf1_otp {
+	shadow-provisionning = <0x00018db6>;
+};
+
+&a35_rproc {
+	status = "okay";
+};
+
+&cpu0 {
+	enable-method = "remoteproc";
+	remoteprocs = <&a35_rproc>;
+};
+
+&risab3 {
+	status = "okay";
+};
+
+&risab5 {
+	status = "okay";
+};
+
+&risaf1 {
+	status = "okay";
+};
+
+&risaf4 {
+	status = "okay";
+};
+
+&rifsc {
+	status = "okay";
+};
+
+&rng1 {
+	status = "okay";
+};

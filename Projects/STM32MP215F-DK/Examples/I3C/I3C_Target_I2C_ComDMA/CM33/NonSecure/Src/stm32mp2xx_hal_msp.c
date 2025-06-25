@@ -2,12 +2,12 @@
   ******************************************************************************
   * @file    stm32mp2xx_hal_msp.c
   * @author  MCD Application Team
-  * @brief   This file provides code for the MSP Initialization 
+  * @brief   This file provides code for the MSP Initialization
   *                      and de-Initialization codes.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -42,9 +42,9 @@ void HAL_MspInit(void)
   /* USER CODE END MspInit 1 */
 }
 
-void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
+void HAL_I2C_MspInit(I2C_HandleTypeDef *hi2c)
 {
-  if(I2C1 == hi2c->Instance)
+  if (I2C1 == hi2c->Instance)
   {
     /* USER CODE BEGIN I2C1_MspInit 0 */
     /* USER CODE END I2C1_MspInit 0 */
@@ -64,20 +64,25 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
     hdma_tx.Init.DestDataWidth = DMA_DEST_DATAWIDTH_BYTE;
     hdma_tx.Init.SrcBurstLength = 1;
     hdma_tx.Init.DestBurstLength = 1;
+    hdma_tx.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT0 | DMA_DEST_ALLOCATED_PORT1;
     hdma_tx.Init.Priority = DMA_HIGH_PRIORITY;
     hdma_tx.Init.TransferEventMode = DMA_TCEM_BLOCK_TRANSFER;
     /* Deinitialize the Stream for new transfer */
     HAL_DMA_DeInit(&hdma_tx);
 
     /* Configure the DMA Stream */
-    if (HAL_OK != HAL_DMA_Init(&hdma_tx))
+    if (HAL_DMA_Init(&hdma_tx) != HAL_OK)
     {
       Error_Handler();
     }
 
-    HAL_DMA_ConfigChannelAttributes(&hdma_tx, (DMA_CHANNEL_PRIV | DMA_CHANNEL_SEC | DMA_CHANNEL_DEST_NSEC | DMA_CHANNEL_SRC_SEC));
-
     __HAL_LINKDMA(hi2c, hdmatx, hdma_tx);
+    if (IS_DEVELOPER_BOOT_MODE())
+    {
+      HAL_DMA_ConfigChannelAttributes(hi2c->hdmatx,
+                                      (DMA_CHANNEL_PRIV | DMA_CHANNEL_SEC | DMA_CHANNEL_DEST_SEC | \
+                                       DMA_CHANNEL_SRC_SEC | DMA_CHANNEL_CID_STATIC_2));
+    }
 
     /* I2C1_RX Init */
     hdma_rx.Instance = HPDMA3_Channel3;
@@ -90,17 +95,22 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
     hdma_rx.Init.SrcBurstLength = 1;
     hdma_rx.Init.DestBurstLength = 1;
     hdma_rx.Init.Priority = DMA_HIGH_PRIORITY;
+    hdma_rx.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT1 | DMA_DEST_ALLOCATED_PORT0;
     hdma_rx.Init.TransferEventMode = DMA_TCEM_BLOCK_TRANSFER;
 
     HAL_DMA_DeInit(&hdma_rx);
-    if (HAL_OK != HAL_DMA_Init(&hdma_rx))
+    if (HAL_DMA_Init(&hdma_rx) != HAL_OK)
     {
       Error_Handler();
     }
-
-    HAL_DMA_ConfigChannelAttributes(&hdma_rx, (DMA_CHANNEL_PRIV | DMA_CHANNEL_SEC | DMA_CHANNEL_DEST_SEC | DMA_CHANNEL_SRC_NSEC));
-
     __HAL_LINKDMA(hi2c, hdmarx, hdma_rx);
+
+    if (IS_DEVELOPER_BOOT_MODE())
+    {
+      HAL_DMA_ConfigChannelAttributes(hi2c->hdmarx,
+                                      (DMA_CHANNEL_PRIV | DMA_CHANNEL_SEC | DMA_CHANNEL_DEST_SEC | \
+                                       DMA_CHANNEL_SRC_SEC | DMA_CHANNEL_CID_STATIC_2));
+    }
 
     /* I2C1 interrupt Init */
     HAL_NVIC_SetPriority(I2C1_IRQn, DEFAULT_IRQ_PRIO, 0);
@@ -119,49 +129,49 @@ void HAL_I2C_MspInit(I2C_HandleTypeDef* hi2c)
 
 }
 
-void HAL_I2C_MspPostInit(I2C_HandleTypeDef* hi2c)
+void HAL_I2C_MspPostInit(I2C_HandleTypeDef *hi2c)
 {
-	GPIO_InitTypeDef GPIO_InitStruct;
+  GPIO_InitTypeDef GPIO_InitStruct;
 
-	/* USER CODE BEGIN I2C_MspPostInit 0 */
+  /* USER CODE BEGIN I2C_MspPostInit 0 */
 
-	/* USER CODE END I2C_MspPostInit 0 */
-	if(I2C1 == hi2c->Instance)
-	{
-	    /**I3C1 GPIO Configuration
-	    PG13    ------> I2C1_SCL
-	    PA2     ------> I2C1_SDA
-	    */
-	    GPIO_InitStruct.Pin = GPIO_PIN_2;
-	    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
-	    GPIO_InitStruct.Pull = GPIO_NOPULL;
-	    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	    GPIO_InitStruct.Alternate = GPIO_AF10_I2C1;
-	    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  /* USER CODE END I2C_MspPostInit 0 */
+  if (I2C1 == hi2c->Instance)
+  {
+    /**I2C1 GPIO Configuration
+    PG13    ------> I2C1_SCL
+    PA2     ------> I2C1_SDA
+      */
+    GPIO_InitStruct.Pin = GPIO_PIN_2;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF10_I2C1;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-	    GPIO_InitStruct.Pin = GPIO_PIN_13;
-	    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
-	    GPIO_InitStruct.Pull = GPIO_NOPULL;
-	    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-	    GPIO_InitStruct.Alternate = GPIO_AF9_I2C1;
-	    HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-	}
+    GPIO_InitStruct.Pin = GPIO_PIN_13;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_OD;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF9_I2C1;
+    HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+  }
 }
 
-void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c)
+void HAL_I2C_MspDeInit(I2C_HandleTypeDef *hi2c)
 {
   /* USER CODE BEGIN I2C1_MspDeInit 0 */
 
   /* USER CODE END I2C1_MspDeInit 0 */
-  if(I2C1 == hi2c->Instance)
+  if (I2C1 == hi2c->Instance)
   {
-	/* Peripheral clock disable */
+    /* Peripheral clock disable */
     __HAL_RCC_I2C1_CLK_DISABLE();
 
-    /**I3C1 GPIO Configuration
+    /**I2C1 GPIO Configuration
     PG13    ------> I2C1_SCL
     PA2     ------> I2C1_SDA
-    */
+      */
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_2);
 
     HAL_GPIO_DeInit(GPIOG, GPIO_PIN_13);
@@ -172,9 +182,9 @@ void HAL_I2C_MspDeInit(I2C_HandleTypeDef* hi2c)
 
     /* I2C1 interrupt DeInit */
     HAL_NVIC_DisableIRQ(I2C1_IRQn);
-	
-	/* USER CODE BEGIN I2C1_MspDeInit 1 */
-	/* USER CODE END I2C1_MspDeInit 1 */
+
+    /* USER CODE BEGIN I2C1_MspDeInit 1 */
+    /* USER CODE END I2C1_MspDeInit 1 */
   }
 
 }

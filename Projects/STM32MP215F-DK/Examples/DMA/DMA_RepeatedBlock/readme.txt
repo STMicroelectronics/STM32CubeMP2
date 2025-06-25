@@ -61,7 +61,7 @@ The start of DMA transfer is triggered by software.
 
 @par Hardware and Software environment
 
-  - This example runs on STM32MP2xx devices.
+  - This example runs on STM32MP21xxxx devices.
 
   - This example has been tested with STMicroelectronics STM32MP215F-DK
     board and can be easily tailored to any other supported device

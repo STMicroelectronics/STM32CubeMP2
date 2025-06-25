@@ -69,11 +69,12 @@
 									<listOptionValue builtIn="false" value="../../../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM33_NTZ/non_secure"/>
 									<listOptionValue builtIn="false" value="../../../../../../../../../Drivers/CMSIS/RTOS2/Include"/>
 									<listOptionValue builtIn="false" value="../../../../../../../../../Drivers/CMSIS/RTOS2/Template"/>
+									<listOptionValue builtIn="false" value="../../../../../../../../../Middlewares/ST/scmiagent"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols.694229439" name="Define symbols (-D)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32MP257Cxx"/>
 									<listOptionValue builtIn="false" value="STM32MP25xxxx"/>
-									<listOptionValue builtIn="false" value="LOGLEVEL=4"/>
+									<listOptionValue builtIn="false" value="LOGLEVEL=3"/>
 									<listOptionValue builtIn="false" value="USE_FULL_LL_DRIVER"/>
 									<listOptionValue builtIn="false" value="TX_SINGLE_MODE_NON_SECURE=1"/>
 									<listOptionValue builtIn="false" value="TX_INCLUDE_USER_DEFINE_FILE"/>
@@ -214,11 +215,12 @@
 									<listOptionValue builtIn="false" value="../../../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM33_NTZ/non_secure"/>
 									<listOptionValue builtIn="false" value="../../../../../../../../../Drivers/CMSIS/RTOS2/Include"/>
 									<listOptionValue builtIn="false" value="../../../../../../../../../Drivers/CMSIS/RTOS2/Template"/>
+									<listOptionValue builtIn="false" value="../../../../../../../../../Middlewares/ST/scmiagent"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols.163333530" name="Define symbols (-D)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32MP257Cxx"/>
 									<listOptionValue builtIn="false" value="STM32MP25xxxx"/>
-									<listOptionValue builtIn="false" value="LOGLEVEL=4"/>
+									<listOptionValue builtIn="false" value="LOGLEVEL=3"/>
 									<listOptionValue builtIn="false" value="USE_FULL_LL_DRIVER"/>
 									<listOptionValue builtIn="false" value="TX_SINGLE_MODE_NON_SECURE=1"/>
 									<listOptionValue builtIn="false" value="TX_INCLUDE_USER_DEFINE_FILE"/>
@@ -359,11 +361,12 @@
 									<listOptionValue builtIn="false" value="../../../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM33_NTZ/non_secure"/>
 									<listOptionValue builtIn="false" value="../../../../../../../../../Drivers/CMSIS/RTOS2/Include"/>
 									<listOptionValue builtIn="false" value="../../../../../../../../../Drivers/CMSIS/RTOS2/Template"/>
+									<listOptionValue builtIn="false" value="../../../../../../../../../Middlewares/ST/scmiagent"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols.465850979" name="Define symbols (-D)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32MP257Cxx"/>
 									<listOptionValue builtIn="false" value="STM32MP25xxxx"/>
-									<listOptionValue builtIn="false" value="LOGLEVEL=4"/>
+									<listOptionValue builtIn="false" value="LOGLEVEL=3"/>
 									<listOptionValue builtIn="false" value="USE_FULL_LL_DRIVER"/>
 									<listOptionValue builtIn="false" value="TX_SINGLE_MODE_NON_SECURE=1"/>
 									<listOptionValue builtIn="false" value="TX_INCLUDE_USER_DEFINE_FILE"/>
@@ -504,11 +507,12 @@
 									<listOptionValue builtIn="false" value="../../../../../../../../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM33_NTZ/non_secure"/>
 									<listOptionValue builtIn="false" value="../../../../../../../../../Drivers/CMSIS/RTOS2/Include"/>
 									<listOptionValue builtIn="false" value="../../../../../../../../../Drivers/CMSIS/RTOS2/Template"/>
+									<listOptionValue builtIn="false" value="../../../../../../../../../Middlewares/ST/scmiagent"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols.1186365567" name="Define symbols (-D)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.definedsymbols" useByScannerDiscovery="false" valueType="definedSymbols">
 									<listOptionValue builtIn="false" value="STM32MP257Cxx"/>
 									<listOptionValue builtIn="false" value="STM32MP25xxxx"/>
-									<listOptionValue builtIn="false" value="LOGLEVEL=4"/>
+									<listOptionValue builtIn="false" value="LOGLEVEL=3"/>
 									<listOptionValue builtIn="false" value="USE_FULL_LL_DRIVER"/>
 									<listOptionValue builtIn="false" value="TX_SINGLE_MODE_NON_SECURE=1"/>
 									<listOptionValue builtIn="false" value="TX_INCLUDE_USER_DEFINE_FILE"/>

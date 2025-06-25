@@ -59,9 +59,9 @@ extern "C" {
 #define STM32MP23_RIFSC_SPI4_ID           25
 #define STM32MP23_RIFSC_SPI5_ID           26
 #define STM32MP23_RIFSC_SPI6_ID           27
-#define STM32MP23_RIFSC_SPI7_ID         28
+#define STM32MP23_RIFSC_SPI7_ID           28
 #define STM32MP23_RIFSC_SPI8_ID           29
-#define STM32MP23_RIFSC_SPDIFRX_ID          30
+#define STM32MP23_RIFSC_SPDIFRX_ID        30
 #define STM32MP23_RIFSC_USART1_ID         31
 #define STM32MP23_RIFSC_USART2_ID         32
 #define STM32MP23_RIFSC_USART3_ID         33
@@ -92,7 +92,7 @@ extern "C" {
 #define STM32MP23_RIFSC_HDP_ID            57
 #define STM32MP23_RIFSC_ADC12_ID          58
 #define STM32MP23_RIFSC_ADC3_ID           59
-#define STM32MP23_RIFSC_ETH1_ID         60
+#define STM32MP23_RIFSC_ETH1_ID           60
 #if !defined(STM32MP231Cxx) || !defined(STM32MP231Fxx) || !defined(STM32MP231Axx) || !defined(STM32MP231Dxx)
 #define STM32MP23_RIFSC_ETH2_ID           61
 #endif
@@ -120,7 +120,7 @@ extern "C" {
 #endif
 #define STM32MP23_RIFSC_CSI_ID            86
 #define STM32MP23_RIFSC_DCMIPP_ID         87
-#define STM32MP23_RIFSC_DCMI_PSSI_ID        88
+#define STM32MP23_RIFSC_DCMI_PSSI_ID      88
 #if defined(STM32MP235Axx) || defined(STM32MP235Dxx) || defined(STM32MP235Cxx) || defined(STM32MP235Fxx)
 #define STM32MP23_RIFSC_VDEC_ID           89
 #define STM32MP23_RIFSC_VENC_ID           90
@@ -145,8 +145,8 @@ extern "C" {
 #define STM32MP23_RIFSC_DTS_ID            107
 #define STM32MP23_RIFSC_RAMCFG_ID         108
 #define STM32MP23_RIFSC_CRC_ID            109
-#define STM32MP23_RIFSC_SERC_ID         110
-#define STM32MP23_RIFSC_OCTOSPIM_ID         111
+#define STM32MP23_RIFSC_SERC_ID           110
+#define STM32MP23_RIFSC_OCTOSPIM_ID       111
 #define STM32MP23_RIFSC_GICV2M_ID         112
 #define STM32MP23_RIFSC_I3C1_ID           114
 #define STM32MP23_RIFSC_I3C2_ID           115
@@ -162,7 +162,7 @@ extern "C" {
 #endif
 #define STM32MP23_RIFSC_OTFDEC1_ID            125
 #define STM32MP23_RIFSC_OTFDEC2_ID            126
-#define STM32MP23_RIFSC_IAC_ID              127
+#define STM32MP23_RIFSC_IAC_ID                127
 
 
 #define RESMGR_RIFSC_TIM1_ID       STM32MP23_RIFSC_TIM1_ID
@@ -226,7 +226,7 @@ extern "C" {
 #define RESMGR_RIFSC_HDP_ID          STM32MP23_RIFSC_HDP_ID
 #define RESMGR_RIFSC_ADC12_ID        STM32MP23_RIFSC_ADC12_ID
 #define RESMGR_RIFSC_ADC3_ID         STM32MP23_RIFSC_ADC3_ID
-#define RESMGR_RIFSC_tea_ID        STM32MP23_RIFSC_ETH1_ID
+#define RESMGR_RIFSC_ETH1_ID        STM32MP23_RIFSC_ETH1_ID
 #if !defined(STM32MP231Cxx) || !defined(STM32MP231Fxx) || !defined(STM32MP231Axx) || !defined(STM32MP231Dxx)
 #define RESMGR_RIFSC_ETH2_ID         STM32MP23_RIFSC_ETH2_ID
 #endif
@@ -298,7 +298,7 @@ extern "C" {
 #define RESMGR_RIFSC_OTFDEC2_ID        STM32MP23_RIFSC_OTFDEC2_ID
 #define RESMGR_RIFSC_IAC_ID          STM32MP23_RIFSC_IAC_ID
 
-#define RESMGR_RIFSC_RIFSC_ID_MAX   127
+#define RESMGR_RIFSC_ID_MAX   127
 
 /*GPIO Pin Resource Selection Macro*/
 #define RESMGR_GPIO_PIN_0                GPIO_PIN_0         /* Pin 0 selected    */
@@ -306,7 +306,7 @@ extern "C" {
 #define RESMGR_GPIO_PIN_2                GPIO_PIN_2         /* Pin 2 selected    */
 #define RESMGR_GPIO_PIN_3                GPIO_PIN_3         /* Pin 3 selected    */
 #define RESMGR_GPIO_PIN_4                GPIO_PIN_4         /* Pin 4 selected    */
-#define RESMGR_GPIO_PIN_5        GPIO_PIN_5         /* Pin 5 selected    */
+#define RESMGR_GPIO_PIN_5                GPIO_PIN_5         /* Pin 5 selected    */
 #define RESMGR_GPIO_PIN_6                GPIO_PIN_6         /* Pin 6 selected    */
 #define RESMGR_GPIO_PIN_7                GPIO_PIN_7         /* Pin 7 selected    */
 #define RESMGR_GPIO_PIN_8                GPIO_PIN_8         /* Pin 8 selected    */

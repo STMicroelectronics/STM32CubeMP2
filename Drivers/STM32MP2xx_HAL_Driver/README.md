@@ -38,8 +38,8 @@ In this table, you can find the successive versions of this HAL-LL Driver compon
 It is **crucial** that you use a consistent set of versions for the CMSIS Core - CMSIS Device - HAL, as mentioned in this table.
 
 HAL Driver | CMSIS Device | CMSIS Core | Was delivered in the full MPU package
-------------- | --------------- | ---------- | -------------------------------------
-Tag v1.0.0 | Tag v1.0.0 | Tag v5.6.0 | Tag v1.0.0 (and following, if any, till next tag)
+-----------| -------------| ---------- | -------------------------------------
+Tag v1.2.0 | Tag v1.2.0   | Tag v5.9.0 | Tag v1.2.0 (and following, if any, till next tag)
 
 
 The full **STM32CubeMP2** MPU package is available [here](https://github.com/STMicroelectronics/STM32CubeMP2).

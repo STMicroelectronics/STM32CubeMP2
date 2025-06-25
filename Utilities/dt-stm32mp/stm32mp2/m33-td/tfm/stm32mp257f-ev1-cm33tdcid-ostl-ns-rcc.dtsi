@@ -1,0 +1,29 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+/*
+ * Copyright (C) STMicroelectronics 2023 - All Rights Reserved
+ */
+
+&clk_hse {
+	clock-frequency = <40000000>;
+	status = "disabled";
+};
+
+&clk_hsi {
+	clock-frequency = <64000000>;
+	status = "disabled";
+};
+
+&clk_lse {
+	clock-frequency = <32768>;
+	status = "disabled";
+};
+
+&clk_lsi {
+	clock-frequency = <32000>;
+	status = "disabled";
+};
+
+&clk_msi {
+	clock-frequency = <16000000>;
+	status = "disabled";
+};

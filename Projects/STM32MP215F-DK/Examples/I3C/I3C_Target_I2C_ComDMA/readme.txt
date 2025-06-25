@@ -2,13 +2,13 @@
   @page I3C_Target_I2C_ComDMA I2C Two Boards Communication DMA example
   
   @verbatim
-  ******************** (C) COPYRIGHT 2024 STMicroelectronics *******************
+  ******************** (C) COPYRIGHT 2025 STMicroelectronics *******************
   * @file    I2C/I3C_Target_I2C_ComDMA/readme.txt 
   * @author  MCD Application Team
   * @brief   Description of the I2C Two Boards Communication DMA example.
   ******************************************************************************
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -23,13 +23,13 @@
 How to handle I2C data buffer transmission/reception between two boards,
 using DMA.
 
-Board: STM32MP257F-EV1 (embeds a STM32MP257FAIx device)
-SCL Pin: PZ4 (CN5, pin5)
-SDA Pin: PZ3 (CN5, pin3)
+      - Board: STM32MP215-DK (embeds a STM32MP21xxxx device)
+      - SCL Pin: PG13 (CN10, pin5)
+      - SDA Pin: PA2  (CN10, pin3)
 
    _________________________                       _________________________ 
   |           ______________|                     |______________           |
-  |          |I2C2          |                     |          I2C2|          |
+  |          |I2C1          |                     |          I2C1|          |
   |          |              |                     |              |          |
   |          |          SCL |_____________________| SCL          |          |
   |          |              |                     |              |          |
@@ -75,7 +75,8 @@ result.
 Finally, aTxBuffer and aRxBuffer are compared through Buffercmp() in order to
 check buffers correctness.
 
-STM32MP257F-EV1's LED can be used to monitor the transfer status:
+STM32MP215F-DK's LEDs can be used to monitor the transfer status:
+
  - LED3 will toggle when the transmission and reception process is complete.
  - LED3 is ON in case of error in initialization or transmission/reception process
 
@@ -90,25 +91,26 @@ STM32MP257F-EV1's LED can be used to monitor the transfer status:
 
 @par Directory contents 
 
-  - I2C/I3C_Target_I2C_ComDMA/CM33/NonSecure/Inc/stm32mp2xx_hal_conf.h    HAL configuration file
-  - I2C/I3C_Target_I2C_ComDMA/CM33/NonSecure/Inc/stm32mp2xx_it.h          DMA and I2C interrupt handlers header file
-  - I2C/I3C_Target_I2C_ComDMA/CM33/NonSecure/Inc/main.h                   Header for main.c module  
-  - I2C/I3C_Target_I2C_ComDMA/CM33/NonSecure/Src/stm32mp2xx_it.c          DMA and I2C interrupt handlers
-  - I2C/I3C_Target_I2C_ComDMA/CM33/NonSecure/Src/main.c                   Main program
-  - I2C/I3C_Target_I2C_ComDMA/CM33/NonSecure/Src/system_stm32mp2xx.c      STM32MP2xx system source file
-  - I2C/I3C_Target_I2C_ComDMA/CM33/NonSecure/Src/stm32mp2xx_hal_msp.c     HAL MSP file    
+  - I3C/I3C_Target_I2C_ComDMA/CM33/NonSecure/Inc/stm32mp215f_disco_conf.h   BSP configuration file
+  - I2C/I3C_Target_I2C_ComDMA/CM33/NonSecure/Inc/stm32mp2xx_hal_conf.h      HAL configuration file
+  - I2C/I3C_Target_I2C_ComDMA/CM33/NonSecure/Inc/stm32mp2xx_it.h            DMA and I2C interrupt handlers header file
+  - I2C/I3C_Target_I2C_ComDMA/CM33/NonSecure/Inc/main.h                     Header for main.c module  
+  - I2C/I3C_Target_I2C_ComDMA/CM33/NonSecure/Src/stm32mp2xx_it.c            DMA and I2C interrupt handlers
+  - I2C/I3C_Target_I2C_ComDMA/CM33/NonSecure/Src/main.c                     Main program
+  - I2C/I3C_Target_I2C_ComDMA/CM33/NonSecure/Src/system_stm32mp2xx.c        STM32MP2xx system source file
+  - I2C/I3C_Target_I2C_ComDMA/CM33/NonSecure/Src/stm32mp2xx_hal_msp.c       HAL MSP file    
 
 @par Hardware and Software environment
 
-  - This example runs on STM32MP257FAIx devices.
-    
-  - This example has been tested with STM32MP257F-EV1 board and can be
-    easily tailored to any other supported device and development board.    
+  - This example runs on STM32MP21xxxx devices.
 
-  - STM32MP257F-EV1 Set-ups
-    - Connect I2C_SCL line of Master board (PZ4, CN5, pin5) to I2C_SCL line of Slave Board (PZ4, CN5, pin5).
-    - Connect I2C_SDA line of Master board (PZ3, CN5, pin3) to I2C_SDA line of Slave Board (PZ3, CN5, pin3).
-    - Connect GND (CN5, pin39) of Master board to GND (CN5, pin39) of Slave Board.
+  - This example has been tested with STM32MP215F-DK board and can be
+    easily tailored to any other supported device and development board.
+
+  - STM32MP215F-DK Set-up
+    - Connect I2C_SCL line of Master board PG13(CN10, pin5) to I2C_SCL line of Slave Board PG13(CN10, pin5).
+    - Connect I2C_SDA line of Master board PA2 (CN10, pin3) to I2C_SDA line of Slave Board PA2 (CN10, pin3).
+    - Connect GND (CN10, pin39) of Master board to GND (CN10, pin39) of Slave Board.
 
 @par How to use it ? 
 

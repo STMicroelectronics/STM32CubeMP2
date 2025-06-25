@@ -73,7 +73,7 @@ System, GPIO, EXTI, Output, Alternate function, Push-pull, Toggle
 @par How to use it ? 
 
 In order to make the program work, you must do the following:
-- Open STM32CubeIDE
+- Open STM32CubeIDE/IAR Workbench
 - Build with config: CA35TDCID_m33_ns_sign
 - ssh root@192.168.7.1 'mkdir -p /home/root/GPIO_EXTI/lib/firmware'
 - scp the signed firmware GPIO_EXTI_CM33_NonSecure_sign.bin to root@192.168.7.1:/home/root/GPIO_EXTI/lib/firmware
@@ -88,7 +88,7 @@ In order to make the program work, you must do the following:
 NOTE: It is necessary to flash the Linux code using - FlashLayout_sdcard_stm32mp257f-dk-ca35tdcid-ostl-m33-examples-optee.tsv
 
 In order to make this program work on SRAM, you must do the following:
-- Open STM32CubeIDE
+- Open STM32CubeIDE/IAR Workbench
 - Build with config: CA35TDCID_SRAM_m33_ns_sign
 - ssh root@192.168.7.1 'mkdir -p /home/root/GPIO_EXTI/lib/firmware'
 - scp the signed firmware GPIO_EXTI_CM33_NonSecure_sign.bin to root@192.168.7.1:/home/root/GPIO_EXTI/lib/firmware

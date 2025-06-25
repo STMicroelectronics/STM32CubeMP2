@@ -1,0 +1,190 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+/*
+ * Copyright (C) STMicroelectronics 2023 - All Rights Reserved
+ * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
+ */
+
+/dts-v1/;
+
+#include <dt-bindings/clock/stm32mp25-clksrc.h>
+#include <dt-bindings/mfd/st,stpmic2.h>
+#include <dt-bindings/regulator/st,stm32mp25-regulator.h>
+#include <dt-bindings/reset/stm32mp25-resets.h>
+#include <dt-bindings/soc/stm32mp25-rif.h>
+#include <dt-bindings/soc/stm32mp25-risab.h>
+#include <dt-bindings/soc/stm32mp25-risaf.h>
+#include <dt-bindings/soc/stm32mp25-rifsc.h>
+#include "stm32mp257.dtsi"
+#include "stm32mp25xf.dtsi"
+#include "stm32mp257f-ev1-cm33tdcid-ostl-rcc.dtsi"
+#include "stm32mp257f-ev1-cm33tdcid-ostl-resmem.dtsi"
+#include "stm32mp257f-ev1-cm33tdcid-ostl-rif.dtsi"
+#include "stm32mp25-pinctrl.dtsi"
+#include "stm32mp25xxai-pinctrl.dtsi"
+
+/ {
+	model = "STMicroelectronics STM32MP257F-EV1 CM33TDCID OSTL Evaluation Board";
+	compatible = "st,stm32mp257f-ev1-cm33tdcid-ostl", "st,stm32mp257f-ev1", "st,stm32mp257";
+
+	aliases {
+		serial0 = &usart2;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
+	clocks {
+		rtc_pclk: rtc-pclk {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <200000000>;
+		};
+
+		rtc_ck: rtc-ck {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <32768>;
+		};
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x0 0x80000000 0x1 0x00000000>;
+	};
+
+	vddcpu: vddcpu {
+		compatible = "regulator-fixed";
+		regulator-name = "vddcpu";
+		regulator-min-microvolt = <800000>;
+		regulator-max-microvolt = <800000>;
+		regulator-always-on;
+	};
+
+        psa-client {
+		compatible = "st,psa-client";
+		mboxes =  <&ipcc1 RIF_IPCC_CPU1_CHANNEL(14)>;
+		mbox-names = "psa_tfm";
+		shmem= <&psa_buffer_cid1_s>;
+	};
+
+};
+
+&bsec {
+	status = "okay";
+};
+
+&cpu0 {
+	cpu-supply = <&vddcpu>;
+};
+
+&gpu {
+	status = "disabled";
+};
+
+&hsem {
+	status = "disabled";
+};
+
+&iac {
+	status = "disabled";
+};
+
+&iwdg1 {
+	timeout-sec = <32>;
+	status = "okay";
+};
+
+&iwdg2 {
+	/delete-property/ resets;
+};
+
+&ommanager {
+	memory-region = <&mm_ospi2>;
+	memory-region-names = "mm_ospi2";
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&ospi_port1_clk_pins_a
+		     &ospi_port1_io03_pins_a
+		     &ospi_port1_cs0_pins_a>;
+	pinctrl-1 = <&ospi_port1_clk_sleep_pins_a
+		     &ospi_port1_io03_sleep_pins_a
+		     &ospi_port1_cs0_sleep_pins_a>;
+	status = "disabled";
+};
+
+&pka {
+	status = "disabled";
+};
+
+&pwr {
+	status = "disabled";
+};
+
+&rcc {
+	st,c1msrd = <2>;
+	st,clk_opp {
+		st,ck_cpu1 {
+			cfg_1 {
+				hz = <1500000000>;
+				st,pll = <&pll1_cfg_1500Mhz>;
+			};
+
+			cfg_2 {
+				hz = <1200000000>;
+				st,pll = <&pll1_cfg_1200Mhz>;
+			};
+		};
+	};
+};
+
+&risab3 {
+	status = "disabled";
+};
+
+&risab4 {
+	status = "disabled";
+};
+
+&risab5 {
+	status = "disabled";
+};
+
+&risab6 {
+	status = "disabled";
+};
+
+&risaf1 {
+	status = "disabled";
+};
+
+&risaf2 {
+	status = "disabled";
+};
+
+&risaf5 {
+	status = "disabled";
+};
+
+&rng {
+	status = "disabled";
+};
+
+&rtc {
+	clocks = <&rtc_pclk>, <&rtc_ck>;
+	status = "okay";
+};
+
+
+&serc {
+	status = "disabled";
+};
+
+&tamp {
+	status = "disabled";
+};
+
+&usart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&usart2_pins_a>;
+	status = "okay";
+};

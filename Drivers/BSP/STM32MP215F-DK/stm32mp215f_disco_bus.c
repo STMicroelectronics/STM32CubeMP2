@@ -1088,8 +1088,7 @@ int32_t BSP_I2C3_Init(void)
     {
       ret = BSP_ERROR_BUS_FAILURE;
     }
-/* TODO: To be enabled after res_mgr changes are done for MP21 */
-#if 0
+
     /* Acquire GPIOZ1 using Resource manager */
     if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOZ, RESMGR_GPIO_PIN(1)))
     {
@@ -1100,7 +1099,7 @@ int32_t BSP_I2C3_Init(void)
     {
       ret = BSP_ERROR_BUS_FAILURE;
     }
-#endif /*0*/
+
     if (HAL_I2C_GetState(&hbus_i2c3) == HAL_I2C_STATE_RESET)
     {
 #if defined(BSP_USE_CMSIS_OS)
@@ -2067,6 +2066,12 @@ static void I2C2_MspInit(I2C_HandleTypeDef *hI2c)
 
   /* Prevent unused argument(s) compilation warning */
   UNUSED(hI2c);
+
+  /*** Configure the GPIOs ***/
+  /* Enable SCL GPIO clock */
+  BUS_I2C2_SCL_GPIO_CLK_ENABLE();
+  /* Enable SDA GPIO clock */
+  BUS_I2C2_SDA_GPIO_CLK_ENABLE();
 
   /*** Configure the GPIOs ***/
 

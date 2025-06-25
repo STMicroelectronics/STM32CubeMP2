@@ -20,6 +20,8 @@
 #ifndef MBOX_IPCC_H_
 #define MBOX_IPCC_H_
 
+#include "openamp/virtio.h"
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 

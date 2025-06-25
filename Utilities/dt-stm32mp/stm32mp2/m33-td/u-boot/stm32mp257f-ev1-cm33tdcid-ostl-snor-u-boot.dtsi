@@ -1,0 +1,76 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+/*
+ * Copyright (C) STMicroelectronics 2021 - All Rights Reserved
+ */
+
+#include "stm32mp257f-ev1-cm33tdcid-ostl-u-boot.dtsi"
+
+
+&flash0 {
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		partition@0 {
+			label = "fsblm1";
+			reg = <0x00000000 0x00040000>;
+		};
+		partition@40000 {
+			label = "fsblm2";
+			reg = <0x00040000 0x00040000>;
+		};
+		partition@80000 {
+			label = "fsbla1";
+			reg = <0x00080000 0x00040000>;
+		};
+		partition@C0000 {
+			label = "fsbla2";
+			reg = <0x000C0000 0x00040000>;
+		};
+		partition@100000 {
+			label = "m33ddr-a";
+			reg = <0x00100000 0x00040000>;
+		};
+		partition@140000 {
+			label = "m33ddr-b";
+			reg = <0x00140000 0x00040000>;
+		};
+		partition@180000 {
+			label = "m33fw-a";
+			reg = <0x00180000 0x00900000>;
+		};
+		partition@a80000 {
+			label = "m33fw-b";
+			reg = <0x00a80000 0x00900000>;
+		};
+		partition@1380000 {
+			label = "ps";
+			reg = <0x01380000 0x00100000>;
+		};
+		partition@1480000 {
+			label = "metadata1";
+			reg = <0x01480000 0x00040000>;
+		};
+		partition@14c0000 {
+			label = "metadata1";
+			reg = <0x014c0000 0x00040000>;
+		};
+		partition@1500000 {
+			label = "fip-a";
+			reg = <0x01500000 0x00400000>;
+		};
+		partition@1900000 {
+			label = "fip-b";
+			reg = <0x01900000 0x00400000>;
+		};
+		partition@1d00000 {
+			label = "u-boot-env";
+			reg = <0x01d00000 0x00080000>;
+		};
+		partition@1d80000 {
+			label = "nor-user";
+			reg = <0x01d80000 0x02180000>;
+		};
+	};
+};

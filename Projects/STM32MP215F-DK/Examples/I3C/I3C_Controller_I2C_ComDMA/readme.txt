@@ -1,14 +1,13 @@
-/**
-  @page I3C_Controller_I2C_ComDMA  Example
-  
+/**@page I3C_Controller_I2C_ComDMA  Example
+
   @verbatim
-  ******************** (C) COPYRIGHT 2024 STMicroelectronics *******************
-  * @file    I3C/I3C_Controller_I2C_ComDMA/readme.txt 
+  ******************** (C) COPYRIGHT 2025 STMicroelectronics *******************
+  * @file    I3C/I3C_Controller_I2C_ComDMA/readme.txt
   * @author  MCD Application Team
   * @brief   Description of I3C_Controller_I2C_ComDMA Example.
   ******************************************************************************
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -22,9 +21,9 @@
 
 How to handle I2C communication as I3C Controller data buffer transmission/reception between two boards, using DMA.
 
-      - Board: STM32MP257F-EV1 (embeds a STM32MP257FAIx device)
-      - SCL Pin: PZ3 (CN5, pin5) to PZ3 (CN5, pin5)
-      - SDA Pin: PZ4 (CN5, pin3) to PZ4 (CN5, pin3)
+      - Board: STM32MP215-DK (embeds a STM32MP21xxxx device)
+      - SCL Pin: PG13 (CN10, pin5)
+      - SDA Pin: PA2  (CN10, pin3)
       Connect GND between each board
       Use short wire as possible between the boards or twist an independent ground wire on each I3C lines
       mean one GND twist around SCL and one GND twist around SDA to help communication.
@@ -40,7 +39,7 @@ the configuration of the needed I3C resources according to the used hardware (CL
 User may update this function to change I3C configuration.
 To have a better signal startup, the user must adapt the parameter BusFreeDuration
 depends on its hardware constraint. The value of BusFreeDuration set on this example
-is link to Eval hardware environment.
+is link to disco hardware environment.
 
 The I2C communication is then initiated.
 The project is split in two workspace:
@@ -71,7 +70,7 @@ result.
 Finally, aTxBuffer and aRxBuffer are compared through Buffercmp() in order to
 check buffers correctness.
 
-STM32MP257F-EV1's LEDs can be used to monitor the transfer status:
+STM32MP215F-DK's LEDs can be used to monitor the transfer status:
 
  - LED3 will toggle when the transmission and reception process is complete.
  - LED3 is ON when there is an error in transmission/reception process.
@@ -94,7 +93,7 @@ Transmission, Reception
 
 ### Directory contents
 
-  - I3C/I3C_Controller_I2C_ComDMA/CM33/NonSecure/Inc/stm32mp257f_eval_conf.h    BSP configuration file
+  - I3C/I3C_Controller_I2C_ComDMA/CM33/NonSecure/Inc/stm32mp215f_disco_conf.h   BSP configuration file
   - I3C/I3C_Controller_I2C_ComDMA/CM33/NonSecure/Inc/stm32mp2xx_hal_conf.h      HAL configuration file
   - I3C/I3C_Controller_I2C_ComDMA/CM33/NonSecure/Inc/stm32mp2xx_it.h            I3C interrupt handlers header file
   - I3C/I3C_Controller_I2C_ComDMA/CM33/NonSecure/Inc/main.h                     Header for main.c module
@@ -102,20 +101,20 @@ Transmission, Reception
   - I3C/I3C_Controller_I2C_ComDMA/CM33/NonSecure/Src/main.c                     Main program
   - I3C/I3C_Controller_I2C_ComDMA/CM33/NonSecure/Src/system_stm32mp2xx.c        STM32MP2xx system source file
   - I3C/I3C_Controller_I2C_ComDMA/CM33/NonSecure/Src/stm32mp2xx_hal_msp.c       HAL MSP file
-  
+
 ### Hardware and Software environment
 
-  - This example runs on STM32MP257FAIx devices.
+  - This example runs on STM32MP21xxxx devices.
 
-  - This example has been tested with STM32MP257F-EV1 board and can be
+  - This example has been tested with STM32MP215F-DK board and can be
     easily tailored to any other supported device and development board.
 
-  - STM32MP257F-EV1 Set-up
+  - STM32MP215F-DK Set-up
 
     - Use short wire as possible between the boards or twist an independent ground wire on each I3C lines
       mean one GND twist around SCL and one GND twist around SDA to help communication.
-    - Connect I3C_SCL line of Controller board PZ3 (CN5, pin5) to I3C_SCL line of Target Board PZ3 (CN5, pin5).
-    - Connect I3C_SDA line of Controller board PZ4 (CN5, pin3) to I3C_SDA line of Target Board PZ4 (CN5, pin3).
+    - Connect I3C_SCL line of Controller board PG13(CN10, pin5) to I3C_SCL line of Target Board PG13(CN10, pin5).
+    - Connect I3C_SDA line of Controller board PA2 (CN10, pin3) to I3C_SDA line of Target Board PA2 (CN10, pin3).
     - Connect GND of Controller board to GND of Target Board.
 
 ### How to use it ?
@@ -128,9 +127,9 @@ In order to make the program work, you must do the following:
 - ssh root@192.168.7.1 'mkdir -p /home/root/I3C_Controller_I2C_ComDMA/lib/firmware'
 - scp the signed firmware I3C_Controller_I2C_ComDMA_CM33_NonSecure_sign.bin to root@192.168.7.1:/home/root/I3C_Controller_I2C_ComDMA/lib/firmware
 - scp the script Firmware/Utilities/scripts/fw_cortex_m33.sh to root@192.168.7.1:/home/root/I3C_Controller_I2C_ComDMA/
-- To run the example on target: 
-	On target shell run:
-	- cd /home/root/I3C_Controller_I2C_ComDMA
-	- ./fw_cortex_m33.sh start
-- Run the Controller before run the Target, this will let a false startup phase on Target side 
+- To run the example on target:
+  On target shell run:
+  - cd /home/root/I3C_Controller_I2C_ComDMA
+  - ./fw_cortex_m33.sh start
+- Run the Controller before run the Target, this will let a false startup phase on Target side
  as there is no high level on the bus, if the Target is started before the Controller.

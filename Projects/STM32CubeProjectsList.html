@@ -70,10 +70,11 @@
 		<td>STM32MP257F-EV1</td>
 		<td>STM32MP257F-DK</td>
 		<td>STM32MP235F-DK</td>
+		<td>STM32MP215F-DK</td>
 	</tr>
 
 	<tr align=center>
-        	<td style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" rowspan=3><p id="Demonstrations">Demonstrations</p></td>
+        	<td style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" rowspan=4><p id="Demonstrations">Demonstrations</p></td>
         	<td align=left rowspan=1><p id="USBPD">USBPD</p></td>
         	<td align=left><p id="USBPD_DRP_UCSI">USBPD_DRP_UCSI</p></td>
         	<td align=left>
@@ -82,6 +83,7 @@
         	<td><font size="5" color=green>X</font></td>
         	<td><font size="5" color=green>X</font></td>
         	<td><font size="5" color=green>X</font></td>
+			<td><font size="5" color=green></font></td>
       </tr>
 	<tr align=center>
         	<td align=left rowspan=1><p id="CM0">CM0</p></td>
@@ -90,8 +92,9 @@
 			Shows usage of Cortex-M0 exercising the LPUART (part of SmartRun Domain) while interacting with Cortex A35 through IPCC.
 		</td>
         	<td><font size="5" color=green>X</font></td>
+        	<td><font size="5" color=green>X</font></td>
         	<td><font size="5" color=green></font></td>
-        	<td><font size="5" color=green></font></td>
+			<td><font size="5" color=green></font></td>
       </tr>
 	<tr align=center>
         	<td align=left rowspan=1><p id="LowPower">LowPower</p></td>
@@ -102,9 +105,21 @@
         	<td><font size="5" color=green>X</font></td>
         	<td><font size="5" color=green></font></td>
         	<td><font size="5" color=green></font></td>
+			<td><font size="5" color=green></font></td>
+      </tr>
+	  	<tr align=center>
+        	<td align=left rowspan=1><p id="OpenAMP">OpenAMP</p></td>
+        	<td align=left><p id="OpenAMP_TTY_echo">OpenAMP_TTY_echo</p></td>
+        	<td align=left>
+			It demonstrates How to use OpenAMP MW + Virtual UART to create an Inter-Processor Communication channel seen as TTY device in Linux OS.
+		</td>
+        	<td><font size="5" color=green></font></td>
+        	<td><font size="5" color=green></font></td>
+        	<td><font size="5" color=green></font></td>
+		    <td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-        <td colspan="7"><b>Total number of Demonstrations: 3</b></td>
+        <td colspan="8"><b>Total number of Demonstrations: 7</b></td>
       </tr>
 
 	<!-- ================= 1 Templates Start ========================================== -->
@@ -118,9 +133,10 @@
         	<td><font size="5" color=green>X</font></td>
         	<td><font size="5" color=green>X</font></td>
         	<td><font size="5" color=green>X</font></td>
+			<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-        <td colspan="7"><b>Total number of Templates: 1</b></td>
+        <td colspan="8"><b>Total number of Templates: 4</b></td>
       </tr>
 	<!--================= 1 Templates End ==========================================-->
 
@@ -135,21 +151,23 @@
         	<td><font size="5" color=green>X</font></td>
         	<td><font size="5" color=green></font></td>
         	<td><font size="5" color=green></font></td>
+			<td><font size="5" color=green></font></td>
       </tr>
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-        <td colspan="7"><b>Total number of Templates_LL: 1</b></td>
+        <td colspan="8"><b>Total number of Templates_LL: 1</b></td>
       </tr>
 	<!--================= 1 Templates_LL End ==========================================-->
 
-	<!-- ================= 7 Applications Start ========================================== -->
+	<!-- ================= 13 Applications Start ========================================== -->
       <tr align=center>
-        <td style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" rowspan=7><p id="Applications">Applications</p></td>
+        <td style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" rowspan=8><p id="Applications">Applications</p></td>
         <td align=left rowspan=4><p id="FreeRTOS">FreeRTOS</p></td>
         <td align=left><p id="FreeRTOS_MsgQueue">FreeRTOS_MsgQueue</p></td>
         <td align=left>Demonstrate MsgQueue API</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="FreeRTOS_ThreadCreation">FreeRTOS_ThreadCreation</p></td>
@@ -157,6 +175,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="FreeRTOS_Semaphore">FreeRTOS_Semaphore</p></td>
@@ -164,6 +183,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="FreeRTOS_Timers">FreeRTOS_Timers</p></td>
@@ -171,6 +191,7 @@
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
 
 	<!--================= ROW ==========================================-->
@@ -181,15 +202,26 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+		<td><font size="5" color=green></font></td>
       </tr>
 	<!--================= ROW ==========================================-->
       <tr align=center>
-        <td align=left rowspan=1><p id="TFM">TFM</p></td>
+        <td align=left rowspan=2><p id="TFM">TFM</p></td>
         <td align=left><p id="TFM_Protected_Storage">TFM_Protected_Storage</p></td>
-        <td align=left>It demonstrates an example of Protected Storage API (PSA) usage provided by the trusted firmware (TFM) middleware.</td>
+        <td align=left>It demonstrates Protected Storage API usage provided by the trusted firmware (TFM) middleware.</td>
         <td><font size="5" color=green>X</font></td>
+		<td><font size="5" color=green></font></td>
         <td></td>
         <td></td>
+		</tr>
+
+		<tr align=center>
+        <td align=left><p id="TFM_Crypto">TFM_Crypto</p></td>
+        <td align=left>It demonstrates AEAD encryption/decryption using Trusted firmware (TF-M) PSA API.</td>
+        <td><font size="5" color=green></font></td>
+		<td><font size="5" color=green></font></td>
+        <td></td>
+        <td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
 	<!--================= ROW ==========================================-->
       <tr align=center>
@@ -199,9 +231,11 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
+
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-        <td colspan="7"><b>Total number of Applications: 6</b></td>
+        <td colspan="8"><b>Total number of Applications: 19</b></td>
       </tr>
 	<!--================= 6 Applications End ==========================================-->
 	<!--================= 3 Examples_LL Start ==========================================-->
@@ -214,6 +248,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
 	<!--================= EXTI ==========================================-->
       <tr align=center>
@@ -223,6 +258,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
 	<!--================= TIM ==========================================-->
       <tr align=center>
@@ -232,9 +268,10 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
       </tr>
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-        <td colspan="7"><b>Total number of Examples_LL: 3</b></td>
+        <td colspan="8"><b>Total number of Examples_LL: 7</b></td>
       </tr>
 	<!--================= 3 Examples_LL end ==========================================-->
 
@@ -250,6 +287,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+        <td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="I3C_Target_I2C_ComDMA">I3C_Target_I2C_ComDMA</p></td>
@@ -257,6 +295,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+	    <td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="I3C_Controller_InBandInterrupt_IT">I3C_Controller_InBandInterrupt_IT</p></td>
@@ -264,6 +303,7 @@
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="I3C_Target_InBandInterrupt_IT">I3C_Target_InBandInterrupt_IT</p></td>
@@ -271,6 +311,7 @@
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
 	<!--================= SPI(1) ==========================================-->
       <tr align=center>
@@ -280,6 +321,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
 	<!--================= LPTIM(1) ==========================================-->
       <tr align=center>
@@ -289,15 +331,17 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+	    <td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
 	<!--================= Cortex(1) ==========================================-->
       <tr align=center>
-        <td align=left rowspan=1><p id="LPTIM">LPTIM</p></td>
+        <td align=left rowspan=1><p id="CortexM">Cortex-M</p></td>
         <td align=left><p id="CORTEXM_ModePrivilege">CORTEXM_ModePrivilege</p></td>
         <td align=left>How to modify the Thread mode privilege access and stack. Thread mode is entered on reset or when returning from an exception.</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+	    <td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
 	<!--================= GPIO(1) ==========================================-->
       <tr align=center>
@@ -307,6 +351,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
 	<!--================= I2C(3) ==========================================-->
       <tr align=center>
@@ -316,6 +361,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+	    <td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="I2C_TwoBoards_ComPolling">I2C_TwoBoards_ComPolling</p></td>
@@ -323,6 +369,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+	    <td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="I2C_TwoBoards_ComIT">I2C_TwoBoards_ComIT</p></td>
@@ -330,6 +377,7 @@
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+	    <td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
 	<!--================= CRC(2) ==========================================-->
       <tr align=center>
@@ -339,6 +387,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="CRC_UserDefinedPolynomial">CRC_UserDefinedPolynomial</p></td>
@@ -346,6 +395,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
 	<!--================= CRYP(3) ==========================================-->
       <tr align=center>
@@ -355,6 +405,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="CRYP_AES_DMA">CRYP_AES_DMA</p></td>
@@ -362,6 +413,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="CRYP_AESCCM_IT">CRYP_AESCCM_IT</p></td>
@@ -369,7 +421,9 @@
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
+	  
 	<!--================= DMA(2) ==========================================-->
       <tr align=center>
         <td align=left rowspan=2><p id="DMA">DMA</p></td>
@@ -378,6 +432,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+	    <td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="DMA_RepeatedBlock">DMA_RepeatedBlock</p></td>
@@ -385,6 +440,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+	    <td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
 	<!--================= FDCAN(3) ==========================================-->
       <tr align=center>
@@ -394,6 +450,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+		<td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="FDCAN_Com_IT">FDCAN_Com_IT</p></td>
@@ -401,6 +458,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+		<td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="FDCAN_Loopback">FDCAN_Loopback</p></td>
@@ -408,6 +466,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
 	<!--================= ADC(4) ==========================================-->
       <tr align=center>
@@ -417,6 +476,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="ADC_InternalChannelConversion">ADC_InternalChannelConversion</p></td>
@@ -424,6 +484,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="ADC_OverSampler">ADC_OverSampler</p></td>
@@ -431,6 +492,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="ADC_RegularConversion_Polling">ADC_RegularConversion_Polling</p></td>
@@ -438,6 +500,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+		<td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
 	<!--================= LTDC(1) ==========================================-->
       <tr align=center>
@@ -447,6 +510,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+		<td><font size="5" color=green></font></td>
       </tr>
 	<!--================= TIM(5) ==========================================-->
       <tr align=center>
@@ -456,6 +520,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+	    <td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="TIM_OnePulse">TIM_OnePulse</p></td>
@@ -463,6 +528,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+	    <td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="TIM_PWMOutput">TIM_PWMOutput</p></td>
@@ -470,6 +536,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+	    <td><font size="5" color=green></font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="TIM_TimeBase">TIM_TimeBase</p></td>
@@ -477,6 +544,7 @@
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green></font></td>
+	    <td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr align=center>
         <td align=left><p id="TIM_InputCapture">TIM_InputCapture</p></td>
@@ -484,15 +552,16 @@
         <td><font size="5" color=green></font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
+	    <td style= "background-color: rgb(255, 255, 153);"><font size="5" color=green >X</font></td>
       </tr>
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-        <td colspan="7"><b>Total number of Examples: 31</b></td>
+        <td colspan="8"><b>Total number of Examples: 76</b></td>
       </tr>
 	<!--================= 31 Examples End ==========================================-->
 
 
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-      	<td colspan="7"><b>Total number of projects: 58</b></td>
+      	<td colspan="8"><b>Total number of projects: 114</b></td>
       </tr>
     </table>
   </body>

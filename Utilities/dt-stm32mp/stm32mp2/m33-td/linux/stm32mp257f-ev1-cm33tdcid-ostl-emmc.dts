@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+/*
+ * Copyright (C) STMicroelectronics 2023 - All Rights Reserved
+ * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
+ */
+
+/dts-v1/;
+
+#include "stm32mp257f-ev1-cm33tdcid-ostl.dts"
+
+/ {
+	model = "STMicroelectronics STM32MP257F-EV1 EMMC CM33TDCID OSTL Evaluation Board";
+	compatible = "st,stm32mp257f-ev1-cm33tdcid-ostl-emmc", "st,stm32mp257f-ev1", "st,stm32mp257";
+
+};

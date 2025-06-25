@@ -15,7 +15,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2024 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -145,23 +145,26 @@ Infinite_Loop:
 __Vectors:
 g_pfnVectors:
     .word   _estack
-    .word   Reset_Handler
-    .word   NMI_Handler
-    .word   HardFault_Handler
-    .word   MemManage_Handler
-    .word   BusFault_Handler
-    .word   UsageFault_Handler
-    .word   SecureFault_Handler
-    .word   0
-    .word   0
-    .word   0
-    .word   SVC_Handler
-    .word   DebugMon_Handler
-    .word   0
-    .word   PendSV_Handler
-    .word   SysTick_Handler
+    .word   Reset_Handler               /* Reset Handler */
+    .word   NMI_Handler                 /* NMI Handler */
+    .word   HardFault_Handler           /* Hard Fault Handler */
+    .word   MemManage_Handler           /* MPU Fault Handler */
+    .word   BusFault_Handler            /* Bus Fault Handler */
+    .word   UsageFault_Handler          /* Usage Fault Handler */
+    .word   SecureFault_Handler         /* Secure Fault Handler */
+    .word   0                           /* Reserved */
+    .word   0                           /* Reserved */
+    .word   0                           /* Reserved */
+    .word   SVC_Handler                 /* SVCall Handler */
+    .word   DebugMon_Handler            /* Debug Monitor Handler */
+    .word   0                           /* Reserved */
+    .word   PendSV_Handler              /* PendSV Handler */
+    .word   SysTick_Handler             /* SysTick Handler */
   /*******************************************************************************/
   /* External interrupts according to                                            */
+  /* "Table 187. interrupt mapping for Cortex®-M33"                              */
+  /* in chapitre 26 "interrupt list" of reference document                       */
+  /* RM0506 - Reference Manual - STM32MP21xx - advanced ARM-based 32/64-bit MPUs */
   /*******************************************************************************/
     .word   PVD_IRQHandler              /* PVD detector through EXTI */
     .word   PVM_IRQHandler              /* PVM detector through EXTI */
@@ -173,27 +176,27 @@ g_pfnVectors:
     .word   WWDG1_IRQHandler            /* Window Watchdog 1 Early Wakeup interrupt */
     .word   0
     .word   0
-    .word   TAMP_IRQHandler             /* Tamper interrupt (include LSECSS interrupts) */
-    .word   RTC_IRQHandler              /* RTC global interrupt */
-    .word   TAMP_S_IRQHandler           /* Tamper secure interrupt (include LSECSS interrupts)*/
-    .word   RTC_S_IRQHandler            /* RTC global secure interrupt */
-    .word   RCC_IRQHandler              /* RCC global interrupt */
-    .word   EXTI_0_IRQHandler           /* EXTI Line 0 interrupt */
-    .word   EXTI_1_IRQHandler           /* EXTI Line 1 interrupt */
-    .word   EXTI_2_IRQHandler           /* EXTI Line 2 interrupt */
-    .word   EXTI_3_IRQHandler           /* EXTI Line 3 interrupt */
-    .word   EXTI_4_IRQHandler           /* EXTI Line 4 interrupt */
-    .word   EXTI_5_IRQHandler           /* EXTI Line 5 interrupt */
-    .word   EXTI_6_IRQHandler           /* EXTI Line 6 interrupt */
-    .word   EXTI_7_IRQHandler           /* EXTI Line 7 interrupt */
-    .word   EXTI_8_IRQHandler           /* EXTI Line 8 interrupt */
-    .word   EXTI_9_IRQHandler           /* EXTI Line 9 interrupt */
-    .word   EXTI_10_IRQHandler          /* EXTI Line 10 interrupt */
-    .word   EXTI_11_IRQHandler          /* EXTI Line 11 interrupt */
-    .word   EXTI_12_IRQHandler          /* EXTI Line 12 interrupt */
-    .word   EXTI_13_IRQHandler          /* EXTI Line 13 interrupt */
-    .word   EXTI_14_IRQHandler          /* EXTI Line 14 interrupt */
-    .word   EXTI_15_IRQHandler          /* EXTI Line 15 interrupt */
+    .word   TAMP_IRQHandler              /* Tamper interrupt (include LSECSS interrupts) *upts) */
+    .word   RTC_IRQHandler               /* RTC global interrupt */
+    .word   TAMP_S_IRQHandler            /* Tamper secure interrupt (include LSECSS interr interrupts)*/
+    .word   RTC_S_IRQHandler             /* RTC global secure interrupt */
+    .word   RCC_IRQHandler               /* RCC global interrupt */
+    .word   EXTI2_0_IRQHandler           /* EXTI Line 0 interrupt */
+    .word   EXTI2_1_IRQHandler           /* EXTI Line 1 interrupt */
+    .word   EXTI2_2_IRQHandler           /* EXTI Line 2 interrupt */
+    .word   EXTI2_3_IRQHandler           /* EXTI Line 3 interrupt */
+    .word   EXTI2_4_IRQHandler           /* EXTI Line 4 interrupt */
+    .word   EXTI2_5_IRQHandler           /* EXTI Line 5 interrupt */
+    .word   EXTI2_6_IRQHandler           /* EXTI Line 6 interrupt */
+    .word   EXTI2_7_IRQHandler           /* EXTI Line 7 interrupt */
+    .word   EXTI2_8_IRQHandler           /* EXTI Line 8 interrupt */
+    .word   EXTI2_9_IRQHandler           /* EXTI Line 9 interrupt */
+    .word   EXTI2_10_IRQHandler          /* EXTI Line 10 interrupt */
+    .word   EXTI2_11_IRQHandler          /* EXTI Line 11 interrupt */
+    .word   EXTI2_12_IRQHandler          /* EXTI Line 12 interrupt */
+    .word   EXTI2_13_IRQHandler          /* EXTI Line 13 interrupt */
+    .word   EXTI2_14_IRQHandler          /* EXTI Line 14 interrupt */
+    .word   EXTI2_15_IRQHandler          /* EXTI Line 15 interrupt */
     .word   HPDMA1_Channel0_IRQHandler  /* HPDMA1 Channel0 interrupt */
     .word   HPDMA1_Channel1_IRQHandler  /* HPDMA1 Channel1 interrupt */
     .word   HPDMA1_Channel2_IRQHandler  /* HPDMA1 Channel2 interrupt */
@@ -293,10 +296,10 @@ g_pfnVectors:
     .word   USBH_OHCI_IRQHandler        /* USB Host OHCI Interrupt */
     .word   DCMI_PSSI_IRQHandler        /* DCMI & PSSI global interrupt */
     .word   CSI2HOST_IRQHandler         /* CSI2 Host controller interrupt */
-    .word   DSI_IRQHandler              /* DSI Host controller global interrupt */
+    .word   0
     .word   0
     .word   HASH1_IRQHandler            /* Hash1 interrupt */
-    .word   PKA_IRQHandler              /* PKA interrupt */
+    .word   0
     .word   FPU_IRQHandler              /* FPU global interrupt */
     .word   UART7_IRQHandler            /* UART7 global interrupt */
     .word   LPUART1_IRQHandler          /* LPUART1 global interrupt */
@@ -304,13 +307,13 @@ g_pfnVectors:
     .word   SPI5_IRQHandler             /* SPI5 global interrupt */
     .word   SPI6_IRQHandler             /* SPI6 global interrupt */
     .word   SAI1_IRQHandler             /* SAI1 global interrupt */
-    .word   LTDC_IRQ_IRQHandler         /* LTDC global interrupt */
-    .word   LTDC_ER_IRQ_IRQHandler      /* LTDC global error interrupt */
-    .word   LTDC_SEC_IRQ_IRQHandler     /* LTDC security global interrupt */
-    .word   LTDC_SEC_ER_IRQ_IRQHandler  /* LTDC security global error interrupt */
+    .word   LTDC_IRQHandler             /* LTDC global interrupt */
+    .word   LTDC_ER_IRQHandler          /* LTDC global error interrupt */
+    .word   LTDC_SEC_IRQHandler         /* LTDC security global interrupt */
+    .word   LTDC_SEC_ER_IRQHandler      /* LTDC security global error interrupt */
     .word   SAI2_IRQHandler             /* SAI2 global interrupt */
     .word   OCTOSPI1_IRQHandler         /* OCTOSPI1 global interrupt */
-    .word   OCTOSPI2_IRQHandler         /* OCTOSPI2 global interrupt */
+    .word   0
     .word   0
     .word   LPTIM1_IRQHandler           /* LPTIMER1 global interrupt */
     .word   USBH_WAKEUP_IRQHandler      /* USBH Remote Wake up from USB2PHY1 */
@@ -340,7 +343,7 @@ g_pfnVectors:
     .word   TIM14_IRQHandler            /* TIM14 global interrupt */
     .word   TIM10_IRQHandler            /* TIM10 global interrupt */
     .word   RNG1_IRQHandler             /* RNG1 interrupt */
-    .word   ADF1_FLT_IRQHandler         /* ADF1 Filter Interrupt */
+    .word   0
     .word   HASH2_IRQHandler            /* Hash2 interrupt */
     .word   SDMMC3_IRQHandler           /* SDMMC3 Global interrupt */
     .word   LPTIM2_IRQHandler           /* LPTIMER2 global interrupt */
@@ -356,10 +359,10 @@ g_pfnVectors:
     .word   CPU2_WAKEUP_PIN_IRQHandler  /* Interrupt for all 6 wake-up enabled by CPU2 */
     .word   OTG_IRQHandler              /* USB2 DR global interrupt */
     .word   RNG2_IRQHandler             /* RNG2 interrupt */
-    .word   UCPD1_IRQHandler            /* USB PD interrupt */
+    .word   0
     .word   0
     .word   SERF_IRQHandler             /* SERF global interrupt */
-    .word   BUSPERFM_IRQHandler         /* BUS Performance Monitor Interrupt */
+    .word   0
     .word   RAMCFG_IRQHandler           /* RAM configuration global interrupt */
     .word   DDRCTRL_IRQHandler          /* DDRCTRL interrupt */
     .word   DDRPHYC_IRQHandler          /* DDRPHY interrupt (active low) */
@@ -371,10 +374,10 @@ g_pfnVectors:
     .word   HPDMA1Handler               /* HPDMA1 channel 0 to 15 wake up */
     .word   HPDMA2Handler               /* HPDMA2 channel 0 to 15 wake up */
     .word   HPDMA3Handler               /* HPDMA3 channel 0 to 15 wake up */
-    .word   UCPD1_VBUS_IRQHandler       /* USB TypeC VBUS valid */
-    .word   UCPD1_VSAFE5V_IRQHandler    /* USB TypeC VSAFE5V valid */
+    .word   DBG_AUTH_HOST_IRQHandler    /* debugger has written DBG_AUTH_HOST register */
+    .word   DBG_AUTH_ACK_IRQHandler     /* debugger has read DBG_AUTH_ACK register */
     .word   RCC_HSI_FMON_IRQHandler     /* HSI Frequency Monitor */
-    .word   VDDGPU_VD_IRQHandler        /* VDDGPU voltage detector */
+    .word   RCC_MSI_FMON_IRQHandler     /* MSI Frequency Monitor */
     .word   0
     .word   0
     .word   0
@@ -471,7 +474,7 @@ g_pfnVectors:
     .word   0
     .word   0
     .word   0
-    .word   IS2M_IRQHandler             /* IS2M fault detect */
+    .word   0
     .word   0
     .word   DDRPERFM_IRQHandler         /* DDR Performance Monitor Interrupt */
 
@@ -493,232 +496,226 @@ g_pfnVectors:
     .endm
 
     def_irq_handler NMI_Handler
-    def_irq_handler HardFault_Handler
-    def_irq_handler MemManage_Handler
-    def_irq_handler BusFault_Handler
-    def_irq_handler UsageFault_Handler
-    def_irq_handler SecureFault_Handler
-    def_irq_handler SVC_Handler
-    def_irq_handler DebugMon_Handler
-    def_irq_handler PendSV_Handler
-    def_irq_handler SysTick_Handler
+  def_irq_handler HardFault_Handler
+  def_irq_handler MemManage_Handler
+  def_irq_handler BusFault_Handler
+  def_irq_handler UsageFault_Handler
+  def_irq_handler SecureFault_Handler
+  def_irq_handler SVC_Handler
+  def_irq_handler DebugMon_Handler
+  def_irq_handler PendSV_Handler
+  def_irq_handler SysTick_Handler
 
-    def_irq_handler PVD_IRQHandler
-    def_irq_handler PVM_IRQHandler
-    def_irq_handler IWDG3_IRQHandler
-    def_irq_handler IWDG4_IRQHandler
-    def_irq_handler IWDG1_RST_IRQHandler
-    def_irq_handler IWDG2_RST_IRQHandler
-    def_irq_handler IWDG4_RST_IRQHandler
-    def_irq_handler WWDG1_IRQHandler
-    def_irq_handler TAMP_IRQHandler
-    def_irq_handler RTC_IRQHandler
-    def_irq_handler TAMP_S_IRQHandler
-    def_irq_handler RTC_S_IRQHandler
-    def_irq_handler RCC_IRQHandler
-    def_irq_handler EXTI_0_IRQHandler
-    def_irq_handler EXTI_1_IRQHandler
-    def_irq_handler EXTI_2_IRQHandler
-    def_irq_handler EXTI_3_IRQHandler
-    def_irq_handler EXTI_4_IRQHandler
-    def_irq_handler EXTI_5_IRQHandler
-    def_irq_handler EXTI_6_IRQHandler
-    def_irq_handler EXTI_7_IRQHandler
-    def_irq_handler EXTI_8_IRQHandler
-    def_irq_handler EXTI_9_IRQHandler
-    def_irq_handler EXTI_10_IRQHandler
-    def_irq_handler EXTI_11_IRQHandler
-    def_irq_handler EXTI_12_IRQHandler
-    def_irq_handler EXTI_13_IRQHandler
-    def_irq_handler EXTI_14_IRQHandler
-    def_irq_handler EXTI_15_IRQHandler
-    def_irq_handler HPDMA1_Channel0_IRQHandler
-    def_irq_handler HPDMA1_Channel1_IRQHandler
-    def_irq_handler HPDMA1_Channel2_IRQHandler
-    def_irq_handler HPDMA1_Channel3_IRQHandler
-    def_irq_handler HPDMA1_Channel4_IRQHandler
-    def_irq_handler HPDMA1_Channel5_IRQHandler
-    def_irq_handler HPDMA1_Channel6_IRQHandler
-    def_irq_handler HPDMA1_Channel7_IRQHandler
-    def_irq_handler HPDMA1_Channel8_IRQHandler
-    def_irq_handler HPDMA1_Channel9_IRQHandler
-    def_irq_handler HPDMA1_Channel10_IRQHandler
-    def_irq_handler HPDMA1_Channel11_IRQHandler
-    def_irq_handler HPDMA1_Channel12_IRQHandler
-    def_irq_handler HPDMA1_Channel13_IRQHandler
-    def_irq_handler HPDMA1_Channel14_IRQHandler
-    def_irq_handler HPDMA1_Channel15_IRQHandler
-    def_irq_handler HPDMA2_Channel0_IRQHandler
-    def_irq_handler HPDMA2_Channel1_IRQHandler
-    def_irq_handler HPDMA2_Channel2_IRQHandler
-    def_irq_handler HPDMA2_Channel3_IRQHandler
-    def_irq_handler HPDMA2_Channel4_IRQHandler
-    def_irq_handler HPDMA2_Channel5_IRQHandler
-    def_irq_handler HPDMA2_Channel6_IRQHandler
-    def_irq_handler HPDMA2_Channel7_IRQHandler
-    def_irq_handler HPDMA2_Channel8_IRQHandler
-    def_irq_handler HPDMA2_Channel9_IRQHandler
-    def_irq_handler HPDMA2_Channel10_IRQHandler
-    def_irq_handler HPDMA2_Channel11_IRQHandler
-    def_irq_handler HPDMA2_Channel12_IRQHandler
-    def_irq_handler HPDMA2_Channel13_IRQHandler
-    def_irq_handler HPDMA2_Channel14_IRQHandler
-    def_irq_handler HPDMA2_Channel15_IRQHandler
-    def_irq_handler HPDMA3_Channel0_IRQHandler
-    def_irq_handler HPDMA3_Channel1_IRQHandler
-    def_irq_handler HPDMA3_Channel2_IRQHandler
-    def_irq_handler HPDMA3_Channel3_IRQHandler
-    def_irq_handler HPDMA3_Channel4_IRQHandler
-    def_irq_handler HPDMA3_Channel5_IRQHandler
-    def_irq_handler HPDMA3_Channel6_IRQHandler
-    def_irq_handler HPDMA3_Channel7_IRQHandler
-    def_irq_handler HPDMA3_Channel8_IRQHandler
-    def_irq_handler HPDMA3_Channel9_IRQHandler
-    def_irq_handler HPDMA3_Channel10_IRQHandler
-    def_irq_handler HPDMA3_Channel11_IRQHandler
-    def_irq_handler HPDMA3_Channel12_IRQHandler
-    def_irq_handler HPDMA3_Channel13_IRQHandler
-    def_irq_handler HPDMA3_Channel14_IRQHandler
-    def_irq_handler HPDMA3_Channel15_IRQHandler
-    def_irq_handler ICACHE_IRQHandler
-    def_irq_handler DCACHE_IRQHandler
-    def_irq_handler ADC1_IRQHandler
-    def_irq_handler ADC2_IRQHandler
-    def_irq_handler FDCAN_CAL_IRQHandler
-    def_irq_handler FDCAN1_IT0_IRQHandler
-    def_irq_handler FDCAN2_IT0_IRQHandler
-    def_irq_handler FDCAN1_IT1_IRQHandler
-    def_irq_handler FDCAN2_IT1_IRQHandler
-    def_irq_handler TIM1_BRK_IRQHandler
-    def_irq_handler TIM1_UP_IRQHandler
-    def_irq_handler TIM1_TRG_COM_IRQHandler
-    def_irq_handler TIM1_CC_IRQHandler
-    def_irq_handler TIM2_IRQHandler
-    def_irq_handler TIM3_IRQHandler
-    def_irq_handler TIM4_IRQHandler
-    def_irq_handler I2C1_IRQHandler
-    def_irq_handler I3C1_IRQHandler
-    def_irq_handler I2C2_IRQHandler
-    def_irq_handler I3C2_IRQHandler
-    def_irq_handler SPI1_IRQHandler
-    def_irq_handler SPI2_IRQHandler
-    def_irq_handler USART1_IRQHandler
-    def_irq_handler USART2_IRQHandler
-    def_irq_handler USART3_IRQHandler
-    def_irq_handler TIM8_BRK_IRQHandler
-    def_irq_handler TIM8_UP_IRQHandler
-    def_irq_handler TIM8_TRG_COM_IRQHandler
-    def_irq_handler TIM8_CC_IRQHandler
-    def_irq_handler FMC_IRQHandler
-    def_irq_handler SDMMC1_IRQHandler
-    def_irq_handler TIM5_IRQHandler
-    def_irq_handler SPI3_IRQHandler
-    def_irq_handler UART4_IRQHandler
-    def_irq_handler UART5_IRQHandler
-    def_irq_handler TIM6_IRQHandler
-    def_irq_handler TIM7_IRQHandler
-    def_irq_handler ETH1_SBD_IRQHandler
-    def_irq_handler ETH1_PMT_IRQHandler
-    def_irq_handler ETH1_LPI_IRQHandler
-    def_irq_handler ETH2_SBD_IRQHandler
-    def_irq_handler ETH2_PMT_IRQHandler
-    def_irq_handler ETH2_LPI_IRQHandler
-    def_irq_handler USART6_IRQHandler
-    def_irq_handler I2C3_IRQHandler
-    def_irq_handler I3C3_IRQHandler
-    def_irq_handler USBH_EHCI_IRQHandler
-    def_irq_handler USBH_OHCI_IRQHandler
-    def_irq_handler DCMI_PSSI_IRQHandler
-    def_irq_handler CSI2HOST_IRQHandler
-    def_irq_handler DSI_IRQHandler
-    def_irq_handler HASH1_IRQHandler
-    def_irq_handler PKA_IRQHandler
-    def_irq_handler FPU_IRQHandler
-    def_irq_handler UART7_IRQHandler
-    def_irq_handler LPUART1_IRQHandler
-    def_irq_handler SPI4_IRQHandler
-    def_irq_handler SPI5_IRQHandler
-    def_irq_handler SPI6_IRQHandler
-    def_irq_handler SAI1_IRQHandler
-    def_irq_handler LTDC_IRQ_IRQHandler
-    def_irq_handler LTDC_ER_IRQ_IRQHandler
-    def_irq_handler LTDC_SEC_IRQ_IRQHandler
-    def_irq_handler LTDC_SEC_ER_IRQ_IRQHandler
-    def_irq_handler SAI2_IRQHandler
-    def_irq_handler OCTOSPI1_IRQHandler
-    def_irq_handler OCTOSPI2_IRQHandler
-    def_irq_handler LPTIM1_IRQHandler
-    def_irq_handler USBH_WAKEUP_IRQHandler
-    def_irq_handler SPDIFRX_IRQHandler
-    def_irq_handler IPCC1_RX_IRQHandler
-    def_irq_handler IPCC1_TX_IRQHandler
-    def_irq_handler IPCC1_RX_S_IRQHandler
-    def_irq_handler IPCC1_TX_S_IRQHandler
-    def_irq_handler OTG_WAKEUP_IRQHandler
-    def_irq_handler MDF1_FLT0_IRQHandler
-    def_irq_handler MDF1_FLT1_IRQHandler
-    def_irq_handler MDF1_FLT2_IRQHandler
-    def_irq_handler MDF1_FLT3_IRQHandler
-    def_irq_handler SAI3_IRQHandler
-    def_irq_handler TIM15_IRQHandler
-    def_irq_handler TIM16_IRQHandler
-    def_irq_handler TIM17_IRQHandler
-    def_irq_handler TIM12_IRQHandler
-    def_irq_handler SDMMC2_IRQHandler
-    def_irq_handler DCMIPP_IRQHandler
-    def_irq_handler nCTIIRQ1_IRQHandler
-    def_irq_handler nCTIIRQ2_IRQHandler
-    def_irq_handler TIM13_IRQHandler
-    def_irq_handler TIM14_IRQHandler
-    def_irq_handler TIM10_IRQHandler
-    def_irq_handler RNG1_IRQHandler
-    def_irq_handler ADF1_FLT_IRQHandler
-    def_irq_handler HASH2_IRQHandler
-    def_irq_handler SDMMC3_IRQHandler
-    def_irq_handler LPTIM2_IRQHandler
-    def_irq_handler LPTIM3_IRQHandler
-    def_irq_handler LPTIM4_IRQHandler
-    def_irq_handler LPTIM5_IRQHandler
-    def_irq_handler CPU1_SEV_IRQHandler
-    def_irq_handler RCC_WAKEUP_IRQHandler
-    def_irq_handler SAI4_IRQHandler
-    def_irq_handler DTS_IRQHandler
-    def_irq_handler TIM11_IRQHandler
-    def_irq_handler CPU2_WAKEUP_PIN_IRQHandler
-    def_irq_handler OTG_IRQHandler
-    def_irq_handler RNG2_IRQHandler
-    def_irq_handler UCPD1_IRQHandler
-    def_irq_handler SERF_IRQHandler
-    def_irq_handler BUSPERFM_IRQHandler
-    def_irq_handler RAMCFG_IRQHandler
-    def_irq_handler DDRCTRL_IRQHandler
-    def_irq_handler DDRPHYC_IRQHandler
-    def_irq_handler DFI_ERR_IRQHandler
-    def_irq_handler IAC_IRQHandler
-    def_irq_handler VDDCPU_VD_IRQHandler
-    def_irq_handler VDDCORE_VD_IRQHandler
-    def_irq_handler HPDMA1Handler
-    def_irq_handler HPDMA2Handler
-    def_irq_handler HPDMA3Handler
-    def_irq_handler UCPD1_VBUS_IRQHandler
-    def_irq_handler UCPD1_VSAFE5V_IRQHandler
-    def_irq_handler RCC_HSI_FMON_IRQHandler
-    def_irq_handler VDDGPU_VD_IRQHandler
-    def_irq_handler EXTI1_0_IRQHandler
-    def_irq_handler EXTI1_1_IRQHandler
-    def_irq_handler EXTI1_2_IRQHandler
-    def_irq_handler EXTI1_3_IRQHandler
-    def_irq_handler EXTI1_4_IRQHandler
-    def_irq_handler EXTI1_5_IRQHandler
-    def_irq_handler EXTI1_6_IRQHandler
-    def_irq_handler EXTI1_7_IRQHandler
-    def_irq_handler EXTI1_8_IRQHandler
-    def_irq_handler EXTI1_9_IRQHandler
-    def_irq_handler EXTI1_10_IRQHandler
-    def_irq_handler EXTI1_11_IRQHandler
-    def_irq_handler EXTI1_12_IRQHandler
-    def_irq_handler EXTI1_13_IRQHandler
-    def_irq_handler EXTI1_14_IRQHandler
-    def_irq_handler EXTI1_15_IRQHandler
-    def_irq_handler IS2M_IRQHandler
-    def_irq_handler DDRPERFM_IRQHandler
+  def_irq_handler PVD_IRQHandler
+  def_irq_handler PVM_IRQHandler
+  def_irq_handler IWDG3_IRQHandler
+  def_irq_handler IWDG4_IRQHandler
+  def_irq_handler IWDG1_RST_IRQHandler
+  def_irq_handler IWDG2_RST_IRQHandler
+  def_irq_handler IWDG4_RST_IRQHandler
+  def_irq_handler WWDG1_IRQHandler
+  def_irq_handler TAMP_IRQHandler
+  def_irq_handler RTC_IRQHandler
+  def_irq_handler TAMP_S_IRQHandler
+  def_irq_handler RTC_S_IRQHandler
+  def_irq_handler RCC_IRQHandler
+  def_irq_handler EXTI2_0_IRQHandler
+  def_irq_handler EXTI2_1_IRQHandler
+  def_irq_handler EXTI2_2_IRQHandler
+  def_irq_handler EXTI2_3_IRQHandler
+  def_irq_handler EXTI2_4_IRQHandler
+  def_irq_handler EXTI2_5_IRQHandler
+  def_irq_handler EXTI2_6_IRQHandler
+  def_irq_handler EXTI2_7_IRQHandler
+  def_irq_handler EXTI2_8_IRQHandler
+  def_irq_handler EXTI2_9_IRQHandler
+  def_irq_handler EXTI2_10_IRQHandler
+  def_irq_handler EXTI2_11_IRQHandler
+  def_irq_handler EXTI2_12_IRQHandler
+  def_irq_handler EXTI2_13_IRQHandler
+  def_irq_handler EXTI2_14_IRQHandler
+  def_irq_handler EXTI2_15_IRQHandler
+  def_irq_handler HPDMA1_Channel0_IRQHandler
+  def_irq_handler HPDMA1_Channel1_IRQHandler
+  def_irq_handler HPDMA1_Channel2_IRQHandler
+  def_irq_handler HPDMA1_Channel3_IRQHandler
+  def_irq_handler HPDMA1_Channel4_IRQHandler
+  def_irq_handler HPDMA1_Channel5_IRQHandler
+  def_irq_handler HPDMA1_Channel6_IRQHandler
+  def_irq_handler HPDMA1_Channel7_IRQHandler
+  def_irq_handler HPDMA1_Channel8_IRQHandler
+  def_irq_handler HPDMA1_Channel9_IRQHandler
+  def_irq_handler HPDMA1_Channel10_IRQHandler
+  def_irq_handler HPDMA1_Channel11_IRQHandler
+  def_irq_handler HPDMA1_Channel12_IRQHandler
+  def_irq_handler HPDMA1_Channel13_IRQHandler
+  def_irq_handler HPDMA1_Channel14_IRQHandler
+  def_irq_handler HPDMA1_Channel15_IRQHandler
+  def_irq_handler HPDMA2_Channel0_IRQHandler
+  def_irq_handler HPDMA2_Channel1_IRQHandler
+  def_irq_handler HPDMA2_Channel2_IRQHandler
+  def_irq_handler HPDMA2_Channel3_IRQHandler
+  def_irq_handler HPDMA2_Channel4_IRQHandler
+  def_irq_handler HPDMA2_Channel5_IRQHandler
+  def_irq_handler HPDMA2_Channel6_IRQHandler
+  def_irq_handler HPDMA2_Channel7_IRQHandler
+  def_irq_handler HPDMA2_Channel8_IRQHandler
+  def_irq_handler HPDMA2_Channel9_IRQHandler
+  def_irq_handler HPDMA2_Channel10_IRQHandler
+  def_irq_handler HPDMA2_Channel11_IRQHandler
+  def_irq_handler HPDMA2_Channel12_IRQHandler
+  def_irq_handler HPDMA2_Channel13_IRQHandler
+  def_irq_handler HPDMA2_Channel14_IRQHandler
+  def_irq_handler HPDMA2_Channel15_IRQHandler
+  def_irq_handler HPDMA3_Channel0_IRQHandler
+  def_irq_handler HPDMA3_Channel1_IRQHandler
+  def_irq_handler HPDMA3_Channel2_IRQHandler
+  def_irq_handler HPDMA3_Channel3_IRQHandler
+  def_irq_handler HPDMA3_Channel4_IRQHandler
+  def_irq_handler HPDMA3_Channel5_IRQHandler
+  def_irq_handler HPDMA3_Channel6_IRQHandler
+  def_irq_handler HPDMA3_Channel7_IRQHandler
+  def_irq_handler HPDMA3_Channel8_IRQHandler
+  def_irq_handler HPDMA3_Channel9_IRQHandler
+  def_irq_handler HPDMA3_Channel10_IRQHandler
+  def_irq_handler HPDMA3_Channel11_IRQHandler
+  def_irq_handler HPDMA3_Channel12_IRQHandler
+  def_irq_handler HPDMA3_Channel13_IRQHandler
+  def_irq_handler HPDMA3_Channel14_IRQHandler
+  def_irq_handler HPDMA3_Channel15_IRQHandler
+  def_irq_handler ICACHE_IRQHandler
+  def_irq_handler DCACHE_IRQHandler
+  def_irq_handler ADC1_IRQHandler
+  def_irq_handler ADC2_IRQHandler
+  def_irq_handler FDCAN_CAL_IRQHandler
+  def_irq_handler FDCAN1_IT0_IRQHandler
+  def_irq_handler FDCAN2_IT0_IRQHandler
+  def_irq_handler FDCAN1_IT1_IRQHandler
+  def_irq_handler FDCAN2_IT1_IRQHandler
+  def_irq_handler TIM1_BRK_IRQHandler
+  def_irq_handler TIM1_UP_IRQHandler
+  def_irq_handler TIM1_TRG_COM_IRQHandler
+  def_irq_handler TIM1_CC_IRQHandler
+  def_irq_handler TIM2_IRQHandler
+  def_irq_handler TIM3_IRQHandler
+  def_irq_handler TIM4_IRQHandler
+  def_irq_handler I2C1_IRQHandler
+  def_irq_handler I3C1_IRQHandler
+  def_irq_handler I2C2_IRQHandler
+  def_irq_handler I3C2_IRQHandler
+  def_irq_handler SPI1_IRQHandler
+  def_irq_handler SPI2_IRQHandler
+  def_irq_handler USART1_IRQHandler
+  def_irq_handler USART2_IRQHandler
+  def_irq_handler USART3_IRQHandler
+  def_irq_handler TIM8_BRK_IRQHandler
+  def_irq_handler TIM8_UP_IRQHandler
+  def_irq_handler TIM8_TRG_COM_IRQHandler
+  def_irq_handler TIM8_CC_IRQHandler
+  def_irq_handler FMC_IRQHandler
+  def_irq_handler SDMMC1_IRQHandler
+  def_irq_handler TIM5_IRQHandler
+  def_irq_handler SPI3_IRQHandler
+  def_irq_handler UART4_IRQHandler
+  def_irq_handler UART5_IRQHandler
+  def_irq_handler TIM6_IRQHandler
+  def_irq_handler TIM7_IRQHandler
+  def_irq_handler ETH1_SBD_IRQHandler
+  def_irq_handler ETH1_PMT_IRQHandler
+  def_irq_handler ETH1_LPI_IRQHandler
+  def_irq_handler ETH2_SBD_IRQHandler
+  def_irq_handler ETH2_PMT_IRQHandler
+  def_irq_handler ETH2_LPI_IRQHandler
+  def_irq_handler USART6_IRQHandler
+  def_irq_handler I2C3_IRQHandler
+  def_irq_handler I3C3_IRQHandler
+  def_irq_handler USBH_EHCI_IRQHandler
+  def_irq_handler USBH_OHCI_IRQHandler
+  def_irq_handler DCMI_PSSI_IRQHandler
+  def_irq_handler CSI2HOST_IRQHandler
+  def_irq_handler HASH1_IRQHandler
+  def_irq_handler FPU_IRQHandler
+  def_irq_handler UART7_IRQHandler
+  def_irq_handler LPUART1_IRQHandler
+  def_irq_handler SPI4_IRQHandler
+  def_irq_handler SPI5_IRQHandler
+  def_irq_handler SPI6_IRQHandler
+  def_irq_handler SAI1_IRQHandler
+  def_irq_handler LTDC_IRQHandler
+  def_irq_handler LTDC_ER_IRQHandler
+  def_irq_handler LTDC_SEC_IRQHandler
+  def_irq_handler LTDC_SEC_ER_IRQHandler
+  def_irq_handler SAI2_IRQHandler
+  def_irq_handler OCTOSPI1_IRQHandler
+  def_irq_handler LPTIM1_IRQHandler
+  def_irq_handler USBH_WAKEUP_IRQHandler
+  def_irq_handler SPDIFRX_IRQHandler
+  def_irq_handler IPCC1_RX_IRQHandler
+  def_irq_handler IPCC1_TX_IRQHandler
+  def_irq_handler IPCC1_RX_S_IRQHandler
+  def_irq_handler IPCC1_TX_S_IRQHandler
+
+  def_irq_handler OTG_WAKEUP_IRQHandler
+  def_irq_handler MDF1_FLT0_IRQHandler
+  def_irq_handler MDF1_FLT1_IRQHandler
+  def_irq_handler MDF1_FLT2_IRQHandler
+  def_irq_handler MDF1_FLT3_IRQHandler
+  def_irq_handler SAI3_IRQHandler
+  def_irq_handler TIM15_IRQHandler
+  def_irq_handler TIM16_IRQHandler
+  def_irq_handler TIM17_IRQHandler
+  def_irq_handler TIM12_IRQHandler
+  def_irq_handler SDMMC2_IRQHandler
+  def_irq_handler DCMIPP_IRQHandler
+  def_irq_handler nCTIIRQ1_IRQHandler
+  def_irq_handler nCTIIRQ2_IRQHandler
+  def_irq_handler TIM13_IRQHandler
+  def_irq_handler TIM14_IRQHandler
+  def_irq_handler TIM10_IRQHandler
+  def_irq_handler RNG1_IRQHandler
+  def_irq_handler HASH2_IRQHandler
+  def_irq_handler SDMMC3_IRQHandler
+  def_irq_handler LPTIM2_IRQHandler
+  def_irq_handler LPTIM3_IRQHandler
+  def_irq_handler LPTIM4_IRQHandler
+  def_irq_handler LPTIM5_IRQHandler
+  def_irq_handler CPU1_SEV_IRQHandler
+  def_irq_handler RCC_WAKEUP_IRQHandler
+  def_irq_handler SAI4_IRQHandler
+  def_irq_handler DTS_IRQHandler
+  def_irq_handler TIM11_IRQHandler
+  def_irq_handler CPU2_WAKEUP_PIN_IRQHandler
+  def_irq_handler OTG_IRQHandler
+  def_irq_handler RNG2_IRQHandler
+  def_irq_handler SERF_IRQHandler
+  def_irq_handler RAMCFG_IRQHandler
+  def_irq_handler DDRCTRL_IRQHandler
+  def_irq_handler DDRPHYC_IRQHandler
+  def_irq_handler DFI_ERR_IRQHandler
+  def_irq_handler IAC_IRQHandler
+  def_irq_handler VDDCPU_VD_IRQHandler
+  def_irq_handler VDDCORE_VD_IRQHandler
+  def_irq_handler HPDMA1Handler
+  def_irq_handler HPDMA2Handler
+  def_irq_handler HPDMA3Handler
+  def_irq_handler DBG_AUTH_HOST_IRQHandler
+  def_irq_handler DBG_AUTH_ACK_IRQHandler
+  def_irq_handler RCC_HSI_FMON_IRQHandler
+  def_irq_handler RCC_MSI_FMON_IRQHandler
+  def_irq_handler EXTI1_0_IRQHandler
+  def_irq_handler EXTI1_1_IRQHandler
+  def_irq_handler EXTI1_2_IRQHandler
+  def_irq_handler EXTI1_3_IRQHandler
+  def_irq_handler EXTI1_4_IRQHandler
+  def_irq_handler EXTI1_5_IRQHandler
+  def_irq_handler EXTI1_6_IRQHandler
+  def_irq_handler EXTI1_7_IRQHandler
+  def_irq_handler EXTI1_8_IRQHandler
+  def_irq_handler EXTI1_9_IRQHandler
+  def_irq_handler EXTI1_10_IRQHandler
+  def_irq_handler EXTI1_11_IRQHandler
+  def_irq_handler EXTI1_12_IRQHandler
+  def_irq_handler EXTI1_13_IRQHandler
+  def_irq_handler EXTI1_14_IRQHandler
+  def_irq_handler EXTI1_15_IRQHandler
+  def_irq_handler DDRPERFM_IRQHandler

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    span.underline{text-decoration: underline;}
+    div.column{display: inline-block; vertical-align: top; width: 50%;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+  </style>
+  <link rel="stylesheet" href="Firmware/_htmresc/mini-st_2020.css" />
+</head>
+<body>
+<h1 id="cm0plus-demo-application-with-low-power-workaround">CM0PLUS Demo Application (with low power workaround)</h1>
+<h2 id="application-description">Application Description</h2>
+<p>The Cortex-M0+ demonstration showcases the ability of the Cortex-A35 to be woken up from low power mode by the Cortex-M0+. This demonstration highlights the interprocessor communication and power management capabilities of the STM32MP2 platform.</p>
+<h3 id="key-features">Key Features</h3>
+<ul>
+<li><strong>LPUART1</strong>: Prints messages on the console.</li>
+<li><strong>IPCC2</strong>: Sends/receives notifications between Cortex-M0+ and Cortex-A35.</li>
+<li><strong>Shared Memory</strong>: Shares data between the processors.</li>
+</ul>
+<h3 id="purpose">Purpose</h3>
+<ul>
+<li>Initialize LPUART1 and IPCC2.</li>
+<li>Print messages on LPUART1 every 2 seconds.</li>
+<li>Wait for IPCC2 interrupts indicating messages from Cortex-A35.</li>
+<li>Read delay from shared memory and start a timer.</li>
+<li>Notify Cortex-A35 after the delay to wake it up.</li>
+<li>Continue printing messages and waiting for new messages.</li>
+</ul>
+<p>For detailed instructions and additional information, please refer to the wiki.</p>
+<p><strong>This demonstration also introduces a software workaround for the Cortex-M0+ crashing when entering or leaving low power modes LPLV-Stop1/2 and Standby1 (see the STM32MP23/STM32MP25 Errata sheet).</strong> The idea behind this workaround is to put the Cortex-M0+ in a Wait For Interrupt (WFI) state for a short time around the clock transitions induced by the low power modes. Here is a sequence diagram that provides a simplified view of this workaround implementation.</p>
+<pre><code>          ,----------.         ,-----.            ,----------.          ,-----.
+          |Cortex-A35|         |EXTI2|            |Cortex-M0+|          |LPTIM|
+          `----+-----&#39;         `--+--&#39;            `----+-----&#39;          `--+--&#39;
+              |X|                 |                   |X|                  |
+Go to low pwr |X|                 |                   |X|                  |
+ -----------&gt; |X|                 |                   |X|                  |
+              |X|      SWIER      |                   |X|                  |
+              |X|---------------&gt; |                   |X|                  |
+              |X|                 |      IRQ 25       |X|                  |
+              |X|                 |-----------------&gt; |X|                  |
+              |X|                 |                   |X|   Start counter  |
+              |X|                 |                   |X|----------------&gt; |
+              |X|                 |                   |X|                  |
+              |X|                 |                   |X|---.              |
+              |X|                 |                   `-&#39;   | WFI          |
+              |X|                 |                    | &lt;--&#39;              |
+              |X|---.             |                    |                   |
+              `-&#39;   | WFI         |                    |                   |
+               | &lt;--&#39;             |                    |                   |
+               |                  |                    |                   |
+           ,---------------------------------------------------!.          |
+           |  Clock transition: Cortex-M0+ is in WFI state     |_\         |
+           `-----------------------------------------------------&#39;         |
+               |                  |                    |                   |
+               |                  |                   ,-.  IRQ 19 from TIM |
+               |                  |                   |X| &lt;----------------|
+               |                  |                   |X|                  |
+           ,---------------------------------------------------!.          |
+           |  Cortex-A35 in low power and M0+ normal execution |_\         |
+           `--------------------------------------------------------&#39;      |
+               |                  |                   |X|                  |
+           PWR_ON rises           |                   |X|                  |
+ -------------------------------&gt; |                   |X|                  |
+               |                  |       IRQ 6       |X|                  |
+               |                  |-----------------&gt; |X|                  |
+               |                  |                   |X|   Start counter  |
+               |                  |                   |X|----------------&gt; |
+               |                  |                   |X|                  |
+               |                  |                   |X|---.              |
+               |                  |                   `-&#39;   | WFI          |
+               |                  |                    | &lt;--&#39;              |
+               |                  |                    |                   |
+           ,---------------------------------------------------!.          |
+           |  Clock transition: Cortex-M0+ is in WFI state     |_\         |
+           `-----------------------------------------------------&#39;         |
+               |                  |                    |                   |
+ Wake up IRQ  ,-.                 |                    |                   |
+ -----------&gt; |X|                 |                    |                   |
+              |X|                 |                    |                   |
+              |X|                 |                   ,-.  IRQ 19 from TIM |
+              |X|                 |                   |X| &lt;----------------|
+              |X|                 |                   |X|                  |
+          ,----+-----.         ,--+--.            ,----+-----.          ,--+--.
+          |Cortex-A35|         |EXTI2|            |Cortex-M0+|          |LPTIM|
+          `----------&#39;         `-----&#39;            `----------&#39;          `-----&#39;</code></pre>
+<p>The actual implementation adds a delay (using the LPTIM) between the PWR_ON rise and the WFI to gain execution time.</p>
+<h2 id="hardware-and-software-environment-to-enable-the-low-power-workaround">Hardware and Software Environment to Enable the Low Power Workaround</h2>
+<h3 id="hardware">Hardware</h3>
+<ul>
+<li>Link PWR_ON to the GPIO PZ9 (for example, on the STM32MP257F-DK, link resistor R61 to mkB.INT).</li>
+</ul>
+<h3 id="software">Software</h3>
+<ul>
+<li>The main CPU must trigger an IRQ 25 in the Cortex-M0+ using the EXTI2 SWIER (line 60) <em>just</em> before entering low power.</li>
+<li>GPIOZ and LPTIM4 clocks must be enabled and have their autonomous mode (AM) enabled as well.</li>
+<li>LPTIM4 clock rate must be 32 kHz in every power mode (which means, on the STM32MP25, FLEXGEN 41 must have the LSI as reference clock with no division).</li>
+</ul>
+<h2 id="how-to-use-the-low-power-workaround">How to Use the Low Power Workaround?</h2>
+<p>In your Cortex-M0+ firmware, include <code>lowpower_wa.h</code> and call <code>lowpower_wa_Init()</code> once before entering low power for the first time.</p>
+<p><strong>Note</strong>: The current implementation is given as an example and only works for Standby1.</p>
+<h2 id="stm32cubeide-build-configurations">STM32CubeIDE Build Configurations</h2>
+<ul>
+<li>CM0plus application with Console on LPUART1
+<ul>
+<li><strong>CA35TDCID_m0plus</strong>: non-signed firmware</li>
+<li><strong>CA35TDCID_m0plus_sign</strong>: signed firmware</li>
+</ul></li>
+</ul>
+<h2 id="stm32cubeide-debug-configuration-specifics">STM32CubeIDE Debug Configuration Specifics</h2>
+<ul>
+<li><strong>M0Plus debug configuration</strong> Create debug configuration on CM0Plus application
+<ol type="1">
+<li>Debug configuration -&gt; Startup -&gt; Initialization Commands Ensure <code>mon reset</code> and <code>mon halt</code> are present. For Semihosting configurations, add <code>mon arm semihosting enable</code>.</li>
+<li>If you want to use MP2 Validation OpenOCD scripts, you shall select the <code>.cfg</code> file to use in your debug configuration. Ensure you have launched STM32CubeIDE with <code>STM32CUBEIDE_RESOURCES</code> environment variable pointing to <code>&lt;mp2_master&gt;\Firmware\Utilities\STM32CubeIDE_Patches\MP2_Patch\STM32CubeIDE</code>.</li>
+<li>Enable LPUART predefined configuration for CM0PLUS (as CM0PLUS has no access to RCC so need to configure in from OpenOCD). OpenOCD Options: <code>-bc "set mp2_preset_file MP2_PRESET_LPUART1_M0P.cfg"</code></li>
+</ol></li>
+</ul>
+<h2 id="notes">Notes</h2>
+<h2 id="keywords">Keywords</h2>
+<h2 id="directory-contents">Directory Contents</h2>
+<h2 id="hardware-and-software-environment">Hardware and Software Environment</h2>
+<ul>
+<li>This application runs on M0Plus.</li>
+<li>This application has been tested with STMicroelectronics on STM32MP257F-DK board and can be easily tailored to any other supported devices and development boards.</li>
+</ul>
+</body>
+</html>

@@ -2,12 +2,12 @@
   ******************************************************************************
   * @file    stm32mp2xx_hal_msp.c
   * @author  MCD Application Team
-  * @brief   This file provides code for the MSP Initialization 
+  * @brief   This file provides code for the MSP Initialization
   *                      and de-Initialization codes.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -46,16 +46,16 @@ void HAL_MspInit(void)
 }
 
 /**
-* @brief I3C MSP Initialization
-* This function configures the hardware resources used in this example
-* @param hi3c: I3C handle pointer
-* @retval None
-*/
-void HAL_I3C_MspInit(I3C_HandleTypeDef* hi3c)
+  * @brief I3C MSP Initialization
+  * This function configures the hardware resources used in this example
+  * @param hi3c: I3C handle pointer
+  * @retval None
+  */
+void HAL_I3C_MspInit(I3C_HandleTypeDef *hi3c)
 {
   GPIO_InitTypeDef GPIO_InitStruct = {0};
 
-  if(hi3c->Instance == I3C1)
+  if (hi3c->Instance == I3C1)
   {
     /* USER CODE BEGIN I3C1_MspInit 0 */
 
@@ -78,7 +78,7 @@ void HAL_I3C_MspInit(I3C_HandleTypeDef* hi3c)
     handle_HPDMA3_Channel1.Init.Priority = DMA_LOW_PRIORITY_LOW_WEIGHT;
     handle_HPDMA3_Channel1.Init.SrcBurstLength = 1;
     handle_HPDMA3_Channel1.Init.DestBurstLength = 1;
-    handle_HPDMA3_Channel1.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT1|DMA_DEST_ALLOCATED_PORT1;
+    handle_HPDMA3_Channel1.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT0 | DMA_DEST_ALLOCATED_PORT1;
     handle_HPDMA3_Channel1.Init.TransferEventMode = DMA_TCEM_BLOCK_TRANSFER;
     handle_HPDMA3_Channel1.Init.Mode = DMA_NORMAL;
     /* Deinitialize the Stream for new transfer */
@@ -89,9 +89,15 @@ void HAL_I3C_MspInit(I3C_HandleTypeDef* hi3c)
     {
       Error_Handler();
     }
-    HAL_DMA_ConfigChannelAttributes(&handle_HPDMA3_Channel1, (DMA_CHANNEL_PRIV | DMA_CHANNEL_SEC | DMA_CHANNEL_DEST_NSEC | DMA_CHANNEL_SRC_SEC));
 
     __HAL_LINKDMA(hi3c, hdmatx, handle_HPDMA3_Channel1);
+
+    if (IS_DEVELOPER_BOOT_MODE())
+    {
+      HAL_DMA_ConfigChannelAttributes(hi3c->hdmatx,
+                                      (DMA_CHANNEL_PRIV | DMA_CHANNEL_SEC | DMA_CHANNEL_DEST_SEC | \
+                                       DMA_CHANNEL_SRC_SEC | DMA_CHANNEL_CID_STATIC_2));
+    }
 
     /* HPDMA3_REQUEST_I3C1_RX Init */
     handle_HPDMA3_Channel2.Instance = HPDMA3_Channel2;
@@ -105,17 +111,21 @@ void HAL_I3C_MspInit(I3C_HandleTypeDef* hi3c)
     handle_HPDMA3_Channel2.Init.Priority = DMA_LOW_PRIORITY_LOW_WEIGHT;
     handle_HPDMA3_Channel2.Init.SrcBurstLength = 1;
     handle_HPDMA3_Channel2.Init.DestBurstLength = 1;
-    handle_HPDMA3_Channel2.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT1|DMA_DEST_ALLOCATED_PORT1;
+    handle_HPDMA3_Channel2.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT1 | DMA_DEST_ALLOCATED_PORT0;
     handle_HPDMA3_Channel2.Init.TransferEventMode = DMA_TCEM_BLOCK_TRANSFER;
     handle_HPDMA3_Channel2.Init.Mode = DMA_NORMAL;
     if (HAL_DMA_Init(&handle_HPDMA3_Channel2) != HAL_OK)
     {
       Error_Handler();
     }
-
-    HAL_DMA_ConfigChannelAttributes(&handle_HPDMA3_Channel2, (DMA_CHANNEL_PRIV | DMA_CHANNEL_SEC | DMA_CHANNEL_DEST_SEC | DMA_CHANNEL_SRC_NSEC));
-
     __HAL_LINKDMA(hi3c, hdmarx, handle_HPDMA3_Channel2);
+
+    if (IS_DEVELOPER_BOOT_MODE())
+    {
+      HAL_DMA_ConfigChannelAttributes(hi3c->hdmarx,
+                                      (DMA_CHANNEL_PRIV | DMA_CHANNEL_SEC | DMA_CHANNEL_DEST_SEC | \
+                                       DMA_CHANNEL_SRC_SEC | DMA_CHANNEL_CID_STATIC_2));
+    }
 
     /* HPDMA3_REQUEST_I3C1_TC Init */
     handle_HPDMA3_Channel0.Instance = HPDMA3_Channel0;
@@ -129,28 +139,33 @@ void HAL_I3C_MspInit(I3C_HandleTypeDef* hi3c)
     handle_HPDMA3_Channel0.Init.Priority = DMA_LOW_PRIORITY_LOW_WEIGHT;
     handle_HPDMA3_Channel0.Init.SrcBurstLength = 1;
     handle_HPDMA3_Channel0.Init.DestBurstLength = 1;
-    handle_HPDMA3_Channel0.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT1|DMA_DEST_ALLOCATED_PORT1;
+    handle_HPDMA3_Channel0.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT0 | DMA_DEST_ALLOCATED_PORT1;
     handle_HPDMA3_Channel0.Init.TransferEventMode = DMA_TCEM_BLOCK_TRANSFER;
     handle_HPDMA3_Channel0.Init.Mode = DMA_NORMAL;
     if (HAL_DMA_Init(&handle_HPDMA3_Channel0) != HAL_OK)
     {
       Error_Handler();
     }
-    HAL_DMA_ConfigChannelAttributes(&handle_HPDMA3_Channel0, (DMA_CHANNEL_PRIV | DMA_CHANNEL_SEC | DMA_CHANNEL_DEST_NSEC | DMA_CHANNEL_SRC_SEC));
-
     __HAL_LINKDMA(hi3c, hdmacr, handle_HPDMA3_Channel0);
+    if (IS_DEVELOPER_BOOT_MODE())
+    {
+      HAL_DMA_ConfigChannelAttributes(hi3c->hdmacr,
+                                      (DMA_CHANNEL_PRIV | DMA_CHANNEL_SEC | DMA_CHANNEL_DEST_SEC | \
+                                       DMA_CHANNEL_SRC_SEC | DMA_CHANNEL_CID_STATIC_2));
+    }
+
 
     /* I3C1 interrupt Init */
     HAL_NVIC_SetPriority(I3C1_IRQn, 0, 0);
     HAL_NVIC_EnableIRQ(I3C1_IRQn);
 
     /* GPDMA1 interrupt Init */
-	HAL_NVIC_SetPriority(HPDMA3_Channel0_IRQn, 0, 0);
-	HAL_NVIC_EnableIRQ(HPDMA3_Channel0_IRQn);
-	HAL_NVIC_SetPriority(HPDMA3_Channel1_IRQn, 0, 0);
-	HAL_NVIC_EnableIRQ(HPDMA3_Channel1_IRQn);
-	HAL_NVIC_SetPriority(HPDMA3_Channel2_IRQn, 0, 0);
-	HAL_NVIC_EnableIRQ(HPDMA3_Channel2_IRQn);
+    HAL_NVIC_SetPriority(HPDMA3_Channel0_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(HPDMA3_Channel0_IRQn);
+    HAL_NVIC_SetPriority(HPDMA3_Channel1_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(HPDMA3_Channel1_IRQn);
+    HAL_NVIC_SetPriority(HPDMA3_Channel2_IRQn, 0, 0);
+    HAL_NVIC_EnableIRQ(HPDMA3_Channel2_IRQn);
 
     /* Add a delay to let startup of High level on the Bus */
     HAL_Delay(1);
@@ -169,55 +184,55 @@ void HAL_I3C_MspInit(I3C_HandleTypeDef* hi3c)
 
 }
 
-void HAL_I3C_MspPostInit(I3C_HandleTypeDef* hi3c)
+void HAL_I3C_MspPostInit(I3C_HandleTypeDef *hi3c)
 {
-	GPIO_InitTypeDef GPIO_InitStruct;
+  GPIO_InitTypeDef GPIO_InitStruct;
 
-	/* USER CODE BEGIN I2C_MspPostInit 0 */
+  /* USER CODE BEGIN I2C_MspPostInit 0 */
 
-	/* USER CODE END I2C_MspPostInit 0 */
-	if(I3C1 == hi3c->Instance)
-	{
-	    /**I3C1 GPIO Configuration
-	    PG13    ------> I3C1_SCL
-	    PA2     ------> I3C1_SDA
-	    */
-	    GPIO_InitStruct.Pin = GPIO_PIN_2;
-	    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-	    GPIO_InitStruct.Pull = GPIO_PULLUP;
-	    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-	    GPIO_InitStruct.Alternate = GPIO_AF8_I3C1;
-	    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+  /* USER CODE END I2C_MspPostInit 0 */
+  if (I3C1 == hi3c->Instance)
+  {
+    /**I3C1 GPIO Configuration
+    PG13    ------> I3C1_SCL
+    PA2     ------> I3C1_SDA
+      */
+    GPIO_InitStruct.Pin = GPIO_PIN_2;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF8_I3C1;
+    HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-	    GPIO_InitStruct.Pin = GPIO_PIN_13;
-	    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
-	    GPIO_InitStruct.Pull = GPIO_PULLUP;
-	    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-	    GPIO_InitStruct.Alternate = GPIO_AF10_I3C1;
-	    HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
-	}
+    GPIO_InitStruct.Pin = GPIO_PIN_13;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_PULLUP;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
+    GPIO_InitStruct.Alternate = GPIO_AF10_I3C1;
+    HAL_GPIO_Init(GPIOG, &GPIO_InitStruct);
+  }
 }
 
 /**
-* @brief I3C MSP De-Initialization
-* This function freeze the hardware resources used in this example
-* @param hi3c: I3C handle pointer
-* @retval None
-*/
-void HAL_I3C_MspDeInit(I3C_HandleTypeDef* hi3c)
+  * @brief I3C MSP De-Initialization
+  * This function freeze the hardware resources used in this example
+  * @param hi3c: I3C handle pointer
+  * @retval None
+  */
+void HAL_I3C_MspDeInit(I3C_HandleTypeDef *hi3c)
 {
-  if(I3C1 == hi3c->Instance)
+  if (I3C1 == hi3c->Instance)
   {
-  /* USER CODE BEGIN I3C1_MspDeInit 0 */
+    /* USER CODE BEGIN I3C1_MspDeInit 0 */
 
-  /* USER CODE END I3C1_MspDeInit 0 */
+    /* USER CODE END I3C1_MspDeInit 0 */
     /* Peripheral clock disable */
     __HAL_RCC_I3C1_CLK_DISABLE();
 
     /**I3C1 GPIO Configuration
     PG13    ------> I3C1_SCL
     PA2     ------> I3C1_SDA
-    */
+      */
     HAL_GPIO_DeInit(GPIOA, GPIO_PIN_2);
     HAL_GPIO_DeInit(GPIOG, GPIO_PIN_13);
 
@@ -229,8 +244,8 @@ void HAL_I3C_MspDeInit(I3C_HandleTypeDef* hi3c)
     /* I3C1 interrupt DeInit */
     HAL_NVIC_DisableIRQ(I3C1_IRQn);
 
-  /* USER CODE BEGIN I3C1_MspDeInit 1 */
-  /* USER CODE END I3C1_MspDeInit 1 */
+    /* USER CODE BEGIN I3C1_MspDeInit 1 */
+    /* USER CODE END I3C1_MspDeInit 1 */
   }
 
 }

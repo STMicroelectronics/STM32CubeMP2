@@ -114,17 +114,6 @@ void DebugMon_Handler(void)
 }
 
 /**
-  * @brief  This function handles PendSVC exception.
-  * @retval None
-  */
-void PendSV_Handler(void)
-{
-  while (1)
-  {
-  }
-}
-
-/**
   * @brief  This function handles SysTick Handler.
   * @param  None
   * @retval None

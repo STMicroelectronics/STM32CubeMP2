@@ -1,0 +1,165 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+/*
+ * Copyright (C) STMicroelectronics 2021 - All Rights Reserved
+ * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
+ */
+
+/ {
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		/* Internal RAM reserved memory declaration */
+		tfa_bl31: tfa-bl31@a000000 {
+			reg = <0x0 0xa000000 0x0 0x20000>;
+			no-map;
+		};
+
+		hpdma1_lli: hpdma1-lli@a020000 {
+			reg = <0x0 0xa020000 0x0 0xf0f0>;
+			no-map;
+		};
+
+		hpdma2_lli: hpdma2-lli@a02f0f0 {
+			reg = <0x0 0xa02f0f0 0x0 0xf0f0>;
+			no-map;
+		};
+
+		hpdma3_lli: hpdma3-lli@a03e1e0 {
+			reg = <0x0 0xa03e1e0 0x0 0x1e20>;
+			no-map;
+		};
+
+		bsec_mirror: bsec-mirror@a040000 {
+			reg = <0x0 0xa040000 0x0 0x1000>;
+			no-map;
+		};
+
+		scmi_cid2_s: scmi-cid2-s@a041000 {
+			reg = <0x0 0xa041000 0x0 0x1000>;
+			no-map;
+		};
+
+		scmi_cid2_ns: scmi-cid2-ns@a042000 {
+			reg = <0x0 0xa042000 0x0 0x1000>;
+			no-map;
+		};
+
+		cm33_cube_fw: cm33-cube-fw@a043000 {
+			reg = <0x0 0xa043000 0x0 0x1d000>;
+			no-map;
+		};
+
+		cm33_cube_data: cm33-cube-data@a060000 {
+			reg = <0x0 0xa060000 0x0 0x10000>;
+			no-map;
+		};
+
+		ipc_shmem: ipc-shmem@a070000 {
+			reg = <0x0 0xa070000 0x0 0x8000>;
+			no-map;
+		};
+
+		vdev0vring0: vdev0vring0@a078000 {
+			compatible = "shared-dma-pool";
+			reg = <0x0 0xa078000 0x0 0x1000>;
+			no-map;
+		};
+
+		vdev0vring1: vdev0vring1@a079000 {
+			compatible = "shared-dma-pool";
+			reg = <0x0 0xa079000 0x0 0x1000>;
+			no-map;
+		};
+
+		vdev0buffer: vdev0buffer@a07a000 {
+			compatible = "shared-dma-pool";
+			reg = <0x0 0xa07a000 0x0 0x6000>;
+			no-map;
+		};
+
+		cm33_retram: cm33-retram@a080000 {
+			reg = <0x0 0xa080000 0x0 0x1f000>;
+			no-map;
+		};
+
+		ddr_param: ddr-param@a09f000 {
+			reg = <0x0 0xa09f000 0x0 0x1000>;
+			no-map;
+		};
+
+		/* Backup RAM reserved memory declaration */
+		bl31_lowpower: bl31-lowpower@42000000 {
+			reg = <0x0 0x42000000 0x0 0x1000>;
+			no-map;
+		};
+
+		tfm_its: tfm-its@42001000 {
+			reg = <0x0 0x42001000 0x0 0x1000>;
+			no-map;
+		};
+
+		/* Octo Memory Manager reserved memory declaration */
+		mm_ospi2: mm-ospi@60000000 {
+			reg = <0x0 0x60000000 0x0 0x10000000>;
+			no-map;
+		};
+
+		/* DDR reserved memory declaration */
+		tfm_code: tfm-code@80000000 {
+			reg = <0x0 0x80000000 0x0 0x100000>;
+			no-map;
+		};
+
+		tfm_data: tfm-data@80100000 {
+			reg = <0x0 0x80100000 0x0 0x100000>;
+			no-map;
+		};
+
+		spare1: spare1@80600000 {
+			reg = <0x0 0x80600000 0x0 0x19C0000>;
+			no-map;
+		};
+
+		bl31_context: bl31-context@81fc0000 {
+			reg = <0x0 0x81fc0000 0x0 0x40000>;
+			no-map;
+		};
+
+		op_tee: op-tee@82000000 {
+			reg = <0x0 0x82000000 0x0 0x2000000>;
+			no-map;
+		};
+
+		gpu_reserved: gpu-reserved@fa800000 {
+			reg = <0x0 0xfa800000 0x0 0x4000000>;
+			no-map;
+		};
+
+		ltdc_m33_layer: ltdc-m33-layer@80200000 {
+			reg = <0x0 0x80200000 0x0 0x400000>;
+			no-map;
+		};
+
+		ltdc_sec_layer: ltdc-sec-layer@fe800000 {
+			reg = <0x0 0xfe800000 0x0 0x800000>;
+			no-map;
+		};
+
+		ltdc_sec_rotation: ltdc-sec-rotation@ff000000 {
+			reg = <0x0 0xff000000 0x0 0x1000000>;
+			no-map;
+		};
+
+		/* global autoconfigured region for contiguous allocations */
+		linux,cma {
+			compatible = "shared-dma-pool";
+			reusable;
+			alloc-ranges = <0 0x80000000 0 0x80000000>;
+			size = <0x0 0x8000000>;
+			alignment = <0x0 0x2000>;
+			linux,cma-default;
+		};
+	};
+};

@@ -205,11 +205,11 @@ int main(void)
 {
 
   /* USER CODE BEGIN 1 */
-uint8_t status;
+  uint32_t status;
   /* USER CODE END 1 */
 
   #ifdef DEBUG
-   while(debug == 1);
+  while(debug);
   #endif
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
@@ -223,20 +223,22 @@ uint8_t status;
   if(IS_DEVELOPER_BOOT_MODE())
   {
     SystemClock_Config();
+
+    status = BSP_PMIC_Init();
+    if (status)
+    {
+      Error_Handler();
+    }
+
+    status = BSP_PMIC_Power_Mode_Init();
+    if (status)
+    {
+      Error_Handler();
+    }
   }
 
   /* USER CODE BEGIN SysInit */
-  status = BSP_PMIC_Init();
-  if (status)
-  {
-    printf("error :  BSP PMIC init fail\r\n");
-  }
 
-  status = BSP_PMIC_Power_Mode_Init();
-  if (status)
-  {
-    printf("error :  BSP PMIC Mode init fail\r\n");
-  }
   /* USER CODE END SysInit */
 
   /* Initialize LED3 */
@@ -364,138 +366,138 @@ uint8_t status;
   * @retval None
   */
 void SystemClock_Config(void) {
-	RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
-	/* PLL 2 is configured by DDR initialization code */
-	/* PLL 3 is configured by GPU initialization code */
-	RCC_PLLInitTypeDef RCC_Pll4InitStruct = { 0 };
-	RCC_PLLInitTypeDef RCC_Pll5InitStruct = { 0 };
-	RCC_PLLInitTypeDef RCC_Pll6InitStruct = { 0 };
-	RCC_PLLInitTypeDef RCC_Pll7InitStruct = { 0 };
-	RCC_PLLInitTypeDef RCC_Pll8InitStruct = { 0 };
-	RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
+  RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
+  /* PLL 2 is configured by DDR initialization code */
+  /* PLL 3 is configured by GPU initialization code */
+  RCC_PLLInitTypeDef RCC_Pll4InitStruct = { 0 };
+  RCC_PLLInitTypeDef RCC_Pll5InitStruct = { 0 };
+  RCC_PLLInitTypeDef RCC_Pll6InitStruct = { 0 };
+  RCC_PLLInitTypeDef RCC_Pll7InitStruct = { 0 };
+  RCC_PLLInitTypeDef RCC_Pll8InitStruct = { 0 };
+  RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
 
-	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI
-			| RCC_OSCILLATORTYPE_HSE |
-			RCC_OSCILLATORTYPE_LSE | RCC_OSCILLATORTYPE_LSI;
-	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-	RCC_OscInitStruct.LSEState = RCC_LSE_OFF;
-	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
-	RCC_OscInitStruct.LSIState = RCC_LSI_OFF;
-	RCC_OscInitStruct.LSEDriveValue = RCC_LSEDRIVE_MEDIUMHIGH;
+  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI
+      | RCC_OSCILLATORTYPE_HSE |
+      RCC_OSCILLATORTYPE_LSE | RCC_OSCILLATORTYPE_LSI;
+  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+  RCC_OscInitStruct.LSEState = RCC_LSE_OFF;
+  RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+  RCC_OscInitStruct.LSIState = RCC_LSI_OFF;
+  RCC_OscInitStruct.LSEDriveValue = RCC_LSEDRIVE_MEDIUMHIGH;
 
-	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
-		Error_Handler();
-	}
+  if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+    Error_Handler();
+  }
 
-	/* PLL 2 is configured by DDR initialization code */
-	/* PLL 3 is configured by GPU initialization code */
+  /* PLL 2 is configured by DDR initialization code */
+  /* PLL 3 is configured by GPU initialization code */
 
-	/* 1200MHz */
-	RCC_Pll4InitStruct.PLLSource = RCC_PLLSOURCE_HSE;
-	RCC_Pll4InitStruct.PLLMode = 0;
-	RCC_Pll4InitStruct.FBDIV = 30;
-	RCC_Pll4InitStruct.FREFDIV = 1;
-	RCC_Pll4InitStruct.FRACIN = 0;
-	RCC_Pll4InitStruct.POSTDIV1 = 1;
-	RCC_Pll4InitStruct.POSTDIV2 = 1;
-	RCC_Pll4InitStruct.PLLState = RCC_PLL_ON;
+  /* 1200MHz */
+  RCC_Pll4InitStruct.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_Pll4InitStruct.PLLMode = 0;
+  RCC_Pll4InitStruct.FBDIV = 30;
+  RCC_Pll4InitStruct.FREFDIV = 1;
+  RCC_Pll4InitStruct.FRACIN = 0;
+  RCC_Pll4InitStruct.POSTDIV1 = 1;
+  RCC_Pll4InitStruct.POSTDIV2 = 1;
+  RCC_Pll4InitStruct.PLLState = RCC_PLL_ON;
 
-	/* 532MHz */
-	RCC_Pll5InitStruct.PLLSource = RCC_PLLSOURCE_HSE;
-	RCC_Pll5InitStruct.PLLMode = 0;
-	RCC_Pll5InitStruct.FBDIV = 133;
-	RCC_Pll5InitStruct.FREFDIV = 5;
-	RCC_Pll5InitStruct.FRACIN = 0;
-	RCC_Pll5InitStruct.POSTDIV1 = 1;
-	RCC_Pll5InitStruct.POSTDIV2 = 2;
-	RCC_Pll5InitStruct.PLLState = RCC_PLL_ON;
+  /* 532MHz */
+  RCC_Pll5InitStruct.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_Pll5InitStruct.PLLMode = 0;
+  RCC_Pll5InitStruct.FBDIV = 133;
+  RCC_Pll5InitStruct.FREFDIV = 5;
+  RCC_Pll5InitStruct.FRACIN = 0;
+  RCC_Pll5InitStruct.POSTDIV1 = 1;
+  RCC_Pll5InitStruct.POSTDIV2 = 2;
+  RCC_Pll5InitStruct.PLLState = RCC_PLL_ON;
 
-	/* 500MHz */
-	RCC_Pll6InitStruct.PLLSource = RCC_PLLSOURCE_HSE;
-	RCC_Pll6InitStruct.PLLMode = 0;
-	RCC_Pll6InitStruct.FBDIV = 25;
-	RCC_Pll6InitStruct.FREFDIV = 1;
-	RCC_Pll6InitStruct.FRACIN = 0;
-	RCC_Pll6InitStruct.POSTDIV1 = 1;
-	RCC_Pll6InitStruct.POSTDIV2 = 2;
-	RCC_Pll6InitStruct.PLLState = RCC_PLL_ON;
+  /* 500MHz */
+  RCC_Pll6InitStruct.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_Pll6InitStruct.PLLMode = 0;
+  RCC_Pll6InitStruct.FBDIV = 25;
+  RCC_Pll6InitStruct.FREFDIV = 1;
+  RCC_Pll6InitStruct.FRACIN = 0;
+  RCC_Pll6InitStruct.POSTDIV1 = 1;
+  RCC_Pll6InitStruct.POSTDIV2 = 2;
+  RCC_Pll6InitStruct.PLLState = RCC_PLL_ON;
 
-	/* 835.512MHz */
-	RCC_Pll7InitStruct.PLLSource = RCC_PLLSOURCE_HSE;
-	RCC_Pll7InitStruct.PLLMode = 0;
-	RCC_Pll7InitStruct.FBDIV = 167;
-	RCC_Pll7InitStruct.FREFDIV = 8;
-	RCC_Pll7InitStruct.FRACIN = 1717047;
-	RCC_Pll7InitStruct.POSTDIV1 = 1;
-	RCC_Pll7InitStruct.POSTDIV2 = 1;
-	RCC_Pll7InitStruct.PLLState = RCC_PLL_ON;
+  /* 835.512MHz */
+  RCC_Pll7InitStruct.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_Pll7InitStruct.PLLMode = 0;
+  RCC_Pll7InitStruct.FBDIV = 167;
+  RCC_Pll7InitStruct.FREFDIV = 8;
+  RCC_Pll7InitStruct.FRACIN = 1717047;
+  RCC_Pll7InitStruct.POSTDIV1 = 1;
+  RCC_Pll7InitStruct.POSTDIV2 = 1;
+  RCC_Pll7InitStruct.PLLState = RCC_PLL_ON;
 
-	/* 594MHz */
-	RCC_Pll8InitStruct.PLLSource = RCC_PLLSOURCE_HSE;
-	RCC_Pll8InitStruct.PLLMode = 0;
-	RCC_Pll8InitStruct.FBDIV = 297;
-	RCC_Pll8InitStruct.FREFDIV = 10;
-	RCC_Pll8InitStruct.FRACIN = 0;
-	RCC_Pll8InitStruct.POSTDIV1 = 1;
-	RCC_Pll8InitStruct.POSTDIV2 = 2;
-	RCC_Pll8InitStruct.PLLState = RCC_PLL_ON;
+  /* 594MHz */
+  RCC_Pll8InitStruct.PLLSource = RCC_PLLSOURCE_HSE;
+  RCC_Pll8InitStruct.PLLMode = 0;
+  RCC_Pll8InitStruct.FBDIV = 297;
+  RCC_Pll8InitStruct.FREFDIV = 10;
+  RCC_Pll8InitStruct.FRACIN = 0;
+  RCC_Pll8InitStruct.POSTDIV1 = 1;
+  RCC_Pll8InitStruct.POSTDIV2 = 2;
+  RCC_Pll8InitStruct.PLLState = RCC_PLL_ON;
 
-	/* PLL 2 is configured by DDR initialization code */
-	/* PLL 3 is configured by GPU initialization code */
+  /* PLL 2 is configured by DDR initialization code */
+  /* PLL 3 is configured by GPU initialization code */
 
-	if (HAL_RCCEx_PLL4Config(&RCC_Pll4InitStruct) != HAL_OK) {
-		Error_Handler();
-	}
+  if (HAL_RCCEx_PLL4Config(&RCC_Pll4InitStruct) != HAL_OK) {
+    Error_Handler();
+  }
 
-	if (HAL_RCCEx_PLL5Config(&RCC_Pll5InitStruct) != HAL_OK) {
-		Error_Handler();
-	}
+  if (HAL_RCCEx_PLL5Config(&RCC_Pll5InitStruct) != HAL_OK) {
+    Error_Handler();
+  }
 
-	if (HAL_RCCEx_PLL6Config(&RCC_Pll6InitStruct) != HAL_OK) {
-		Error_Handler();
-	}
+  if (HAL_RCCEx_PLL6Config(&RCC_Pll6InitStruct) != HAL_OK) {
+    Error_Handler();
+  }
 
-	if (HAL_RCCEx_PLL7Config(&RCC_Pll7InitStruct) != HAL_OK) {
-		Error_Handler();
-	}
+  if (HAL_RCCEx_PLL7Config(&RCC_Pll7InitStruct) != HAL_OK) {
+    Error_Handler();
+  }
 
-	if (HAL_RCCEx_PLL8Config(&RCC_Pll8InitStruct) != HAL_OK) {
-		Error_Handler();
-	}
+  if (HAL_RCCEx_PLL8Config(&RCC_Pll8InitStruct) != HAL_OK) {
+    Error_Handler();
+  }
 
-	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_ICN_HS_MCU
-			| RCC_CLOCKTYPE_ICN_LS_MCU |
-			RCC_CLOCKTYPE_ICN_SDMMC | RCC_CLOCKTYPE_ICN_DDR |
-			RCC_CLOCKTYPE_ICN_DISPLAY | RCC_CLOCKTYPE_ICN_HCL |
-			RCC_CLOCKTYPE_ICN_NIC | RCC_CLOCKTYPE_ICN_VID |
-			RCC_CLOCKTYPE_ICN_APB1 | RCC_CLOCKTYPE_ICN_APB2 |
-			RCC_CLOCKTYPE_ICN_APB3 | RCC_CLOCKTYPE_ICN_APB4 |
-			RCC_CLOCKTYPE_ICN_APBDBG;
+  RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_ICN_HS_MCU
+      | RCC_CLOCKTYPE_ICN_LS_MCU |
+      RCC_CLOCKTYPE_ICN_SDMMC | RCC_CLOCKTYPE_ICN_DDR |
+      RCC_CLOCKTYPE_ICN_DISPLAY | RCC_CLOCKTYPE_ICN_HCL |
+      RCC_CLOCKTYPE_ICN_NIC | RCC_CLOCKTYPE_ICN_VID |
+      RCC_CLOCKTYPE_ICN_APB1 | RCC_CLOCKTYPE_ICN_APB2 |
+      RCC_CLOCKTYPE_ICN_APB3 | RCC_CLOCKTYPE_ICN_APB4 |
+      RCC_CLOCKTYPE_ICN_APBDBG;
 
-	RCC_ClkInitStruct.ICN_HS_MCU.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
-	RCC_ClkInitStruct.ICN_HS_MCU.Div = 3;
-	RCC_ClkInitStruct.ICN_SDMMC.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
-	RCC_ClkInitStruct.ICN_SDMMC.Div = 6;
-	RCC_ClkInitStruct.ICN_DDR.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
-	RCC_ClkInitStruct.ICN_DDR.Div = 2;
-	RCC_ClkInitStruct.ICN_DISPLAY.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
-	RCC_ClkInitStruct.ICN_DISPLAY.Div = 3;
-	RCC_ClkInitStruct.ICN_HCL.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
-	RCC_ClkInitStruct.ICN_HCL.Div = 4;
-	RCC_ClkInitStruct.ICN_NIC.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
-	RCC_ClkInitStruct.ICN_NIC.Div = 3;
-	RCC_ClkInitStruct.ICN_VID.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
-	RCC_ClkInitStruct.ICN_VID.Div = 2;
-	RCC_ClkInitStruct.ICN_LSMCU_Div = RCC_LSMCU_DIV2;
-	RCC_ClkInitStruct.APB1_Div = RCC_APB1_DIV1;
-	RCC_ClkInitStruct.APB2_Div = RCC_APB2_DIV1;
-	RCC_ClkInitStruct.APB3_Div = RCC_APB3_DIV1;
-	RCC_ClkInitStruct.APB4_Div = RCC_APB4_DIV1;
-	RCC_ClkInitStruct.APBDBG_Div = RCC_APBDBG_DIV1;
+  RCC_ClkInitStruct.ICN_HS_MCU.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
+  RCC_ClkInitStruct.ICN_HS_MCU.Div = 3;
+  RCC_ClkInitStruct.ICN_SDMMC.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
+  RCC_ClkInitStruct.ICN_SDMMC.Div = 6;
+  RCC_ClkInitStruct.ICN_DDR.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
+  RCC_ClkInitStruct.ICN_DDR.Div = 2;
+  RCC_ClkInitStruct.ICN_DISPLAY.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
+  RCC_ClkInitStruct.ICN_DISPLAY.Div = 3;
+  RCC_ClkInitStruct.ICN_HCL.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
+  RCC_ClkInitStruct.ICN_HCL.Div = 4;
+  RCC_ClkInitStruct.ICN_NIC.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
+  RCC_ClkInitStruct.ICN_NIC.Div = 3;
+  RCC_ClkInitStruct.ICN_VID.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
+  RCC_ClkInitStruct.ICN_VID.Div = 2;
+  RCC_ClkInitStruct.ICN_LSMCU_Div = RCC_LSMCU_DIV2;
+  RCC_ClkInitStruct.APB1_Div = RCC_APB1_DIV1;
+  RCC_ClkInitStruct.APB2_Div = RCC_APB2_DIV1;
+  RCC_ClkInitStruct.APB3_Div = RCC_APB3_DIV1;
+  RCC_ClkInitStruct.APB4_Div = RCC_APB4_DIV1;
+  RCC_ClkInitStruct.APBDBG_Div = RCC_APBDBG_DIV1;
 
-	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, 0) != HAL_OK) {
-		Error_Handler();
-	}
+  if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, 0) != HAL_OK) {
+    Error_Handler();
+  }
 
 }
 
@@ -543,7 +545,7 @@ static void MX_HPDMA3_Init(void)
   handle_HPDMA3_Channel12.Init.Priority = DMA_LOW_PRIORITY_HIGH_WEIGHT;
   handle_HPDMA3_Channel12.Init.SrcBurstLength = 1;
   handle_HPDMA3_Channel12.Init.DestBurstLength = 1;
-  handle_HPDMA3_Channel12.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT1|DMA_DEST_ALLOCATED_PORT1;
+  handle_HPDMA3_Channel12.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT0|DMA_DEST_ALLOCATED_PORT0;
   handle_HPDMA3_Channel12.Init.TransferEventMode = DMA_TCEM_BLOCK_TRANSFER;
   handle_HPDMA3_Channel12.Init.Mode = DMA_NORMAL;
   if (HAL_DMA_Init(&handle_HPDMA3_Channel12) != HAL_OK)
@@ -561,7 +563,7 @@ static void MX_HPDMA3_Init(void)
   }
   if(IS_DEVELOPER_BOOT_MODE())
   {
-    if (HAL_DMA_ConfigChannelAttributes(&handle_HPDMA3_Channel12, (DMA_CHANNEL_PRIV | DMA_CHANNEL_SEC | DMA_CHANNEL_DEST_SEC | DMA_CHANNEL_SRC_SEC)) != HAL_OK)
+    if (HAL_DMA_ConfigChannelAttributes(&handle_HPDMA3_Channel12, (DMA_CHANNEL_CID_STATIC_2 | DMA_CHANNEL_PRIV | DMA_CHANNEL_SEC | DMA_CHANNEL_DEST_SEC | DMA_CHANNEL_SRC_SEC)) != HAL_OK)
     {
       Error_Handler();
     }
@@ -646,7 +648,7 @@ static void DMA_Increment_ScatterOperation(void)
   handle_HPDMA3_Channel12.Init.Priority = DMA_LOW_PRIORITY_HIGH_WEIGHT;
   handle_HPDMA3_Channel12.Init.SrcBurstLength = 1;
   handle_HPDMA3_Channel12.Init.DestBurstLength = 1;
-  handle_HPDMA3_Channel12.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT0|DMA_DEST_ALLOCATED_PORT1;
+  handle_HPDMA3_Channel12.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT0|DMA_DEST_ALLOCATED_PORT0;
   handle_HPDMA3_Channel12.Init.Mode = DMA_NORMAL;
   if (HAL_DMA_Init(&handle_HPDMA3_Channel12) != HAL_OK)
   {
@@ -716,7 +718,7 @@ static void DMA_Decrement_GatherOperation(void)
   handle_HPDMA3_Channel12.Init.Priority = DMA_LOW_PRIORITY_HIGH_WEIGHT;
   handle_HPDMA3_Channel12.Init.SrcBurstLength = 1;
   handle_HPDMA3_Channel12.Init.DestBurstLength = 1;
-  handle_HPDMA3_Channel12.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT0|DMA_DEST_ALLOCATED_PORT1;
+  handle_HPDMA3_Channel12.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT0|DMA_DEST_ALLOCATED_PORT0;
   handle_HPDMA3_Channel12.Init.Mode = DMA_NORMAL;
   if (HAL_DMA_Init(&handle_HPDMA3_Channel12) != HAL_OK)
   {
@@ -786,7 +788,7 @@ static void DMA_Decrement_ScatterOperation(void)
   handle_HPDMA3_Channel12.Init.Priority = DMA_LOW_PRIORITY_HIGH_WEIGHT;
   handle_HPDMA3_Channel12.Init.SrcBurstLength = 1;
   handle_HPDMA3_Channel12.Init.DestBurstLength = 1;
-  handle_HPDMA3_Channel12.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT0|DMA_DEST_ALLOCATED_PORT1;
+  handle_HPDMA3_Channel12.Init.TransferAllocatedPort = DMA_SRC_ALLOCATED_PORT0|DMA_DEST_ALLOCATED_PORT0;
   handle_HPDMA3_Channel12.Init.Mode = DMA_NORMAL;
   if (HAL_DMA_Init(&handle_HPDMA3_Channel12) != HAL_OK)
   {

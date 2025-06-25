@@ -28,8 +28,8 @@
 #include "stm32mp2xx_hal.h"
 
 /* COM define */
-#define USE_COM_LOG                         0U
-#define USE_BSP_COM_FEATURE                 0U
+#define USE_COM_LOG                         1U
+#define USE_BSP_COM_FEATURE                 1U
 
 /* LCD controllers defines */
 #define USE_LCD_CTRL_OTM8009A               0U

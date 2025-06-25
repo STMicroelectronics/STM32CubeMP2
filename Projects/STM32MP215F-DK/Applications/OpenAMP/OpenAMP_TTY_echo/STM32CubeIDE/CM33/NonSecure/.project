@@ -46,9 +46,9 @@
 			<locationURI>PARENT-8-PROJECT_LOC/Utilities/ResourcesManager/res_mgr.c</locationURI>
 		</link>
 		<link>
-			<name>Application/Startup/startup_stm32mp21xx_m33_ns.S</name>
+			<name>Application/Startup/startup_stm32mp215fxx_m33.s</name>
 			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/gcc/startup_stm32mp21xx_m33_ns.S</locationURI>
+			<locationURI>PARENT-3-PROJECT_LOC/startup_stm32mp215fxx_m33.s</locationURI>
 		</link>
 		<link>
 			<name>Drivers/CMSIS/system_stm32mp2xx_m33_ns.c</name>

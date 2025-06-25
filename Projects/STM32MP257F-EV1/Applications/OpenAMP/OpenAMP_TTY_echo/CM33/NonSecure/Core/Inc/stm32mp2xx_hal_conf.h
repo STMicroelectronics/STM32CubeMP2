@@ -43,7 +43,7 @@
 /* #define HAL_CRC_MODULE_ENABLED */
 /* #define HAL_CRYP_MODULE_ENABLED */
 /* #define HAL_CSI_MODULE_ENABLED */
-/* #define HAL_DCACHE_MODULE_ENABLED */
+ #define HAL_DCACHE_MODULE_ENABLED
 /* #define HAL_DCMI_MODULE_ENABLED */
 /* #define HAL_DCMIPP_MODULE_ENABLED */
 /* #define HAL_DDR_MODULE_ENABLED */
@@ -58,7 +58,7 @@
 /* #define HAL_I2C_MODULE_ENABLED */
 /* #define HAL_I2S_MODULE_ENABLED */
 /* #define HAL_I3C_MODULE_ENABLED */ /* Disabled because I3C HAL not available yet */
-/* #define HAL_ICACHE_MODULE_ENABLED */
+ #define HAL_ICACHE_MODULE_ENABLED 
 #define HAL_IPCC_MODULE_ENABLED
 /* #define HAL_IRDA_MODULE_ENABLED */
 /* #define HAL_IWDG_MODULE_ENABLED */

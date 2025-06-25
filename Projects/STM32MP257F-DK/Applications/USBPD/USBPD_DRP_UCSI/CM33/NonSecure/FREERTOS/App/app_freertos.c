@@ -20,6 +20,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "mbox_scmi.h"
 #include "cmsis_os2.h"
 #include "app_freertos.h"
 #include "usbpd_ucsi_if.h"
@@ -95,6 +96,7 @@ void MX_FREERTOS_DeInit(void)
   MX_USBPD_DeInit();
   MX_UCPD1_Deinit();
   MX_HPDMA3_Deinit();
+  MAILBOX_SCMI_DeInit();
   Thread_Led_Deinit();
   Thread_App_Deinit();
 

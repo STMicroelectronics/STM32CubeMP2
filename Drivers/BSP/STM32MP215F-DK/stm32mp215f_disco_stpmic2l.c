@@ -122,7 +122,7 @@ board_regul_struct_t board_regulators_table[] =
   },
   {
     "GPO1_3V3",    GPO1_3V3,    STPMIC_GPO1,   GPO1_MAIN_CR,    GPO1_MAIN_CR,    \
-    GPO1_ALT_CR,    GPO1_ALT_CR,    GPO2_PWRCTRL_CR,   0, 0
+    GPO1_ALT_CR,    GPO1_ALT_CR,    GPO1_PWRCTRL_CR,   0, 0
   },
   {
     "GPO2_FREE",    GPO2_FREE,    STPMIC_GPO2,   GPO2_MAIN_CR,    GPO2_MAIN_CR,    \
@@ -322,9 +322,8 @@ uint32_t BSP_PMIC_DumpRegs(void)
  * @brief BSP_PMIC_DDR_Power_Init initialize DDR power
  *
  * DDR power on sequence is:
- * enable VPP_DDR
- * wait 2ms
- * enable VREF_DDR, VTT_DDR, VPP_DDR
+ * enable VDD1_DDR
+ * enable VDD2_DDR
  *
  * @param  None
  * @retval status
@@ -336,7 +335,7 @@ uint32_t BSP_PMIC_DDR_Power_Init()
   uint32_t  status = BSP_ERROR_NONE;
 
   /* VDD1_DDR ==> LDO3 ==> 1800mV */
-  if (BSP_PMIC_WriteReg(board_regulators_table[VDD1_DDR].control_reg1, 0x9) != BSP_ERROR_NONE)
+  if (BSP_PMIC_WriteReg(board_regulators_table[VDD1_DDR].control_reg1, (0x9 << 1)) != BSP_ERROR_NONE)
   {
     return BSP_ERROR_PMIC;
   }
@@ -347,28 +346,19 @@ uint32_t BSP_PMIC_DDR_Power_Init()
     return BSP_ERROR_PMIC;
   }
 
-
   /* enable VDD1_DDR */
-  if (BSP_PMIC_UpdateReg(board_regulators_table[VDD1_DDR].control_reg1, 0x1) != BSP_ERROR_NONE)
+  status = BSP_PMIC_REGU_Set_On(VDD1_DDR);
+  if (status != BSP_ERROR_NONE)
   {
-    return BSP_ERROR_PMIC;
+    return status;
   }
-
-  HAL_Delay(2);
 
   /* enable VDD2_DDR */
-  if (BSP_PMIC_UpdateReg(board_regulators_table[VDD2_DDR].control_reg2, 0x1 != BSP_ERROR_NONE))
-  {
-    return BSP_ERROR_PMIC;
-  }
-
-  return status;
+  return BSP_PMIC_REGU_Set_On(VDD2_DDR);
 }
 
 uint32_t BSP_PMIC_REGU_Set_On(board_regul_t regu)
 {
-  uint32_t  status = BSP_ERROR_NONE;
-
   switch (regu)
   {
     case VDDA1V8_AON:
@@ -399,16 +389,18 @@ uint32_t BSP_PMIC_REGU_Set_On(board_regul_t regu)
       }
       break;
     default:
-      status = BSP_ERROR_WRONG_PARAM ;
+      return BSP_ERROR_WRONG_PARAM;
       break;
   }
 
-  return status;
+  /* Default ramp delay of 1ms */
+  HAL_Delay(1);
+
+  return BSP_ERROR_NONE;
 }
 
 uint32_t BSP_PMIC_REGU_Set_Off(board_regul_t regu)
 {
-  uint32_t  status = BSP_ERROR_NONE;
   uint8_t data;
 
   switch (regu)
@@ -458,55 +450,33 @@ uint32_t BSP_PMIC_REGU_Set_Off(board_regul_t regu)
       }
       break;
     default:
-      status = BSP_ERROR_WRONG_PARAM ;
+      return BSP_ERROR_WRONG_PARAM;
       break;
   }
 
-  return status;
+  /* Default ramp delay of 1ms */
+  HAL_Delay(1);
+
+  return BSP_ERROR_NONE;
 }
 
 uint32_t BSP_PMIC_DDR_Power_Off()
 {
   uint32_t  status = BSP_ERROR_NONE;
-  uint8_t data;
 
   /* disable VDD1_DDR */
-  if (BSP_PMIC_ReadReg(board_regulators_table[VDD1_DDR].control_reg1,
-                       &data) != BSP_ERROR_NONE) /* read control reg to save data */
+  status = BSP_PMIC_REGU_Set_Off(VDD1_DDR);
+  if (status != BSP_ERROR_NONE)
   {
-    return BSP_ERROR_PMIC;
+    return status;
   }
-
-  data &= ~MAIN_CR_EN; /* clear enable bit */
-  if (BSP_PMIC_WriteReg(board_regulators_table[VDD1_DDR].control_reg1,
-                        data) != BSP_ERROR_NONE) /* write control reg to clear enable bit */
-  {
-    return BSP_ERROR_PMIC;
-  }
-
-  HAL_Delay(2);
 
   /* disable VDD2_DDR */
-  if (BSP_PMIC_ReadReg(board_regulators_table[VDD2_DDR].control_reg2,
-                       &data) != BSP_ERROR_NONE) /* read control reg to save data */
-  {
-    return BSP_ERROR_PMIC;
-  }
-
-  data &= ~MAIN_CR_EN; /* clear enable bit */
-  if (BSP_PMIC_WriteReg(board_regulators_table[VDD2_DDR].control_reg2,
-                        data) != BSP_ERROR_NONE) /* write control reg to clear enable bit */
-  {
-    return BSP_ERROR_PMIC;
-  }
-
-
-  return status;
+  return BSP_PMIC_REGU_Set_Off(VDD2_DDR);
 }
 
 /**
   * @brief  BSP_PMIC_Set_Power_Mode Set PMIC run/low power mode
-  * @param  mode  mode to set
   * @retval status
   */
 
@@ -619,7 +589,12 @@ uint32_t BSP_PMIC_Power_Mode_Init()
   return status;
 }
 
-/* TODO: It needs modifications for Low Power Mode */
+/**
+  * @brief  BSP_PMIC_Set_Power_Mode Set PMIC power mode
+  * @param  mode  mode to set
+  * @retval status
+  * TODO: It needs modifications for Low Power Mode
+  */
 uint32_t BSP_PMIC_Set_Power_Mode(__attribute__((unused))uint32_t mode)
 {
   uint32_t  status = BSP_ERROR_NONE;

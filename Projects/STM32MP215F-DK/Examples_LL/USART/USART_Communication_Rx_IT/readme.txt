@@ -25,7 +25,7 @@ Configuration of GPIO and USART peripherals to receive characters
 from an HyperTerminal (PC) in Asynchronous mode using an interrupt. The peripheral initialization 
 uses LL unitary service functions for optimization purposes (performance and size).
 
-At the beginning of the main program the SystemClock_Config() function is called to configure the system clock for STM32MP21xx Devices
+At the beginning of the main program the SystemClock_Config() function is called to configure the system clock for STM32MP21xxxx Devices
 
 USART Peripheral is configured in asynchronous mode (115200 bauds, 8 data bit, 1 start bit, 1 stop bit, no parity).
 No HW flow control is used.
@@ -39,7 +39,7 @@ USART IRQ Handler routine is then checking received character value.
 On a specific value ('S' or 's'), LED3 is turned On.
 Received character is echoed on Tx line.
 On press on User push-button, LED is turned Off.
-In case of errors, LED turns ON continuosly.
+In case of errors, LED turns ON continuously.
 
 @par Keywords
 
@@ -59,7 +59,7 @@ Connectivity, USART, Asynchronous mode, RS-232, baud rate, Interrupt, HyperTermi
 
 @par Hardware and Software environment
 
-  - This example runs on STM32MP21xx devices.
+  - This example runs on STM32MP21xxxx devices.
     
   - This example has been tested with STM32MP215F-DK board and can be
     easily tailored to any other supported device and development board.

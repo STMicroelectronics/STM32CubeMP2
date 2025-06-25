@@ -64,24 +64,27 @@ __HeapLimit:
   .align 2
   .globl  __Vectors
 __Vectors:
-  .long __StackTop            /* Top of Stack */
-  .long Reset_Handler         /* Reset Handler */
-  .long NMI_Handler           /* NMI Handler */
-  .long HardFault_Handler     /* Hard Fault Handler */
-  .long MemManage_Handler     /* MPU Fault Handler */
-  .long BusFault_Handler      /* Bus Fault Handler */
-  .long UsageFault_Handler    /* Usage Fault Handler */
-  .long SecureFault_Handler   /* Secure Fault Handler */
-  .long 0                     /* Reserved */
-  .long 0                     /* Reserved */
-  .long 0                     /* Reserved */
-  .long SVC_Handler           /* SVCall Handler */
-  .long DebugMon_Handler      /* Debug Monitor Handler */
-  .long 0                     /* Reserved */
-  .long PendSV_Handler        /* PendSV Handler */
-  .long SysTick_Handler       /* SysTick Handler */
+  .long __StackTop                  /* Top of Stack */
+  .long Reset_Handler               /* Reset Handler */
+  .long NMI_Handler                 /* NMI Handler */
+  .long HardFault_Handler           /* Hard Fault Handler */
+  .long MemManage_Handler           /* MPU Fault Handler */
+  .long BusFault_Handler            /* Bus Fault Handler */
+  .long UsageFault_Handler          /* Usage Fault Handler */
+  .long SecureFault_Handler         /* Secure Fault Handler */
+  .long 0                           /* Reserved */
+  .long 0                           /* Reserved */
+  .long 0                           /* Reserved */
+  .long SVC_Handler                 /* SVCall Handler */
+  .long DebugMon_Handler            /* Debug Monitor Handler */
+  .long 0                           /* Reserved */
+  .long PendSV_Handler              /* PendSV Handler */
+  .long SysTick_Handler             /* SysTick Handler */
   /*******************************************************************************/
   /* External interrupts according to                                            */
+  /* "Table 187. interrupt mapping for Cortex®-M33"                              */
+  /* in chapitre 26 "interrupt list" of reference document                       */
+  /* RM0506 - Reference Manual - STM32MP21xx - advanced ARM-based 32/64-bit MPUs */
   /*******************************************************************************/
   .long PVD_IRQHandler              /* PVD detector through EXTI */
   .long PVM_IRQHandler              /* PVM detector through EXTI */
@@ -93,11 +96,11 @@ __Vectors:
   .long WWDG1_IRQHandler            /* Window Watchdog 1 Early Wakeup interrupt */
   .long 0
   .long 0
-  .long TAMP_IRQHandler             /* Tamper interrupt (include LSECSS interrupts) */
-  .long RTC_IRQHandler              /* RTC global interrupt */
-  .long TAMP_S_IRQHandler           /* Tamper secure interrupt (include LSECSS interrupts)*/
-  .long RTC_S_IRQHandler            /* RTC global secure interrupt */
-  .long RCC_IRQHandler              /* RCC global interrupt */
+  .long TAMP_IRQHandler              /* Tamper interrupt (include LSECSS interrupts) */
+  .long RTC_IRQHandler               /* RTC global interrupt */
+  .long TAMP_S_IRQHandler            /* Tamper secure interrupt (include LSECSS interrupts)*/
+  .long RTC_S_IRQHandler             /* RTC global secure interrupt */
+  .long RCC_IRQHandler               /* RCC global interrupt */
   .long EXTI2_0_IRQHandler           /* EXTI Line 0 interrupt */
   .long EXTI2_1_IRQHandler           /* EXTI Line 1 interrupt */
   .long EXTI2_2_IRQHandler           /* EXTI Line 2 interrupt */
@@ -224,10 +227,10 @@ __Vectors:
   .long SPI5_IRQHandler             /* SPI5 global interrupt */
   .long SPI6_IRQHandler             /* SPI6 global interrupt */
   .long SAI1_IRQHandler             /* SAI1 global interrupt */
-  .long LTDC_IRQ_IRQHandler         /* LTDC global interrupt */
-  .long LTDC_ER_IRQ_IRQHandler      /* LTDC global error interrupt */
-  .long LTDC_SEC_IRQ_IRQHandler     /* LTDC security global interrupt */
-  .long LTDC_SEC_ER_IRQ_IRQHandler  /* LTDC security global error interrupt */
+  .long LTDC_IRQHandler             /* LTDC global interrupt */
+  .long LTDC_ER_IRQHandler          /* LTDC global error interrupt */
+  .long LTDC_SEC_IRQHandler         /* LTDC security global interrupt */
+  .long LTDC_SEC_ER_IRQHandler      /* LTDC security global error interrupt */
   .long SAI2_IRQHandler             /* SAI2 global interrupt */
   .long OCTOSPI1_IRQHandler         /* OCTOSPI1 global interrupt */
   .long 0
@@ -716,10 +719,10 @@ Default_Handler:
   def_irq_handler SPI5_IRQHandler
   def_irq_handler SPI6_IRQHandler
   def_irq_handler SAI1_IRQHandler
-  def_irq_handler LTDC_IRQ_IRQHandler
-  def_irq_handler LTDC_ER_IRQ_IRQHandler
-  def_irq_handler LTDC_SEC_IRQ_IRQHandler
-  def_irq_handler LTDC_SEC_ER_IRQ_IRQHandler
+  def_irq_handler LTDC_IRQHandler       
+  def_irq_handler LTDC_ER_IRQHandler    
+  def_irq_handler LTDC_SEC_IRQHandler   
+  def_irq_handler LTDC_SEC_ER_IRQHandler
   def_irq_handler SAI2_IRQHandler
   def_irq_handler OCTOSPI1_IRQHandler
   def_irq_handler OTFDEC1_IRQHandler

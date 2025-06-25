@@ -234,7 +234,7 @@ extern "C" {
 #define RESMGR_RIFSC_LTDC_ROT_ID                    STM32MP21_RIFSC_LTDC_ROT_ID
 #define RESMGR_RIFSC_IAC_ID                         STM32MP21_RIFSC_IAC_ID
 
-#define RESMGR_RIFSC_RIFSC_ID_MAX                   127
+#define RESMGR_RIFSC_ID_MAX                   127
 
 /*GPIO Pin Resource Selection Macro*/
 #define RESMGR_GPIO_PIN_0                           GPIO_PIN_0         /* Pin 0 selected    */

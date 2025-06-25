@@ -238,7 +238,7 @@ typedef enum
   */
 #define IS_RESMGR_RES_TYPE(__TYPE__)     ((ResMgr_Res_Type_t )(__TYPE__) < (ResMgr_Res_Type_t) RESMGR_RESOURCE_MAX)
 
-#define IS_RESMGR_RIFSC_RSC(__NUM__)     ((__NUM__) <= RESMGR_RIFSC_RIFSC_ID_MAX)
+#define IS_RESMGR_RIFSC_RSC(__NUM__)     ((__NUM__) <= RESMGR_RIFSC_ID_MAX)
 
 #define IS_RESMGR_PWR_RSC(__NUM__)       ((__NUM__) < RESMGR_RIFSC_PWR_RSC_NB)
 

@@ -65,7 +65,7 @@ System, GPIO, EXTI, Output, Alternate function, Push-pull, Toggle
 
 @par Hardware and Software environment
 
-  - This example runs on STM32MP215Fxx devices.
+  - This example runs on STM32MP21xxxx devices.
     
   - This example has been tested with STM32MP215F-DK board and can be
     easily tailored to any other supported device and development board.

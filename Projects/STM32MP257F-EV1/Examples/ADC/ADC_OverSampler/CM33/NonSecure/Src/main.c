@@ -1,7 +1,7 @@
 /* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    ADC/ADC_RegularConversion_Polling/Src/main.c
+  * @file    ADC/ADC_OverSampler/Application/User/main.c
   * @author  MCD Application Team
   * @brief   This example describes how to use Polling mode to convert data.
   ******************************************************************************
@@ -41,6 +41,10 @@
 
 /* Private macro -------------------------------------------------------------*/
 /* USER CODE BEGIN PM */
+#define LED_TOGGLE_DELAY_MS  (500)                      /* Time delay in mili-seconds to toggle the LED */
+#define PRINT_DELAY_MS       (LED_TOGGLE_DELAY_MS * 2)  /* Time delay in mili-seconds to print
+                                                         * the results or required information,
+                                                         * it should be in multiple of LED_TOGGLE_DELAY_MS */
 
 /* USER CODE END PM */
 
@@ -51,19 +55,26 @@ volatile int debug = 1;
 #endif
 
 /* ADC handler declaration */
-ADC_HandleTypeDef    AdcHandle;
-
-/* IPCC handler declaration */
-IPCC_HandleTypeDef   hipcc;
+ADC_HandleTypeDef         AdcHandle;
 
 /* ADC channel configuration structure declaration */
-ADC_ChannelConfTypeDef   sConfig;
+ADC_ChannelConfTypeDef    sConfig;
+
+/* IPCC handler declaration */
+IPCC_HandleTypeDef        hipcc;
+
+/* TIMx handler declaration */
+TIM_HandleTypeDef         htim;
 
 /* Converted value declaration */
-uint32_t                 uwConvertedValue;
+__IO uint32_t                    uwConvertedValue;
 /* Input voltage declaration */
-uint32_t                 uwInputVoltage;
+__IO int32_t                     uwInputVoltage;
 
+static __IO int32_t              g_tim_int_flag  = 0;
+static __IO int32_t              g_shutdown_flag = 0;
+static IPCC_HandleTypeDef const *hipcc_handle       ;
+static uint32_t                  ipcc_ch_id         ;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -73,6 +84,10 @@ static void SystemClock_Config(void);
 static void MX_IPCC_Init(void);
 static void MX_ADC3_Init(void);
 static void MX_ADC3_DeInit(void);
+static void MX_TIMx_Init(void);
+static void MX_TIMx_DeInit(void);
+static void Shutdown_Routine(void);
+void        HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 
 /* USER CODE BEGIN PFP */
 
@@ -89,12 +104,31 @@ static void MX_ADC3_DeInit(void);
   */
 int main(void)
 {
-  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
-  HAL_Init();
+  g_tim_int_flag       = 0;
+  g_shutdown_flag      = 0;
 
 #ifdef DEBUG
   while(debug==1);
 #endif
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+
+#if defined(__VALID_OUTPUT_TERMINAL_IO__) && defined (__GNUC__)
+  initialise_monitor_handles();
+#elif defined(__VALID_OUTPUT_UART_IO__)
+  COM_InitTypeDef COM_Conf;
+
+  COM_Conf.BaudRate   = 115200;
+  COM_Conf.HwFlowCtl  = COM_HWCONTROL_NONE;
+  COM_Conf.Parity     = COM_PARITY_NONE;
+  COM_Conf.StopBits   = COM_STOPBITS_1;
+  COM_Conf.WordLength = COM_WORDLENGTH_8B;
+
+  BSP_COM_Init(COM_VCP_CM33, &COM_Conf);
+#endif  /* __VALID_OUTPUT_TERMINAL_IO__ or __VALID_OUTPUT_UART_IO__ */
+
+  printf("ADC Example (ADC_OverSampler) execution started :\r\n");
 
   /* Configure the system clock for dev mode*/
   if(IS_DEVELOPER_BOOT_MODE())
@@ -119,27 +153,42 @@ int main(void)
     MX_IPCC_Init();
     /*Corpo Sync Initialization*/
     CoproSync_Init();
+    /* Initialize MAILBOX with IPCC peripheral */
+    MAILBOX_SCMI_Init();
   }
-  MX_ADC3_Init();
-  /* USER CODE END 2 */
 
+  /* Initialize all configured peripherals */
+  MX_TIMx_Init();
+  MX_ADC3_Init();
 
   /* Infinite Loop */
   while (1)
   {
-    if (HAL_ADC_PollForConversion(&AdcHandle, 10) != HAL_OK)
+    if( 1 == g_tim_int_flag )
     {
-      Error_Handler();
+      if (HAL_ADC_PollForConversion(&AdcHandle, 10) != HAL_OK)
+      {
+        Error_Handler();
+      }
+
+      /* Read the converted value */
+      uwConvertedValue = HAL_ADC_GetValue(&AdcHandle);
+
+      /* Convert the result from 16 bit value to the voltage dimension (mV unit) */
+      /* Vref = 1.8 V */
+      uwInputVoltage = (uwConvertedValue * 1800) / 0xFFF0;
+
+      printf("uwConvertedValue = %lu,    uwInputVoltage = %ld    (ADC_OverSampler)\r\n", uwConvertedValue, uwInputVoltage);
+      BSP_LED_Toggle(LED3);
+
+      g_tim_int_flag = 0;
     }
 
-    /* Read the converted value */
-    uwConvertedValue = HAL_ADC_GetValue(&AdcHandle);
-
-    /* Convert the result from 16 bit value to the voltage dimension (mV unit) */
-    /* Vref = 1.8 V */
-    uwInputVoltage = uwConvertedValue * 1800;
-    uwInputVoltage = uwInputVoltage / 0xFFF0;
-
+    if( 1 == g_shutdown_flag )
+    {
+      Shutdown_Routine();
+      g_shutdown_flag = 0;
+    }
   }
   /* USER CODE END 3 */
 }
@@ -149,7 +198,8 @@ int main(void)
   * @param  None
   * @retval None
   */
-static void SystemClock_Config(void) {
+static void SystemClock_Config(void)
+{
 	RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
 	/* PLL 2 is configured by DDR initialization code */
 	/* PLL 3 is configured by GPU initialization code */
@@ -290,23 +340,44 @@ static void SystemClock_Config(void) {
   * @retval None
   */
 static void MX_ADC3_Init(void)
-	{
-	/* Acquire ADC3 using Resource manager */
-	if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIFSC, STM32MP25_RIFSC_ADC3_ID))
-	{
-		Error_Handler();
-	}
-	/* Acquire GPIOF11 using Resource manager */
-	if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOF, RESMGR_GPIO_PIN(11)))
-	{
-		Error_Handler();
-	}
+{
+  /* Enable ADC regulator */
+  if(ResMgr_Request(RESMGR_RESOURCE_RIF_PWR, RESMGR_PWR_RESOURCE(0)) == RESMGR_STATUS_ACCESS_OK)
+  {
+    loc_printf("Enable ADC regulator directly\r\n");
+    HAL_PWREx_EnableSupply(PWR_PVM_A);
+  }
+  else
+  {
+    int ret = 0;
+    loc_printf("Enable ADC regulator with SCMI\r\n");
+    ret = scmi_voltage_domain_enable(&scmi_channel, VOLTD_SCMI_ADC);
+    if (ret)
+      loc_printf("Error : Failed to enable VOLTD_SCMI_ADC (error code %d)\r\n", ret);
+    else
+      loc_printf("Successfully enabled VOLTD_SCMI_ADC\r\n");
+  }
 
-	/* Enable GPIOs power supplies */
-	if (RESMGR_STATUS_ACCESS_OK == ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(101)))
-	{
-	__HAL_RCC_GPIOF_CLK_ENABLE();
-	}
+  /* Acquire ADC3 using Resource manager */
+  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIFSC, STM32MP25_RIFSC_ADC3_ID))
+  {
+    loc_printf("Error : ResMgr_Request failed for STM32MP25_RIFSC_ADC3_ID \r\n");
+    Error_Handler();
+  }
+
+  /* Acquire GPIOF11 using Resource manager */
+  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOF, RESMGR_GPIO_PIN(11)))
+  {
+    loc_printf("Error : ResMgr_Request failed for GPIOF-PIN-11 \r\n");
+    Error_Handler();
+  }
+
+  /* Enable GPIOs power supplies */
+  if (RESMGR_STATUS_ACCESS_OK == ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(101)))
+  {
+    loc_printf("Error : ResMgr_Request failed for RESMGR_RCC_RESOURCE(101) \r\n");
+    __HAL_RCC_GPIOF_CLK_ENABLE();
+  }
 
 /*##-1- Configure the ADC peripheral #######################################*/
   AdcHandle.Instance                                = ADC3;
@@ -363,23 +434,6 @@ static void MX_ADC3_Init(void)
 }
 
 /**
-  * @brief  Initialize the IPCC Peripheral
-  * @retval None
-  */
-static void MX_IPCC_Init(void)
-{
-
-  hipcc.Instance = IPCC1;
-  if (HAL_IPCC_Init(&hipcc) != HAL_OK)
-  {
-     Error_Handler();
-  }
-  /* IPCC interrupt Init */
-  HAL_NVIC_SetPriority(IPCC1_RX_IRQn, DEFAULT_IRQ_PRIO, 0);
-  HAL_NVIC_EnableIRQ(IPCC1_RX_IRQn);
-}
-
-/**
   * @brief  De-Initialize the ADC Peripheral
   * @param  None
   * @retval None
@@ -392,9 +446,120 @@ static void MX_ADC3_DeInit(void)
   /* Release ADC3 using Resource manager */
   ResMgr_Release(RESMGR_RESOURCE_RIFSC, STM32MP25_RIFSC_ADC3_ID);
 
+  /* Disable ADC regulator */
+  if(ResMgr_Request(RESMGR_RESOURCE_RIF_PWR, RESMGR_PWR_RESOURCE(0)) == RESMGR_STATUS_ACCESS_OK)
+  {
+    loc_printf("Disable ADC regulator directly\r\n");
+    HAL_PWREx_DisableSupply(PWR_PVM_A);
+  }
+  else
+  {
+    int ret = 0;
+    loc_printf("Disable ADC regulator with SCMI\r\n");
+    ret = scmi_voltage_domain_disable(&scmi_channel, VOLTD_SCMI_ADC);
+    if (ret)
+      loc_printf("Error : Failed to disable VOLTD_SCMI_ADC (error code %d)\r\n", ret);
+    else
+      loc_printf("Successfully disabled VOLTD_SCMI_ADC\r\n");
+  }
+
+  ResMgr_Release(RESMGR_RESOURCE_RIF_PWR, RESMGR_PWR_RESOURCE(0));
+
   /* Release GPIOF11 using Resource manager */
   ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOF, RESMGR_GPIO_PIN(11));
+  ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(101));
 }
+
+/**
+  * @brief  Initialize the IPCC Peripheral
+  * @retval None
+  */
+static void MX_IPCC_Init(void)
+{
+  hipcc.Instance = IPCC1;
+  if (HAL_IPCC_Init(&hipcc) != HAL_OK)
+  {
+     Error_Handler();
+  }
+  /* IPCC interrupt Init */
+  HAL_NVIC_SetPriority(IPCC1_RX_IRQn, DEFAULT_IRQ_PRIO, 0);
+  HAL_NVIC_EnableIRQ(IPCC1_RX_IRQn);
+}
+
+/* TIMx init function */
+static void MX_TIMx_Init(void)
+{
+  TIM_ClockConfigTypeDef    sClockSourceConfig;
+  TIM_MasterConfigTypeDef   sMasterConfig;
+
+  /* Acquire TIMx using Resource manager */
+  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIFSC, STM32MP25_RIFSC_TIMx_ID))
+  {
+    loc_printf("Error : ResMgr_Request failed for STM32MP25_RIFSC_TIMx_ID \r\n");
+    Error_Handler();
+  }
+
+  htim.Instance           = TIMx;
+  htim.Init.Prescaler     = PRESCALER_VALUE;
+  htim.Init.CounterMode   = TIM_COUNTERMODE_UP;
+  htim.Init.Period        = PERIOD_VALUE;
+  htim.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  if (HAL_TIM_Base_Init(&htim) != HAL_OK)
+  {
+	Error_Handler();
+  }
+
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&htim, &sClockSourceConfig) != HAL_OK)
+  {
+	Error_Handler();
+  }
+
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode     = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&htim, &sMasterConfig) != HAL_OK)
+  {
+	Error_Handler();
+  }
+
+  /*## Start the TIM Base generation in interrupt mode ####################*/
+  /* Start Channel1 */
+  if (HAL_TIM_Base_Start_IT(&htim) != HAL_OK)
+  {
+    /* Starting Error */
+    Error_Handler();
+  }
+}
+
+
+/**
+  * @brief  TIM DeInitialization Function
+  * @param  None
+  * @retval None
+  */
+static void MX_TIMx_DeInit(void)
+{
+  /* Deinitialize the TIM peripheral and Resources*/
+  HAL_TIM_Base_DeInit(&htim);
+
+  /* Release TIMx using Resource manager */
+  ResMgr_Release(RESMGR_RESOURCE_RIFSC, STM32MP25_RIFSC_TIMx_ID);
+}
+
+/**
+  * @brief  Period elapsed callback in non blocking mode
+  * @param  htim : TIM handle
+  * @retval None
+  */
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
+{
+  if (TIMx == htim->Instance)
+  {
+    g_tim_int_flag = 1;
+  }
+}
+
+
 /**
   * @brief  Callback from IPCC Interrupt Handler: Remote Processor asks local processor to shutdown
   * @param  hipcc IPCC handle
@@ -404,14 +569,33 @@ static void MX_ADC3_DeInit(void)
   */
 void CoproSync_ShutdownCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir)
 {
+  hipcc_handle = hipcc;
+  ipcc_ch_id   = ChannelIndex;
+
+  g_shutdown_flag = 1;
+}
+
+/**
+  * @brief  Executes in main after Callback from IPCC Interrupt Handler
+  * @param  none
+  * @retval None
+  */
+static void Shutdown_Routine(void)
+{
   /* Deinitialize the ADC peripheral */
   MX_ADC3_DeInit();
 
+  /* DeInitialize MAILBOX with IPCC peripheral */
+  MAILBOX_SCMI_DeInit();
+
+  /* Deinitialize the TIM peripheral and Resources*/
+  MX_TIMx_DeInit();
+
   /* Deinitialize the LED3 */
-  BSP_LED_DeInit(LED3);
+  (void)BSP_LED_DeInit(LED3);
 
   /* When ready, notify the remote processor that we can be shut down */
-  HAL_IPCC_NotifyCPU(hipcc, ChannelIndex, IPCC_CHANNEL_DIR_RX);
+  (void)HAL_IPCC_NotifyCPU(hipcc_handle, ipcc_ch_id, IPCC_CHANNEL_DIR_RX);
 
   /* Wait for complete shutdown */
   while(1);
@@ -423,16 +607,15 @@ void CoproSync_ShutdownCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPC
   */
 void Error_Handler(void)
 {
-	/* Blink the LED3 */
-	while (1)
-	{
-	  /* Error if LED3 is ON */
-	  BSP_LED_On(LED3);
-	  while (1)
-	  {
-	    HAL_Delay(1000);
-	  }
-	}
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* Error if LED3 is ON */
+  BSP_LED_On(LED3);
+  printf("error : Something went wrong\r\n");
+  while (1)
+  {
+    HAL_Delay(1000);
+  }
+  /* USER CODE END Error_Handler_Debug */
 }
 
 #ifdef  USE_FULL_ASSERT
@@ -456,3 +639,5 @@ void assert_failed(uint8_t *file, uint32_t line)
   /* USER CODE END 6 */
 }
 #endif /* USE_FULL_ASSERT */
+
+

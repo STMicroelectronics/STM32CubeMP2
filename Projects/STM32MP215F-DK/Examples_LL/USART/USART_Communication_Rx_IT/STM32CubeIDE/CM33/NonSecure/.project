@@ -157,17 +157,17 @@
 			<locationURI>PARENT-8-PROJECT_LOC/Drivers/STM32MP2xx_HAL_Driver/Src/stm32mp2xx_ll_rcc.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/STM32MP257F-DK/stm32mp215f_disco.c</name>
+			<name>Drivers/BSP/STM32MP215F-DK/stm32mp215f_disco.c</name>
 			<type>1</type>
 			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/STM32MP215F-DK/stm32mp215f_disco.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/STM32MP257F-DK/stm32mp215f_disco_bus.c</name>
+			<name>Drivers/BSP/STM32MP215F-DK/stm32mp215f_disco_bus.c</name>
 			<type>1</type>
 			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/STM32MP215F-DK/stm32mp215f_disco_bus.c</locationURI>
 		</link>
 		<link>
-			<name>Drivers/BSP/STM32MP257F-DK/stm32mp215f_disco_stpmic2l.c</name>
+			<name>Drivers/BSP/STM32MP215F-DK/stm32mp215f_disco_stpmic2l.c</name>
 			<type>1</type>
 			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/STM32MP215F-DK/stm32mp215f_disco_stpmic2l.c</locationURI>
 		</link>

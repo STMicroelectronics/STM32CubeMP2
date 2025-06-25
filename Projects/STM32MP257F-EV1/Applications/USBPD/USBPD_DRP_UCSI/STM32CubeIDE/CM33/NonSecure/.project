@@ -53,7 +53,7 @@
 		<link>
 			<name>Application/Startup/startup_stm32mp257cxx_m33.s</name>
 			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/gcc/startup_stm32mp257cxx_m33.s</locationURI>
+			<locationURI>PARENT-3-PROJECT_LOC/CM33/NonSecure/Core/Src/startup_stm32mp257cxx_m33.s</locationURI>
 		</link>
 		<link>
 			<name>Application/User/Core</name>
@@ -239,6 +239,21 @@
 			<name>Middlewares/USBPD/usbpd_trace.c</name>
 			<type>1</type>
 			<locationURI>PARENT-8-PROJECT_LOC/Middlewares/ST/STM32_USBPD_Library/Core/src/usbpd_trace.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/scmiagent/mbox_scmi.c</name>
+			<type>1</type>
+			<locationURI>PARENT-8-PROJECT_LOC/Middlewares/ST/scmiagent/mbox_scmi.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/scmiagent/scmi_helpers.c</name>
+			<type>1</type>
+			<locationURI>PARENT-8-PROJECT_LOC/Middlewares/ST/scmiagent/scmi_helpers.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/scmiagent/scmi_regu.c</name>
+			<type>1</type>
+			<locationURI>PARENT-8-PROJECT_LOC/Middlewares/ST/scmiagent/scmi_regu.c</locationURI>
 		</link>
 		<link>
 			<name>Application/User/Core/Inc</name>

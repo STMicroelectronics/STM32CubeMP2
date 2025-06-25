@@ -7,7 +7,7 @@
   *
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -23,8 +23,8 @@
 #define __STM32MP2xx_IT_H
 
 #ifdef __cplusplus
- extern "C" {
-#endif 
+  extern "C" {
+#endif
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
@@ -46,7 +46,7 @@ void IPCC1_RX_IRQHandler(void);
 void HPDMA3_Channel0_IRQHandler(void);
 void HPDMA3_Channel1_IRQHandler(void);
 void HPDMA3_Channel2_IRQHandler(void);
-void I3C2_IRQHandler(void);
+void I3C1_IRQHandler(void);
 
 #ifdef __cplusplus
 }

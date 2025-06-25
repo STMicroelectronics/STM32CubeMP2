@@ -1,0 +1,43 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+/*
+ * Copyright (C) STMicroelectronics 2023 - All Rights Reserved
+ * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
+ */
+
+/dts-v1/;
+
+#include "stm32mp257f-ev1-cm33tdcid-ostl.dts"
+#include "stm32mp257f-ev1-cm33tdcid-ostl-resmem-snor.dtsi"
+
+/ {
+	model = "STMicroelectronics STM32MP257F-EV1 CM33TDCID OSTL SNOR Evaluation Board";
+	compatible = "st,stm32mp257f-ev1-cm33tdcid-ostl-snor", "st,stm32mp257f-ev1", "st,stm32mp257";
+};
+
+&ommanager {
+	memory-region = <&mm_ospi1>;
+	memory-region-names = "mm_ospi1";
+	pinctrl-names = "default", "sleep";
+	pinctrl-0 = <&ospi_port1_clk_pins_a
+		     &ospi_port1_io03_pins_a
+		     &ospi_port1_cs0_pins_a>;
+	pinctrl-1 = <&ospi_port1_clk_sleep_pins_a
+		     &ospi_port1_io03_sleep_pins_a
+		     &ospi_port1_cs0_sleep_pins_a>;
+	status = "okay";
+
+	spi@40430000 {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		memory-region = <&mm_ospi1>;
+		status = "okay";
+
+		flash0: flash@0 {
+			compatible = "jedec,spi-nor";
+			reg = <0>;
+			spi-rx-bus-width = <4>;
+			spi-tx-bus-width = <4>;
+			spi-max-frequency = <84000000>;
+		};
+	};
+};

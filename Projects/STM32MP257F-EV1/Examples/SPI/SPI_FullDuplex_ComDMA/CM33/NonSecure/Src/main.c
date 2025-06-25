@@ -100,11 +100,31 @@ int main(void)
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
 
+#if defined(__VALID_OUTPUT_TERMINAL_IO__) && defined (__GNUC__)
+  initialise_monitor_handles();
+#elif defined(__VALID_OUTPUT_UART_IO__)
+  COM_InitTypeDef COM_Conf;
+
+  COM_Conf.BaudRate   = 115200;
+  COM_Conf.HwFlowCtl  = COM_HWCONTROL_NONE;
+  COM_Conf.Parity     = COM_PARITY_NONE;
+  COM_Conf.StopBits   = COM_STOPBITS_1;
+  COM_Conf.WordLength = COM_WORDLENGTH_8B;
+
+  BSP_COM_Init(COM_VCP_CM33, &COM_Conf);
+#endif  /* __VALID_OUTPUT_TERMINAL_IO__ or __VALID_OUTPUT_UART_IO__ */
+
   if (IS_DEVELOPER_BOOT_MODE())
   {
 	  /* Configure the system clock */
 	  SystemClock_Config();
   }
+
+#ifdef  MASTER_BOARD
+  printf("\r\nLog : SPI example running (on SPI Master Board)\r\n");
+#else   /* MASTER_BOARD */
+  printf("\r\nLog : SPI example running (on SPI Slave Board)\r\n");
+#endif  /* MASTER_BOARD */
 
   /* Configure LED3 */
   BSP_LED_Init(LED3);
@@ -124,6 +144,7 @@ int main(void)
   MX_SPI3_Init();
 
 #ifdef MASTER_BOARD
+  printf("Log : Press USER2 button to start communication (on SPI Master Board)\r\n");
 
   /* Configure User push-button */
   BSP_PB_Init(BUTTON_USER2, BUTTON_MODE_GPIO);
@@ -147,6 +168,11 @@ int main(void)
   /*##-2- Start the Full Duplex Communication process ########################*/
   /* While the SPI in TransmitReceive process, user can transmit data through
      "aTxBuffer" buffer & receive data through "aRxBuffer" */
+#ifdef  MASTER_BOARD
+  printf("Log : Communication enabled (on SPI Master Board)\r\n");
+#else   /* MASTER_BOARD */
+  printf("Log : Communication enabled (on SPI Slave Board)\r\n");
+#endif  /* MASTER_BOARD */
   if(HAL_SPI_TransmitReceive_DMA(&SpiHandle, (uint8_t*)aTxBuffer, (uint8_t *)aRxBuffer, BUFFERSIZE) != HAL_OK)
   {
     /* Transfer error in transmission process */
@@ -161,6 +187,12 @@ int main(void)
       is ongoing. */
   while (wTransferState == TRANSFER_WAIT)
   {
+#ifdef  MASTER_BOARD
+    printf("Log : Waiting for communication to finish (on SPI Master Board)\r\n");
+#else   /* MASTER_BOARD */
+    printf("Log : Waiting for SPI master to start communication (on SPI Slave Board)\r\n");
+#endif  /* MASTER_BOARD */
+    HAL_Delay(1000);
   }
 
   switch(wTransferState)
@@ -169,9 +201,11 @@ int main(void)
       /*##-4- Compare the sent and received buffers ##############################*/
       if(Buffercmp((uint8_t*)aTxBuffer, (uint8_t*)aRxBuffer, BUFFERSIZE))
       {
+        printf("Error : SPI example failed (TX-RX data mismatch)\r\n");
         /* Processing Error */
         Error_Handler();
       }
+      printf("Log : SPI example working fine\r\n");
       break;
     default :
       Error_Handler();
@@ -589,6 +623,7 @@ void Error_Handler(void)
 {
   /* USER CODE BEGIN Error_Handler_Debug */
   /* Error if LED3 is ON */
+  printf("Error : Something went wrong\r\n");
   BSP_LED_On(LED3);
   while (1)
   {

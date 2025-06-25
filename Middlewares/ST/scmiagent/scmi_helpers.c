@@ -5,7 +5,7 @@
  */
 
 #include "scmi.h"
-#include "mbox_ipcc.h"
+#include "mbox_scmi.h"
 
 /*
  * Shared Memory based Transport (SMT) relies on a 128byte piece of
@@ -29,31 +29,19 @@ struct scmi_smt_header {
 };
 
 
-#define SMT_SHARED_MEMORY_SIZE	128
-
-#define SMT_CHANNEL_STATUS_FREE		BIT(0)
-#define SMT_CHANNEL_STATUS_ERROR	BIT(1)
-
-#define SMT_FLAGS_INTR_ENABLED		BIT(0)
-
-#define SMT_MSG_HEADER_TOKEN(token)		(((token) << 18) & GENMASK(31, 18))
-#define SMT_MSG_HEADER_PROTOCOL_ID(proto)	(((proto) << 10) & GENMASK(17, 10))
-#define SMT_MSG_HEADER_MESSAGE_TYPE(type)	(((type) << 18) & GENMASK(9, 8))
-#define SMT_MSG_HEADER_MESSAGE_ID(id)		((id) & GENMASK(7, 0))
-
 static int write_msg_to_smt(struct scmi_message_data *msg)
 {
 	struct scmi_smt_header *hdr = (void *)msg->channel->tx_buffer;
 
 	if ((!msg->message && msg->message_size) || (!msg->response && msg->response_size))
-		return -1;
+		return SCMIAGENT_NOT_ALLOCATED;
 
 	if (!(hdr->channel_status & SMT_CHANNEL_STATUS_FREE))
-		return -1;
+		return SCMIAGENT_CHANNEL_BUSY;
 
 	if ((sizeof(*hdr) + msg->message_size > SMT_SHARED_MEMORY_SIZE) ||
 	    (sizeof(*hdr) + msg->message_size > SMT_SHARED_MEMORY_SIZE))
-		return -1;
+		return SCMIAGENT_OUT_OF_MEMORY;
 
 	/* Load message in shared memory */
 	hdr->channel_status &= ~SMT_CHANNEL_STATUS_FREE;
@@ -73,13 +61,13 @@ static int read_resp_from_smt(uint32_t *shared_buffer, struct scmi_message_data 
 	struct scmi_smt_header *hdr = (struct scmi_smt_header *)shared_buffer;
 
 	if (!(hdr->channel_status & SMT_CHANNEL_STATUS_FREE))
-		return -1;
+		return SCMIAGENT_NOTHING_TO_RECEIVE;
 
 	if (hdr->channel_status & SMT_CHANNEL_STATUS_ERROR)
-		return -1;
+		return SCMIAGENT_CHANNEL_ERROR;
 
 	if (hdr->length > msg->response_size + sizeof(hdr->msg_header))
-		return -1;
+		return SCMIAGENT_OUT_OF_MEMORY;
 
 	/* Get the SCMI response payload data */
 	msg->response_size = hdr->length - sizeof(hdr->msg_header);
@@ -102,22 +90,11 @@ int scmi_process_message(struct scmi_message_data *msg)
 	ret = write_msg_to_smt(msg);
 	if (ret)
 		return ret;
-/*
-	ret = mailbox_send(msg->channel->tx_mailbox, msg->channel->tx_buffer);
-	if (ret)
-		goto out;
 
-	ret = mailbox_receive(msg->channel->tx_mailbox, msg->channel->tx_buffer, msg->channel->tx_timeout_ms);
-	if (ret)
-		goto out;
-*/
-
-	SCMI_IPCC_Req();
+	MAILBOX_SCMI_Req();
 
 	ret = read_resp_from_smt(msg->channel->tx_buffer, msg);
-/*
-out:
-*/
+
 	clear_smt_channel(msg->channel->tx_buffer);
 
 	return ret;
@@ -125,5 +102,8 @@ out:
 
 int scmi_status_to_ret(int32_t scmi_status)
 {
-	return scmi_status;
+	if (scmi_status == SCMI_SUCCESS)
+		return 0;
+
+	return SCMIAGENT_SCMI_ERROR + (int)scmi_status;
 }

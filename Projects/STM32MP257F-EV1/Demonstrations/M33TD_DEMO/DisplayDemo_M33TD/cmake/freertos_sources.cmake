@@ -1,0 +1,13 @@
+set(FREERTOS_SRC_FILES
+    ${BASE_DIR}/../../../../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2/cmsis_os2.c
+    ${BASE_DIR}/../../../../../Middlewares/Third_Party/FreeRTOS/Source/croutine.c
+    ${BASE_DIR}/../../../../../Middlewares/Third_Party/FreeRTOS/Source/event_groups.c
+    ${BASE_DIR}/../../../../../Middlewares/Third_Party/FreeRTOS/Source/list.c
+    ${BASE_DIR}/../../../../../Middlewares/Third_Party/FreeRTOS/Source/queue.c
+    ${BASE_DIR}/../../../../../Middlewares/Third_Party/FreeRTOS/Source/stream_buffer.c
+    ${BASE_DIR}/../../../../../Middlewares/Third_Party/FreeRTOS/Source/tasks.c
+    ${BASE_DIR}/../../../../../Middlewares/Third_Party/FreeRTOS/Source/timers.c
+    ${BASE_DIR}/../../../../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM33_NTZ/non_secure/portasm.c
+    ${BASE_DIR}/../../../../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM33_NTZ/non_secure/port.c
+    ${BASE_DIR}/../../../../../Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c
+)

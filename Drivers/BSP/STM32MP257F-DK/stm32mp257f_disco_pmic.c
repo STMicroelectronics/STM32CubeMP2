@@ -334,9 +334,8 @@ uint32_t BSP_PMIC_DumpRegs(void)
   * @brief BSP_PMIC_DDR_Power_Init initialize DDR power
   *
   * DDR power on sequence is:
-  * enable VPP_DDR
-  * wait 2ms
-  * enable VREF_DDR, VTT_DDR, VPP_DDR
+  * enable VDD1_DDR
+  * enable VDD2_DDR
   *
   * @param  None
   * @retval status
@@ -358,28 +357,19 @@ uint32_t BSP_PMIC_DDR_Power_Init()
     return BSP_ERROR_PMIC;
   }
 
-  HAL_Delay(2);
-
-  /* enable VTT_DDR/VDD1_DDR */
-  if (BSP_PMIC_UpdateReg(board_regulators_table[VDD1_DDR].control_reg1, 0x1) != BSP_ERROR_NONE)
+  /* enable VDD1_DDR */
+  status = BSP_PMIC_REGU_Set_On(VDD1_DDR);
+  if (status != BSP_ERROR_NONE)
   {
-    return BSP_ERROR_PMIC;
+    return status;
   }
 
-  HAL_Delay(2);
-
-  /* enable vdd2_ddr (1100mV) ==> BUCK6 */
-  if (BSP_PMIC_UpdateReg(board_regulators_table[VDD2_DDR].control_reg2, 0x1 != BSP_ERROR_NONE))
-  {
-    return BSP_ERROR_PMIC;
-  }
-
-  return status;
+  /* enable VDD2_DDR */
+  return BSP_PMIC_REGU_Set_On(VDD2_DDR);
 }
 
 uint32_t BSP_PMIC_REGU_Set_On(board_regul_t regu)
 {
-  uint32_t  status = BSP_ERROR_NONE;
   uint8_t data;
 
   switch (regu)
@@ -424,16 +414,18 @@ uint32_t BSP_PMIC_REGU_Set_On(board_regul_t regu)
       }
       break;
     default:
-      status = BSP_ERROR_WRONG_PARAM ;
+      return BSP_ERROR_WRONG_PARAM ;
       break;
   }
 
-  return status;
+  /* Default ramp delay of 1ms */
+  HAL_Delay(1);
+
+  return BSP_ERROR_NONE;
 }
 
 uint32_t BSP_PMIC_REGU_Set_Off(board_regul_t regu)
 {
-  uint32_t  status = BSP_ERROR_NONE;
   uint8_t data;
 
   switch (regu)
@@ -480,47 +472,29 @@ uint32_t BSP_PMIC_REGU_Set_Off(board_regul_t regu)
       }
       break;
     default:
-      status = BSP_ERROR_WRONG_PARAM ;
+      return BSP_ERROR_WRONG_PARAM ;
       break;
   }
 
-  return status;
+  /* Default ramp delay of 1ms */
+  HAL_Delay(1);
+
+  return BSP_ERROR_NONE;
 }
 
 uint32_t BSP_PMIC_DDR_Power_Off()
 {
   uint32_t  status = BSP_ERROR_NONE;
-  uint8_t data;
 
-  /* disable vdd_ddr */
-  if (BSP_PMIC_ReadReg(board_regulators_table[VDD2_DDR].control_reg2,
-                       &data) != BSP_ERROR_NONE) /* read control reg to save data */
+  /* disable vdd2_ddr */
+  status = BSP_PMIC_REGU_Set_Off(VDD2_DDR);
+  if (status != BSP_ERROR_NONE)
   {
-    return BSP_ERROR_PMIC;
+    return status;
   }
 
-  data &= ~MAIN_CR_EN; /* clear enable bit */
-  if (BSP_PMIC_WriteReg(board_regulators_table[VDD2_DDR].control_reg2,
-                        data) != BSP_ERROR_NONE) /* write control reg to clear enable bit */
-  {
-    return BSP_ERROR_PMIC;
-  }
-
-  /* disable vtt_ddr */
-  if (BSP_PMIC_ReadReg(board_regulators_table[VDD1_DDR].control_reg1,
-                       &data) != BSP_ERROR_NONE) /* read control reg to save data */
-  {
-    return BSP_ERROR_PMIC;
-  }
-
-  data &= ~MAIN_CR_EN; /* clear enable bit */
-  if (BSP_PMIC_WriteReg(board_regulators_table[VDD1_DDR].control_reg1,
-                        data) != BSP_ERROR_NONE) /* write control reg to clear enable bit */
-  {
-    return BSP_ERROR_PMIC;
-  }
-
-  return status;
+  /* disable vdd1_ddr */
+  return BSP_PMIC_REGU_Set_Off(VDD1_DDR);
 }
 
 /**

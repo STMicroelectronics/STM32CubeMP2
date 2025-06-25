@@ -39,7 +39,7 @@ USART IRQ Handler routine is then checking received character value.
 On a specific value ('S' or 's'), LED3 is turned On.
 Received character is echoed on Tx line.
 On press on User push-button, LED is turned Off.
-In case of errors, LED turns ON continuosly.
+In case of errors, LED turns ON continuously.
 
 @par Keywords
 

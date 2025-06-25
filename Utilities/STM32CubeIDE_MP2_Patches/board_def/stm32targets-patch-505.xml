@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<targetParts xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://st.com/stm32TargetDefinitions" xsi:schemaLocation="http://st.com/stm32TargetDefinitions stm32TargetDefinitions.xsd">
+  <!--version = v4.21-->
+
+  <board>
+    <name>STM32MP257F_M0P-EV1</name>
+    <status>ST Insider</status>
+    <parent>stm32mp25xx_m0plus</parent>
+    <dbgDEV>ST-LinkV2</dbgDEV>
+    <CDefines >
+      <CDefine>-DSTM32MP257F_M0P-EV1</CDefine>
+    </CDefines>
+  </board>
+
+ <mcu>
+    <name>STM32MP25xx_M0PLUS</name>
+    <status>ST Insider</status>
+    <parent>stm32mp2</parent>
+    <cpus>
+      <cpu>
+        <name>Co-Pro ARM Cortex-M0plus</name>
+        <shortname>CM0plus</shortname>
+        <id>0</id>
+        <svd>
+          <name>STM32MP25_CM0P.svd</name>
+          <version>v0r5</version>
+          <url></url>
+        </svd>
+        <cores>
+          <core>
+            <id>0</id>
+            <apnum>2</apnum>
+            <type>arm cortex-m0+</type>
+            <fpu>None</fpu>
+            <maxFrequency>216000</maxFrequency>
+          </core>
+        </cores>
+      </cpu>
+    </cpus>
+    <memories>
+      <memory>
+        <type>ram</type>
+        <name>LPSRAM1</name>
+        <address>0x200C0000</address>
+        <size>0x2000</size>
+        <!--end = 0x0-->
+      </memory>
+      <memory>
+        <type>ram</type>
+        <name>LPSRAM2</name>
+        <address>0x200C2000</address>
+        <size>0x2000</size>
+        <!--end = 0x0-->
+      </memory>
+      <memory>
+        <type>ram</type>
+        <name>LPSRAM3</name>
+        <address>0x200C4000</address>
+        <size>0x4000</size>
+        <!--end = 0x0-->
+      </memory>
+    </memories>
+  </mcu>
+
+  <serie>
+    <name>STM32MP2</name>
+    <status>ST Insider</status>
+    <parent>stm32</parent>
+    <CDefines>
+      <CDefine>-DSTM32MP2</CDefine>
+    </CDefines>
+  </serie>
+
+</targetParts>

@@ -66,7 +66,6 @@ set(UTILS_SRC_FILES ${UTILS_SRC_FILES}
 						)
 set(CMSIS_SRC_FILES ${CMSIS_SRC_FILES}
 						${BASE_DIR}/../../../../../Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/system_stm32mp2xx_m33_ns.c
-						${BASE_DIR}/../../../../../Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/gcc/startup_stm32mp21xx_m33_ns.S
 						)
 set(OPENAMP_SRC_GEN_FILES ${OPENAMP_SRC_GEN_FILES}
 						${BASE_DIR}/../../../../../Middlewares/Third_Party/OpenAMP/libmetal/lib/system/generic/generic_device.c 
@@ -81,10 +80,12 @@ set(APPLICATION_SRC ${APPLICATION_SRC} ${HAL_SRC_FILES} ${OPENAMP_SRC_FILES} ${O
 						${BASE_DIR}/CM33/NonSecure/Core/Src/syscalls.c
 						${BASE_DIR}/CM33/NonSecure/Core/Src/stm32mp2xx_hal_msp.c
 						${BASE_DIR}/CM33/NonSecure/Core/Src/stm32mp2xx_it.c
-						${BASE_DIR}/CM33/NonSecure/OpenAMP/mbox_ipcc.c
-						${BASE_DIR}/CM33/NonSecure/OpenAMP/openamp.c
-						${BASE_DIR}/CM33/NonSecure/OpenAMP/openamp_log.c
-						${BASE_DIR}/CM33/NonSecure/OpenAMP/rsc_table.c)
+						${BASE_DIR}/CM33/NonSecure/Core/Src/startup_stm32mp215fxx_m33.s
+						${BASE_DIR}/CM33/NonSecure/OPENAMP/mbox_ipcc.c
+						${BASE_DIR}/CM33/NonSecure/OPENAMP/openamp.c
+						${BASE_DIR}/CM33/NonSecure/OPENAMP/openamp_log.c
+						${BASE_DIR}/CM33/NonSecure/OPENAMP/rsc_table.c
+                        )
 
 include_directories(APPLICATION_INCLUDE ${BASE_DIR}/CM33/NonSecure/Core/Inc) 
 include_directories(APPLICATION_INCLUDE ${BASE_DIR}/CM33/NonSecure/OPENAMP )
@@ -100,7 +101,7 @@ include_directories(APPLICATION_INCLUDE ${BASE_DIR}/../../../../../Middlewares/T
 
 set(SOURCE_FILES ${APPLICATION_SRC} ${LINKER_SCRIPT} )
 add_custom_target(openamp_gen
-    COMMAND ${CMAKE_COMMAND} -S ${BASE_DIR}/../../../../../Middlewares/Third_Party/OpenAMP/libmetal/ -B libmetal  -G"Unix Makefiles" -DCMAKE_TOOLCHAIN_FILE=cmake/platforms/stm32mp-generic-gcc.cmake
+    COMMAND ${CMAKE_COMMAND} -S ${BASE_DIR}/../../../../../Middlewares/Third_Party/OpenAMP/libmetal/ -B libmetal  -G'Unix Makefiles' -DCMAKE_TOOLCHAIN_FILE=cmake/platforms/stm32mp-generic-gcc.cmake
 )
 add_custom_command(
   OUTPUT ${OPENAMP_SRC_GEN_FILES}

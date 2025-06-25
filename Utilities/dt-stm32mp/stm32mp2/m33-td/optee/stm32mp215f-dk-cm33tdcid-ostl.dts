@@ -1,0 +1,148 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+/*
+ * Copyright (C) 2024, STMicroelectronics - All Rights Reserved
+ */
+
+/dts-v1/;
+
+#include <dt-bindings/clock/stm32mp21-clksrc.h>
+#include <dt-bindings/mfd/st,stpmic2.h>
+#include "stm32mp215.dtsi"
+#include "stm32mp21xf.dtsi"
+#include "stm32mp215f-dk-cm33tdcid-ostl-rcc.dtsi"
+#include "stm32mp215f-dk-cm33tdcid-ostl-resmem.dtsi"
+#include "stm32mp215f-dk-cm33tdcid-ostl-rif.dtsi"
+#include "stm32mp21-pinctrl.dtsi"
+#include "stm32mp21xxan-pinctrl.dtsi"
+
+/ {
+	model = "STMicroelectronics STM32MP215F-DK OSTL Discovery Board";
+	compatible = "st,stm32mp215f-dk-cm33tdcid-ostl", "st,stm32mp215f-dk", "st,stm32mp215";
+
+	aliases {
+		serial0 = &usart2;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
+	clocks {
+		rtc_pclk: rtc-pclk {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <200000000>;
+		};
+
+		rtc_ck: rtc-ck {
+			compatible = "fixed-clock";
+			#clock-cells = <0>;
+			clock-frequency = <32768>;
+		};
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x0 0x80000000 0x0 0x80000000>;
+	};
+
+	vddcpu: vddcpu {
+		compatible = "regulator-fixed";
+		regulator-name = "vddcpu";
+		regulator-min-microvolt = <800000>;
+		regulator-max-microvolt = <800000>;
+		regulator-always-on;
+	};
+
+	psa-client {
+		compatible = "st,psa-client";
+		mboxes = <&ipcc1 RIF_IPCC_CPU1_CHANNEL(14)>;
+		mbox-names = "psa_tfm";
+		shmem= <&psa_buffer_cid1_s>;
+	};
+};
+
+&bsec {
+	status = "okay";
+};
+
+&cpu0 {
+	cpu-supply = <&vddcpu>;
+};
+
+&iac {
+	status = "disabled";
+};
+
+&iwdg1 {
+	timeout-sec = <32>;
+	status = "okay";
+};
+
+&iwdg2 {
+	/delete-property/ resets;
+};
+
+&pwr {
+	status = "disabled";
+};
+
+&rcc {
+	st,c1msrd = <2>;
+	st,clk_opp {
+		st,ck_cpu1 {
+			cfg_1 {
+				hz = <1200000000>;
+				st,pll = <&pll1_cfg_1200MHz>;
+			};
+
+			cfg_2 {
+				hz = <1500000000>;
+				st,pll = <&pll1_cfg_1500MHz>;
+			};
+		};
+	};
+};
+
+&risab3 {
+	status = "disabled";
+};
+
+&risab5 {
+	status = "disabled";
+};
+
+&risaf1 {
+	status = "disabled";
+};
+
+&risaf2 {
+	status = "disabled";
+};
+
+&rng2 {
+	status = "disabled";
+};
+
+&rtc {
+	status = "disabled";
+};
+
+&rtc {
+	clocks = <&rtc_pclk>, <&rtc_ck>;
+	status = "okay";
+};
+
+&serc {
+	status = "disabled";
+};
+
+&tamp {
+	status = "disabled";
+};
+
+&usart2 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&usart2_pins_a>;
+	status = "okay";
+};

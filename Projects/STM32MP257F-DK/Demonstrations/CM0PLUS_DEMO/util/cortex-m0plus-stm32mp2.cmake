@@ -1,0 +1,6 @@
+set(LINKER_SCRIPT "${BASE_DIR}/STM32CubeIDE/CM0PLUS/NonSecure/LinkerScript_m0plus.ld")
+set(WARNING_FLAGS "-Wall")
+set(CPU_OPTIONS -mthumb -mcpu=cortex-m0plus)
+set(CPU "cortex-m0plus")
+set(CPU_OPTIONS "-mcpu=${CPU} -mthumb")
+set(COMMON_COMPILE_FLAGS "${CPU_OPTIONS} -ffunction-sections -g3 -fstack-usage --specs=nano.specs -mfloat-abi=soft -Os")

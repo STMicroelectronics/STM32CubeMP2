@@ -88,7 +88,7 @@ Security, CRC, CRC Polynomial, IEC 60870-5
      
 @par Hardware and Software environment
 
-  - This example runs on STM32MP2xx devices.
+  - This example runs on STM32MP21xxxx devices.
   - This example has been tested with STM32MP215F-DK board and can be
     easily tailored to any other supported device and development board.
 

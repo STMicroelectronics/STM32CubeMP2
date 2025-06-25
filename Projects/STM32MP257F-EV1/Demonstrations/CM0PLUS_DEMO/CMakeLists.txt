@@ -18,6 +18,8 @@ set(DEFINITIONS "-DSTM32MP257Cxx \
 				-DSTM32MP25xx_EVAL \
 				-DSTM32MP25xxxx \
 				-DUSE_HAL_DRIVER \
+				-DUSE_FULL_LL_DRIVER \
+				-DLOWPOWER_WA_STANDBY1 \
 				-DSTM32MP2 \
 				-DUSE_STM32MP257F_EV1")
 
@@ -53,6 +55,7 @@ set(APPLICATION_SRC ${APPLICATION_SRC} ${HAL_SRC_FILES} ${BSP_SRC_FILES} ${UTILS
 						${BASE_DIR}/CM0PLUS/NonSecure/Core/Src/syscalls.c /
 						${BASE_DIR}/CM0PLUS/NonSecure/Core/Src/stm32mp2xx_hal_msp.c /
 						${BASE_DIR}/CM0PLUS/NonSecure/Core/Src/stm32mp2xx_it.c /
+						${BASE_DIR}/CM0PLUS/NonSecure/Core/Src/lowpower_wa.c /
 						${BASE_DIR}/../../../../Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/gcc/startup_stm32mp2xx_m0plus.s /
 						${BASE_DIR}/../../../../Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/system_stm32mp2xx_m0plus.c /
 						)

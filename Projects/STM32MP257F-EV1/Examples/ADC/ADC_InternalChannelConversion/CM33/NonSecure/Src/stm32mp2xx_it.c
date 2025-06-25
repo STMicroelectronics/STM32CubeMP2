@@ -31,6 +31,7 @@
 
 /* External variables --------------------------------------------------------*/
 extern IPCC_HandleTypeDef   hipcc;
+extern TIM_HandleTypeDef    htim;
 /******************************************************************************/
 /*            Cortex Processor Interruption and Exception Handlers         */ 
 /******************************************************************************/
@@ -182,12 +183,30 @@ void SysTick_Handler(void)
 
 /* USER CODE BEGIN 1 */
 
+
 /**
 * @brief This function handles the RX Occupied interrupt.
 */
 void IPCC1_RX_IRQHandler(void)
 {
    HAL_IPCC_RX_IRQHandler(&hipcc);
+}
+
+
+/**
+  * @brief  This function handles TIMx global interrupt request.
+  * @param  None
+  * @retval None
+  */
+void TIM3_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM3_IRQn 0 */
+
+  /* USER CODE END TIM3_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim);
+  /* USER CODE BEGIN TIM3_IRQn 1 */
+
+  /* USER CODE END TIM3_IRQn 1 */
 }
 
 /* USER CODE END 1 */

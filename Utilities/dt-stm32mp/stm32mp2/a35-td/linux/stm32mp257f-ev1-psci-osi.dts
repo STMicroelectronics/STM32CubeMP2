@@ -1,0 +1,74 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+/*
+ * Copyright (C) STMicroelectronics 2024 - All Rights Reserved
+ */
+
+/dts-v1/;
+
+#include <stm32mp257f-ev1.dts>
+
+/ {
+	model = "STMicroelectronics STM32MP257F-EV1 Power PSCI OSI Evaluation Board";
+	compatible = "st,stm32mp257f-ev1-psci-osi", "st,stm32mp257f-ev1", "st,stm32mp257";
+};
+
+/* Deactivate drivers without a full PM runtime support or with external modules */
+
+&combophy {
+	status = "disabled";
+};
+
+&csi {
+	status = "disabled";
+};
+
+&dcmipp {
+	status = "disabled";
+};
+
+&eth1 {
+	status = "disabled";
+};
+
+&eth2 {
+	status = "disabled";
+};
+
+&gpu {
+	status = "disabled";
+};
+
+&ltdc {
+	status = "disabled";
+};
+
+&lvds {
+	status = "disabled";
+};
+
+&ommanager {
+	status = "disabled";
+	spi@40430000 {
+		status = "disabled";
+	};
+};
+
+&pcie_rc {
+	status = "disabled";
+};
+
+&usb2_phy1 {
+	status = "disabled";
+};
+
+&usb2_phy2 {
+	status = "disabled";
+};
+
+&usbh {
+	status = "disabled";
+};
+
+&usb3dr {
+	status = "disabled";
+};

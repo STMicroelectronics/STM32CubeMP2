@@ -49,6 +49,11 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
     /* USER CODE BEGIN SPI3_MspInit 0 */
     /* USER CODE END SPI3_MspInit 0 */
 
+    if (IS_DEVELOPER_BOOT_MODE())
+    {
+      HAL_PWREx_EnableSupply(PWR_PVM_VDDIO4);
+    }
+
     __HAL_RCC_SPI3_CLK_ENABLE();
     __HAL_RCC_SPI3_FORCE_RESET();
     __HAL_RCC_SPI3_RELEASE_RESET();
@@ -78,6 +83,13 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
 
     __HAL_LINKDMA(hspi, hdmatx, hdma_tx);
 
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+    if (IS_DEVELOPER_BOOT_MODE())
+    {
+      HAL_DMA_ConfigChannelAttributes(hspi->hdmatx, (DMA_CHANNEL_PRIV | DMA_CHANNEL_SEC | DMA_CHANNEL_DEST_NSEC | DMA_CHANNEL_SRC_SEC | DMA_CHANNEL_CID_STATIC_2));
+    }
+#endif /* __ARM_FEATURE_CMSE */
+
     /* SPI3_RX Init */
     hdma_rx.Instance = HPDMA3_Channel3;
     hdma_rx.Init.Request = HPDMA_REQUEST_SPI3_RX;
@@ -98,6 +110,13 @@ void HAL_SPI_MspInit(SPI_HandleTypeDef* hspi)
     }
 
     __HAL_LINKDMA(hspi, hdmarx, hdma_rx);
+
+#if defined (__ARM_FEATURE_CMSE) && (__ARM_FEATURE_CMSE == 3U)
+    if (IS_DEVELOPER_BOOT_MODE())
+    {
+      HAL_DMA_ConfigChannelAttributes(hspi->hdmarx, (DMA_CHANNEL_PRIV | DMA_CHANNEL_SEC | DMA_CHANNEL_DEST_NSEC | DMA_CHANNEL_SRC_SEC | DMA_CHANNEL_CID_STATIC_2));
+    }
+#endif /* __ARM_FEATURE_CMSE */
 
     /* SPI3 interrupt Init */
     HAL_NVIC_SetPriority(SPI3_IRQn, DEFAULT_IRQ_PRIO, 0);

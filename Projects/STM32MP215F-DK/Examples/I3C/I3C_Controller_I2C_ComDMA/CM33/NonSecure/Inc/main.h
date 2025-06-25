@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2021 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -32,8 +32,9 @@
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
 /* Target descriptor */
-typedef struct {
-  char *        TARGET_NAME;          /*!< Marketing Target reference */
+typedef struct
+{
+  char         *TARGET_NAME;          /*!< Marketing Target reference */
   uint32_t      TARGET_ID;            /*!< Target Identifier on the Bus */
   uint64_t      TARGET_BCR_DCR_PID;   /*!< Concatenation value of PID, BCR and DCR of the target */
   uint8_t       STATIC_ADDR;          /*!< Static Address of the target, value found in the datasheet of the device */
@@ -62,7 +63,7 @@ void Error_Handler(void);
 
 /* ########################## Assert Selection ############################## */
 /**
-  * @brief Uncomment the line below to expanse the "assert_param" macro in the 
+  * @brief Uncomment the line below to expanse the "assert_param" macro in the
   *        HAL drivers code
   */
 /* #define USE_FULL_ASSERT    1U */

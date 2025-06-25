@@ -24,7 +24,7 @@ This driver provides a set of functions offered by STPMIC2L Component
 
 ::: {.collapse}
 <input type="checkbox" id="collapse-section2" checked aria-hidden="true">
-<label for="collapse-section2" aria-hidden="true">__V0.0.1 / 12-Juin-2023__</label>
+<label for="collapse-section2" aria-hidden="true">__V1.0.0 / 12-Juin-2025__</label>
 <div>
 
 ## Main Changes

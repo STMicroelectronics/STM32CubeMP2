@@ -40,3 +40,7 @@ In order to make the program work, you must do the following :
  - Rebuild all files and load your image into target memory
  - Run the application
  - Connect a type C device on the Type-C connector 21
+ - Icache and Dcache enable option is available(it can be enable/disable by ICACHE_DCACHE_ENABLE macro)
+
+ 
+ 

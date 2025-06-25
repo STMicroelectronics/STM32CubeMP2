@@ -36,34 +36,14 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/gcc/startup_stm32mp2xx_m0plus.s</locationURI>
 		</link>
 		<link>
-			<name>Application/User/Core/main.c</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/CM0PLUS/NonSecure/Core/Src/main.c</locationURI>
-		</link>
-		<link>
-			<name>Application/User/Core/stm32mp2xx_hal_msp.c</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/CM0PLUS/NonSecure/Core/Src/stm32mp2xx_hal_msp.c</locationURI>
-		</link>
-		<link>
-			<name>Application/User/Core/stm32mp2xx_it.c</name>
-			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/CM0PLUS/NonSecure/Core/Src/stm32mp2xx_it.c</locationURI>
-		</link>
-		<link>
-			<name>Application/Utilities/res_mgr.c</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Utilities/ResourcesManager/res_mgr.c</locationURI>
-		</link>
-		<link>
 			<name>Application/Utilities/copro_sync.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Utilities/CoproSync/copro_sync.c</locationURI>
 		</link>
 		<link>
-			<name>Application/User/Core/syscalls.c</name>
+			<name>Application/Utilities/res_mgr.c</name>
 			<type>1</type>
-			<locationURI>PARENT-3-PROJECT_LOC/CM0PLUS/NonSecure/Core/Src/syscalls.c</locationURI>
+			<locationURI>PARENT-7-PROJECT_LOC/Utilities/ResourcesManager/res_mgr.c</locationURI>
 		</link>
 		<link>
 			<name>Drivers/CMSIS/system_stm32mp2xx_m0plus.c</name>
@@ -114,6 +94,31 @@
 			<name>Drivers/STM32MP2xx_HAL_Driver/stm32mp2xx_hal_uart_ex.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Drivers/STM32MP2xx_HAL_Driver/Src/stm32mp2xx_hal_uart_ex.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/Core/lowpower_wa.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/CM0PLUS/NonSecure/Core/Src/lowpower_wa.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/Core/main.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/CM0PLUS/NonSecure/Core/Src/main.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/Core/stm32mp2xx_hal_msp.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/CM0PLUS/NonSecure/Core/Src/stm32mp2xx_hal_msp.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/Core/stm32mp2xx_it.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/CM0PLUS/NonSecure/Core/Src/stm32mp2xx_it.c</locationURI>
+		</link>
+		<link>
+			<name>Application/User/Core/syscalls.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/CM0PLUS/NonSecure/Core/Src/syscalls.c</locationURI>
 		</link>
 		<link>
 			<name>Drivers/BSP/STM32MP257F-EV1/stm32mp257f_eval.c</name>

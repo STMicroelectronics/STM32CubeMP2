@@ -34,7 +34,7 @@
 /* Memory mapping */
 /******************/
 /*** Memory regions
-  Bootrom mem located at begining of SYSRAM
+  Bootrom mem located at beginning of SYSRAM
     Data area used by Bootrom
     9 KBytes
   Image Header located  in SYSRAM after Bootrom mem

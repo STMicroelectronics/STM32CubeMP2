@@ -228,6 +228,12 @@ struct scmi_clock_name_get_p2a {
 	char clock_name[SCMI_VOLTAGE_EXTENDED_NAME_LENGTH_MAX];
 };
 
+struct scmi_channel scmi_channel =
+{
+  .tx_buffer     = (uint32_t *)(SCMI_SHM_START_ADDRESS),
+  .rx_buffer     = (uint32_t *)(SCMI_SHM_START_ADDRESS + SMT_SHARED_MEMORY_SIZE),
+};
+
 /*
  * Enabling and disabling a voltage domain
  */

@@ -191,9 +191,9 @@
 			<locationURI>PARENT-8-PROJECT_LOC/Middlewares/Third_Party/trusted-firmware-m/interface/src/tfm_ps_api.c</locationURI>
 		</link>
 		<link>
-			<name>Application/User/TFM/App/tfm_psa_ns_api.c</name>
+			<name>Application/User/TFM/App/tfm_tz_psa_ns_api.c</name>
 			<type>1</type>
-			<locationURI>PARENT-8-PROJECT_LOC/Middlewares/Third_Party/trusted-firmware-m/interface/src/tfm_psa_ns_api.c</locationURI>
+			<locationURI>PARENT-8-PROJECT_LOC/Middlewares/Third_Party/trusted-firmware-m/interface/src/tfm_tz_psa_ns_api.c</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>

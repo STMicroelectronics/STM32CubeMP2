@@ -12,8 +12,10 @@ span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
 div.column{flex: auto; overflow-x: auto;}
 div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
-ul.task-list{list-style: none;}
+
+ul.task-list[class]{list-style: none;}
 ul.task-list li input[type="checkbox"] {
+font-size: inherit;
 width: 0.8em;
 margin: 0 0.8em 0.2em -1.6em;
 vertical-align: middle;
@@ -21,7 +23,7 @@ vertical-align: middle;
 .display.math{display: block; text-align: center; margin: 0.5rem auto;}
 
 pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span { line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode > span { color: inherit; text-decoration: inherit; }
@@ -135,11 +137,314 @@ lines.</strong></p>
 <section id="update-history" class="col-sm-12 col-lg-8">
 <h1>Update history</h1>
 <div class="collapse">
-<input type="checkbox" id="collapse-section1" checked aria-hidden="true">
-<label for="collapse-section1" checked aria-hidden="true"><strong>V1.1.0
-/ 07-Nov-2024</strong></label>
+<input type="checkbox" id="collapse-section2" checked aria-hidden="true">
+<label for="collapse-section2" checked aria-hidden="true"><strong>V1.2.0
+/ 30-May-2025</strong></label>
 <div>
 <h2 id="main-changes">Main Changes</h2>
+<ul>
+<li>This is <strong>release of STM32CubeMP2</strong> Firmware Package
+including <strong>STM32CubeMP21</strong> support.</li>
+<li>Support (Beta) for using <strong>Cortex-M33 as Trusted Domain
+Master</strong> a.k.a M33TDCID configuration of STM32MP2x MPU
+Platforms.</li>
+</ul>
+<h3 id="v1.2.0-release">v1.2.0 release</h3>
+<ul>
+<li><p>Delivered SBOM in <a href="sbom_cdx.json">CycloneDX v1.5
+format</a>.</p></li>
+<li><p>Added support for MP21 (new SOC MP21 Cube Firmware Mass
+Market)</p>
+<ul>
+<li>Added CMSIS for all CPNs of this derivative.</li>
+<li>Added BSP for a new Board STM32MP215F-DK.</li>
+<li>Added new examples, Applications and Demonstration projects for
+MP21.</li>
+<li>ResourceManager updated to handle requests for MP21 resources.</li>
+<li>Added STPMIC2L: new BSP pmic lighter component support.</li>
+</ul></li>
+<li><p>MP2x General updates</p>
+<ul>
+<li>MP25: Software Workaround added to CM0Plus demo application to
+prevent crash when D1/D2 domains enter/exit low power states.</li>
+<li>Bug fixes to scmiagent middleware</li>
+<li>USBPD applications updated to enable use of SCMI to control power
+regulator.</li>
+<li>Free RTOS Middleware update to cater CVE fixes.</li>
+<li>Upgraded to TFM version v2.1.0</li>
+<li>General bug fixes and known issues.</li>
+</ul></li>
+<li><p>Support for using Cortex-M33 as Trusted Domain Master of
+system.</p>
+<ul>
+<li>Here CM33 acts as Master of System and defines/controls security of
+the system.</li>
+<li>A CM33 Non-Secure Starter Application is provided as part of
+firmware package.</li>
+<li>This application is used in conjuction with Trusted Firmware -
+M.</li>
+<li>Please refer to ST Wiki to know details about this usage.</li>
+</ul></li>
+</ul>
+<h2 id="contents">Contents</h2>
+<p><small>The components flagged by “<span class="icon-st-update"></span>” have changed since the previous release.
+“<span class="icon-st-add"></span>” are new.</small></p>
+<table>
+<caption>Components</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: left;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">SBOM</td>
+<td style="text-align: center;">v1.2.0 <span class="icon-st-add"></span></td>
+<td style="text-align: left;"><a href="sbom_cdx.json">CycloneDX v1.5
+format</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">ARM CMSIS Package</td>
+<td style="text-align: center;">v5.9.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/Documentation/index.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Cortex-M CMSIS</td>
+<td style="text-align: center;">v5.6.0</td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/Documentation/index.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Cortex-A CMSIS</td>
+<td style="text-align: center;">v1.2.1</td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/Documentation/index.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32MP2xx CMSIS</td>
+<td style="text-align: center;">v1.2.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/Device/ST/STM32MP2xx/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32MP2xx HAL</td>
+<td style="text-align: center;">v1.2.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Drivers/STM32MP2xx_HAL_Driver/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32MP257F-EV1</td>
+<td style="text-align: center;">v1.2.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32MP257F-EV1/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32MP257F-DK</td>
+<td style="text-align: center;">v1.2.0 <span class="icon-st-update"></span></td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32MP257F-DK/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP STM32MP235F-DK</td>
+<td style="text-align: center;">v1.2.0 <span class="icon-st-add"></span></td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32MP235F-DK/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">BSP STM32MP215F-DK</td>
+<td style="text-align: center;">v1.2.0 <span class="icon-st-add"></span></td>
+<td style="text-align: left;"><a href="Drivers/BSP/STM32MP215F-DK/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP Common</td>
+<td style="text-align: center;">v7.2.1</td>
+<td style="text-align: left;"><a href="Drivers/BSP/Components/Common/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">mx25l512</td>
+<td style="text-align: center;">v1.0.3</td>
+<td style="text-align: left;"><a href="Drivers/BSP/Components/mx25l512/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">rk043fn48h</td>
+<td style="text-align: center;">v1.0.4</td>
+<td style="text-align: left;"><a href="Drivers/BSP/Components/rk043fn48h/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">rtl8211</td>
+<td style="text-align: center;">v1.0.1</td>
+<td style="text-align: left;"><a href="Drivers/BSP/Components/rtl8211/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">stpmic2</td>
+<td style="text-align: center;">v1.0.0</td>
+<td style="text-align: left;"><a href="Drivers/BSP/Components/stpmic2/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">stpmic2l</td>
+<td style="text-align: center;">v1.0.0 <span class="icon-st-add"></span></td>
+<td style="text-align: left;"><a href="Drivers/BSP/Components/stpmic2l/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">BSP tcpp0203</td>
+<td style="text-align: center;">v1.2.2</td>
+<td style="text-align: left;"><a href="Drivers/BSP/Components/tcpp0203/Release_Notes.html">release
+notes</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Middlewares</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">OpenAMP</td>
+<td style="text-align: center;"></td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">- libmetal</td>
+<td style="text-align: center;">v2022.10_20240315</td>
+<td style="text-align: center;"><a href="Middlewares/Third_Party/OpenAMP/libmetal/st_readme.txt">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">- open-amp</td>
+<td style="text-align: center;">v2022.10_20230315</td>
+<td style="text-align: center;"><a href="Middlewares/Third_Party/OpenAMP/open-amp/st_readme.txt">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">- mw_if</td>
+<td style="text-align: center;">v2022.10_20230315</td>
+<td style="text-align: center;"><a href="Middlewares/Third_Party/OpenAMP/mw_if/st_readme.txt">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">-virtual_driver</td>
+<td style="text-align: center;">v2022.10_20230315</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">scmiagent</td>
+<td style="text-align: center;">v1.0.0</td>
+<td style="text-align: center;"><a href="Middlewares/ST/scmiagent/license.md">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32 USB-C Power Delivery MP2 Device
+Driver</td>
+<td style="text-align: center;">v1.0.0_rc2</td>
+<td style="text-align: center;"><a href="Middlewares/ST/STM32_USBPD_Library/Devices/STM32MP2XX/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">STM32 USB-C Power Delivery Core Stack
+Library</td>
+<td style="text-align: center;">v5.2.0_rc4</td>
+<td style="text-align: center;"><a href="Middlewares/ST/STM32_USBPD_Library/Core/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">STM32 USB-C Power Delivery UCSI
+Library</td>
+<td style="text-align: center;">v1.1.0_rc5</td>
+<td style="text-align: center;"><a href="Middlewares/ST/STM32_USBPD_Library/UCSI/Release_Notes.html">release
+notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">FreeRTOS</td>
+<td style="text-align: center;">v10.6.2_20241011 <span class="icon-st-update"></span></td>
+<td style="text-align: center;"><a href="Middlewares/Third_Party/FreeRTOS/Source/st_readme.txt">release
+notes</a></td>
+</tr>
+</tbody>
+</table>
+<table>
+<caption>Utilities</caption>
+<thead>
+<tr class="header">
+<th style="text-align: left;">Name</th>
+<th style="text-align: center;">Version</th>
+<th style="text-align: center;">Release note</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">OP-TEE (Partial)</td>
+<td style="text-align: center;">4.0.0-stm32mp-24-10-11</td>
+<td style="text-align: center;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">GUI_INTERFACE</td>
+<td style="text-align: center;">GUI_V2.2.2</td>
+<td style="text-align: center;"><a href="Utilities/GUI_INTERFACE/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">TRACER_EMB</td>
+<td style="text-align: center;">V1.9.0_rc1</td>
+<td style="text-align: center;"><a href="Utilities/TRACER_EMB/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">lcd</td>
+<td style="text-align: center;">V2.1.0</td>
+<td style="text-align: center;"><a href="Utilities/lcd/Release_Notes.html">release notes</a></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Fonts</td>
+<td style="text-align: center;">v2.0.4</td>
+<td style="text-align: center;"><a href="Utilities/Fonts/Release_Notes.html">release notes</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="known-limitations">Known limitations</h2>
+<p>None</p>
+<h2 id="development-toolchains-and-compilers">Development toolchains and
+compilers</h2>
+<ul>
+<li>PYTHON3 required for optee signature - postbuild command inside
+CubeIDE projects</li>
+<li>CMAKE required for OpenAMP project or TFM build</li>
+<li>STM32CubeIDE 1.19.0</li>
+<li>For CM0+ compilation, please set environment variable
+“STM32CUBEIDE_RESOURCES=&lt;FIRMWARE_DIRECTORY&gt;\Utilities\STM32CubeIDE_MP2_Patches”</li>
+</ul>
+<h2 id="supported-devices-and-boards">Supported devices and boards</h2>
+<ul>
+<li>The delivery provided support the following devices :
+<ul>
+<li>STM32MP25xxxx, STM32MP23xxxx, <strong>STM32MP21xxxx</strong></li>
+</ul></li>
+<li>Boards supported; :
+<ul>
+<li>STM32MP257F-EV1, STM32MP257F-DK, STM32MP235F-DK,
+<strong>STM32MP215F-DK</strong></li>
+</ul></li>
+</ul>
+<h2 id="backward-compatibility">Backward compatibility</h2>
+<ul>
+<li>Not applicable</li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section1" aria-hidden="true">
+<label for="collapse-section1" checked aria-hidden="true"><strong>V1.1.0
+/ 25-Oct-2024</strong></label>
+<div>
+<h2 id="main-changes-1">Main Changes</h2>
 <ul>
 <li>This is a <strong>Maintenance release of STM32CubeMP2</strong>
 Firmware Package</li>
@@ -177,6 +482,12 @@ in production mode.</li>
 </ul></li>
 <li>MP2x: Support added to encrypt the Cube Firmware and decrypt when
 loaded on M33.</li>
+<li>MP25: Support to switch ON/OFF UCPD power supply VDD3UCPD.
+<ul>
+<li>Achieved through controlling PMIC regulator by virtue of SCMI
+inter-processor communication with SCMI server running on OPTEE (Secure
+OS running on CA35).</li>
+</ul></li>
 <li>MP2x: Updated Resource Manager
 <ul>
 <li>Support for multiple GPIO pins request/release.</li>
@@ -189,7 +500,7 @@ derivatives.</li>
 <li>Misra, MCUAstyle fixes.</li>
 <li>General Code cleanup</li>
 </ul>
-<h2 id="contents">Contents</h2>
+<h2 id="contents-1">Contents</h2>
 <p><small>The components flagged by “<span class="icon-st-update"></span>” have changed since the previous release.
 “<span class="icon-st-add"></span>” are new.</small></p>
 <table>
@@ -365,17 +676,18 @@ notes</a></td>
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations">Known limitations</h2>
+<h2 id="known-limitations-1">Known limitations</h2>
 <p>None</p>
-<h2 id="development-toolchains-and-compilers">Development toolchains and
-compilers</h2>
+<h2 id="development-toolchains-and-compilers-1">Development toolchains
+and compilers</h2>
 <ul>
 <li>PYTHON3 required for optee signature - postbuild command inside
 CubeIDE projects</li>
 <li>CMAKE required for OpenAMP project or TFM build</li>
 <li>STM32CubeIDE 1.16.0</li>
 </ul>
-<h2 id="supported-devices-and-boards">Supported devices and boards</h2>
+<h2 id="supported-devices-and-boards-1">Supported devices and
+boards</h2>
 <ul>
 <li>The delivery provided support the following devices :
 <ul>
@@ -386,7 +698,7 @@ CubeIDE projects</li>
 <li>STM32MP257F-EV1, STM32MP257F-DK, STM32MP235F-DK</li>
 </ul></li>
 </ul>
-<h2 id="backward-compatibility">Backward compatibility</h2>
+<h2 id="backward-compatibility-1">Backward compatibility</h2>
 <ul>
 <li>Not applicable</li>
 </ul>
@@ -397,7 +709,7 @@ CubeIDE projects</li>
 <label for="collapse-section0" aria-hidden="true">V1.0.0 /
 31-May-2024</label>
 <div>
-<h2 id="main-changes-1">Main changes</h2>
+<h2 id="main-changes-2">Main changes</h2>
 <h3 id="v1.0.0-release">v1.0.0 release</h3>
 <ul>
 <li>IP HAL/LL, BSP updated for improving code quality.
@@ -410,7 +722,7 @@ CubeIDE projects</li>
 <li>Added a new example showing usage of LTDC 3rd layer.</li>
 <li>Cleanup updated for all Examples/Apps.</li>
 </ul>
-<h2 id="contents-1">Contents</h2>
+<h2 id="contents-2">Contents</h2>
 <p><small>The Project categories flagged by “<span class="icon-st-update"></span>” have changed since the previous release.
 “<span class="icon-st-add"></span>” are new.</small></p>
 <table>
@@ -855,18 +1167,21 @@ have changed since the previous release. “<span class="icon-st-add"></span>”
 <tbody>
 <tr class="odd">
 <td style="text-align: left;">ARM CMSIS Package</td>
-<td style="text-align: center;">V5.6.0</td>
-<td style="text-align: left;"><a href="Drivers/CMSIS/docs/General/html/index.html">release notes</a></td>
+<td style="text-align: center;">V5.9.0</td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/Documentation/General/html/index.html">release
+notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">Cortex-M CMSIS</td>
-<td style="text-align: center;">V5.3.0</td>
-<td style="text-align: left;"><a href="Drivers/CMSIS/docs/Core/html/index.html">release notes</a></td>
+<td style="text-align: center;">V5.6.0</td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/Documentation/Core/html/index.html">release
+notes</a></td>
 </tr>
 <tr class="odd">
 <td style="text-align: left;">Cortex-A CMSIS</td>
-<td style="text-align: center;">V1.1.4</td>
-<td style="text-align: left;"><a href="Drivers/CMSIS/docs/Core_A/html/index.html">release notes</a></td>
+<td style="text-align: center;">V1.2.1</td>
+<td style="text-align: left;"><a href="Drivers/CMSIS/Documentation/Core_A/html/index.html">release
+notes</a></td>
 </tr>
 <tr class="even">
 <td style="text-align: left;">STM32MP2xx CMSIS</td>
@@ -1008,9 +1323,9 @@ notes</a></td>
 </tr>
 </tbody>
 </table>
-<h2 id="known-limitations-1">Known limitations</h2>
+<h2 id="known-limitations-2">Known limitations</h2>
 <p>None</p>
-<h2 id="development-toolchains-and-compilers-1">Development toolchains
+<h2 id="development-toolchains-and-compilers-2">Development toolchains
 and compilers</h2>
 <ul>
 <li>PYTHON3 required for optee signature - postbuild command inside
@@ -1018,7 +1333,7 @@ CubeIDE projects</li>
 <li>CMAKE required for OpenAMP project or TFM build</li>
 <li>STM32CubeIDE 1.16.0.24w19</li>
 </ul>
-<h2 id="supported-devices-and-boards-1">Supported devices and
+<h2 id="supported-devices-and-boards-2">Supported devices and
 boards</h2>
 <ul>
 <li>The delivery provided support the following devices :
@@ -1030,7 +1345,7 @@ boards</h2>
 <li>STM32MP257F-EV1, STM32MP257F-DK</li>
 </ul></li>
 </ul>
-<h2 id="backward-compatibility-1">Backward compatibility</h2>
+<h2 id="backward-compatibility-2">Backward compatibility</h2>
 <ul>
 <li>Not applicable</li>
 </ul>

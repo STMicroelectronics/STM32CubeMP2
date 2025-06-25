@@ -48,6 +48,8 @@ extern "C" {
 #include "openamp.h"
 #include "copro_sync.h"
 #include "openamp_log.h"
+#include "scmi.h"
+#include "mbox_scmi.h"
 
 /* Exported types ------------------------------------------------------------*/
 /* Exported constants --------------------------------------------------------*/
@@ -61,12 +63,6 @@ void MX_IPCC_DeInit(void);
 
 /* Private defines -----------------------------------------------------------*/
 #define DEFAULT_IRQ_PRIO      5U
-
-#if defined(NO_PRINTF)
-  #define loc_printf(...)
-#else
-  #define loc_printf(mess, ...)   printf(mess, ##__VA_ARGS__)
-#endif
 
 #ifdef __cplusplus
 }

@@ -1,0 +1,49 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+/*
+ * Copyright (C) STMicroelectronics 2023 - All Rights Reserved
+ */
+
+/dts-v1/;
+
+#include <dt-bindings/clock/stm32mp25-clksrc.h>
+#include <dt-bindings/reset/st,stm32mp25-rcc.h>
+
+#include "stm32mp257.dtsi"
+#include "stm32mp25x-ns.dtsi"
+#include "stm32mp257f-ev1-cm33tdcid-ostl-resmem.dtsi"
+#include "stm32mp257f-ev1-cm33tdcid-ostl-ns-rcc.dtsi"
+#include "stm32mp25-pinctrl.dtsi"
+#include "stm32mp25xxai-pinctrl.dtsi"
+
+
+/ {
+	model = "STMicroelectronics STM32MP257F-EV1 OSTL Evaluation Board";
+	compatible = "st,stm32mp257f-ev1-m33tdcid-ostl", "st,stm32mp257f-ev1", "st,stm32mp257";
+
+	aliases {
+		serial0 = &uart5;
+	};
+
+	chosen {
+		stdout-device = &uart5;
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x80000000 0x80000000>;
+	};
+};
+
+&uart5 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart5_pins_a>;
+	clocks = <&rcc CK_KER_UART5>;
+	current-speed = <115200>;
+	status = "okay";
+};
+
+&systick {
+	clocks = <&rcc CK_ICN_HS_MCU>;
+	clock-frequency = <1000000>; /* tick at 1us */
+	status = "okay";
+};

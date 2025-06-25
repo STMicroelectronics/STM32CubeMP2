@@ -23,7 +23,7 @@
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
 #define MAX_BUFFER_SIZE RPMSG_BUFFER_SIZE
-
+#define ICACHE_DCACHE_ENABLE
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 COM_InitTypeDef COM_Init;
@@ -43,10 +43,20 @@ uint16_t VirtUart1ChannelRxSize = 0;
 
 /* Exported variables --------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
+
 static void MX_IPCC_Init(void);
+
+#ifdef ICACHE_DCACHE_ENABLE
+static void MX_ICACHE_Init(void);
+static void MX_DCACHE_Init(void);
+static void MPU_Config(void);
+DCACHE_HandleTypeDef hdcache = {0};
+#endif
 
 void VIRT_UART0_RxCpltCallback(VIRT_UART_HandleTypeDef *huart);
 void VIRT_UART1_RxCpltCallback(VIRT_UART_HandleTypeDef *huart);
+
+
 
 /* Private functions ---------------------------------------------------------*/
 
@@ -67,6 +77,12 @@ int main(void)
 
   /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
   HAL_Init();
+
+#ifdef ICACHE_DCACHE_ENABLE
+  MPU_Config();
+  MX_DCACHE_Init();
+  MX_ICACHE_Init();
+#endif
 
   /* Initialize Display destination */
 #if defined(__VALID_OUTPUT_TERMINAL_IO__) && defined (__GNUC__)
@@ -237,6 +253,85 @@ void CoproSync_ShutdownCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPC
   while(1);
 }
 
+#ifdef ICACHE_DCACHE_ENABLE
+static void MX_ICACHE_Init(void)
+{
+
+  if(HAL_ICACHE_DeInit() != HAL_OK)
+  {
+    while(1);
+  }
+  ICACHE_RegionConfigTypeDef pRegionConfig = {0};
+  pRegionConfig.TrafficRoute    = ICACHE_MASTER2_PORT;
+  pRegionConfig.OutputBurstType = ICACHE_OUTPUT_BURST_INCR;
+  pRegionConfig.Size            = ICACHE_REGIONSIZE_2MB;
+  pRegionConfig.BaseAddress     = 0x00000000;
+  pRegionConfig.RemapAddress    = 0x80000000;
+
+  if (HAL_ICACHE_EnableRemapRegion(ICACHE_REGION_0, &pRegionConfig) != HAL_OK)
+  {
+  	 while(1);
+  }
+
+  if (HAL_ICACHE_Enable() != HAL_OK)
+  {
+	  while(1);
+  }
+}
+
+static void MX_DCACHE_Init(void)
+{
+
+  hdcache.Instance = DCACHE;
+  hdcache.Init.ReadBurstType = DCACHE_READ_BURST_WRAP;
+
+  HAL_DCACHE_Enable(&hdcache);
+
+}
+
+static void MPU_Config(void)
+{
+
+   MPU_Region_InitTypeDef MPU_InitStruct;
+   MPU_Attributes_InitTypeDef MPU_Attributes_InitStruct ;
+
+   HAL_MPU_Disable();
+
+   /* write back, read and write allocate */
+   MPU_Attributes_InitStruct.Attributes = INNER_OUTER(MPU_WRITE_BACK | MPU_NON_TRANSIENT | MPU_RW_ALLOCATE);
+   MPU_Attributes_InitStruct.Number = MPU_ATTRIBUTES_NUMBER0;
+   HAL_MPU_ConfigMemoryAttributes(&MPU_Attributes_InitStruct);
+
+   /* Code Section(FLASH) */
+   MPU_InitStruct.AccessPermission = MPU_REGION_ALL_RO;
+   MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+   MPU_InitStruct.AttributesIndex = MPU_ATTRIBUTES_NUMBER0;
+   MPU_InitStruct.DisableExec= MPU_INSTRUCTION_ACCESS_ENABLE;
+   MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
+   MPU_InitStruct.BaseAddress = 0x00000000;
+   MPU_InitStruct.LimitAddress= 0x00010000;
+   MPU_InitStruct.Number = MPU_REGION_NUMBER0;
+   HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+
+   /* Data section(IPC_SHMEM_1 & VIRTIO_SHMEM)- non cacheable */
+   MPU_Attributes_InitStruct.Attributes = INNER_OUTER(MPU_NOT_CACHEABLE);
+   MPU_Attributes_InitStruct.Number = MPU_ATTRIBUTES_NUMBER1;
+   HAL_MPU_ConfigMemoryAttributes(&MPU_Attributes_InitStruct);
+
+   MPU_InitStruct.AccessPermission = MPU_REGION_ALL_RW;
+   MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+   MPU_InitStruct.AttributesIndex = MPU_ATTRIBUTES_NUMBER1;
+   MPU_InitStruct.DisableExec= MPU_INSTRUCTION_ACCESS_DISABLE;
+   MPU_InitStruct.IsShareable = MPU_ACCESS_INNER_SHAREABLE;
+   MPU_InitStruct.BaseAddress =  0x81200000;
+   MPU_InitStruct.LimitAddress = 0x812FFFFF;
+   MPU_InitStruct.Number = MPU_REGION_NUMBER1;
+   HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+   HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
+}
+#endif
 #ifdef  USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number

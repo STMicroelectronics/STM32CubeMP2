@@ -111,7 +111,7 @@ set(BSP_SRC_FILES ${BSP_SRC_FILES}
 						${BASE_DIR}/../../../../Drivers/BSP/Components/tcpp0203/tcpp0203.c 
 						${BASE_DIR}/../../../../Drivers/BSP/Components/tcpp0203/tcpp0203_reg.c 
 						)
-set(USBPDLIB_SRC_FILES
+set(USBPDLIB_SRC_FILES ${USBPDLIB_SRC_FILES}
 						${BASE_DIR}/../../../../Middlewares/ST/STM32_USBPD_Library/UCSI/ppm.c 
 						${BASE_DIR}/../../../../Middlewares/ST/STM32_USBPD_Library/UCSI/usbpd_ucsi_ppm.c 
 						${BASE_DIR}/../../../../Middlewares/ST/STM32_USBPD_Library/Devices/STM32MP2XX/src/usbpd_cad_hw_if.c 
@@ -123,6 +123,11 @@ set(USBPDLIB_SRC_FILES
 						${BASE_DIR}/../../../../Middlewares/ST/STM32_USBPD_Library/Devices/STM32MP2XX/src/usbpd_timersserver.c 
 						${BASE_DIR}/../../../../Middlewares/ST/STM32_USBPD_Library/Core/src/usbpd_trace.c 
 						)
+set(SCMIAGENT_SRC_FILES ${SCMIAGENT_SRC_FILES}
+						${BASE_DIR}/../../../../Middlewares/ST/scmiagent/mbox_scmi.c
+						${BASE_DIR}/../../../../Middlewares/ST/scmiagent/scmi_helpers.c 
+						${BASE_DIR}/../../../../Middlewares/ST/scmiagent/scmi_regu.c 
+						)
 set(UTILS_SRC_FILES ${UTILS_SRC_FILES}
 						${BASE_DIR}/../../../../Utilities/TRACER_EMB/tracer_emb.c 
 						${BASE_DIR}/../../../../Utilities/ResourcesManager/res_mgr.c 
@@ -131,11 +136,11 @@ set(UTILS_SRC_FILES ${UTILS_SRC_FILES}
 						)
 set(CMSIS_SRC_FILES ${CMSIS_SRC_FILES}
 						${BASE_DIR}/../../../../Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/system_stm32mp2xx_m33_ns.c
-						${BASE_DIR}/../../../../Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/gcc/startup_stm32mp257cxx_m33.s
 						)
 # Set application source files
-set(APPLICATION_SRC ${APPLICATION_SRC} ${HAL_SRC_FILES} ${OPENAMP_SRC_FILES} ${OPENAMP_SRC_GEN_FILES} ${FREERTOS_SRC_FILES} ${BSP_SRC_FILES} ${USBPDLIB_SRC_FILES} ${UTILS_SRC_FILES} ${CMSIS_SRC_FILES}
+set(APPLICATION_SRC ${APPLICATION_SRC} ${HAL_SRC_FILES} ${OPENAMP_SRC_FILES} ${OPENAMP_SRC_GEN_FILES} ${FREERTOS_SRC_FILES} ${BSP_SRC_FILES} ${USBPDLIB_SRC_FILES} ${SCMIAGENT_SRC_FILES} ${UTILS_SRC_FILES} ${CMSIS_SRC_FILES}
 						${BASE_DIR}/CM33/NonSecure/FREERTOS/App/app_freertos.c
+						${BASE_DIR}/CM33/NonSecure/Core/Src/startup_stm32mp257cxx_m33.s
 						${BASE_DIR}/CM33/NonSecure/Core/Src/led_thread.c 
 						${BASE_DIR}/CM33/NonSecure/Core/Src/main.c 
 						${BASE_DIR}/CM33/NonSecure/Core/Src/syscalls.c
@@ -178,6 +183,7 @@ include_directories(APPLICATION_INCLUDE ${BASE_DIR}/../../../../Middlewares/Thir
 include_directories(APPLICATION_INCLUDE ${BASE_DIR}/../../../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM33_NTZ/non_secure)
 include_directories(APPLICATION_INCLUDE ${BASE_DIR}/../../../../Drivers/CMSIS/RTOS2/Include)
 include_directories(APPLICATION_INCLUDE ${BASE_DIR}/../../../../Drivers/CMSIS/RTOS2/Template)
+include_directories(APPLICATION_INCLUDE ${BASE_DIR}/../../../../Middlewares/ST/scmiagent)
 
 set(SOURCE_FILES ${APPLICATION_SRC} ${LINKER_SCRIPT} )
 add_custom_target(openamp_gen

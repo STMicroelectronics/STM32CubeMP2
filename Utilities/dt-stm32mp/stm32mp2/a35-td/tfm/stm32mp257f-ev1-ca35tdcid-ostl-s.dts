@@ -1,0 +1,84 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+/*
+ * Copyright (C) STMicroelectronics 2023 - All Rights Reserved
+ */
+
+/dts-v1/;
+
+#include <dt-bindings/clock/stm32mp25-clksrc.h>
+#include <dt-bindings/reset/st,stm32mp25-rcc.h>
+
+#include "stm32mp257.dtsi"
+#include "stm32mp257f-ev1-ca35tdcid-ostl-resmem.dtsi"
+#include "stm32mp257f-ev1-ca35tdcid-ostl-rcc.dtsi"
+#include "stm32mp25-pinctrl.dtsi"
+#include "stm32mp25xxai-pinctrl.dtsi"
+
+/ {
+	model = "STMicroelectronics STM32MP257F-EV1 Evaluation Board";
+	compatible = "st,stm32mp257f-ev1", "st,stm32mp257";
+
+	aliases {
+		serial0 = &uart5;
+	};
+
+	chosen {
+		stdout-device = &uart5;
+	};
+
+	memory@80000000 {
+		device_type = "memory";
+		reg = <0x80000000 0x80000000>;
+	};
+};
+
+&uart5 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart5_pins_a>;
+	clocks = <&rcc CK_KER_UART5>;
+	current-speed = <115200>;
+	status = "okay";
+};
+
+&systick {
+	clocks = <&rcc CK_ICN_HS_MCU>;
+	clock-frequency = <1000000>; /* tick at 1us */
+	status = "okay";
+};
+
+&ospi2 {
+	memory-region = <&mm_ospi2>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	flash0: flash@0 {
+		compatible = "jedec,spi-nor";
+		reg = <0>;
+		spi-rx-bus-width = <4>;
+		spi-tx-bus-width = <4>;
+		spi-max-frequency = <133000000>;
+		size = <0x4000000>;
+		erase-size = <0x1000>;
+		write-size = <256>;
+		read-cmd = "READ_1_1_4_4B";
+		write-cmd = "WRITE_1_4_4_4B";
+		erase-cmd = "SE_4B";
+
+		partitions {
+			compatible = "fixed-partitions";
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			tfm_ps_partition: partition@0 {
+				label = "ps_area";
+				reg = <0x00000000 0x00100000>;
+			};
+		};
+	};
+};
+
+&bsec {
+	memory-region = <&bsec_mirror>;
+	status = "okay";
+};

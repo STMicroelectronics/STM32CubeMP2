@@ -25,7 +25,7 @@ This example describes how to configure and use the ADC to retrieve an internal 
 
 At the beginning of the main program the HAL_Init() function is called to reset 
 all the peripherals, initialize the Flash interface and the systick.
-The SystemClock_Config() function is used to configure the system clock for STM32H743xx Devices :
+The SystemClock_Config() function is used to configure the system clock for STM32 Devices :
 The CPU at 400MHz 
 The HCLK for D1 Domain AXI and AHB3 peripherals , D2 Domain AHB1/AHB2 peripherals and D3 Domain AHB4  peripherals at 200MHz.
 The APB clock dividers for D1 Domain APB3 peripherals, D2 Domain APB1 and APB2 peripherals and D3 Domain APB4 peripherals to  run at 100MHz
@@ -34,9 +34,10 @@ The ADC is configured to convert continuously from ADC_CHANNEL_VREFINT.
 
 uwConvertedValue variable contains the 32-bit conversion result and 
 uwInputVoltage yields the unsigned input voltage in mV.
+The converted value is monitored through debugger: uwConvertedValue and uwInputVoltage variables.
 
-LED3 is ON and example is stopped(using infinite loop) when there is an error
-during process.
+STM32 board LED can be used to monitor the conversion:
+  - LED3 is ON when there is an error during process.
 
 @note Care must be taken when using HAL_Delay(), this function provides accurate delay (in milliseconds)
       based on variable incremented in SysTick ISR. This implies that if HAL_Delay() is called from
@@ -64,7 +65,7 @@ Analog, ADC, Analog to Digital, Internal, Vref, Continuous conversion, Voltage
 
 @par Hardware and Software environment
 
-  - This example runs on STM32MP2xx devices.
+  - This example runs on STM32MP25xx devices.
   - This example has been tested with STM32MP257F-EV1 board and can be
     easily tailored to any other supported device and development board.
 

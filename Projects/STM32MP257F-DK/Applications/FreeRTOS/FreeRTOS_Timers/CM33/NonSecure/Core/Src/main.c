@@ -265,7 +265,7 @@ static void MX_IPCC_Init(void)
      Error_Handler();
   }
   /* IPCC interrupt Init */
-  HAL_NVIC_SetPriority(IPCC1_RX_IRQn, DEFAULT_IRQ_PRIO, 0);
+  HAL_NVIC_SetPriority(IPCC1_RX_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY+ DEFAULT_IRQ_PRIO, 0);
   HAL_NVIC_EnableIRQ(IPCC1_RX_IRQn);
 }
 

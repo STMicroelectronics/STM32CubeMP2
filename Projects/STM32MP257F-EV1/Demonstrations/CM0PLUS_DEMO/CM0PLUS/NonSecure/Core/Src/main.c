@@ -57,6 +57,19 @@ void IPCC_channel1_callback(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, I
   */
 int main(void)
 {
+  /* Low Power Workaround Initialization:
+   * 
+   * The M0+ microcontroller may crash when power domains D1 or D2 enter or exit
+   * low power states (Standby 1 and LPLV-Stop 2).
+   * To prevent this issue, the M0+ is placed in a Wait For Interrupt (WFI)
+   * state for less than 800 us during the transitions of D1/D2 into or out of
+   * low power states.
+   * 
+   * Requirement: The main CPU (either CPU1 or CPU2) must send an interrupt just
+   * before entering low power using EXTI2 (line 59 for CPU2 and line 60 for
+   * CPU1) to trigger the workaround.
+   */
+  lowpower_wa_Init();
   /* STM32MP2xx HAL library initialization:
        - Secure Systick timer is configured by default as source of time base,
          but user can eventually implement his proper time base source (a general
@@ -92,25 +105,27 @@ int main(void)
   /* Add your CM0PLUS application code here */
   while (1)
   {
-  	count++;
-  	printf("(%ld) Hello from CM0+ \n\r", count);
+    count++;
+    printf("(%ld) Hello from CM0+ \n\r", count);
 
-  	if (wakeup)
-  	{
-  		/* Reset A35 wakeup request */
-  		wakeup = 0;
+    if (wakeup)
+    {
+      /* Reset A35 wakeup request */
+      wakeup = 0;
 
-  	  	printf("(%ld) A35 wakeup request in %lds\n\r", count, delay_s);
+      printf("(%ld) A35 wakeup request in %lds\n\r", count, delay_s);
 
-  	  	/* Convert delay in ms */
-  		HAL_Delay(1000*delay_s);
+      /* Convert delay in ms */
+      HAL_Delay(1000*delay_s);
 
-  		/* Notify A35 */
-  		HAL_IPCC_NotifyCPU(&hipcc, IPCC_CHANNEL_1, IPCC_CHANNEL_DIR_TX);
+      printf("(%ld) Send A35 wakeup request\n\r", count);
 
-  		printf("(%ld) A35 wakeup request done !\n\r", count);
-  	}
-  	HAL_Delay(2000);
+      /* Notify A35 */
+      HAL_IPCC_NotifyCPU(&hipcc, IPCC_CHANNEL_1, IPCC_CHANNEL_DIR_TX);
+
+      printf("(%ld) A35 wakeup request done !\n\r", count);
+    }
+    HAL_Delay(2000);
   }
 }
 
@@ -131,8 +146,8 @@ void MX_IPCC_Init(void)
   HAL_NVIC_EnableIRQ(IPCC2_RX_IRQn);
 
   if (HAL_IPCC_ActivateNotification(&hipcc, IPCC_CHANNEL_1, IPCC_CHANNEL_DIR_RX,
-          IPCC_channel1_callback) != HAL_OK) {
-	  Error_Handler();
+      IPCC_channel1_callback) != HAL_OK) {
+    Error_Handler();
   }
 
   ipc_shm_addr = (char *)(&__IPC_SHM_region_start__);
@@ -150,7 +165,7 @@ void MX_IPCC_DeInit(void)
   hipcc.Instance = IPCC2;
   if (HAL_IPCC_DeInit(&hipcc) != HAL_OK)
   {
-     Error_Handler();
+    Error_Handler();
   }
 }
 
@@ -170,8 +185,8 @@ void IPCC_channel1_callback(IPCC_HandleTypeDef * hipcc,
 
   /* Make sure delay is correct */
   if (delay_s > 0) {
-	  /* Allow A35 wakeup */
-	  wakeup = 1;
+    /* Allow A35 wakeup */
+    wakeup = 1;
   }
 
   /* USER CODE BEGIN POST_MAILBOX_CHANNEL1_CALLBACK */

@@ -24,6 +24,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32mp2xx_hal.h"
 #include "stm32mp257f_eval.h"
+#include "lowpower_wa.h"
 
 /* Exported constants --------------------------------------------------------*/
 #define DEFAULT_IRQ_PRIO      1U

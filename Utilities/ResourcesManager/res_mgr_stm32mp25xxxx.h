@@ -232,7 +232,7 @@ extern "C" {
 #define RESMGR_RIFSC_HDP_ID          STM32MP25_RIFSC_HDP_ID
 #define RESMGR_RIFSC_ADC12_ID        STM32MP25_RIFSC_ADC12_ID
 #define RESMGR_RIFSC_ADC3_ID         STM32MP25_RIFSC_ADC3_ID
-#define RESMGR_RIFSC_tea_ID        STM32MP25_RIFSC_ETH1_ID
+#define RESMGR_RIFSC_ETH1_ID        STM32MP25_RIFSC_ETH1_ID
 #if !defined(STM32MP251Cxx) || !defined(STM32MP251Fxx) || !defined(STM32MP251Axx) || !defined(STM32MP251Dxx)
 #define RESMGR_RIFSC_ETH2_ID         STM32MP25_RIFSC_ETH2_ID
 #endif
@@ -310,7 +310,7 @@ extern "C" {
 #define RESMGR_RIFSC_OTFDEC2_ID        STM32MP25_RIFSC_OTFDEC2_ID
 #define RESMGR_RIFSC_IAC_ID          STM32MP25_RIFSC_IAC_ID
 
-#define RESMGR_RIFSC_RIFSC_ID_MAX   127
+#define RESMGR_RIFSC_ID_MAX   127
 
 /*GPIO Pin Resource Selection Macro*/
 #define RESMGR_GPIO_PIN_0                GPIO_PIN_0         /* Pin 0 selected    */

@@ -11,6 +11,9 @@
 | STM32 USBPD Device Library      | SLA0044              | STMicroelectronics |
 | OpenAMP                         | BSD-3-Clause         | Xilinx Inc. and Contributors |
 | FreeRTOS Kernel                 | MIT                  | Amazon.com, Inc. or its affiliates |
+| LWIP                            | BSD 3-Clause         | Swedish Institute of Computer Science |
 | STM32 Utilities                 | BSD-3-Clause         | STMicroelectronics |
 | Utilities LCD                   | BSD-3-Clause         | STMicroelectronics |
 | Utilities Fonts                 | BSD-3-Clause         | STMicroelectronics |
+| Trusted Firmware-M              | BSD-3-Clause         | ARM Limited        |
+| scmiagent			              | BSD-3-Clause         | ARM Limited        |

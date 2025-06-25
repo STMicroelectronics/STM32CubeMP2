@@ -46,15 +46,20 @@ MEMORY
 {
   NS_VECTOR_TBL (xrw)   : ORIGIN = 0x0A041000,	LENGTH = 0x00000600
   FLASH         (rx)    : ORIGIN = 0x0A041600,  LENGTH = 4K - LENGTH(NS_VECTOR_TBL)
-  ROM           (rx)    : ORIGIN = 0x0A042000,  LENGTH = 120k
+  SCMI_SHMEM    (rw)    : ORIGIN = 0x0A042000,	LENGTH = 0x1000
+  ROM           (rx)    : ORIGIN = 0x0A043000,  LENGTH = 120k - LENGTH(SCMI_SHMEM)
   RAM           (rwx)   : ORIGIN = 0x0A060000,  LENGTH = 80K
   VIRTIO_SHMEM  (rw)    : ORIGIN = 0x0A07A000,	LENGTH = 24K
   IPC_SHMEM     (rw)    : ORIGIN = 0x0A074000,	LENGTH = 24K
 }
 
- /* Symbols needed for OpenAMP to enable rpmsg */
+/* Symbols needed for OpenAMP to enable rpmsg */
 __OPENAMP_region_start__  = ORIGIN(VIRTIO_SHMEM);
 __OPENAMP_region_end__ = ORIGIN(VIRTIO_SHMEM)+LENGTH(VIRTIO_SHMEM);
+
+/* Symbols needed for scmiagent to enable mailbox communication */
+__SCMI_SHM_region_start__  = ORIGIN(SCMI_SHMEM);
+__SCMI_SHM_region_end__    = ORIGIN(SCMI_SHMEM)+LENGTH(SCMI_SHMEM);
 
 /* Library configurations */
 GROUP(libgcc.a libc.a libm.a libnosys.a)

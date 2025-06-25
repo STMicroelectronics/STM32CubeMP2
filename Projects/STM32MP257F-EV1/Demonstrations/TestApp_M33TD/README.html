@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="_htmresc/mini-st.css" />
+</head>
+<body>
+<h1 id="testapp_m33td-demonstration-application">TestApp_M33TD
+Demonstration Application</h1>
+<hr />
+<h2 id="application-description">Application Description</h2>
+<p>The TestApp_M33TD demonstration showcases the capabilities of the
+STM32MP2 platform for the M33TDCID profile, highlighting the Cortex-M33
+as the primary CPU and the Cortex-A35 as a high-performance coprocessor.
+This application demonstrates the execution of HAL M33 examples in the
+M33TDCID profile while managing critical tasks such as RemoteProc and
+UserApp blinking LED.</p>
+<p>In addition to these tasks, the application introduces a dedicated
+<strong>TestApp Task</strong> to run a variety of tests sequentially,
+showcasing the multitasking capabilities of FreeRTOS in the non-secure
+(NS) environment. These tests validate the functionality of the M33
+examples under the M33TDCID profile, with each test categorized as
+either automatic or manual depending on external dependencies.</p>
+<hr />
+<h2 id="key-features">Key Features</h2>
+<ul>
+<li><strong>FreeRTOS Multitasking</strong>: The application is built on
+FreeRTOS, enabling multitasking in the non-secure environment.</li>
+<li><strong>UserApp Task</strong>: A task to blink an LED every
+second.</li>
+<li><strong>RemoteProc Task</strong>: A dedicated task to manage the A35
+core.</li>
+<li><strong>TestApp Task</strong>: A task to run various tests
+sequentially.</li>
+</ul>
+<hr />
+<h2 id="purpose">Purpose</h2>
+<p>The purpose of this demonstration is to validate the functionality of
+HAL M33 examples in the M33TDCID profile while showcasing the
+multitasking capabilities of FreeRTOS in the non-secure environment. The
+application achieves this through the following tasks:</p>
+<ol type="1">
+<li><strong>UserApp Task</strong>:
+<ul>
+<li>A user application task that blinks an LED every second to indicate
+the M33 system is functioning correctly.</li>
+</ul></li>
+<li><strong>RemoteProc Task</strong>:
+<ul>
+<li>Manages the A35 coprocessor, including:
+<ul>
+<li>Starting the A35 on demand (not started by default on boot) by
+requesting a TFM secure service.</li>
+<li>Retrieving the A35 CPU status through a secure service.</li>
+<li>Restarting the A35 in case of a crash, using NVIC interruptions and
+EXTI line configuration.</li>
+</ul></li>
+</ul></li>
+<li><strong>TestApp Task</strong>:
+<ul>
+<li>Runs a variety of tests sequentially to validate the functionality
+of HAL M33 examples:
+<ul>
+<li><strong>Automatic Tests</strong>:
+<ul>
+<li><strong>ADC</strong>: Internal voltage conversion using ADC.</li>
+<li><strong>TIMERS</strong>: Synchronization of multiple timers.</li>
+</ul></li>
+<li><strong>Manual Tests</strong>:
+<ul>
+<li><strong>I2C</strong>: Control of a Low Power I2C Display.</li>
+<li><strong>I3C</strong>: Data transmission/reception as a controller
+(Master).</li>
+<li><strong>SPI</strong>: Data transmission/reception as a controller
+(Master).</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="prerequisite-hardware-software-environment-setup">Prerequisite
+Hardware &amp; Software Environment Setup</h2>
+<ul>
+<li><strong>Trusted Firmware-M</strong>: The source code must be
+installed under the <code>Middlewares/Third_Party</code> directory with
+the path <code>Middlewares/Third_Party/trusted-firmware-m</code>. Ensure
+the correct version is used as described in the STM32 MPU release
+note.</li>
+<li><strong>Supported Devices</strong>: This example runs on STM32MP25xx
+devices and has been tested with the STMicroelectronics STM32MP257F-EV1
+board. It can be tailored to other supported devices and development
+boards.</li>
+<li><strong>ST-Link Connection</strong>: Connect the ST-Link cable to
+the PC USB port to display traces.</li>
+</ul>
+<h3 id="software-versions">Software Versions</h3>
+<ul>
+<li><strong>Trusted Firmware-M (TFM)</strong>: Refer to the <a
+href="https://wiki.st.com/stm32mpu/wiki/Category:Trusted_Firmware-M">Trusted
+Firmware-M wiki</a> for recommended versions and integration
+details.</li>
+<li><strong>External Device Tree (externalDT)</strong>: See the <a
+href="https://wiki.st.com/stm32mpu/wiki/External_device_tree">External
+Device Tree wiki</a> for guidance on obtaining and using external DT
+sources.</li>
+<li><strong>STM32CubeIDE</strong>: For supported IDE versions and
+ecosystem information, refer the <a
+href="https://wiki.st.com/stm32mpu/wiki/">STM32 MPU wiki</a>.</li>
+</ul>
+<h2 id="to-build-cmake-project-for-m33tdcid-through-command-line">To
+Build CMake Project for M33TDCID (Through Command Line)</h2>
+<h3 id="compilation-instructions">Compilation Instructions</h3>
+<ul>
+<li>Export the path of any ARM cross-compiler toolchain with
+<code>arm-none-eabi-gcc</code> to your PC’s PATH environment variable.
+<ul>
+<li><p>Example for STM32CubeIDE’s 1.19.0.25A9 Toolchain:</p>
+<pre><code>C:\ST\STM32CubeIDE_1.19.0.25A9\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.1.0.202501171655\tools\bin</code></pre></li>
+</ul></li>
+</ul>
+<hr />
+<h2 id="build-procedure">Build Procedure</h2>
+<h3 id="secure-build-tfm">Secure Build (TFM)</h3>
+<ol type="1">
+<li><p>Navigate to
+<code>Firmware/Middlewares/Third_Party/trusted-firmware-m</code>.</p></li>
+<li><p>For SD card development mode, execute the following command:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-B</span> config_default <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-DTFM_PLATFORM</span><span class="op">=</span>stm/stm32mp257f_ev1 <span class="at">-DTFM_TOOLCHAIN_FILE</span><span class="op">=</span>toolchain_GNUARM.cmake <span class="at">-DSTM32_BOOT_DEV</span><span class="op">=</span>sdmmc1 <span class="at">-DTFM_PROFILE</span><span class="op">=</span>profile_medium <span class="at">-DSTM32_M33TDCID</span><span class="op">=</span>ON <span class="at">-DCMAKE_BUILD_TYPE</span><span class="op">=</span>Relwithdebinfo <span class="at">-DNS</span><span class="op">=</span>OFF <span class="at">-DDTS_EXT_DIR</span><span class="op">=&lt;</span>EXT_DT_DIR<span class="op">&gt;</span> -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-bl2.dts <span class="at">-DDTS_BOARD_S</span><span class="op">=</span>stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span> </span></code></pre></div></li>
+<li><p>Build the project:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">--build</span> config_default <span class="at">--</span> install</span></code></pre></div></li>
+</ol>
+<p><strong>Note</strong>: The external DT repository is placed in the
+<code>Utilities</code> directory.</p>
+<hr />
+<h3
+id="non-secure-m33-firmware-build-testapp_m33td-application">Non-Secure
+M33 Firmware Build (TestApp_M33TD Application)</h3>
+<ol type="1">
+<li>Navigate to
+<code>Firmware/Projects/STM32MP257F-EV1/Demonstrations/TestApp_M33TD</code>.</li>
+<li>Run the following command:</li>
+</ol>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-B</span> build <span class="at">-DTFM_BUILD_DIR</span><span class="op">=&lt;</span>TFM_BUILD_DIRECTORY<span class="op">&gt;</span> -DENABLE_AUTO_TEST=ON</span></code></pre></div>
+<ul>
+<li>If <code>TFM_BUILD_DIR</code> is not specified, the default path
+<code>Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default</code>
+will be used, assuming the TFM Secure Build step is completed.</li>
+<li>By default:
+<ul>
+<li><code>REMOTE_PROC_AUTO_START</code> is set to <code>0</code> for
+TestApp_M33TD unless explicitly provided.</li>
+<li><code>ENABLE_AUTO_TEST</code> is set to <code>0</code> for
+TestApp_M33TD unless explicitly provided. <strong>Note</strong>: For
+more detailed build configuration for TestApp execution, refer to the <a
+href="#testapp-task-configuration">TestApp Task Configuration</a>
+section.</li>
+</ul></li>
+</ul>
+<ol start="3" type="1">
+<li><p>Build the project:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> <span class="at">-C</span> build all</span></code></pre></div></li>
+</ol>
+<hr />
+<h2 id="to-build-native-stm32cubeide-project">To Build Native
+STM32CubeIDE Project</h2>
+<h3 id="project-structure">Project Structure</h3>
+<pre><code>TestApp_M33TD
+├── TestApp_M33TD_CM33
+│   ├── TestApp_M33TD_CM33_NonSecure (Non-Secure STM32CubeIDE M33 project)
+│   └── TestApp_M33TD_CM33_trusted-firmware-m (Secure CMake project)</code></pre>
+<p><strong>Note</strong>: Refer to <a
+href="https://wiki.st.com/stm32mpu/wiki/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#">this
+wiki</a> for instructions on importing a CMake project.</p>
+<h3 id="build-procedure-1">Build Procedure</h3>
+<h4 id="secure-tfm-firmware-build">Secure TFM Firmware Build</h4>
+<ol type="1">
+<li>Configure the CMake build options:
+<ul>
+<li><p>Navigate to <code>TestApp_M33TD_CM33_trusted-firmware-m</code>
+and update the CMake settings:</p>
+<pre><code>-DDEBUG_AUTHENTICATION=FULL  # Enabled for Debug Purpose, Default: this option is removed
+-DTFM_PLATFORM=stm/stm32mp257f_ev1
+-DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake
+-DSTM32_BOOT_DEV=sdmmc1  # Building TFM for &quot;sdcard_sdcard&quot; bootdevice mode
+-DTFM_PROFILE=profile_medium
+-DSTM32_M33TDCID=ON
+-DCMAKE_BUILD_TYPE=Relwithdebinfo
+-DNS=OFF
+-DDTS_EXT_DIR=../../../../../../../../../Firmware/Utilities/dt-stm32mp
+-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-bl2.dts  # External DT file for sdcard_sdcard bootdevice mode 
+-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts          # External DT file for sdcard_sdcard bootdevice mode 
+-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts               # External DT file common for all bootdevice modes</code></pre></li>
+</ul></li>
+<li>Configure the TFM CMake project:
+<ul>
+<li>Right-click on <code>TestApp_M33TD_CM33_trusted-firmware-m</code>
+-&gt; <code>CMake Configure</code>.</li>
+</ul></li>
+<li>Build the TFM CMake project:
+<ul>
+<li>Right-click on <code>TestApp_M33TD_CM33_trusted-firmware-m</code>
+-&gt; <code>Build Project</code>.</li>
+</ul></li>
+</ol>
+<h4 id="non-secure-stm32cubeide-project-build">Non-Secure STM32CubeIDE
+Project Build</h4>
+<ol type="1">
+<li>Build the project:
+<ul>
+<li>Select the build configuration as per the TFM version:
+<ul>
+<li>Choose <code>CM33TDCID_m33_ns_tfm_s_sign</code>.</li>
+</ul></li>
+<li>Right-click on <code>TestApp_M33TD_CM33_NonSecure</code> -&gt;
+<code>Build Project</code>.</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="output">Output</h2>
+<ul>
+<li>The generated binaries will be located in the <code>bin</code>
+folder:</li>
+</ul>
+<pre><code>   cd bin/</code></pre>
+<ul>
+<li><code>StarterApp_M33TD_CM33_NonSecure.bin</code></li>
+<li><code>tfm_s_ns_signed.bin</code></li>
+<li><code>ddr_phy_signed.bin</code></li>
+<li><code>bl2.stm32</code></li>
+</ul>
+<p><strong>Note</strong>: For other boot device modes, TFM Secure Build
+commands need to be adjusted, and the generated binary should be renamed
+accordingly. Refer to the <a
+href="#how-to-generate-binaries-for-different-boot-modes">How to
+Generate Binaries for Different Boot Modes</a> section.</p>
+<hr />
+<p>For detailed instructions on flashing the generated binaries to your
+device, see <a href="#how-to-flash-binaries">How to Flash
+Binaries</a>.</p>
+<hr />
+<h2 id="testapp-task-configuration">TestApp Task Configuration</h2>
+<p>The <strong>TestApp Task</strong> is responsible for running a
+sequence of M33 example tests. Each test follows these steps: 1. Acquire
+the required resources to run the test. 2. Initialize the necessary
+peripherals. 3. Execute the test. 4. Deinitialize the test and release
+the acquired resources.</p>
+<h3 id="test-categories">Test Categories</h3>
+<p>Tests are categorized into two types based on their execution
+requirements: - <strong>AUTO</strong>: Tests that can be executed
+without external dependencies. - <strong>MANUAL</strong>: Tests that
+require external dependencies or user interaction.</p>
+<h3 id="controlling-test-execution">Controlling Test Execution</h3>
+<p>While building the <code>TestApp_M33TD</code>, the test execution
+behavior can be controlled by passing the following CMake options or
+CubeIDE preprocessor definitions:</p>
+<h4 id="scenario-1-enable_auto_test-is-on-set-to-1"><strong>Scenario 1:
+ENABLE_AUTO_TEST is ON (Set to 1)</strong></h4>
+<ul>
+<li><strong>Behavior</strong>:
+<ul>
+<li>The TestApp will execute automatically.</li>
+<li><strong>AUTO</strong> tests will be fully executed, including all
+steps (AcquireResource → Init → Run → Deinit → ReleaseResource).</li>
+<li><strong>MANUAL</strong> tests will be partially executed, performing
+only the resource acquisition and release steps (AcquireResource →
+ReleaseResource).</li>
+</ul></li>
+<li><strong>Purpose</strong>:
+<ul>
+<li>This scenario validates the correct runtime configuration settings
+required for specific M33 examples in the M33TDCID profile.</li>
+</ul></li>
+</ul>
+<h4 id="scenario-2-enable_auto_test-is-off-set-to-0"><strong>Scenario 2:
+ENABLE_AUTO_TEST is OFF (Set to 0)</strong></h4>
+<ul>
+<li><strong>Behavior</strong>:
+<ul>
+<li>The TestApp will execute tests fully based on <strong>User Button
+2</strong> actions.</li>
+<li>Both <strong>AUTO</strong> and <strong>MANUAL</strong> tests will be
+executed completely (AcquireResource → Init → Run → Deinit →
+ReleaseResource).</li>
+</ul></li>
+</ul>
+<h3 id="how-to-run-manual-tests">How to Run Manual Tests</h3>
+<h4 id="i3c-test">I3C Test</h4>
+<ul>
+<li>Ensure the target I2C board is ready before executing the I3C
+controller test.</li>
+<li>Refer to the examples provided at
+<code>Firmware/Projects/STM32MP257F-EV1/Examples/I3C</code> to set up
+the target I2C board.</li>
+</ul>
+<h4 id="spi-test">SPI Test</h4>
+<ul>
+<li>Ensure the slave SPI board is ready before executing the SPI Master
+test.</li>
+<li>Refer to the examples provided at
+<code>Firmware/Projects/STM32MP257F-EV1/Examples/SPI</code> to set up
+the slave board for testing.</li>
+</ul>
+<h4 id="i2c-test">I2C Test</h4>
+<ul>
+<li>Ensure the I2C Low Power Display is connected to the board.</li>
+<li>Refer to the example at
+<code>Firmware/Projects/STM32MP257F-EV1/Demonstrations/M33TD_DEMO/DisplayDemo_M33TD</code>
+to set up the display.</li>
+</ul>
+<hr />
+<h3 id="example-cmake-options">Example CMake Options</h3>
+<p>To control the test execution behavior, use the following CMake
+options during the build process:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-ENABLE_AUTO_TEST=ON</span>   <span class="co"># Enables automatic execution of Test Sequence.</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-ENABLE_AUTO_TEST=OFF</span>  <span class="co"># Disables automatic execution; tests are triggered manually.</span></span></code></pre></div>
+<h3 id="example-cubeide-preprocessor-definitions">Example CubeIDE
+Preprocessor Definitions</h3>
+<p>To control the test execution behavior in CubeIDE, define the
+following preprocessor macros in project settings under compiler
+preprocessor configuration:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ENABLE_AUTO_TEST <span class="dv">1</span>  <span class="co">// Enables automatic execution of Test Sequence.</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>ENABLE_AUTO_TEST <span class="dv">0</span>  <span class="co">// Disables automatic execution; tests are triggered manually.</span></span></code></pre></div>
+<hr />
+<p>This section ensures that developers can configure and control the
+execution of the TestApp task based on their requirements, providing
+flexibility for both automated and manual testing scenarios.</p>
+<hr />
+<h4 id="uart-console-output">UART Console Output</h4>
+<p>Below is a sample UART log output from the CM33 during the boot and
+runtime sequence:</p>
+<pre><code>[INF] Loading gpt header
+
+[INF] welcome to MCUboot: v2.1.0-stm32mp-r1-rc5
+[INF] cpu: STM32MP257FAI Rev.Y
+[INF] board: stm32mp257f eval1
+[INF] board ID: MB1936 Var1.0 Rev.D-01
+[INF] dts: stm32mp257f-ev1-cm33tdcid-ostl-sdcard-bl2.dts
+[INF] boot device: sdmmc1
+[INF] mcu sysclk: 400000000
+[INF] Starting bootloader
+[INF] ***************************
+
+[INF] Provisioning bypassed, if your OTP are not set.
+
+[INF] Default values will be used.
+
+[INF] DUMMY_PROVISIONING is not suitable for production!
+
+[INF] This device is NOT SECURE
+
+[INF] ***************************
+
+[WRN] This device was provisioned with dummy keys.
+
+[WRN] This device is NOT SECURE
+
+[WRN] NV_MM_COUNTER_INIT is not suitable for production! This device is NOT SECURE
+
+[INF] Primary   slot: version=0.1.0+0
+[INF] Image 1 Secondary slot: Image not found
+[INF] Image 1 RAM loading to 0xe060000 is succeeded.
+[INF] Image 1 loaded from the primary slot
+[INF] BL2: image 1, enable DDR-FW
+[INF] Primary   slot: version=2.1.0+0
+[INF] Image 0 Secondary slot: Image not found
+[INF] Image 0 RAM loading to 0x80000000 is succeeded.
+[INF] Image 0 loaded from the primary slot
+[INF] Bootloader chainload address offset: 0x104400
+[INF] Jumping to the first image slot
+[INF] Enable Macronix quad support
+[INF] welcome to TF-M: v2.1.0-stm32mp-r1-rc5
+[INF] board: stm32mp257f eval1
+[INF] dts: stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts
+[INF] ***************************
+[INF] Provisioning bypassed, if your OTP are not set.
+[INF] Default values will be used.
+[INF] DUMMY_PROVISIONING is not suitable for production!
+[INF] This device is NOT SECURE
+[INF] ***************************
+[WAR] This device was provisioned with dummy keys.
+[WAR] This device is NOT SECURE
+[NS] [INF] Non-Secure system starting...
+[NS] [INF] STM32Cube FW version: v1.2.0-rc8
+[NS] [TestApp] [INF] Acquiring resources for test: TIMERS
+[NS] [TestApp] [INF] Running test: TIMERS
+[NS] [TestApp] [INF] Test TIMERS: PASSED
+[NS] [TestApp] [INF] Releasing resources for test: TIMERS
+[NS] [TestApp] [INF] Acquiring resources for test: I2C
+[NS] [TestApp] [INF] Skipping manual test in auto Test mode: I2C
+[NS] [TestApp] [INF] Releasing resources for test: I2C
+[NS] [TestApp] [INF] Acquiring resources for test: SPI
+[NS] [TestApp] [INF] Skipping manual test in auto Test mode: SPI
+[NS] [TestApp] [INF] Releasing resources for test: SPI
+[NS] [TestApp] [INF] Acquiring resources for test: ADC
+[NS] [TestApp] [INF] Running test: ADC
+[NS] [TestApp] [INF] Test ADC: PASSED
+[NS] [TestApp] [INF] Releasing resources for test: ADC
+[NS] [TestApp] [INF] Acquiring resources for test: I3C
+[NS] [TestApp] [INF] Skipping manual test in auto Test mode: I3C
+[NS] [TestApp] [INF] Releasing resources for test: I3C
+[NS] [TestApp] [INF] All tests completed.</code></pre>
+<h3 id="understanding-testapp-logs">Understanding TestApp Logs</h3>
+<p>The TestApp logs provide detailed, step-by-step insight into the
+execution of each test within the TestApp task. When running in
+automatic mode (<code>ENABLE_AUTO_TEST=ON</code>), the TestApp
+sequentially acquires resources, initializes, runs, and deinitializes
+each test categorized as <strong>AUTO</strong>, while
+<strong>MANUAL</strong> tests are acknowledged but skipped unless user
+interaction is required. These logs help developers verify that each
+test is executed in the correct order, resources are properly managed,
+and the overall system behavior matches the configuration described in
+<a href="#testapp-task-configuration">TestApp Task Configuration</a>.
+The log output is essential for debugging, validating test results, and
+ensuring the correct operation of the multitasking environment.</p>
+<p>The log also reflects the specific firmware and configuration used
+for the device boot: - <strong>CubeFW Version</strong>: The STM32Cube
+firmware version is shown (e.g.,
+<code>STM32Cube FW version: v1.2.0-rc8</code>). - <strong>TFM
+Version</strong>: The Trusted Firmware-M version is indicated (e.g.,
+<code>welcome to TF-M: v2.1.0-stm32mp-r1-rc5</code>). - <strong>Device
+Tree Files</strong>: The log lists the external device tree files used
+for the build and boot (e.g.,
+<code>dts: stm32mp257f-ev1-cm33tdcid-ostl-sdcard-bl2.dts</code> and
+<code>dts: stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts</code>).</p>
+<p>To verify that the correct configuration is reflected, compare the
+device tree filenames and firmware versions in the log with the CMake
+options and external DTS files specified during the TFM secure build
+(see <a href="#how-to-generate-binaries-for-different-boot-modes">How to
+Generate Binaries for Different Boot Modes</a>). This ensures that the
+intended configuration and external DTS references are being used for
+your specific boot mode and hardware.</p>
+<h2 id="error-behaviors">Error Behaviors</h2>
+<p>If an error occurs during initialization or system configuration at
+runtime, <strong>LED3 will blink at a 100 ms interval</strong> to
+indicate the error state.</p>
+<h2 id="assumptions">Assumptions</h2>
+<h2 id="known-limitations">Known Limitations</h2>
+<h2 id="keywords">Keywords</h2>
+<p>Security, TFM, Secure, SD Card, Non-Secure</p>
+<h2 id="how-to-flash-binaries">How to Flash Binaries</h2>
+<ol type="1">
+<li><p><strong>Build/Compile the Project</strong><br />
+Follow the <a href="#build-procedure">Build Procedure</a> to generate
+the required binaries.</p></li>
+<li><p><strong>Copy and Rename Generated Binaries</strong><br />
+Before copying, <strong>rename the generated binaries</strong>
+(<code>bl2.stm32</code>, <code>ddr_phy_signed.bin</code>, and
+<code>tfm_s_ns_signed.bin</code>) according to the names specified in
+the <strong>Required Binaries</strong> section of the relevant flash
+layout under <a
+href="#reference-use-cases-for-mp25-ev1-board-testapp-project">Reference
+Use Cases for MP25-EV1 Board (TestApp Project)</a>.<br />
+Then, navigate to the <code>bin/</code> folder and copy the renamed
+binaries to the following paths:</p>
+<pre><code>&lt;OSTL-IMAGE-PATH&gt;/images/stm32mp2-m33td/arm-trusted-firmware-m</code></pre>
+<ul>
+<li>Place the renamed <code>bl2</code> and <code>ddr_phy_signed</code>
+binaries in this directory.</li>
+</ul>
+<pre><code>&lt;OSTL-IMAGE-PATH&gt;/images/stm32mp2-m33td/arm-trusted-firmware-m-cube</code></pre>
+<ul>
+<li>Place the renamed <code>tfm_s_ns_signed</code> binary in this
+directory.</li>
+</ul></li>
+<li><p><strong>Modify Flashlayout (TSV)</strong><br />
+Select the relevant TSV file under
+<code>&lt;OSTL-IMAGE-PATH&gt;/images/stm32mp2-m33td/flashlayout_st-image-weston/optee</code>
+as per specific dev mode (see <a
+href="#flash-layouts-for-mp25-ev1-board">Flash Layouts for MP25-EV1
+Board</a>). And then modify the TSV file, by replacing the existing
+<code>tfm_s_ns_signed</code> binary name with the name of your newly
+generated and renamed <code>tfm_s_ns_signed</code> binary that
+corresponds to your chosen boot mode.</p></li>
+<li><p><strong>Connect the Device</strong><br />
+Use a Type-C cable to connect the device to the Type-C
+connector.</p></li>
+<li><p><strong>Flash the Image</strong><br />
+Refer to the <a href="https://wiki.st.com/stm32mpu/wiki/">STM32 MPU
+wiki</a> for detailed flashing instructions.</p></li>
+<li><p><strong>Perform a Power-On Reset</strong><br />
+After flashing, perform a power-on reset to complete the
+process.</p></li>
+</ol>
+<hr />
+<h2 id="different-boot-device-modes-for-mp25-ev1-board">Different Boot
+Device Modes for MP25-EV1 Board</h2>
+<p>The MP25-EV1 board supports the following boot device modes:</p>
+<ol type="1">
+<li><strong>emmc_emmc</strong>:
+<ul>
+<li>MCUBOOT/TFM(S/NS) → eMMC<br />
+</li>
+<li>OSTL → eMMC</li>
+</ul></li>
+<li><strong>nor_emmc</strong>:
+<ul>
+<li>MCUBOOT/TFM(S/NS) → Serial NOR<br />
+</li>
+<li>OSTL → eMMC</li>
+</ul></li>
+<li><strong>nor_nor_sdcard</strong>:
+<ul>
+<li>MCUBOOT/TFM(S/NS) → Serial NOR<br />
+</li>
+<li>TF-A/FIP → Serial NOR<br />
+</li>
+<li>OSTL filesystem → SD card</li>
+</ul></li>
+<li><strong>nor_sdcard</strong>:
+<ul>
+<li>MCUBOOT/TFM(S/NS) → Serial NOR<br />
+</li>
+<li>OSTL → SD card</li>
+</ul></li>
+<li><strong>sdcard_sdcard</strong>:
+<ul>
+<li>MCUBOOT/TFM(S/NS) → SD card<br />
+</li>
+<li>OSTL → SD card</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="flash-layouts-for-mp25-ev1-board">Flash Layouts for MP25-EV1
+Board</h2>
+<p>For the MP25-EV1 board, five TSV flavors are provided to flash under
+the M33TDCID profile:</p>
+<ul>
+<li><code>FlashLayout_emmc_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv</code></li>
+<li><code>FlashLayout_nor-emmc_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv</code></li>
+<li><code>FlashLayout_nor-nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv</code></li>
+<li><code>FlashLayout_sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv</code></li>
+<li><code>FlashLayout_nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv</code></li>
+</ul>
+<p><strong>Note</strong>: Each TSV requires three sets of binaries.
+Refer to the <a
+href="#reference-use-cases-for-mp25-ev1-board-testapp-project">Reference
+Use Cases for MP25-EV1 Board (TestApp Project)</a> section for
+details.</p>
+<hr />
+<h2 id="how-to-generate-binaries-for-different-boot-modes">How to
+Generate Binaries for Different Boot Modes</h2>
+<ol type="1">
+<li><p><strong>Configure and Build TFM Secure</strong>:<br />
+Use specific CMake options defined for each boot mode as described in
+the <strong>Required CMake Options</strong> section under <a
+href="#reference-use-cases-for-mp25-ev1-board-testapp-project">Reference
+Use Cases for MP25-EV1 Board (TestApp Project)</a>.</p></li>
+<li><p><strong>Build TestApp Project</strong>:<br />
+Compile the TestApp project after building the TFM secure
+binaries.</p></li>
+<li><p><strong>Rename Generated Binaries</strong>:<br />
+Rename the binaries in the <code>bin/</code> folder to match the
+required binaries for the specific TSV as described in the
+<strong>Required Binaries</strong> section under <a
+href="#reference-use-cases-for-mp25-ev1-board-testapp-project">Reference
+Use Cases for MP25-EV1 Board (TestApp Project)</a>.</p></li>
+</ol>
+<hr />
+<h2
+id="reference-use-cases-for-mp25-ev1-board-testapp-project">Reference
+Use Cases for MP25-EV1 Board (TestApp Project)</h2>
+<h3
+id="flashlayout_emmc_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv-emmc_emmc-boot-mode">1.
+FlashLayout_emmc_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv (emmc_emmc
+Boot Mode)</h3>
+<p><strong>Required Binaries</strong>:<br />
+- <code>bl2-stm32mp257f-ev1-cm33tdcid-ostl-emmc.stm32</code><br />
+-
+<code>ddr_phy_signed-stm32mp257f-ev1-cm33tdcid-ostl-emmc.bin</code><br />
+-
+<code>tfm-testapp-stm32mp257f-ev1-cm33tdcid-ostl-emmc-emmc_s_ns_signed.bin</code></p>
+<p><strong>Required CMake Options</strong>:</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=sdmmc2</span>  <span class="co"># eMMC</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-emmc-bl2.dts</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-emmc-s.dts</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
+<hr />
+<h3
+id="flashlayout_nor-emmc_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv-nor_emmc-boot-mode">2.
+FlashLayout_nor-emmc_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv (nor_emmc
+Boot Mode)</h3>
+<p><strong>Required Binaries</strong>:<br />
+- <code>bl2-stm32mp257f-ev1-cm33tdcid-ostl-nor.stm32</code><br />
+-
+<code>ddr_phy_signed-stm32mp257f-ev1-cm33tdcid-ostl-nor.bin</code><br />
+-
+<code>tfm-testapp-stm32mp257f-ev1-cm33tdcid-ostl-nor-emmc_s_ns_signed.bin</code></p>
+<p><strong>Required CMake Options</strong>:</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=ospi</span>  <span class="co"># Serial NOR</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-emmc-s.dts</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
+<hr />
+<h3
+id="flashlayout_nor-nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv-nor_nor_sdcard-boot-mode">3.
+FlashLayout_nor-nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv
+(nor_nor_sdcard Boot Mode)</h3>
+<p><strong>Required Binaries</strong>:<br />
+- <code>bl2-stm32mp257f-ev1-cm33tdcid-ostl-nor.stm32</code><br />
+-
+<code>ddr_phy_signed-stm32mp257f-ev1-cm33tdcid-ostl-nor.bin</code><br />
+-
+<code>tfm-testapp-stm32mp257f-ev1-cm33tdcid-ostl-nor-nor_s_ns_signed.bin</code></p>
+<p><strong>Required CMake Options</strong>:</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=ospi</span>  <span class="co"># Serial NOR</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-snor-s.dts</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-DTFM_PARTITION_PROTECTED_STORAGE=OFF</span>     <span class="co">#For this dev mode , Protected Storage feature needs to be disabled </span></span></code></pre></div>
+<hr />
+<h3
+id="flashlayout_nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv-nor_sdcard-boot-mode">4.
+FlashLayout_nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv
+(nor_sdcard Boot Mode)</h3>
+<p><strong>Required Binaries</strong>:<br />
+- <code>bl2-stm32mp257f-ev1-cm33tdcid-ostl-nor.stm32</code><br />
+-
+<code>ddr_phy_signed-stm32mp257f-ev1-cm33tdcid-ostl-nor.bin</code><br />
+-
+<code>tfm-testapp-stm32mp257f-ev1-cm33tdcid-ostl-nor-sdcard_s_ns_signed.bin</code></p>
+<p><strong>Required CMake Options</strong>:</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=ospi</span>  <span class="co"># Serial NOR</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
+<hr />
+<h3
+id="flashlayout_sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv-sdcard_sdcard-boot-mode">5.
+FlashLayout_sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv
+(sdcard_sdcard Boot Mode)</h3>
+<p><strong>Required Binaries</strong>:<br />
+- <code>bl2-stm32mp257f-ev1-cm33tdcid-ostl-sdcard.stm32</code><br />
+-
+<code>ddr_phy_signed-stm32mp257f-ev1-cm33tdcid-ostl-sdcard.bin</code><br />
+-
+<code>tfm-testapp-stm32mp257f-ev1-cm33tdcid-ostl-sdcard-sdcard_s_ns_signed.bin</code></p>
+<p><strong>Required CMake Options</strong>:</p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=sdmmc1</span>  <span class="co"># SD card</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-bl2.dts</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
+</body>
+</html>

@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    stm32mp257f_disco_errno.h
+  * \@file    stm32mp215f_disco_errno.h
   * @author  MCD Application Team
   * @brief   Error Code.
   *

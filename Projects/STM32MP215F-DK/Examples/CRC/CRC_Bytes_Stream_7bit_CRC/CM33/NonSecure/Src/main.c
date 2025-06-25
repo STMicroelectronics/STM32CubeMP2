@@ -127,17 +127,16 @@ int main(void)
   {
     SystemClock_Config();
 
-    HAL_PWR_EnableBkUpAccess();
     status = BSP_PMIC_Init();
     if (status)
     {
-      printf("error :  BSP PMIC init fail\r\n");
+      Error_Handler();
     }
 
     status = BSP_PMIC_Power_Mode_Init();
     if (status)
     {
-      printf("error :  BSP PMIC Mode init fail\r\n");
+      Error_Handler();
     }
   }
 

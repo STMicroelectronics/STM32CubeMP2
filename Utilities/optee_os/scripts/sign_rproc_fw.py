@@ -419,6 +419,9 @@ def get_args(logger):
                         help='Type of signing key: should be RSA or ECC',
                         default='RSA',
                         dest='key_type')
+    parser.add_argument('--key_pwd', required=False,
+                        help='passphrase for the private key decryption',
+                        dest='key_pwd')
     parser.add_argument('--plat-tlv', required=False, nargs=2,
                         metavar=("ID", "value"), action='append',
                         help='Platform TLV that will be placed into image '
@@ -428,7 +431,7 @@ def get_args(logger):
                              'multiple times to add multiple TLVs.',
                         default=[], dest='plat_tlv')
     parser.add_argument('--enc_key', required=False,
-                        help='AES-256 encryption key (32 bytes)',
+                        help='AES-256 encryption key (32 bytes) in binary format',
                         dest='enc_key')
 
     parsed = parser.parse_args()
@@ -441,12 +444,12 @@ def get_args(logger):
     return parsed
 
 
-def rsa_key(key_file):
-    return RSA.importKey(open(key_file).read())
+def rsa_key(key_file, key_pwd):
+    return RSA.importKey(open(key_file).read(), key_pwd)
 
 
-def ecc_key(key_file):
-    return ECC.import_key(open(key_file).read())
+def ecc_key(key_file, key_pwd):
+    return ECC.import_key(open(key_file).read(), key_pwd)
 
 
 key_type = {
@@ -491,7 +494,7 @@ def main():
     sign_type = ENUM_SIGNATURE_TYPE[args.key_type]
     get_key = key_type.get(sign_type, lambda: "Invalid sign type")
 
-    key = get_key(args.key_file)
+    key = get_key(args.key_file, args.key_pwd)
 
     if not key.has_private():
         print('Provided key cannot be used for signing, ')
@@ -506,15 +509,13 @@ def main():
     if args.enc_key:
         # Read the AES key from the file
         try:
-            with open(args.enc_key, 'r') as key_file:
-                key_hex = key_file.read().strip()
-                enc_key = bytes.fromhex(key_hex)
-                utils._check_byteslike("key", enc_key)
+            with open(args.enc_key, 'rb') as key_file:
+                enc_key = key_file.read()
         except Exception as e:
             print(f"Error reading AES key file: {e}")
             sys.exit(1)
         if len(enc_key) not in (16, 24, 32):
-            print("Error: AES key must be 128, 192, or 256 bits")
+            print("Error: AES key size must be 128, 192, or 256 bits")
             sys.exit(1)
         enc_type = ENUM_ENCRYPT_TYPE['AES_CBC']
         tlv.add('ENCTYPE', enc_type.to_bytes(1, 'little'))

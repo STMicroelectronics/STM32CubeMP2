@@ -75,15 +75,19 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef *hadc)
 
   if (ADC3 == hadc->Instance)
   {
-	/* Select ADC kernel source clock */
+    if(IS_DEVELOPER_BOOT_MODE())
+    {
+       HAL_PWREx_EnableSupply(PWR_PVM_A);
+    }
+
+    /* Select ADC kernel source clock */
     __HAL_RCC_ADC3KERCLK_SETSOURCE(RCC_ADC3KERCLKSOURCE_CK_ICN_LS_MCU);
-    /* ADC Periph clock enable */
+    /* ADC clock enable */
     __HAL_RCC_ADC3_CLK_ENABLE();
 
-  	__HAL_RCC_ADC3_FORCE_RESET();
-  	__HAL_RCC_ADC3_RELEASE_RESET();
+    __HAL_RCC_ADC3_FORCE_RESET();
+    __HAL_RCC_ADC3_RELEASE_RESET();
 
-    /*## Configure peripheral GPIO ##########################################*/
     /* ADC Channel GPIO pin configuration */
     GPIO_InitStruct.Pin = GPIO_PIN_11;
     GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
@@ -104,13 +108,58 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
 {
   if (ADC3 == hadc->Instance)
   {
-    /* Peripheral clock disable */
-	__HAL_RCC_ADC3_CLK_DISABLE();
+    /* Setting clock source to default value */
+    __HAL_RCC_ADC3KERCLK_SETSOURCE(RCC_ADC3KERCLKSOURCE_CK_KER_ADC3);
 
-    /*##- Disable peripherals and GPIO Clocks ################################*/
+    /* ADC clock disable */
+    __HAL_RCC_ADC3_CLK_DISABLE();
+
     /* De-initialize the ADC Channel GPIO pin */
     HAL_GPIO_DeInit(GPIOF, GPIO_PIN_11);
   }
+}
+
+/**
+  * @brief TIM MSP Initialization
+  *        This function configures the hardware resources used in this example:
+  *           - Peripheral's clock enable
+  *           - Peripheral's GPIO Configuration
+  * @param htim: TIM handle pointer
+  * @retval None
+  */
+void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
+{
+  /* USER CODE BEGIN TIMx_MspInit 0 */
+
+  /* USER CODE END TIMx_MspInit 0 */
+
+  if(htim_base->Instance == TIMx)
+  {
+    /* TIMx clock enable */
+    __HAL_RCC_TIMx_CLK_ENABLE();
+
+    /* Peripheral interrupt init */
+    HAL_NVIC_SetPriority(TIMx_IRQn, DEFAULT_IRQ_PRIO, 0);
+    HAL_NVIC_EnableIRQ(TIMx_IRQn);
+  }
+
+  /* USER CODE BEGIN TIMx_MspInit 1 */
+
+  /* USER CODE END TIMx_MspInit 1 */
+}
+
+void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
+{
+  /* USER CODE BEGIN TIMx_MspDeInit 0 */
+
+  /* USER CODE END TIMx_MspDeInit 0 */
+
+  /* Peripheral clock disable */
+  __HAL_RCC_TIMx_CLK_DISABLE();
+
+  /* USER CODE BEGIN TIMx_MspDeInit 1 */
+
+  /* USER CODE END TIMx_MspDeInit 1 */
 }
 
 /* USER CODE BEGIN 1 */

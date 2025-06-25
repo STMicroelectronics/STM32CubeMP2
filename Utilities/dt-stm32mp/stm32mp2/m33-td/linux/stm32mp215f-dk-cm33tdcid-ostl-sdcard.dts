@@ -1,0 +1,15 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+/*
+ * Copyright (C) STMicroelectronics 2023 - All Rights Reserved
+ * Author: Alexandre Torgue <alexandre.torgue@foss.st.com> for STMicroelectronics.
+ */
+
+/dts-v1/;
+
+#include "stm32mp215f-dk-cm33tdcid-ostl.dts"
+
+/ {
+	model = "STMicroelectronics STM32MP215F-DK SDCARD CM33TDCID OSTL Evaluation Board";
+	compatible = "st,stm32mp215f-dk-cm33tdcid-ostl-sdcard", "st,stm32mp215f-dk", "st,stm32mp215";
+
+};

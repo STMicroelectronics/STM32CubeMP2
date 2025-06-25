@@ -10,11 +10,16 @@ MEMORY
   RAM           (rwx)   : ORIGIN = 0x80A00000,  LENGTH = 8M
   IPC_SHMEM_1   (rw)    : ORIGIN = 0x81200000,  LENGTH = 1M - _virtio_shmem_size
   VIRTIO_SHMEM  (rw)    : ORIGIN = ORIGIN(IPC_SHMEM_1) + LENGTH(IPC_SHMEM_1), LENGTH = _virtio_shmem_size
+  SCMI_SHMEM    (rw)    : ORIGIN = 0x0A062000,	LENGTH = 0x1000
 }
 
  /* Symbols needed for OpenAMP to enable rpmsg */
 __OPENAMP_region_start__  = ORIGIN(VIRTIO_SHMEM);
 __OPENAMP_region_end__ = ORIGIN(VIRTIO_SHMEM)+LENGTH(VIRTIO_SHMEM);
+
+ /* Symbols needed for scmiagent to enable mailbox communication */
+__SCMI_SHM_region_start__  = ORIGIN(SCMI_SHMEM);
+__SCMI_SHM_region_end__    = ORIGIN(SCMI_SHMEM)+LENGTH(SCMI_SHMEM);
 
 /* Library configurations */
 GROUP(libgcc.a libc.a libm.a libnosys.a)
@@ -150,10 +155,14 @@ SECTIONS
 	*/
 
 	__etext = .;
-
+	
+    /* Used by the startup to initialize data */
+    _sidata = LOADADDR(.data);
+	
 	.data : AT (__etext)
 	{
 		__data_start__ = .;
+		_sdata = .;        /* create a global symbol at data start */
 		*(vtable)
 		*(.data*)
 
@@ -182,17 +191,19 @@ SECTIONS
 		. = ALIGN(4);
 		/* All data end */
 		__data_end__ = .;
-
-	} > RAM
+        _edata = .;        /* define a global symbol at data end */
+   	} > RAM
 
 	.bss :
 	{
 		. = ALIGN(4);
-		__bss_start__ = .;
+        _sbss = .;         /* define a global symbol at bss start */
+        __bss_start__ = _sbss;
 		*(.bss*)
 		*(COMMON)
 		. = ALIGN(4);
-		__bss_end__ = .;
+        _ebss = .;         /* define a global symbol at bss end */
+        __bss_end__ = _ebss;  
 	} > RAM
 
 	.heap (COPY):
@@ -217,6 +228,7 @@ SECTIONS
   __StackTop = ORIGIN(RAM) + LENGTH(RAM);
   __StackLimit = __StackTop - SIZEOF(.stack_dummy);
   PROVIDE(__stack = __StackTop);
+  PROVIDE(_estack = __StackTop);
 
   /* Check if data + heap + stack exceeds RAM limit */
   ASSERT(__StackLimit >= __HeapLimit, "region RAM overflowed with stack")

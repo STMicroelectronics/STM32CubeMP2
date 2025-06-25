@@ -49,11 +49,11 @@ To port a HAL example to the targeted board:
    - Replace file STM32MP2xx_it.h
    - Replace file STM32MP2xx_it.c
 
-  This projects is configured for STM32MP2xx devices using STM32CubeMP2 HAL and
-  running on the STM32MP215F-DK board from STMicroelectronics.
+  This projects is configured for STM32MP21xxxx devices using STM32CubeMP2 HAL and
+  running on the STM32MP21xxxx board from STMicroelectronics.
 
   At the beginning of the main program the SystemClock_Config()function is called
-  to configure the system clock for STM32MP2xx Devices :
+  to configure the system clock for STM32MP21xxxx Devices :
         - The CPU at 520 MHz
         - The HCLK for D1 Domain AXI peripherals, D2 Domain AHB peripherals and
           D3 Domain AHB  peripherals at 260 MHz.
@@ -84,7 +84,7 @@ System, HAL template, Clock Configuration, HSE bypass mode,System clock, Oscilla
 
 @par Hardware and Software environment
 
-  - This template runs on STM32MP2xx devices.
+  - This template runs on STM32MP21xxxx devices.
 
   - This template has been tested with STMicroelectronics STM32MP215F-DK
     boards and can be easily tailored to any other supported device

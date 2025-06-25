@@ -1,0 +1,9 @@
+// SPDX-License-Identifier: (GPL-2.0-only OR BSD-3-Clause)
+/*
+ * Copyright (C) STMicroelectronics 2024 - All Rights Reserved
+ */
+
+/dts-v1/;
+
+#include "stm32mp257f-ev1.dts"
+#include "stm32mp257f-ev1-tampers-u-boot.dtsi"
