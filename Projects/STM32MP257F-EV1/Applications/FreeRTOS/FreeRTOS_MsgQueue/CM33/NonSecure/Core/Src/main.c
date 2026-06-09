@@ -74,6 +74,10 @@ int main(void)
   {
 	SystemClock_Config();
   }
+  else
+  {
+    SystemCoreClockUpdate();
+  }
 
   /* Initialize LEDs */
   BSP_LED_Init(LED3);

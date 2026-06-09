@@ -398,7 +398,10 @@ HAL_StatusTypeDef HAL_RCCEx_CA35SS_PLL1Config(const RCC_PLLInitTypeDef *pll_conf
     }
 
     /* Setup PLL (source) */
-    LL_RCC_PLL1_SetSource((pll_config->PLLSource) << RCC_MUXSELCFGR_MUXSEL5_Pos);
+    if(((RIMC->CR)& RIMC_CR_TDCID1) == RIMC_CR_TDCID1)
+    {
+      LL_RCC_PLL1_SetSource((pll_config->PLLSource) << RCC_MUXSELCFGR_MUXSEL5_Pos);
+    }
 
     /* Reset PLL1 output clock path */
     CA35SSC->PLL_ENABLE_WC1 = CA35SSC_PLL_ENABLE_WC1_NRESET_SWPLL;

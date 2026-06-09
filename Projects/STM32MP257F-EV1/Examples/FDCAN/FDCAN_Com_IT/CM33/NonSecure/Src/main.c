@@ -99,7 +99,11 @@ int main(void)
   if (IS_DEVELOPER_BOOT_MODE())
   {
 	/* Configure the system clock */
-	SystemClock_Config();
+    SystemClock_Config();
+  }
+  else
+  {
+    SystemCoreClockUpdate();
   }
 
   uint32_t fdcan_freq = HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_FDCAN);

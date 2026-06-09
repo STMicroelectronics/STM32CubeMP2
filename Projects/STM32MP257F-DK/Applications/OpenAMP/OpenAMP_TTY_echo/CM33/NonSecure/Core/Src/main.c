@@ -112,6 +112,7 @@ int main(void)
   {
     /*Corpo Sync Initialization*/
     CoproSync_Init();
+    SystemCoreClockUpdate();
   }
 
 #if defined (RPMSG_LATE_ATTACH)

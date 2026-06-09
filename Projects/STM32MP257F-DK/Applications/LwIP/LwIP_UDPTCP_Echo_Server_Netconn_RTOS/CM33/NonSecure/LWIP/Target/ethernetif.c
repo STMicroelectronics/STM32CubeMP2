@@ -290,6 +290,7 @@ static void low_level_init(struct netif *netif)
   /* USER CODE END OS_THREAD_ATTR_CMSIS_RTOS_V2 */
   uint32_t duplex, speed = 0;
   int32_t PHYLinkState = 0;
+  FunctionState portselect = DISABLE;
   /* Start ETH HAL Init */
   driver_hardware_initialize();
   /* End ETH HAL Init */
@@ -369,31 +370,38 @@ static void low_level_init(struct netif *netif)
     case ETH_PHY_STATUS_1000MBITS_FULLDUPLEX:
       duplex = ETH_FULLDUPLEX_MODE;
       speed = ETH_SPEED_1000M;
+      portselect = DISABLE;
       break;
     case ETH_PHY_STATUS_1000MBITS_HALFDUPLEX:
       duplex = ETH_HALFDUPLEX_MODE;
       speed = ETH_SPEED_1000M;
+      portselect = DISABLE;
       break;
 #endif
     case ETH_PHY_STATUS_100MBITS_FULLDUPLEX:
       duplex = ETH_FULLDUPLEX_MODE;
       speed = ETH_SPEED_100M;
+      portselect = ENABLE;
       break;
     case ETH_PHY_STATUS_100MBITS_HALFDUPLEX:
       duplex = ETH_HALFDUPLEX_MODE;
       speed = ETH_SPEED_100M;
+      portselect = ENABLE;
       break;
     case ETH_PHY_STATUS_10MBITS_FULLDUPLEX:
       duplex = ETH_FULLDUPLEX_MODE;
       speed = ETH_SPEED_10M;
+      portselect = ENABLE;
       break;
     case ETH_PHY_STATUS_10MBITS_HALFDUPLEX:
       duplex = ETH_HALFDUPLEX_MODE;
       speed = ETH_SPEED_10M;
+      portselect = ENABLE;
       break;
     default:
       duplex = ETH_FULLDUPLEX_MODE;
       speed = ETH_SPEED_100M;
+      portselect = ENABLE;
       break;
     }
 
@@ -401,6 +409,7 @@ static void low_level_init(struct netif *netif)
     HAL_ETH_GetMACConfig(&heth, &MACConf);
     MACConf.DuplexMode = duplex;
     MACConf.Speed = speed;
+    MACConf.PortSelect = portselect;
     HAL_ETH_SetMACConfig(&heth, &MACConf);
     HAL_ETH_Start_IT(&heth);
     netif_set_up(netif);
@@ -666,6 +675,7 @@ void ethernet_link_thread(void* argument)
   ETH_MACConfigTypeDef MACConf = {0};
   int32_t PHYLinkState = 0;
   uint32_t linkchanged = 0U, speed = 0U, duplex = 0U;
+  FunctionalState portselect = DISABLE;
 
   struct netif *netif = (struct netif *) argument;
 /* USER CODE BEGIN ETH link init */
@@ -690,37 +700,44 @@ void ethernet_link_thread(void* argument)
 			case ETH_PHY_STATUS_1000MBITS_FULLDUPLEX:
 				duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_1000M;
+        portselect = DISABLE;
 				linkchanged = 1;
 				break;
 			case ETH_PHY_STATUS_1000MBITS_HALFDUPLEX:
 				duplex = ETH_HALFDUPLEX_MODE;
 				speed = ETH_SPEED_1000M;
+        portselect = DISABLE;
 				linkchanged = 1;
 				break;
 	#endif
 			case ETH_PHY_STATUS_100MBITS_FULLDUPLEX:
 				duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_100M;
+        portselect = ENABLE;
 				linkchanged = 1;
 				break;
 			case ETH_PHY_STATUS_100MBITS_HALFDUPLEX:
 				duplex = ETH_HALFDUPLEX_MODE;
 				speed = ETH_SPEED_100M;
+        portselect = ENABLE;
 				linkchanged = 1;
 				break;
 			case ETH_PHY_STATUS_10MBITS_FULLDUPLEX:
 				duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_10M;
+        portselect = ENABLE;
 				linkchanged = 1;
 				break;
 			case ETH_PHY_STATUS_10MBITS_HALFDUPLEX:
 				duplex = ETH_HALFDUPLEX_MODE;
 				speed = ETH_SPEED_10M;
+        portselect = ENABLE;
 				linkchanged = 1;
 				break;
 			default:
-				duplex = ETH_FULLDUPLEX_MODE;
+  			duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_100M;
+        portselect = ENABLE;
 				linkchanged = 1;
 				break;
 			}
@@ -731,6 +748,7 @@ void ethernet_link_thread(void* argument)
 				HAL_ETH_GetMACConfig(&heth, &MACConf);
 				MACConf.DuplexMode = duplex;
 				MACConf.Speed = speed;
+				MACConf.PortSelect = portselect;
 				HAL_ETH_SetMACConfig(&heth, &MACConf);
 				HAL_ETH_Start_IT(&heth);
 				netif_set_up(netif);

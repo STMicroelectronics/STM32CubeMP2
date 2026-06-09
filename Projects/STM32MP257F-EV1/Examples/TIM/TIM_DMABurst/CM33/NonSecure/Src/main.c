@@ -125,10 +125,14 @@ int main(void)
   {
     SystemClock_Config();
   }
+  else
+  {
+    SystemCoreClockUpdate();
+  }
 
   /* Configure LED3 */
   BSP_LED_Init(LED3);
-  
+
   if(!IS_DEVELOPER_BOOT_MODE())
   {
     /* IPCC initialization */

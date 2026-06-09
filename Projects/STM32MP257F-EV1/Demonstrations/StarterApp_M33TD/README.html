@@ -6,9 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>README</title>
   <style>
-    /* Default styles provided by pandoc.
-    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -106,12 +103,15 @@ typically requires several seconds to initialize. By leveraging this
 approach, the system can quickly execute critical tasks in the
 non-secure environment while maintaining flexibility for
 high-performance operations on the A35. This project enables the CM33-NS
-<strong>Non‑Secure Application Manager</strong> functionality using the
+<strong>Non-Secure Application Manager</strong> functionality using the
 common utility stack <code>Utilities/M33TD_NSAppCore</code> as the
-bootstrap/task base (Logger, RemoteProc, SCMI Manager, Watchdog Monitor,
-OpenAMP, etc.) and keeps board-specific implementations in the project
-under
+bootstrap/task base and keeps board-specific implementations in the
+project under
 <code>CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/</code>.</p>
+<p>The StarterApp configuration enables OpenAMP, button handling,
+low-power orchestration, and FWU transport by default, while the display
+path is enabled when the project is built with
+<code>BUILD_CONFIG=FULL</code>.</p>
 <hr />
 <h2 id="key-features">Key Features</h2>
 <ul>
@@ -126,6 +126,14 @@ receive interrupts on NVIC line 4 of the M33 on the event IWDG RST.</li>
 <li><strong>Integrate Utility Stack</strong>: Uses
 <code>Utilities/M33TD_NSAppCore</code> for reusable tasks and thin
 driver abstractions.</li>
+<li><strong>OpenAMP and Button Handling</strong>: Keeps RPMsg transport
+services and local button-triggered power actions enabled in the default
+StarterApp profile.</li>
+<li><strong>Low-Power Orchestration</strong>: Includes the LowPowerMgr
+task in the default StarterApp profile.</li>
+<li><strong>FWU Transport Path</strong>: Includes the FWU manager task
+and RPMsg endpoint used to query components and drive the secure FWU
+flow with install, accept, and reject actions.</li>
 <li><strong>Optional Display Pipeline</strong>: A build-time option
 enables a display panel path, with optional dynamic splash animation
 (see <code>BUILD_CONFIG</code> / <code>BOOT_SPLASHSCREEN</code>).</li>
@@ -136,7 +144,7 @@ enables a display panel path, with optional dynamic splash animation
 processing environment, while the TFM secure application operates in the
 secure processing environment. The secure application acts as a client
 to process secure services requested by both the A35 and M33 NS.</p>
-<p>This application implements the StarterApp functionality (Non‑Secure
+<p>This application implements the StarterApp functionality (Non-Secure
 Application Manager) around the <code>Utilities/M33TD_NSAppCore</code>
 stack. The <code>NSCoreApp_Init()</code> bootstrap configures the stack
 and starts the enabled tasks below:</p>
@@ -149,10 +157,49 @@ and starts the enabled tasks below:</p>
 <ul>
 <li>Centralized logging, with optional real-time output.</li>
 </ul></li>
+<li><strong>LowPowerMgr Task</strong>:
+<ul>
+<li>Owns the low-power policy handling and suspend/resume coordination
+used by StarterApp.</li>
+</ul></li>
 <li><strong>UserApp Task</strong>:
 <ul>
 <li>Example application task (LED activity) to validate system
 liveness.</li>
+</ul></li>
+<li><strong>Button Monitor Task</strong>:
+<ul>
+<li>Monitors the USER button and can trigger M33-initiated power
+requests through the OpenAMP power endpoint (for example, a very long
+press).</li>
+</ul></li>
+<li><strong>Display Task (optional)</strong>:
+<ul>
+<li>Available when the display pipeline is enabled in the build (see
+<code>BUILD_CONFIG=FULL</code>).</li>
+<li>When built with <code>BUILD_CONFIG=MINIMUM</code>, the display
+pipeline is disabled, but OpenAMP + Button Monitor remain available for
+M33-initiated reboot/shutdown use-cases.</li>
+</ul></li>
+<li><strong>SCMI Manager Task</strong>:
+<ul>
+<li>Handles SCMI notifications and related TF-M forwarding.</li>
+</ul></li>
+<li><strong>OpenAMP Task</strong>:
+<ul>
+<li>Provides the RPMsg communication layer used by StarterApp to
+interact with the A35/Linux side.</li>
+<li>Exposes RPMsg endpoints used by this project:
+<ul>
+<li><strong>Power endpoint</strong>: used to send M33-initiated power
+requests (for example reboot/shutdown) to the remote processor.</li>
+<li><strong>Display endpoint</strong>: used when the display pipeline is
+enabled to exchange display messages with Linux.</li>
+</ul></li>
+<li><strong>Low-power endpoint</strong>: used by Linux to post low-power
+policy commands into the firmware low-power manager.</li>
+<li><strong>FWU endpoint</strong>: used by the FWU manager task in the
+default StarterApp profile.</li>
 </ul></li>
 <li><strong>RemoteProc Task</strong>:
 <ul>
@@ -164,40 +211,16 @@ liveness.</li>
 <li>Crash detection and recovery (stop/start sequence).</li>
 </ul></li>
 </ul></li>
-<li><strong>SCMI Manager Task</strong>:
-<ul>
-<li>Handles SCMI notifications and related TF-M forwarding.</li>
-</ul></li>
 <li><strong>Watchdog Monitor Task</strong>:
 <ul>
 <li>Supervises system health and watchdog-related handling.</li>
 </ul></li>
-<li><strong>OpenAMP Task</strong>:
+<li><strong>FWU Manager Task</strong>:
 <ul>
-<li>Provides the RPMsg communication layer used by StarterApp to
-interact with the A35/Linux side.</li>
-<li>Exposes RPMsg endpoints used by this project:
-<ul>
-<li><strong>Power endpoint</strong>: used to send M33-initiated power
-requests (e.g., reboot/shutdown) to the remote processor.</li>
-<li><strong>Display endpoint</strong>: used when the display pipeline is
-enabled (see <strong>Display Task</strong>) to exchange display messages
-with Linux.</li>
-</ul></li>
-</ul></li>
-<li><strong>Button Monitor Task</strong>:
-<ul>
-<li>Monitors the USER button and can trigger M33-initiated power
-requests through the OpenAMP power endpoint (e.g., very long
-press).</li>
-</ul></li>
-<li><strong>Display Task (optional)</strong>:
-<ul>
-<li>Available when the display pipeline is enabled in the build (see
-<code>BUILD_CONFIG=FULL</code>).</li>
-<li>When built with <code>BUILD_CONFIG=MINIMUM</code>, the display
-pipeline is disabled, but OpenAMP + Button Monitor remain available for
-M33-initiated reboot/shutdown use-cases.</li>
+<li>Receives FWU RPMsg commands from the OpenAMP transport, tracks
+pending component updates, and forwards the secure FWU actions used by
+StarterApp such as install, accept, reject, cancel, info, and
+reboot.</li>
 </ul></li>
 </ol>
 <hr />
@@ -219,38 +242,38 @@ the PC USB port to display traces.</li>
 <h3 id="software-versions">Software Versions</h3>
 <ul>
 <li><strong>Trusted Firmware-M (TFM)</strong>: Refer to the <a
-href="https://wiki.st.com/stm32mpu/Category:Trusted_Firmware-M">Trusted
+href="https://wiki.st.com/stm32mpu/wiki/Category:Trusted_Firmware-M">Trusted
 Firmware-M wiki</a> for recommended versions and integration
 details.</li>
 <li><strong>External Device Tree (externalDT)</strong>: See the <a
-href="https://wiki.st.com/stm32mpu/External_device_tree">External
+href="https://wiki.st.com/stm32mpu/wiki/External_device_tree">External
 Device Tree wiki</a> for guidance on obtaining and using external DT
 sources.</li>
 <li><strong>STM32CubeIDE</strong>: For supported IDE versions and
 ecosystem information, refer the <a
-href="https://wiki.st.com/stm32mpu/">STM32 MPU wiki</a>.</li>
+href="https://wiki.st.com/stm32mpu/wiki/">STM32 MPU wiki</a>.</li>
 </ul>
 <hr />
-<h2 id="artifact-flow-build-sign-deploy">Artifact flow (build → sign →
-deploy)</h2>
+<h2 id="artifact-flow-build---sign---deploy">Artifact flow (build -&gt;
+sign -&gt; deploy)</h2>
 <p>This is a high-level view; the later sections in this README give the
 board-specific filenames and flashing steps.</p>
 <pre>
-┌──────────────┐
-│ TF-M build   │
-└─┬────────────┘
++----------------+
+| TF-M build     |
++----------------+
   +-> bl2*.stm32
   +-> ddr_phy*_Signed.bin
   +-> tfm_s.bin
 
-┌───────────────────┐
-│ CM33-NS app build │
-└─┬─────────────────┘
++---------------------+
+| CM33-NS app build   |
++---------------------+
   +-> ${PROJECT_NAME}.bin
 
-┌─────────────────────────────┐
-│ postbuild (assemble + sign) │
-└─┬───────────────────────────┘
++------------------------------+
+| postbuild (assemble + sign)  |
++------------------------------+
   | inputs: ${PROJECT_NAME}.bin + tfm_s.bin
   +-> tfm-*_s_ns_Signed.bin
 
@@ -306,9 +329,11 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="
         - `MINIMUM`: disables display pipeline
      - `-DBOOT_SPLASHSCREEN=DYNAMIC|STATIC` (default: `DYNAMIC`, only meaningful when `BUILD_CONFIG=FULL`)
      - `-DREMOTE_PROC_AUTO_START=ON|OFF` (default: `ON`)
+     - `-DLOW_POWER_DEFAULT_POLICY_ENABLE=ON|OFF` (default: `OFF`)
      - `-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF` (default: `OFF`)
      - `-DFAULT_EXCEPTION_ENABLE=ON|OFF` (default: `ON`)
-     - `-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF` (default: `ON`)</code></pre></li>
+     - `-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF` (default: `ON`)
+  - `ENABLE_FWU_MGR_TASK` is part of the fixed StarterApp project profile and is not exposed as a separate public CMake option.</code></pre></li>
 <li><p>Build the project:</p>
 <div class="sourceCode" id="cb5"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> <span class="at">-C</span> build all</span></code></pre></div></li>
@@ -318,11 +343,11 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="
 STM32CubeIDE Project</h2>
 <h3 id="project-structure">Project Structure</h3>
 <pre><code>StarterApp_M33TD
-├── StarterApp_M33TD_CM33
-│   ├── StarterApp_M33TD_CM33_NonSecure (Non-Secure STM32CubeIDE M33 project)
-│   └── StarterApp_M33TD_CM33_trusted-firmware-m (Secure CMake project)</code></pre>
++--- StarterApp_M33TD_CM33
+|   +--- StarterApp_M33TD_CM33_NonSecure (Non-Secure STM32CubeIDE M33 project)
+|   +--- StarterApp_M33TD_CM33_trusted-firmware-m (Secure CMake project)</code></pre>
 <p><strong>Note</strong>: Refer to <a
-href="https://wiki.st.com/stm32mpu/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#">this
+href="https://wiki.st.com/stm32mpu/wiki/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#">this
 wiki</a> for instructions on importing a CMake project.</p>
 <h3 id="build-procedure-1">Build Procedure</h3>
 <h4 id="secure-tfm-firmware-build">Secure TFM Firmware Build</h4>
@@ -381,9 +406,12 @@ folder:</li>
 <li><code>ddr_phy_signed.bin</code></li>
 <li><code>bl2.stm32</code></li>
 </ul>
-<p><strong>Note</strong>: For other boot device modes, TFM Secure Build
-commands need to be adjusted, and the generated binary should be renamed
-accordingly. Refer to the <a
+<p><strong>Note</strong>:
+<code>StarterApp_M33TD_CM33_NonSecure.bin</code> is the raw NS output.
+<code>tfm_s_ns_signed.bin</code> remains the signed combined TF-M Secure
++ Non-Secure image used by the postbuild flow. For other boot device
+modes, TFM Secure Build commands need to be adjusted, and the generated
+binary should be renamed accordingly. Refer to the <a
 href="#how-to-generate-binaries-for-different-boot-modes">How to
 Generate Binaries for Different Boot Modes</a> section.</p>
 <hr />
@@ -440,7 +468,7 @@ Creating an empty ITS flash layout.
 <h3 id="understanding-starterapp-logs">Understanding StarterApp
 Logs</h3>
 <p>This log demonstrates the CM33 boot sequence (MCUboot/TF-M),
-provisioning status, secure→non-secure handover, and the main StarterApp
+provisioning status, secure-non-secure handover, and the main StarterApp
 runtime tasks (DisplayTask, Watchdog Monitor, RemoteProc, OpenAMP).</p>
 <blockquote>
 <p><strong>Note:</strong> The
@@ -485,7 +513,7 @@ href="#how-to-test-and-verify-system-behavior">How to Test and Verify
 System Behavior</a>.</p>
 <h3 id="how-to-test-and-verify-system-behavior">How to Test and Verify
 System Behavior</h3>
-<p>Once the system has completed boot (e.g., you see
+<p>Once the system has completed boot (for example, you see
 <code>[RemoteProc] copro cpu@0 started.</code> and, when enabled,
 <code>[OpenAMP]  Ready for RPMsg communication</code>), you can run the
 checks below. For each test, look for the corresponding activity on the
@@ -502,8 +530,8 @@ the OpenAMP “power” RPMsg endpoint (see
 <li>Expected CM33 logs (may vary by build options):
 <ul>
 <li><code>[OpenAMP] request remote processor reboot</code></li>
-<li>A35 restart sequence may be reflected by RemoteProc messages (e.g.,
-crash/recovery and/or stop/start messages).</li>
+<li>A35 restart sequence may be reflected by RemoteProc messages (for
+example crash/recovery and/or stop/start messages).</li>
 </ul></li>
 </ul></li>
 <li><strong>Simulate a Linux crash and observe recovery</strong>
@@ -531,6 +559,88 @@ may also see an SCMI notification such as
 on the CM33 UART you should see <code>SYS_POWER_WARM_RESET</code> and a
 RemoteProc stop/start sequence. When OpenAMP is enabled, you should also
 see <code>OpenAMP reinit requested</code>.</li>
+</ul></li>
+<li><strong>Prepare the LowPowerMgr RPMsg endpoint on Linux</strong>
+<ul>
+<li>StarterApp enables the firmware low-power endpoint by default
+through OpenAMP. In the firmware,
+<code>OpenampTask_LowPowerEndpointRegister()</code> registers the RPMsg
+service named <code>low_power</code> at address <code>0x5A</code>.</li>
+<li>On Linux, first bind or create an <code>rpmsg_char</code> endpoint
+for that <code>low_power</code> service. Once the endpoint is created,
+it appears as a <code>/dev/rpmsgX</code> node. The example commands
+below assume that node is <code>/dev/rpmsg2</code>.</li>
+</ul></li>
+<li><strong>Suspend policy test: STOP2</strong>
+<ul>
+<li>This command limits the firmware suspend policy to STOP2 before
+Linux enters suspend:
+<code>bash  echo "LIMIT_PM_STOP2" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li>Expected behavior: Linux requests suspend, the firmware keeps the
+low-power target at STOP2, and the system wakes up after the RTC
+timeout.</li>
+</ul></li>
+<li><strong>Suspend policy test: LP_STOP2</strong>
+<ul>
+<li>This command allows the low-power manager to enter LP_STOP2 instead
+of plain STOP2:
+<code>bash  echo "LIMIT_PM_LP_STOP2" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li>Expected behavior: Linux suspend still uses the RTC wake-up, but the
+firmware low-power target is constrained to LP_STOP2.</li>
+</ul></li>
+<li><strong>Suspend policy test: LPLV_STOP2</strong>
+<ul>
+<li>This command allows the deepest STOP-class mode currently exposed
+over the low-power endpoint:
+<code>bash  echo "LIMIT_PM_LPLV_STOP2" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li>Expected behavior: the firmware low-power manager accepts the deeper
+STOP-class mode and the system resumes after the RTC wake-up.</li>
+</ul></li>
+<li><strong>RUN2 test with RTC wake-up</strong>
+<ul>
+<li><code>LIMIT_PM_DISABLED</code> disables low-power entry in the
+firmware. Linux can still enter its suspend path, but the M33 side stays
+in RUN2 while waiting for the wake-up source:
+<code>bash  echo "LIMIT_PM_DISABLED" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li>Expected behavior: the CM33 logs should show the low-power request
+was rejected locally while the system still exercises the RUN2/D1
+standby synchronization path.</li>
+</ul></li>
+<li><strong>RUN2 test without RTC wake-up</strong>
+<ul>
+<li><p>This variant keeps low-power entry disabled but lets Linux use
+its standard suspend flow without programming <code>rtcwake</code>:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;LIMIT_PM_DISABLED&quot;</span> <span class="op">&gt;</span> /dev/rpmsg2</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> deep <span class="op">&gt;</span> /sys/power/mem_sleep</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">systemctl</span> suspend</span></code></pre></div></li>
+<li><p>Expected behavior: wake-up depends on the platform wake-up source
+configured by Linux or the board environment. Use this flow to validate
+the no-RTC wake-up case.</p></li>
+</ul></li>
+<li><strong>Linux-initiated shutdown</strong>
+<ul>
+<li><p>On Linux, run:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">shutdown</span> <span class="at">-h</span> now</span></code></pre></div></li>
+<li><p>Expected behavior: SCMI reports <code>SYS_POWER_SHUTDOWN</code>,
+LowPowerMgr switches to its one-way shutdown path, and the firmware
+prepares the <code>STANDBY2</code> shutdown mode instead of a resumable
+suspend mode.</p></li>
+</ul></li>
+<li><strong>Firmware update manager reference test</strong>
+<ul>
+<li>StarterApp enables the FWU manager transport path by default. The
+firmware registers a dedicated FWU RPMsg endpoint through OpenAMP and
+routes FWU commands into <code>FwuMgrTask</code>, which supports
+component listing and info queries plus the secure FWU control actions
+used by the reference flow: install, reboot-to-apply, accept, reject,
+and cancel.</li>
+<li>Use the ST reference procedure for end-to-end FWU validation:
+<code>https://wiki.st.com/stm32mpu/wiki/M33-TD_flavor_Secure_Firmware_Update</code></li>
+<li>In this project, the README intentionally references the secure
+firmware update flow instead of duplicating the full update procedure
+here.</li>
 </ul></li>
 </ol>
 <hr />
@@ -583,7 +693,7 @@ chosen boot mode.</p></li>
 Use a Type-C cable to connect the device to the Type-C
 connector.</p></li>
 <li><p><strong>Flash the Image</strong><br />
-Refer to the <a href="https://wiki.st.com/stm32mpu/">STM32 MPU
+Refer to the <a href="https://wiki.st.com/stm32mpu/wiki/">STM32 MPU
 wiki</a> for detailed flashing instructions.</p></li>
 <li><p><strong>Perform a Power-On Reset</strong><br />
 After flashing, perform a power-on reset to complete the
@@ -596,35 +706,35 @@ Device Modes for MP25-EV1 Board</h2>
 <ol type="1">
 <li><strong>emmc_emmc</strong>:
 <ul>
-<li>MCUBOOT/TFM(S/NS) → eMMC<br />
+<li>MCUBOOT/TFM(S/NS) -&gt; eMMC<br />
 </li>
-<li>OSTL → eMMC</li>
+<li>OSTL -&gt; eMMC</li>
 </ul></li>
 <li><strong>nor_emmc</strong>:
 <ul>
-<li>MCUBOOT/TFM(S/NS) → Serial NOR<br />
+<li>MCUBOOT/TFM(S/NS) -&gt; Serial NOR<br />
 </li>
-<li>OSTL → eMMC</li>
+<li>OSTL -&gt; eMMC</li>
 </ul></li>
 <li><strong>nor_nor_sdcard</strong>:
 <ul>
-<li>MCUBOOT/TFM(S/NS) → Serial NOR<br />
+<li>MCUBOOT/TFM(S/NS) -&gt; Serial NOR<br />
 </li>
-<li>TF-A/FIP → Serial NOR<br />
+<li>TF-A/FIP -&gt; Serial NOR<br />
 </li>
-<li>OSTL filesystem → SD card</li>
+<li>OSTL filesystem -&gt; SD card</li>
 </ul></li>
 <li><strong>nor_sdcard</strong>:
 <ul>
-<li>MCUBOOT/TFM(S/NS) → Serial NOR<br />
+<li>MCUBOOT/TFM(S/NS) -&gt; Serial NOR<br />
 </li>
-<li>OSTL → SD card</li>
+<li>OSTL -&gt; SD card</li>
 </ul></li>
 <li><strong>sdcard_sdcard</strong>:
 <ul>
-<li>MCUBOOT/TFM(S/NS) → SD card<br />
+<li>MCUBOOT/TFM(S/NS) -&gt; SD card<br />
 </li>
-<li>OSTL → SD card</li>
+<li>OSTL -&gt; SD card</li>
 </ul></li>
 </ol>
 <hr />
@@ -678,11 +788,11 @@ Boot Mode)</h3>
 -
 <code>tfm-starterapp-stm32mp257f-ev1-cm33tdcid-ostl-emmc-emmc_s_ns_Signed.bin</code></p>
 <p><strong>Required CMake Options</strong>:</p>
-<div class="sourceCode" id="cb12"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=sdmmc2</span>  <span class="co"># eMMC</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-emmc-bl2.dts</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-emmc-s.dts</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=sdmmc2</span>  <span class="co"># eMMC</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-emmc-bl2.dts</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-emmc-s.dts</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
 <hr />
 <h3
 id="flashlayout_nor-emmc_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv-nor_emmc-boot-mode">2.
@@ -695,11 +805,11 @@ Boot Mode)</h3>
 -
 <code>tfm-starterapp-stm32mp257f-ev1-cm33tdcid-ostl-nor-emmc_s_ns_Signed.bin</code></p>
 <p><strong>Required CMake Options</strong>:</p>
-<div class="sourceCode" id="cb13"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=ospi</span>  <span class="co"># Serial NOR</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-emmc-s.dts</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=ospi</span>  <span class="co"># Serial NOR</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-emmc-s.dts</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
 <hr />
 <h3
 id="flashlayout_nor-nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv-nor_nor_sdcard-boot-mode">3.
@@ -712,12 +822,12 @@ FlashLayout_nor-nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv
 -
 <code>tfm-starterapp-stm32mp257f-ev1-cm33tdcid-ostl-nor-nor_s_ns_Signed.bin</code></p>
 <p><strong>Required CMake Options</strong>:</p>
-<div class="sourceCode" id="cb14"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=ospi</span>  <span class="co"># Serial NOR</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-snor-s.dts</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-DTFM_PARTITION_PROTECTED_STORAGE=OFF</span>     <span class="co">#For this dev mode , Protected Storage feature needs to be disabled </span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=ospi</span>  <span class="co"># Serial NOR</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-snor-s.dts</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-DTFM_PARTITION_PROTECTED_STORAGE=OFF</span>     <span class="co">#For this dev mode , Protected Storage feature needs to be disabled </span></span></code></pre></div>
 <hr />
 <h3
 id="flashlayout_nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv-nor_sdcard-boot-mode">4.
@@ -730,11 +840,11 @@ FlashLayout_nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv
 -
 <code>tfm-starterapp-stm32mp257f-ev1-cm33tdcid-ostl-nor-sdcard_s_ns_Signed.bin</code></p>
 <p><strong>Required CMake Options</strong>:</p>
-<div class="sourceCode" id="cb15"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=ospi</span>  <span class="co"># Serial NOR</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=ospi</span>  <span class="co"># Serial NOR</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
 <hr />
 <h3
 id="flashlayout_sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv-sdcard_sdcard-boot-mode">5.
@@ -747,10 +857,10 @@ FlashLayout_sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv
 -
 <code>tfm-starterapp-stm32mp257f-ev1-cm33tdcid-ostl-sdcard-sdcard_s_ns_Signed.bin</code></p>
 <p><strong>Required CMake Options</strong>:</p>
-<div class="sourceCode" id="cb16"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=sdmmc1</span>  <span class="co"># SD card</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-bl2.dts</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=sdmmc1</span>  <span class="co"># SD card</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-bl2.dts</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
 </body>
 </html>

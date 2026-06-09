@@ -241,6 +241,11 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/trusted-firmware-m/config_default/api_ns/interface/src/tfm_platform_api.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/TFM/App/tfm_pm_api.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/trusted-firmware-m/config_default/api_ns/common/stm32mp2xx/secure/services/src/tfm_pm_api.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/TFM/App/tfm_scmi_api.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/trusted-firmware-m/config_default/api_ns/common/stm32mp2xx/secure/services/src/tfm_scmi_api.c</locationURI>

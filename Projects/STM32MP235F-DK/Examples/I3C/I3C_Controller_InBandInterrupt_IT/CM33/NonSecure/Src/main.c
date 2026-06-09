@@ -147,6 +147,10 @@ int main(void)
   {
 	  SystemClock_Config();
   }
+  else
+  {
+    SystemCoreClockUpdate();
+  }
 
   /* USER CODE BEGIN SysInit */
 
@@ -155,12 +159,12 @@ int main(void)
   /* Configure LED3 */
   BSP_LED_Init(LED3);
 
-	
+
   if(!IS_DEVELOPER_BOOT_MODE())
   {
     /* IPCC initialization */
     MX_IPCC_Init();
-  
+
 	/*Corpo Sync Initialization*/
 	CoproSync_Init();
   }

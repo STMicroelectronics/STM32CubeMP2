@@ -1020,7 +1020,11 @@ int32_t BSP_LCD_DisplayOn(uint32_t Instance)
   }
   else
   {
-    LCD_RST_GPIO_CLK_ENABLE();
+    if (!IS_LCD_RST_GPIO_CLK_ENABLED())
+    {
+      LCD_RST_GPIO_CLK_ENABLE();
+    }
+
     /* Configure the GPIO RST pin */
     GPIO_Init_Structure.Pin   = LCD_RST_PIN;
     GPIO_Init_Structure.Mode  = GPIO_MODE_OUTPUT_PP;
@@ -1488,24 +1492,30 @@ __weak void BSP_LCD_MspInit(LTDC_HandleTypeDef *hltdc, void *Params)
 
   /* Enable GPIOs clock */
 #if defined(USE_DEVELOPMENT_MODE)
-    __HAL_RCC_GPIOA_CLK_ENABLE();
-    __HAL_RCC_GPIOB_CLK_ENABLE();
-    __HAL_RCC_GPIOC_CLK_ENABLE();
-    __HAL_RCC_GPIOD_CLK_ENABLE();
-    __HAL_RCC_GPIOE_CLK_ENABLE();
-    __HAL_RCC_GPIOF_CLK_ENABLE();
-    __HAL_RCC_GPIOG_CLK_ENABLE();
-    __HAL_RCC_GPIOH_CLK_ENABLE();
-    __HAL_RCC_GPIOI_CLK_ENABLE();
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  __HAL_RCC_GPIOB_CLK_ENABLE();
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+  __HAL_RCC_GPIOE_CLK_ENABLE();
+  __HAL_RCC_GPIOF_CLK_ENABLE();
+  __HAL_RCC_GPIOG_CLK_ENABLE();
+  __HAL_RCC_GPIOH_CLK_ENABLE();
+  __HAL_RCC_GPIOI_CLK_ENABLE();
 #endif /* defined(USE_DEVELOPMENT_MODE) */
 
-	/* Request all needed GPIOs for LTDC */
-	if (ResMgr_GPIO_Request(RESMGR_RESOURCE_RIF_GPIOA, GPIO_PIN_1 | GPIO_PIN_7 | GPIO_PIN_10) != RESMGR_STATUS_ACCESS_OK) Error_Handler();
-	if (ResMgr_GPIO_Request(RESMGR_RESOURCE_RIF_GPIOF, GPIO_PIN_5 | GPIO_PIN_9 | GPIO_PIN_12) != RESMGR_STATUS_ACCESS_OK) Error_Handler();
-	if (ResMgr_GPIO_Request(RESMGR_RESOURCE_RIF_GPIOG, GPIO_PIN_2 | GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 | GPIO_PIN_15) != RESMGR_STATUS_ACCESS_OK) Error_Handler();
-	if (ResMgr_GPIO_Request(RESMGR_RESOURCE_RIF_GPIOI, GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_6 | GPIO_PIN_8) != RESMGR_STATUS_ACCESS_OK) Error_Handler();
-	if (ResMgr_GPIO_Request(RESMGR_RESOURCE_RIF_GPIOC, GPIO_PIN_0 | GPIO_PIN_5 | GPIO_PIN_11) != RESMGR_STATUS_ACCESS_OK) Error_Handler();
-	if (ResMgr_GPIO_Request(RESMGR_RESOURCE_RIF_GPIOB, GPIO_PIN_15) != RESMGR_STATUS_ACCESS_OK) Error_Handler();
+  /* Request all needed GPIOs for LTDC */
+  if (ResMgr_GPIO_Request(RESMGR_RESOURCE_RIF_GPIOA,
+                          GPIO_PIN_1 | GPIO_PIN_7 | GPIO_PIN_10) != RESMGR_STATUS_ACCESS_OK) { Error_Handler(); }
+  if (ResMgr_GPIO_Request(RESMGR_RESOURCE_RIF_GPIOF,
+                          GPIO_PIN_5 | GPIO_PIN_9 | GPIO_PIN_12) != RESMGR_STATUS_ACCESS_OK) { Error_Handler(); }
+  if (ResMgr_GPIO_Request(RESMGR_RESOURCE_RIF_GPIOG,
+                          GPIO_PIN_2 | GPIO_PIN_4 | GPIO_PIN_5 | GPIO_PIN_7 | GPIO_PIN_8 | GPIO_PIN_9 | GPIO_PIN_10 | GPIO_PIN_11 | GPIO_PIN_12 |
+                          GPIO_PIN_15) != RESMGR_STATUS_ACCESS_OK) { Error_Handler(); }
+  if (ResMgr_GPIO_Request(RESMGR_RESOURCE_RIF_GPIOI,
+                          GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_6 | GPIO_PIN_8) != RESMGR_STATUS_ACCESS_OK) { Error_Handler(); }
+  if (ResMgr_GPIO_Request(RESMGR_RESOURCE_RIF_GPIOC,
+                          GPIO_PIN_0 | GPIO_PIN_5 | GPIO_PIN_11) != RESMGR_STATUS_ACCESS_OK) { Error_Handler(); }
+  if (ResMgr_GPIO_Request(RESMGR_RESOURCE_RIF_GPIOB, GPIO_PIN_15) != RESMGR_STATUS_ACCESS_OK) { Error_Handler(); }
 
   /*
    * CLK  ----> F12  (AF13)

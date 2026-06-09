@@ -756,11 +756,6 @@
 			regu = <&vdda18adc>;
 			scmi-id = <VOLTD_SCMI_ADC>;
 		};
-		scmi_vddgpu:voltd-vddgpu {
-			compatible = "st,stm32mp25-scmi-regu";
-			regu = <&vddgpu>;
-			scmi-id = <VOLTD_SCMI_GPU>;
-		};
 	};
 
 	stm32mp25-scmi-pd {

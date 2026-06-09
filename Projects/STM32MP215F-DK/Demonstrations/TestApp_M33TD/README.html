@@ -6,9 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>README</title>
   <style>
-    /* Default styles provided by pandoc.
-    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -97,51 +94,44 @@
 Demonstration Application</h1>
 <hr />
 <h2 id="application-description">Application Description</h2>
-<p>The TestApp_M33TD demonstration highlights the capabilities of the
-STM32MP2 platform for the M33TDCID profile, showcasing the Cortex‑M33 as
-the primary CPU and the Cortex‑A35 as a high-performance
+<p>The TestApp_M33TD demonstration highlights the STM32MP2 M33TDCID
+profile with Cortex-M33 as the primary CPU and Cortex-A35 as a managed
 coprocessor.</p>
-<p>This project uses the “Utility-integrated” design and enables the
-CM33‑NS <strong>Non‑Secure Application Manager</strong> bootstrap based
-on the shared utility stack <code>Utilities/M33TD_NSAppCore</code>
-(Logger, RemoteProc, SCMI Manager, Watchdog Monitor, OpenAMP, etc.).
-Board-specific drivers and adaptations for this demonstration are
-implemented under
+<p>This project is built on the shared
+<code>Utilities/M33TD_NSAppCore</code> stack and demonstrates how to
+layer a project-specific validation task on top of the common utility
+profile. Board-specific drivers and local adaptations are implemented
+under
 <code>CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/</code>.</p>
-<p>TestApp then demonstrates how to build a custom application on top of
-this common stack by adding a dedicated <strong>TestApp Task</strong>,
-which runs a sequence of HAL-based functional tests to validate platform
-configuration and example peripherals in the non-secure (NS)
-environment.</p>
 <hr />
 <h2 id="key-features">Key Features</h2>
 <ul>
 <li><strong>FreeRTOS Multitasking</strong>: Runs multiple tasks in the
 non-secure environment.</li>
-<li><strong>Integrate Utility Stack</strong>: Uses
-<code>Utilities/M33TD_NSAppCore</code> for reusable tasks and thin
-driver abstractions.</li>
+<li><strong>Utility Stack Integration</strong>: Uses
+<code>Utilities/M33TD_NSAppCore</code> for reusable bootstrap, task
+logic, and thin driver abstractions.</li>
 <li><strong>A35 Coprocessor Management</strong>: Uses the RemoteProc
-task to manage the A35 core lifecycle via TF‑M secure services.</li>
-<li><strong>UserApp Task</strong>: LED activity task to validate system
-liveness.</li>
-<li><strong>TestApp Task</strong>: Runs a suite of tests sequentially
-(automatic/manual behavior controlled by build options).</li>
-<li><strong>Optional Display Pipeline</strong>: Same build-time display
-option support as the shared stack (see <code>BUILD_CONFIG</code> /
-<code>BOOT_SPLASHSCREEN</code>).</li>
+task to manage the A35 lifecycle through TF-M secure services.</li>
+<li><strong>Low-Power Orchestration</strong>: Includes the LowPowerMgr
+task in the default TestApp profile.</li>
+<li><strong>UserApp Task</strong>: Keeps the example LED activity
+enabled.</li>
+<li><strong>TestApp Task</strong>: Runs a sequence of platform tests in
+the NS environment.</li>
+<li><strong>Optional Display Pipeline</strong>:
+<code>BUILD_CONFIG=FULL</code> enables the display path;
+<code>BUILD_CONFIG=MINIMUM</code> keeps the non-display profile.</li>
 </ul>
 <hr />
 <h2 id="purpose">Purpose</h2>
-<p>This is a FreeRTOS-based multitask application running in the NS
-processing environment, while the TF‑M secure application operates in
-the secure processing environment. The secure application acts as a
-client to process secure services requested by both the A35 and
-CM33‑NS.</p>
-<p>TestApp implements the Non‑Secure Application Manager around the
-<code>Utilities/M33TD_NSAppCore</code> stack. The
-<code>NSCoreApp_Init()</code> bootstrap configures the stack and starts
-the enabled tasks below:</p>
+<p>This is a FreeRTOS-based multi-task application running in the NS
+processing environment while TF-M runs in the secure environment and
+provides secure services.</p>
+<p>In the current STM32MP215F-DK TestApp profile, UserApp, LowPowerMgr,
+Button Monitor, and OpenAMP are enabled by default; DisplayTask is added
+automatically in <code>BUILD_CONFIG=FULL</code>.
+<code>NSCoreApp_Init()</code> starts the tasks below:</p>
 <ol type="1">
 <li><strong>NSCoreApp (Bootstrap)</strong>:
 <ul>
@@ -153,106 +143,92 @@ the enabled tasks below:</p>
 </ul></li>
 <li><strong>UserApp Task</strong>:
 <ul>
-<li>Example application task (LED activity) to validate system
-liveness.</li>
+<li>Keeps the example LED activity enabled.</li>
 </ul></li>
-<li><strong>RemoteProc Task</strong>:
+<li><strong>LowPowerMgr Task</strong>:
 <ul>
-<li>Manages the A35 coprocessor lifecycle via TF‑M secure services:
-<ul>
-<li>Optional auto-start at boot
-(<code>REMOTE_PROC_AUTO_START</code>).</li>
-<li>CPU status retrieval.</li>
-<li>Crash detection and recovery (stop/start sequence).</li>
-</ul></li>
+<li>Owns the low-power policy and suspend/resume sequencing used by the
+TestApp profile.</li>
 </ul></li>
 <li><strong>SCMI Manager Task</strong>:
 <ul>
-<li>Handles SCMI notifications and related TF‑M forwarding.</li>
+<li>Handles SCMI notifications and related TF-M forwarding.</li>
+</ul></li>
+<li><strong>OpenAMP Task</strong>:
+<ul>
+<li>Provides the RPMsg transport used by the project profile.</li>
+</ul></li>
+<li><strong>RemoteProc Task</strong>:
+<ul>
+<li>Manages A35 lifecycle control, status reporting, and recovery
+flows.</li>
 </ul></li>
 <li><strong>Watchdog Monitor Task</strong>:
 <ul>
 <li>Supervises system health and watchdog-related handling.</li>
 </ul></li>
-<li><strong>OpenAMP Task</strong>:
-<ul>
-<li>Provides the RPMsg communication layer used by the stack to interact
-with the A35/Linux side.</li>
-</ul></li>
 <li><strong>Button Monitor Task</strong>:
 <ul>
-<li>Monitors the USER button and can trigger application-defined actions
-(implementation may vary by build configuration).</li>
+<li>Monitors the USER button and dispatches project-side actions.</li>
 </ul></li>
 <li><strong>Display Task (optional)</strong>:
 <ul>
-<li>Available when the display pipeline is enabled in the build (see
-<code>BUILD_CONFIG=FULL</code>).</li>
+<li>Added automatically when <code>BUILD_CONFIG=FULL</code> enables the
+display pipeline.</li>
 </ul></li>
-<li><strong>TestApp Task</strong>:</li>
-</ol>
+<li><strong>TestApp Task</strong>:
 <ul>
-<li>Executes a sequence of tests to validate the M33 example
-functionality under the M33TDCID profile.</li>
-</ul>
+<li>Executes the platform and example test sequence.</li>
+</ul></li>
+</ol>
 <hr />
 <h2 id="prerequisite-hardware-software-environment-setup">Prerequisite
 Hardware &amp; Software Environment Setup</h2>
 <ul>
-<li><strong>Trusted Firmware-M</strong>: The source code must be
-installed under the <code>Middlewares/Third_Party</code> directory with
-the path <code>Middlewares/Third_Party/trusted-firmware-m</code>. Ensure
-the correct version is used as described in the STM32 MPU release
-note.</li>
-<li><strong>Supported Devices</strong>: This example runs on STM32MP21xx
-devices and has been tested with the STMicroelectronics STM32MP215F-DK
-board. It can be tailored to other supported devices and development
-boards.</li>
+<li><strong>Trusted Firmware-M</strong>: Install the source code under
+<code>Middlewares/Third_Party/trusted-firmware-m</code>.</li>
+<li><strong>Supported Devices</strong>: This example targets STM32MP21xx
+devices and has been validated on STM32MP215F-DK.</li>
 <li><strong>ST-Link Connection</strong>: Connect the ST-Link cable to
 the PC USB port to display traces.</li>
 </ul>
 <h3 id="software-versions">Software Versions</h3>
 <ul>
 <li><strong>Trusted Firmware-M (TFM)</strong>: Refer to the <a
-href="https://wiki.st.com/stm32mpu/Category:Trusted_Firmware-M">Trusted
-Firmware-M wiki</a> for recommended versions and integration
-details.</li>
+href="https://wiki.st.com/stm32mpu/wiki/Category:Trusted_Firmware-M">Trusted
+Firmware-M wiki</a>.</li>
 <li><strong>External Device Tree (externalDT)</strong>: See the <a
-href="https://wiki.st.com/stm32mpu/External_device_tree">External
-Device Tree wiki</a> for guidance on obtaining and using external DT
-sources.</li>
-<li><strong>STM32CubeIDE</strong>: For supported IDE versions and
-ecosystem information, refer the <a
-href="https://wiki.st.com/stm32mpu/">STM32 MPU wiki</a>.</li>
+href="https://wiki.st.com/stm32mpu/wiki/External_device_tree">External
+Device Tree wiki</a>.</li>
+<li><strong>STM32CubeIDE</strong>: Refer to the <a
+href="https://wiki.st.com/stm32mpu/wiki/">STM32 MPU wiki</a>.</li>
 </ul>
 <hr />
-<h2 id="artifact-flow-build-sign-deploy">Artifact flow (build → sign →
-deploy)</h2>
-<p>This is a high-level view; the later sections in this README give the
-board-specific filenames and flashing steps.</p>
+<h2 id="artifact-flow-build---sign---deploy">Artifact flow (build -&gt;
+sign -&gt; deploy)</h2>
 <pre>
-┌──────────────┐
-│ TF-M build   │
-└─┬────────────┘
++----------------+
+| TF-M build     |
++----------------+
   +-> bl2*.stm32
-  +-> ddr_phy*_Signed.bin
+   +-> ddr_phy*_Signed.bin
   +-> tfm_s.bin
 
-┌───────────────────┐
-│ CM33-NS app build │
-└─┬─────────────────┘
-  +-> ${PROJECT_NAME}.bin
++---------------------+
+| CM33-NS app build   |
++---------------------+
+   +-> ${PROJECT_NAME}.bin
 
-┌─────────────────────────────┐
-│ postbuild (assemble + sign) │
-└─┬───────────────────────────┘
-  | inputs: ${PROJECT_NAME}.bin + tfm_s.bin
-   +-> tfm-testapp-*_s_ns_Signed.bin
++------------------------------+
+| postbuild (assemble + sign)  |
++------------------------------+
+   | inputs: ${PROJECT_NAME}.bin + tfm_s.bin
+   +-> tfm-*_s_ns_Signed.bin
 
 Deploy into OSTL image tree
-   bl2*.stm32            -> .../images/stm32mp2-m33td/arm-trusted-firmware-m/bl2
-   ddr_phy*_Signed.bin   -> .../images/stm32mp2-m33td/m33-firmware
-   tfm-testapp-*_s_ns_Signed.bin -> .../images/stm32mp2-m33td/m33-firmware
+    bl2*.stm32            -> .../images/stm32mp2-m33td/arm-trusted-firmware-m/bl2
+    ddr_phy*_Signed.bin   -> .../images/stm32mp2-m33td/m33-firmware
+    tfm-*_s_ns_Signed.bin -> .../images/stm32mp2-m33td/m33-firmware
 </pre>
 <hr />
 <h2 id="to-build-cmake-project-for-m33tdcid-through-command-line">To
@@ -272,8 +248,7 @@ Build CMake Project for M33TDCID (Through Command Line)</h2>
 <code>Firmware/Middlewares/Third_Party/trusted-firmware-m</code>.</p></li>
 <li><p>For SD card development mode, execute the following command:</p>
 <div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-B</span> config_default <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-DTFM_PLATFORM</span><span class="op">=</span>stm/stm32mp215f_dk <span class="at">-DTFM_TOOLCHAIN_FILE</span><span class="op">=</span>toolchain_GNUARM.cmake <span class="at">-DSTM32_BOOT_DEV</span><span class="op">=</span>sdmmc1 <span class="at">-DTFM_PROFILE</span><span class="op">=</span>profile_medium <span class="at">-DSTM32_M33TDCID</span><span class="op">=</span>ON <span class="at">-DCMAKE_BUILD_TYPE</span><span class="op">=</span>Relwithdebinfo <span class="at">-DNS</span><span class="op">=</span>OFF <span class="at">-DDTS_EXT_DIR</span><span class="op">=&lt;</span>EXT_DT_DIR<span class="op">&gt;</span> -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts <span class="at">-DDTS_BOARD_S</span><span class="op">=</span>stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts <span class="dt">\</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts</span></code></pre></div></li>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-B</span> config_default <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-DTFM_PLATFORM</span><span class="op">=</span>stm/stm32mp215f_dk <span class="at">-DTFM_TOOLCHAIN_FILE</span><span class="op">=</span>toolchain_GNUARM.cmake <span class="at">-DSTM32_BOOT_DEV</span><span class="op">=</span>sdmmc1 <span class="at">-DTFM_PROFILE</span><span class="op">=</span>profile_medium <span class="at">-DSTM32_M33TDCID</span><span class="op">=</span>ON <span class="at">-DCMAKE_BUILD_TYPE</span><span class="op">=</span>Relwithdebinfo <span class="at">-DNS</span><span class="op">=</span>OFF <span class="at">-DDTS_EXT_DIR</span><span class="op">=&lt;</span>EXT_DT_DIR<span class="op">&gt;</span> -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts <span class="at">-DDTS_BOARD_S</span><span class="op">=</span>stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts <span class="at">-DDTS_BOARD_NS</span><span class="op">=</span>stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts</span></code></pre></div></li>
 <li><p>Build the project:</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">--build</span> config_default <span class="at">--</span> install</span></code></pre></div></li>
@@ -289,44 +264,32 @@ M33 Firmware Build (TestApp_M33TD Application)</h3>
 <code>Firmware/Projects/STM32MP215F-DK/Demonstrations/TestApp_M33TD</code>.</p></li>
 <li><p>Run the following command:</p>
 <div class="sourceCode" id="cb3"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-B</span> build <span class="dt">\</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-DTFM_BUILD_DIR</span><span class="op">=&lt;</span>TFM_BUILD_DIRECTORY<span class="op">&gt;</span> <span class="dt">\</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-DENABLE_AUTO_TEST</span><span class="op">=</span>ON</span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-B</span> build <span class="at">-DTFM_BUILD_DIR</span><span class="op">=&lt;</span>TFM_BUILD_DIRECTORY<span class="op">&gt;</span> -DENABLE_AUTO_TEST=ON</span></code></pre></div>
 <ul>
 <li>If <code>TFM_BUILD_DIR</code> is not specified, the default path
 <code>Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default</code>
-will be used (assuming the TF‑M secure build step is completed).</li>
-<li>Common build options (see <code>CMakeLists.txt</code>):
+is used.</li>
+<li>Current project CMake options:
 <ul>
 <li><code>-DBUILD_CONFIG=FULL|MINIMUM</code> (default:
-<code>FULL</code>)
-<ul>
-<li><code>FULL</code>: enables display pipeline (adds display panel
-files and HAL LTDC/LVDS dependencies)</li>
-<li><code>MINIMUM</code>: disables display pipeline</li>
-</ul></li>
+<code>FULL</code>)</li>
 <li><code>-DBOOT_SPLASHSCREEN=DYNAMIC|STATIC</code> (default:
-<code>DYNAMIC</code>, only meaningful when
+<code>DYNAMIC</code>, meaningful with
 <code>BUILD_CONFIG=FULL</code>)</li>
 <li><code>-DREMOTE_PROC_AUTO_START=ON|OFF</code> (default:
-<code>ON</code>)
-<ul>
+<code>ON</code>)</li>
+<li><code>-DLOW_POWER_DEFAULT_POLICY_ENABLE=ON|OFF</code> (default:
+<code>OFF</code>)</li>
 <li><code>-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF</code> (default:
 <code>OFF</code>)</li>
-</ul></li>
 <li><code>-DFAULT_EXCEPTION_ENABLE=ON|OFF</code> (default:
 <code>ON</code>)</li>
 <li><code>-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF</code> (default:
-<code>ON</code>)
-<ul>
+<code>ON</code>)</li>
 <li><code>-DENABLE_AUTO_TEST=ON|OFF</code> (default:
 <code>ON</code>)</li>
 </ul></li>
 </ul></li>
-</ul>
-<p><strong>Note</strong>: These CMake options are converted into numeric
-compile-time macros (<code>...=1</code> or <code>...=0</code>) by the
-project CMake logic.</p></li>
 <li><p>Build the project:</p>
 <div class="sourceCode" id="cb4"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> <span class="at">-C</span> build all</span></code></pre></div></li>
@@ -337,55 +300,25 @@ STM32CubeIDE Project</h2>
 <h3 id="project-structure">Project Structure</h3>
 <pre><code>TestApp_M33TD
 ├── TestApp_M33TD_CM33
-│   ├── TestApp_M33TD_CM33_NonSecure (Non-Secure STM32CubeIDE M33 project)
-│   └── TestApp_M33TD_CM33_trusted-firmware-m (Secure CMake project)</code></pre>
-<p><strong>Note</strong>: Refer to <a
-href="https://wiki.st.com/stm32mpu/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#">this
-wiki</a> for instructions on importing a CMake project.</p>
+│   ├── TestApp_M33TD_CM33_NonSecure
+│   └── TestApp_M33TD_CM33_trusted-firmware-m</code></pre>
+<p><strong>Note</strong>: Refer to the <a
+href="https://wiki.st.com/stm32mpu/wiki/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#">STM32
+MPU wiki</a> for project import guidance.</p>
 <h3 id="build-procedure-1">Build Procedure</h3>
 <h4 id="secure-tfm-firmware-build">Secure TFM Firmware Build</h4>
 <ol type="1">
-<li>Configure the CMake build options:
-<ul>
-<li><p>Navigate to <code>TestApp_M33TD_CM33_trusted-firmware-m</code>
-and update the CMake settings:</p>
-<pre><code>-DDEBUG_AUTHENTICATION=FULL  # Enabled for Debug Purpose, Default: this option is removed
--DTFM_PLATFORM=stm/stm32mp215f_dk
--DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake
-
--DSTM32_BOOT_DEV=sdmmc1  # Building TFM for &quot;sdcard_sdcard&quot; bootdevice mode
--DTFM_PROFILE=profile_medium
--DSTM32_M33TDCID=ON
--DCMAKE_BUILD_TYPE=Relwithdebinfo
--DNS=OFF
--DDTS_EXT_DIR=../../../../../../../../../Firmware/Utilities/dt-stm32mp
--DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts
--DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts
--DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts</code></pre></li>
-</ul></li>
-<li>Configure the TFM CMake project:
-<ul>
-<li>Right-click on <code>TestApp_M33TD_CM33_trusted-firmware-m</code>
--&gt; <code>CMake Configure</code>.</li>
-</ul></li>
-<li>Build the TFM CMake project:
-<ul>
-<li>Right-click on <code>TestApp_M33TD_CM33_trusted-firmware-m</code>
--&gt; <code>Build Project</code>.</li>
-</ul></li>
+<li>Configure the TF-M CMake project with the same platform and DTS
+values used by the command-line flow.</li>
+<li>Run <code>CMake Configure</code> on
+<code>TestApp_M33TD_CM33_trusted-firmware-m</code>.</li>
+<li>Build the TF-M CMake project.</li>
 </ol>
 <h4 id="non-secure-stm32cubeide-project-build">Non-Secure STM32CubeIDE
 Project Build</h4>
 <ol type="1">
-<li>Build the project:
-<ul>
-<li>Select the build configuration as per the TFM version:
-<ul>
-<li>Choose <code>CM33TDCID_m33_ns_tfm_s_sign</code>.</li>
-</ul></li>
-<li>Right-click on <code>TestApp_M33TD_CM33_NonSecure</code> -&gt;
-<code>Build Project</code>.</li>
-</ul></li>
+<li>Select the matching NonSecure build configuration.</li>
+<li>Build <code>TestApp_M33TD_CM33_NonSecure</code>.</li>
 </ol>
 <hr />
 <h2 id="output">Output</h2>
@@ -395,11 +328,17 @@ folder:</li>
 </ul>
 <pre><code>cd bin/</code></pre>
 <ul>
-<li><code>${PROJECT_NAME}.bin</code></li>
-<li><code>tfm-testapp-*_s_ns_Signed.bin</code></li>
-<li><code>ddr_phy*_Signed.bin</code></li>
-<li><code>bl2*.stm32</code></li>
+<li><code>TestApp_M33TD_CM33_NonSecure.bin</code></li>
+<li><code>tfm_s_ns_signed.bin</code></li>
+<li><code>ddr_phy_signed.bin</code></li>
+<li><code>bl2.stm32</code></li>
 </ul>
+<p><strong>Note</strong>: <code>TestApp_M33TD_CM33_NonSecure.bin</code>
+is the raw Non-Secure application output.
+<code>tfm_s_ns_signed.bin</code> is the signed combined TF-M Secure +
+Non-Secure image produced by the postbuild flow. For other boot device
+modes, the TF-M secure build commands and final deployed binary names
+must be adjusted as described later in the README.</p>
 <hr />
 <h2 id="testapp-task-configuration">TestApp Task Configuration</h2>
 <p>The <strong>TestApp Task</strong> is responsible for running a
@@ -423,9 +362,10 @@ ENABLE_AUTO_TEST is ON (Set to 1)</strong></h4>
 <ul>
 <li>The TestApp will execute automatically.</li>
 <li><strong>AUTO</strong> tests will be fully executed, including all
-steps (AcquireResource → Init → Run → Deinit → ReleaseResource).</li>
+steps (AcquireResource -&gt; Init -&gt; Run -&gt; Deinit -&gt;
+ReleaseResource).</li>
 <li><strong>MANUAL</strong> tests will be partially executed, performing
-only the resource acquisition and release steps (AcquireResource →
+only the resource acquisition and release steps (AcquireResource -&gt;
 ReleaseResource).</li>
 </ul></li>
 </ul>
@@ -437,8 +377,8 @@ ENABLE_AUTO_TEST is OFF (Set to 0)</strong></h4>
 <li>The TestApp will execute tests fully based on <strong>User Button
 2</strong> actions.</li>
 <li>Both <strong>AUTO</strong> and <strong>MANUAL</strong> tests will be
-executed completely (AcquireResource → Init → Run → Deinit →
-ReleaseResource).</li>
+executed completely (AcquireResource -&gt; Init -&gt; Run -&gt; Deinit
+-&gt; ReleaseResource).</li>
 </ul></li>
 </ul>
 <h3 id="how-to-run-manual-tests">How to Run Manual Tests</h3>
@@ -460,13 +400,13 @@ slave board for testing.</li>
 </ul>
 <hr />
 <h3 id="example-cmake-options">Example CMake Options</h3>
-<div class="sourceCode" id="cb8"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DENABLE_AUTO_TEST=ON</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DENABLE_AUTO_TEST=OFF</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DENABLE_AUTO_TEST=ON</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DENABLE_AUTO_TEST=OFF</span></span></code></pre></div>
 <h3 id="example-cubeide-preprocessor-definitions">Example CubeIDE
 Preprocessor Definitions</h3>
-<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ENABLE_AUTO_TEST<span class="op">=</span><span class="dv">1</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>ENABLE_AUTO_TEST<span class="op">=</span><span class="dv">0</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>ENABLE_AUTO_TEST<span class="op">=</span><span class="dv">1</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ENABLE_AUTO_TEST<span class="op">=</span><span class="dv">0</span></span></code></pre></div>
 <hr />
 <h4 id="uart-console-output">UART Console Output</h4>
 <p>Below is a sample UART log output from the CM33 during the boot and
@@ -502,7 +442,7 @@ runtime sequence:</p>
 [NS] [INF] [OpenAMP]  Ready for RPMsg communication</code></pre>
 <h3 id="understanding-testapp-logs">Understanding TestApp Logs</h3>
 <p>This log demonstrates the CM33 boot sequence (MCUboot/TF-M),
-secure→non-secure handover, and the TestApp test execution flow.</p>
+secure-non-secure handover, and the TestApp test execution flow.</p>
 <blockquote>
 <p><strong>Note:</strong> The presence of
 <code>Skipping manual test in auto Test mode: ...</code> indicates the
@@ -613,6 +553,71 @@ on the CM33 UART you should see the relevant SCMI notification and
 RemoteProc/OpenAMP re-init sequence (messages may vary by build
 options).</li>
 </ul></li>
+<li><strong>Prepare the LowPowerMgr RPMsg endpoint on Linux</strong>
+<ul>
+<li>TestApp enables the firmware low-power endpoint by default through
+OpenAMP. In the firmware,
+<code>OpenampTask_LowPowerEndpointRegister()</code> registers the RPMsg
+service named <code>low_power</code> at address <code>0x5A</code>.</li>
+<li>On Linux, first bind or create an <code>rpmsg_char</code> endpoint
+for that <code>low_power</code> service. Once the endpoint is created,
+it appears as a <code>/dev/rpmsgX</code> node. The example commands
+below assume that node is <code>/dev/rpmsg2</code>.</li>
+</ul></li>
+<li><strong>Suspend policy test: STOP2</strong>
+<ul>
+<li>Limit the firmware suspend policy to STOP2 before Linux enters
+suspend:
+<code>bash  echo "LIMIT_PM_STOP2" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li>Expected behavior: Linux requests suspend, the firmware keeps the
+low-power target at STOP2, and the system wakes up after the RTC
+timeout.</li>
+</ul></li>
+<li><strong>Suspend policy test: LP_STOP2</strong>
+<ul>
+<li>Allow the low-power manager to enter LP_STOP2 instead of plain
+STOP2:
+<code>bash  echo "LIMIT_PM_LP_STOP2" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li>Expected behavior: Linux suspend still uses the RTC wake-up, but the
+firmware low-power target is constrained to LP_STOP2.</li>
+</ul></li>
+<li><strong>Suspend policy test: LPLV_STOP2</strong>
+<ul>
+<li><p>Allow the deepest STOP-class mode currently exposed over the
+low-power endpoint:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;LIMIT_PM_LPLV_STOP2&quot;</span> <span class="op">&gt;</span> /dev/rpmsg2</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> deep <span class="op">&gt;</span> /sys/power/mem_sleep</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">rtcwake</span> <span class="at">-m</span> mem <span class="at">-s</span> 10</span></code></pre></div></li>
+<li><p>Expected behavior: the firmware low-power manager accepts the
+deeper STOP-class mode and the system resumes after the RTC
+wake-up.</p></li>
+</ul></li>
+<li><strong>RUN2 test with RTC wake-up</strong>
+<ul>
+<li><p><code>LIMIT_PM_DISABLED</code> disables low-power entry in the
+firmware. Linux can still enter its suspend path, but the M33 side stays
+in RUN2 while waiting for the wake-up source:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;LIMIT_PM_DISABLED&quot;</span> <span class="op">&gt;</span> /dev/rpmsg2</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> deep <span class="op">&gt;</span> /sys/power/mem_sleep</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">rtcwake</span> <span class="at">-m</span> mem <span class="at">-s</span> 10</span></code></pre></div></li>
+<li><p>Expected behavior: the CM33 logs should show the low-power
+request was rejected locally while the system still exercises the
+RUN2/D1 standby synchronization path.</p></li>
+</ul></li>
+<li><strong>RUN2 test without RTC wake-up</strong>
+<ul>
+<li><p>This variant keeps low-power entry disabled but lets Linux use
+its standard suspend flow without programming <code>rtcwake</code>:</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="st">&quot;LIMIT_PM_DISABLED&quot;</span> <span class="op">&gt;</span> /dev/rpmsg2</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> deep <span class="op">&gt;</span> /sys/power/mem_sleep</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">systemctl</span> suspend</span></code></pre></div></li>
+<li><p>Expected behavior: wake-up depends on the platform wake-up source
+configured by Linux or the board environment. Use this flow to validate
+the no-RTC wake-up case.</p></li>
+</ul></li>
 </ol>
 <h2 id="error-behaviors">Error Behaviors</h2>
 <p>If an error occurs during initialization or system configuration at
@@ -659,8 +664,8 @@ Device Modes for MP21-DK Board</h2>
 <ol type="1">
 <li><strong>sdcard_sdcard</strong>:
 <ul>
-<li>MCUBOOT/TFM(S/NS) → SD card</li>
-<li>OSTL → SD card</li>
+<li>MCUBOOT/TFM(S/NS) -&gt; SD card</li>
+<li>OSTL -&gt; SD card</li>
 </ul></li>
 </ol>
 <hr />
@@ -670,7 +675,7 @@ Board</h2>
 <li><code>FlashLayout_sdcard_stm32mp215f-dk-cm33tdcid-ostl-optee.tsv</code></li>
 </ul>
 <p><strong>Note</strong>: This TSV requires three binaries (BL2, DDR PHY
-firmware, and the combined TF‑M S+NS signed image). Refer to the <a
+firmware, and the combined TF-M S+NS signed image). Refer to the <a
 href="#reference-use-cases-for-mp21-dk-board-testapp-project">Reference
 Use Cases for MP21-DK Board (TestApp Project)</a> section.</p>
 <hr />
@@ -685,11 +690,11 @@ FlashLayout_sdcard_stm32mp215f-dk-cm33tdcid-ostl-optee.tsv
 <code>ddr_phy-stm32mp215f-dk-cm33tdcid-ostl-sdcard_Signed.bin</code> -
 <code>tfm-testapp-stm32mp215f-dk-cm33tdcid-ostl-sdcard-sdcard_s_ns_Signed.bin</code></p>
 <p><strong>Required CMake Options</strong>:</p>
-<div class="sourceCode" id="cb13"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=sdmmc1</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=sdmmc1</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
 <hr />
 </body>
 </html>

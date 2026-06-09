@@ -57,12 +57,15 @@
 volatile uint8_t debug = 1;
 #endif /* DEBUG */
 
-struct netif gnetif;
-extern ETH_HandleTypeDef heth;
+/* ETH_TxPacketConfig_t TxConfig; */
 extern ETH_TxPacketConfigTypeDef TxConfig;
-extern ETH_DMADescTypeDef DMARxDscrTab[ETH_RX_DESC_CNT]; /* Ethernet Rx DMA Descriptors */
-extern ETH_DMADescTypeDef DMATxDscrTab[ETH_TX_DESC_CNT];   /* Ethernet Tx DMA Descriptors */
 
+/* ETH_HandleTypeDef heth; */
+extern ETH_HandleTypeDef heth;
+struct netif gnetif;
+
+extern ETH_DMADescTypeDef DMARxDscrTab[ETH_RX_DESC_CNT]; /* Ethernet Rx DMA Descriptors */
+extern ETH_DMADescTypeDef DMATxDscrTab[ETH_TX_DESC_CNT]; /* Ethernet Tx DMA Descriptors */
 
 #if defined(INSTRUCTION_CACHE_ENABLE) && (INSTRUCTION_CACHE_ENABLE == 1U)
 static ICACHE_RegionConfigTypeDef region_config;
@@ -78,6 +81,10 @@ void SystemClock_Config(void);
 void UART_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_ETH_Init(void);
+
+#if (INSTRUCTION_CACHE_ENABLE == 1U) && (DATA_CACHE_ENABLE == 1U)
+static void MPU_Config(void);
+#endif
 
 #if defined(INSTRUCTION_CACHE_ENABLE) && (INSTRUCTION_CACHE_ENABLE == 1U)
 static void MX_ICACHE_Init(void);
@@ -108,25 +115,33 @@ static void Netif_Config(void)
   ip_addr_t gw;
 
 #if LWIP_DHCP
+  /* If DHCP is enabled, set IP address, netmask, and gateway to zero */
   ip_addr_set_zero_ip4(&ipaddr);
   ip_addr_set_zero_ip4(&netmask);
   ip_addr_set_zero_ip4(&gw);
 #else
+  /* If DHCP is not enabled, use static IP address settings */
   /* IP address default setting */
   IP4_ADDR(&ipaddr, IP_ADDR0, IP_ADDR1, IP_ADDR2, IP_ADDR3);
   IP4_ADDR(&netmask, NETMASK_ADDR0, NETMASK_ADDR1 , NETMASK_ADDR2, NETMASK_ADDR3);
   IP4_ADDR(&gw, GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
+  printf("DHCP is not enabled. Using static IP settings:\r\n");
+  printf("IP Address: %s\n", ip4addr_ntoa(&ipaddr));
+  printf("Netmask: %s\n", ip4addr_ntoa(&netmask));
+  printf("Gateway: %s\n", ip4addr_ntoa(&gw));
 #endif /* LWIP_DHCP */
 
-  /* add the network interface */
+  /* Add the network interface to the netif list */
   netif_add(&gnetif, &ipaddr, &netmask, &gw, NULL, &ethernetif_init, &ethernet_input);
 
-  /*  Registers the default network interface */
+  /* Register the default network interface */
   netif_set_default(&gnetif);
 
+  /* Update the link status of the network interface */
   ethernet_link_status_updated(&gnetif);
 
 #if LWIP_NETIF_LINK_CALLBACK
+  /* Set the link callback function to update the link status */
   netif_set_link_callback(&gnetif, ethernet_link_status_updated);
 #endif /* LWIP_NETIF_LINK_CALLBACK */
 }
@@ -147,6 +162,7 @@ int main(void)
 
   /* Configure the Instruction CACHE */
 #if defined(INSTRUCTION_CACHE_ENABLE) && (INSTRUCTION_CACHE_ENABLE == 1U)
+  MPU_Config();
   MX_ICACHE_Init();
 #endif
   /* Configure the Data CACHE */
@@ -166,8 +182,7 @@ int main(void)
   if(IS_DEVELOPER_BOOT_MODE())
   {
     SystemClock_Config();
-  }
-  else
+  }else
   {
     SystemCoreClockUpdate();
   }
@@ -469,7 +484,7 @@ static void MX_ICACHE_Init(void)
 
   /* Remap external flash memory to C-Bus */
   region_config.BaseAddress     = 0x10000000;
-  region_config.RemapAddress    = ( uint32_t)ext_flash_addr;
+  region_config.RemapAddress    = 0x80100600;
   region_config.TrafficRoute    = ICACHE_MASTER2_PORT;
   region_config.OutputBurstType = ICACHE_OUTPUT_BURST_INCR;
   region_config.Size            = ICACHE_REGIONSIZE_2MB;
@@ -481,7 +496,9 @@ static void MX_ICACHE_Init(void)
   }
 
   /* Enable the Instruction and Data Cache */
-  HAL_ICACHE_Enable();
+  if(HAL_ICACHE_Enable() != HAL_OK){
+	  Error_Handler();
+  }
   /* USER CODE BEGIN ICACHE_Init 2 */
 
   /* USER CODE END ICACHE_Init 2 */
@@ -518,6 +535,78 @@ static void MX_DCACHE_Init(void)
   /* USER CODE END ICACHE_Init 2 */
 }
 #endif
+
+/**
+ * @brief  Configure the MPU attributes
+ * @param  None
+ * @retval None
+ */
+static void MPU_Config(void)
+{
+
+  MPU_Region_InitTypeDef MPU_InitStruct;
+  MPU_Attributes_InitTypeDef MPU_Attributes_InitStruct;
+
+  HAL_MPU_Disable();
+
+  /* write back, read and write allocate */
+  MPU_Attributes_InitStruct.Attributes = INNER_OUTER(MPU_WRITE_BACK | MPU_NON_TRANSIENT | MPU_RW_ALLOCATE);
+  MPU_Attributes_InitStruct.Number = MPU_ATTRIBUTES_NUMBER0;
+  HAL_MPU_ConfigMemoryAttributes(&MPU_Attributes_InitStruct);
+
+  /* ICACHE */
+  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+  MPU_InitStruct.Number = MPU_REGION_NUMBER0;
+  MPU_InitStruct.AttributesIndex = MPU_ATTRIBUTES_NUMBER0;
+  MPU_InitStruct.BaseAddress = 0x00000000;
+  MPU_InitStruct.LimitAddress = 0x00010000;
+  MPU_InitStruct.AccessPermission = MPU_REGION_ALL_RO;
+  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_ENABLE;
+  MPU_InitStruct.IsShareable = MPU_ACCESS_NOT_SHAREABLE;
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+  /* DCACHE */
+  MPU_InitStruct.AccessPermission = MPU_REGION_ALL_RW;
+  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+  MPU_InitStruct.AttributesIndex = MPU_ATTRIBUTES_NUMBER0;
+  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
+  MPU_InitStruct.IsShareable = MPU_ACCESS_INNER_SHAREABLE;
+  MPU_InitStruct.BaseAddress = 0x80A00000;
+  MPU_InitStruct.LimitAddress = 0x811FFFFF;
+  MPU_InitStruct.Number = MPU_REGION_NUMBER1;
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+  MPU_Attributes_InitStruct.Attributes = INNER_OUTER(MPU_NOT_CACHEABLE);
+  MPU_Attributes_InitStruct.Number = MPU_ATTRIBUTES_NUMBER2;
+  HAL_MPU_ConfigMemoryAttributes(&MPU_Attributes_InitStruct);
+
+  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+  MPU_InitStruct.Number = MPU_REGION_NUMBER0;
+  MPU_InitStruct.AttributesIndex = MPU_ATTRIBUTES_NUMBER2;
+  MPU_InitStruct.BaseAddress = 0x0A060000;
+  MPU_InitStruct.LimitAddress = 0x0A080000;
+  MPU_InitStruct.AccessPermission = MPU_REGION_ALL_RW;
+  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
+  MPU_InitStruct.IsShareable = MPU_ACCESS_INNER_SHAREABLE;
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+  /* 3. Non-cacheable region for IPC/SHMEM (if needed) */
+  MPU_Attributes_InitStruct.Attributes = INNER_OUTER(MPU_NOT_CACHEABLE);
+  MPU_Attributes_InitStruct.Number = MPU_ATTRIBUTES_NUMBER2;
+  HAL_MPU_ConfigMemoryAttributes(&MPU_Attributes_InitStruct);
+
+  MPU_InitStruct.Enable = MPU_REGION_ENABLE;
+  MPU_InitStruct.Number = MPU_REGION_NUMBER1;
+  MPU_InitStruct.AttributesIndex = MPU_ATTRIBUTES_NUMBER2;
+  MPU_InitStruct.BaseAddress = 0x81200000;
+  MPU_InitStruct.LimitAddress = 0x812FFFFF;
+  MPU_InitStruct.AccessPermission = MPU_REGION_ALL_RW;
+  MPU_InitStruct.DisableExec = MPU_INSTRUCTION_ACCESS_DISABLE;
+  MPU_InitStruct.IsShareable = MPU_ACCESS_INNER_SHAREABLE;
+  HAL_MPU_ConfigRegion(&MPU_InitStruct);
+
+  HAL_MPU_Enable(MPU_PRIVILEGED_DEFAULT);
+}
 
 void UART_Config(void)
 {

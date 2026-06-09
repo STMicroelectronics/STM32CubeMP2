@@ -1163,7 +1163,8 @@ void HAL_DMA_IRQHandler(DMA_HandleTypeDef *const hdma)
           /* If linked-list transfer */
           if (hdma->Instance->CLLR == 0U)
           {
-            if (hdma->Instance->CBR1 == 0U)
+            if ((((hdma->Instance->CBR1) & DMA_CBR1_BRC) == 0U)
+                && (__HAL_DMA_GET_COUNTER(hdma) == 0U))
             {
               /* Update the DMA channel state */
               hdma->State = HAL_DMA_STATE_READY;
@@ -1176,7 +1177,8 @@ void HAL_DMA_IRQHandler(DMA_HandleTypeDef *const hdma)
         else
         {
           /* If normal transfer */
-          if (hdma->Instance->CBR1 == 0U)
+          if ((((hdma->Instance->CBR1) & DMA_CBR1_BRC) == 0U)
+              && (__HAL_DMA_GET_COUNTER(hdma) == 0U))
           {
             /* Update the DMA channel state */
             hdma->State = HAL_DMA_STATE_READY;

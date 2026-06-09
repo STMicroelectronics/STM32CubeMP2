@@ -31,6 +31,12 @@
   @endverbatim
 
 =======
+### 02-June-2026 ###
+=========================
+  + Add SW_Security_Level.md file in the Source directory.
+    - Source/SW_Security_Level.md
+
+=======
 ### 11-October-2024 ###
 =========================
   + FreeRTOS: Update to FreeRTOS v10.6.2

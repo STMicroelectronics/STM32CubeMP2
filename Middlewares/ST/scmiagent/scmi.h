@@ -157,9 +157,10 @@ int scmi_voltage_domain_name(struct scmi_channel *channel, unsigned int domain_i
 int scmi_clock_set_rate(struct scmi_channel *channel, unsigned int clock_id, unsigned int rate_khz);
 int scmi_clock_get_rate(struct scmi_channel *channel, unsigned int clock_id, unsigned int *rate_khz);
 int scmi_clock_gate(struct scmi_channel *channel, unsigned int clock_id, int enable);
+int scmi_clock_get_config(struct scmi_channel *channel, unsigned int clock_id,uint32_t *flags, uint32_t *attributes, uint32_t *config);
 int scmi_clock_get_attributes(struct scmi_channel *channel, unsigned int clock_id, char *name, int len, uint32_t *attributes);
 int scmi_clock_enable(struct scmi_channel *channel, unsigned int clock_id);
 int scmi_clock_disable(struct scmi_channel *channel, unsigned int clock_id);
-
+int scmi_clock_protocol_version(struct scmi_channel *channel, uint32_t *version);
 #endif /* SCMI_H */
 

@@ -32,6 +32,9 @@ typedef enum {
     REMOTEPROC_STATE_OFFLINE,    /*!< Remote processor is powered off */
     REMOTEPROC_STATE_STARTING,   /*!< Remote processor is starting */
     REMOTEPROC_STATE_RUNNING,    /*!< Remote processor is running */
+    REMOTEPROC_STATE_SUSPENDING, /*!< Remote processor is suspending */
+    REMOTEPROC_STATE_SUSPENDED,  /*!< Remote processor is suspended */
+    REMOTEPROC_STATE_RESUMING,   /*!< Remote processor is resuming */
     REMOTEPROC_STATE_STOPPING,   /*!< Remote processor is stopping */
     REMOTEPROC_STATE_UNKNOWN     /*!< Unknown state */
 } RemoteProcState;
@@ -42,11 +45,11 @@ typedef enum {
 typedef enum {
     REMOTEPROC_EVENT_START,                 /*!< Request to start the remote processor */
     REMOTEPROC_EVENT_STOP,                  /*!< Request to stop the remote processor */
+    REMOTEPROC_EVENT_SUSPEND,               /*!< Request to suspend the remote processor */
+    REMOTEPROC_EVENT_RESUME,                /*!< Request to resume the remote processor */
     REMOTEPROC_EVENT_CRASH,                 /*!< Crash detected */
-    REMOTEPROC_EVENT_STARTED,               /*!< Start operation completed */
-    REMOTEPROC_EVENT_STOPPED,               /*!< Stop operation completed */
     REMOTEPROC_EVENT_ERROR,                 /*!< Error occurred */
-    REMOTEPROC_EVENT_CHECK_START_STATUS     /*!< Internal: check CPU_RUNNING after start */
+    REMOTEPROC_EVENT_CHECK_STATUS           /*!< Internal: poll CPU state for async command completion */
 } RemoteProcEvent;
 
 /**

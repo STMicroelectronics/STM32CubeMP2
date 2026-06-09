@@ -768,6 +768,7 @@ void HAL_HASH_Resume(HASH_HandleTypeDef *hhash, uint8_t *pMemBuffer)
 HAL_StatusTypeDef HAL_HASH_ProcessSuspend(HASH_HandleTypeDef *hhash)
 {
   uint32_t remainingwords; /*remaining number in of source block to be transferred.*/
+  uint32_t remainingbytes; /*remaining number of bytes in the source block to be transferred.*/
   uint32_t nbbytePartialHash  = (((hhash->Instance->SR) >> 16U) * 4U); /* Nb byte  to enter in HASH fifo
                                                                       to trig a partial HASH computation*/
   uint32_t sizeinwords;/* number in word of source block to be transferred.*/
@@ -781,6 +782,26 @@ HAL_StatusTypeDef HAL_HASH_ProcessSuspend(HASH_HandleTypeDef *hhash)
     }
     else
     {
+      /* Make sure there is enough time to suspend the processing before changing DMA state. */
+      /* DMA3 uses DMA_CBR1_BNDT in bytes and DMA_CSR_FIFOL in words. */
+      remainingwords = ((((DMA_Channel_TypeDef *)hhash->hdmain->Instance)->CBR1) \
+                        & DMA_CBR1_BNDT) / 4U;
+#if defined(DMA_VER_V1_6)
+      remainingwords += (((((DMA_Channel_TypeDef *)hhash->hdmain->Instance)->CSR) \
+                          & DMA_CSR_FIFOL) >> DMA_CSR_FIFOL_Pos) / 4U;
+#else
+      remainingwords += ((((DMA_Channel_TypeDef *)hhash->hdmain->Instance)->CSR) \
+                         & DMA_CSR_FIFOL) >> DMA_CSR_FIFOL_Pos;
+#endif /* DMA_VER_V1_6 */
+
+      remainingbytes = 4U * remainingwords;
+
+      if (remainingbytes <= nbbytePartialHash)
+      {
+        /* No suspension attempted since almost to the end of the transferred data. */
+        /* Best option for user code is to wrap up low priority message hashing      */
+        return HAL_ERROR;
+      }
 
       /* Clear the DMAE bit to disable the DMA interface */
       CLEAR_BIT(hhash->Instance->CR, HASH_CR_DMAE);
@@ -803,13 +824,6 @@ HAL_StatusTypeDef HAL_HASH_ProcessSuspend(HASH_HandleTypeDef *hhash)
       remainingwords += ((((DMA_Channel_TypeDef *)hhash->hdmain->Instance)->CSR) \
                          & DMA_CSR_FIFOL) >> DMA_CSR_FIFOL_Pos;
 #endif /* DMA_VER_V1_6 */
-
-      if (remainingwords <= nbbytePartialHash)
-      {
-        /* No suspension attempted since almost to the end of the transferred data. */
-        /* Best option for user code is to wrap up low priority message hashing     */
-        return HAL_ERROR;
-      }
 
       /* Disable DMA channel */
       /* Note that the Abort function will

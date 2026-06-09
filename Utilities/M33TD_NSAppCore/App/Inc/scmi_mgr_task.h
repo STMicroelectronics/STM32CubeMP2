@@ -64,6 +64,18 @@ void ScmiMgrTask_DeInit(void);
 void ScmiMgrTask_Signal(void);
 
 /**
+  * @brief  Mask SCMI-related non-secure notifications during critical stop sequences.
+  * @retval None
+  */
+void ScmiMgrTask_DisableNotifications(void);
+
+/**
+  * @brief  Reset SCMI shared state and re-enable SCMI-related notifications.
+  * @retval None
+  */
+void ScmiMgrTask_ResetAndEnableNotifications(void);
+
+/**
   * @brief  Register a listener for SCMI power events.
   * @param  cb: Callback function to be called on event.
   * @param  context: User context pointer.

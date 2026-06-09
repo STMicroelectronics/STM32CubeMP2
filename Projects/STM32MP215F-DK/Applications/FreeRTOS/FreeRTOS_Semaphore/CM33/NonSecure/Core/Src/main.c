@@ -82,12 +82,15 @@ int main(void)
   if(IS_DEVELOPER_BOOT_MODE())
   {
 	SystemClock_Config();
-	/* Update System clock variable SystemCoreClock for debug */
-	SystemCoreClockUpdate();
 	HAL_PWR_EnableBkUpAccess();
 	BSP_PMIC_Init();
 	BSP_PMIC_Power_Mode_Init();
-}
+  }
+  else
+  {
+    SystemCoreClockUpdate();
+  }
+
 
 
   /* Initialize LEDs */

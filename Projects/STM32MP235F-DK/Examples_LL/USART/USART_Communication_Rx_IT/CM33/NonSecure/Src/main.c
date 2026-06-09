@@ -127,6 +127,11 @@ int main(void)
   {
     SystemClock_Config();
   }
+  else
+  {
+    SystemCoreClockUpdate();
+  }
+
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
 

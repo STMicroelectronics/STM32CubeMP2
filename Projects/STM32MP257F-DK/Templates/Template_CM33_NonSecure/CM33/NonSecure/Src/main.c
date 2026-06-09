@@ -64,6 +64,10 @@ int main(void)
   {
     SystemClock_Config();
   }
+  else
+  {
+    SystemCoreClockUpdate();
+  }
 
   HAL_Init();
 #ifdef ICACHE_DCACHE_ENABLE

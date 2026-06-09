@@ -48,6 +48,7 @@
 									<listOptionValue builtIn="false" value="STM32MP2"/>
 									<listOptionValue builtIn="false" value="STM32MP215FANx"/>
 									<listOptionValue builtIn="false" value="__VALID_OUTPUT_UART_IO__"/>
+									<listOptionValue builtIn="false" value="__ARM_FEATURE_CMSE=3"/>
 									<listOptionValue builtIn="false" value="DEBUG"/>
 								</option>
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths.110933458" name="Include paths (-I)" superClass="com.st.stm32cube.ide.mcu.gnu.managedbuild.tool.c.compiler.option.includepaths" useByScannerDiscovery="false" valueType="includePath">

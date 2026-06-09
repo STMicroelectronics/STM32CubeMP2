@@ -57,27 +57,27 @@
 				compatible = "domain-idle-state";
 				arm,psci-suspend-param = <0x00000011>;
 				/* TODO: update latency values */
-				entry-latency-us = <300>;
-				exit-latency-us = <500>;
-				min-residency-us = <1500>;
+				entry-latency-us = <800>;
+				exit-latency-us = <450>;
+				min-residency-us = <1600>;
 			};
 
 			lp_stop1: domain-lp-stop1 {
 				compatible = "domain-idle-state";
 				arm,psci-suspend-param = <0x0000021>;
 				/* TODO: update latency values */
-				entry-latency-us = <350>;
-				exit-latency-us = <600>;
-				min-residency-us = <2000>;
+				entry-latency-us = <800>;
+				exit-latency-us = <750>;
+				min-residency-us = <1600>;
 			};
 
 			lplv_stop1: domain-lplv-stop1 {
 				compatible = "domain-idle-state";
 				arm,psci-suspend-param = <0x00000211>;
 				/* TODO: update latency values */
-				entry-latency-us = <500>;
-				exit-latency-us = <2000>;
-				min-residency-us = <2500>;
+				entry-latency-us = <2800>;
+				exit-latency-us = <4700>;
+				min-residency-us = <5600>;
 			};
 		};
 	};

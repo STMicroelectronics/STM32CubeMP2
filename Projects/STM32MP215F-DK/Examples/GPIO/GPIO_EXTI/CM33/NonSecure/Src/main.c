@@ -132,6 +132,10 @@ int main(void)
       Error_Handler();
    }
   }
+  else
+  {
+    SystemCoreClockUpdate();
+  }
 
   /* USER CODE BEGIN SysInit */
 

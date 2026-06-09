@@ -47,6 +47,10 @@
   ******************************************************************************
   @endverbatim
 
+### 02-June-2026 ###
+========================
+  + Add SW_Security_Level.md file at the root directory.
+
 ### 02-February-2024 ###
 ========================
   + Upgrade to LwIP V2.2.0 version

@@ -23,6 +23,9 @@
 
 #include "btn_monitor_task.h"
 #include "btn_monitor_driver.h"
+#if ENABLE_LOW_POWER_MGR_TASK
+#include "low_power_mgr_task.h"
+#endif
 
 #include "FreeRTOS.h"
 #include "task.h"
@@ -91,6 +94,16 @@ static void BtnMonitorTask(void *argument);
 static void BtnMonitorTask_DispatchEvent(ButtonEventType_t eventType);
 static void BtnMonitorTask_IRQCallback(void *context);
 
+#if ENABLE_LOW_POWER_MGR_TASK
+/**
+    * @brief Low-power manager listener for button IRQ handling.
+    * @param notif: Low-power manager notif.
+    * @param mode: Low-power mode associated with the event.
+    * @param context: User context pointer.
+    */
+static void BtnMonitorTask_LowPowerListener(LowPowerMgrNotif_t notif, LowPowerMgrMode_t mode, void *context);
+#endif
+
 /**
     * @brief IRQ callback used by the button monitor driver.
     * @param  context: User context pointer (unused).
@@ -103,6 +116,29 @@ static void BtnMonitorTask_IRQCallback(void *context)
         (void)osSemaphoreRelease(BtnMonitorSemHandle);
     }
 }
+
+/**
+    * @brief Handle low-power notifications to mask or unmask button IRQs.
+    * @param notif: Low-power manager notif.
+    * @param mode: Low-power mode associated with the event.
+    * @param context: User context pointer.
+    */
+#if ENABLE_LOW_POWER_MGR_TASK
+static void BtnMonitorTask_LowPowerListener(LowPowerMgrNotif_t notif, LowPowerMgrMode_t mode, void *context)
+{
+    (void)mode;
+    (void)context;
+
+    if ((notif == LOW_POWER_MGR_NOTIF_PREPARE_STOP || (notif == LOW_POWER_MGR_NOTIF_PREPARE_STANDBY)) && (btnMonitorDriver.disable_btn_irq != NULL))
+    {
+        btnMonitorDriver.disable_btn_irq();
+    }
+    else if ((notif == LOW_POWER_MGR_NOTIF_RESUME_STOP || (notif == LOW_POWER_MGR_NOTIF_RESUME_STANDBY)) && (btnMonitorDriver.enable_btn_irq != NULL))
+    {
+        btnMonitorDriver.enable_btn_irq();
+    }
+}
+#endif
 
 /**
     * @brief Initialize the button monitor task and its resources.
@@ -127,6 +163,13 @@ void BtnMonitorTask_Init(void)
     {
         NSAppCore_ErrorHandler();
     }
+
+#if ENABLE_LOW_POWER_MGR_TASK
+    if (LowPowerMgrTask_RegisterListener(BtnMonitorTask_LowPowerListener, NULL) != HAL_OK)
+    {
+        NSAppCore_ErrorHandler();
+    }
+#endif
 }
 
 /**
@@ -136,6 +179,10 @@ void BtnMonitorTask_Init(void)
     */
 void BtnMonitorTask_DeInit(void)
 {
+#if ENABLE_LOW_POWER_MGR_TASK
+    (void)LowPowerMgrTask_UnregisterListener(BtnMonitorTask_LowPowerListener);
+#endif
+
     if (btnMonitorDriver.deinit)
     {
         (void)btnMonitorDriver.deinit();

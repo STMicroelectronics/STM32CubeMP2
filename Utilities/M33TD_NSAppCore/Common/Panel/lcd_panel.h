@@ -46,8 +46,10 @@
 #include "lcd_panel_edt_etml0700z9ndha.h"
 #elif defined(USE_LCD_RGB_RK043FN48H)
 #include "lcd_panel_rk043fn48h.h"
+#elif defined(USE_OLED_SSD1306)
+#include "lcd_panel_ssd1306_oled.h"
 #else
-#error "Please select the LCD panel (e.g. USE_LCD_LVDS_EDT_ETML0700Z9NDHA or USE_LCD_RGB_RK043FN48H)"
+#error "Please select a supported display panel (e.g. USE_LCD_LVDS_EDT_ETML0700Z9NDHA, USE_LCD_RGB_RK043FN48H, or USE_OLED_SSD1306)"
 #endif
 
 #endif /* __LCD_PANEL_H */

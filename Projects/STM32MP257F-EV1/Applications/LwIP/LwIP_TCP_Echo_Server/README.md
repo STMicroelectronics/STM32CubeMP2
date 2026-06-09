@@ -94,9 +94,9 @@ In order to make the program work, you must do the following:
 - For M33 TD
 In order to make the program work, you must do the following :
 - Open STM32CubeIDE
-- Build with config: Release
+- Build with config: CA35_ARCH32_BM
 - LwIP_TCP_Echo_Server.bin file would be generated containing the application.
-- refer to the Steps present in Projects\STM32MP215F-DK\Demonstrations\StarterApp_M33TD\README.md to compile remaining binaries.
+- Refer to the Steps present in Projects\STM32MP257F-EV1\Template_StarterApp_M33TD\README.md to compile remaining binaries.
   LwIP_TCP_Echo_Server.bin need  to be signed. While compiling TFM Secure in StarterAppM33TD add the absolute path to LwIP_TCP_Echo_Server.bin using below argument
 
   -DSTM32_CA35_FW=`<PATH>`/LwIP_TCP_Echo_Server.bin

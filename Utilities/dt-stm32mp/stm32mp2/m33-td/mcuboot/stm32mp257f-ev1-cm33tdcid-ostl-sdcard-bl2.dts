@@ -64,7 +64,19 @@
 				   "board_id",
 				   "iak";
 	};
+};
 
+&nvram {
+	status = "okay";
+
+	nvmem-layout {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		cm_fwu_info: tamp-bkp@124 {
+			#nvmem-cell-cells = <0>;
+			reg = <0x124 0x4>;
+		};
+	};
 };
 
 &uart5 {
@@ -117,7 +129,6 @@
 				regulator-name = "vddgpu_pmic";
 				regulator-min-microvolt = <800000>;
 				regulator-max-microvolt = <900000>;
-				regulator-always-on;
 			};
 			vddio_pmic: buck4 {
 				regulator-name = "vddio_pmic";
@@ -211,55 +222,63 @@
 &pwr {
 	status = "okay";
 
-	vdd33ucpd: vdd33ucpd {
+	pwr_rif: access-controller {
 		status = "okay";
-		regulator-min-microvolt = <3300000>;
-		regulator-max-microvolt = <3300000>;
-		vin-supply = <&vdd3v3_usb>;
-		regulator-always-on;
 	};
 
-	vdda18adc: vdda18adc {
+	regulators {
 		status = "okay";
-		regulator-min-microvolt = <1800000>;
-		regulator-max-microvolt = <1800000>;
-		vin-supply = <&v1v8>;
-		regulator-always-on;
-	};
 
-	vddgpu: vddgpu {
-		status = "okay";
-		vin-supply = <&vddgpu_pmic>;
-	};
+		vdd33ucpd: vdd33ucpd {
+			status = "okay";
+			regulator-min-microvolt = <3300000>;
+			regulator-max-microvolt = <3300000>;
+			vin-supply = <&vdd3v3_usb>;
+			regulator-always-on;
+		};
 
-	vddio1: vddio1 {
-		status = "okay";
-		regulator-min-microvolt = <1800000>;
-		regulator-max-microvolt = <3300000>;
-		vin-supply = <&vddio_sdcard>;
-	};
+		vdda18adc: vdda18adc {
+			status = "okay";
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <1800000>;
+			vin-supply = <&v1v8>;
+			regulator-always-on;
+		};
 
-	vddio2: vddio2 {
-		status = "okay";
-		vin-supply = <&v1v8>;
-		regulator-always-on;
-	};
+		vddgpu: vddgpu {
+			status = "okay";
+			vin-supply = <&vddgpu_pmic>;
+		};
 
-	vddio3: vddio3 {
-		status = "okay";
-		vin-supply = <&vddio_pmic>;
-		regulator-always-on;
-	};
+		vddio1: vddio1 {
+			status = "okay";
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <3300000>;
+			vin-supply = <&vddio_sdcard>;
+		};
 
-	vddio4: vddio4 {
-		status = "okay";
-		vin-supply = <&vddio_pmic>;
-		regulator-always-on;
-	};
+		vddio2: vddio2 {
+			status = "okay";
+			vin-supply = <&v1v8>;
+			regulator-always-on;
+		};
 
-	vddio: vddio {
-		status = "okay";
-		vin-supply = <&vddio_pmic>;
+		vddio3: vddio3 {
+			status = "okay";
+			vin-supply = <&vddio_pmic>;
+			regulator-always-on;
+		};
+
+		vddio4: vddio4 {
+			status = "okay";
+			vin-supply = <&vddio_pmic>;
+			regulator-always-on;
+		};
+
+		vddio: vddio {
+			status = "okay";
+			vin-supply = <&vddio_pmic>;
+		};
 	};
 };
 

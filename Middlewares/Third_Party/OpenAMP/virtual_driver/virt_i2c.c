@@ -134,7 +134,7 @@ VIRT_I2C_StatusTypeDef VIRT_I2C_sendToMaster(VIRT_I2C_HandleTypeDef *i2c_dev, ui
   msg->addr = i2c_dev->msg->addr;
   msg->len = Size;
   msg->result = VIRT_I2C_ACK;
-  memcpy(msg->buf,pData,msg_size);
+  memcpy(msg->buf,pData,Size);
 
   res = OPENAMP_send(&i2c_dev->ept, msg, msg_size);
 

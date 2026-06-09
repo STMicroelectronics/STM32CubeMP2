@@ -22,12 +22,7 @@
 		};
 
 		hpdma2_lli: hpdma2-lli@a030000 {
-			reg = <0x0 0xa030000 0x0 0xe000>;
-			no-map;
-		};
-
-		hpdma3_lli: hpdma3-lli@a03e000 {
-			reg = <0x0 0xa03e000 0x0 0x2000>;
+			reg = <0x0 0xa030000 0x0 0x10000>;
 			no-map;
 		};
 

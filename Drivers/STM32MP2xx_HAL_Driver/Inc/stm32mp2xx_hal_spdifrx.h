@@ -187,9 +187,6 @@ typedef struct
 #endif /* USE_HAL_SPDIFRX_REGISTER_CALLBACKS */
 
 } SPDIFRX_HandleTypeDef;
-/**
-  * @}
-  */
 
 #if (USE_HAL_SPDIFRX_REGISTER_CALLBACKS == 1)
 /**
@@ -212,7 +209,9 @@ typedef enum
 typedef  void (*pSPDIFRX_CallbackTypeDef)(SPDIFRX_HandleTypeDef *hspdif);  /*!< pointer to an SPDIFRX callback
                                                                                 function */
 #endif /* USE_HAL_SPDIFRX_REGISTER_CALLBACKS */
-
+/**
+  * @}
+  */
 /* Exported constants --------------------------------------------------------*/
 /** @defgroup SPDIFRX_Exported_Constants SPDIFRX Exported Constants
   * @{

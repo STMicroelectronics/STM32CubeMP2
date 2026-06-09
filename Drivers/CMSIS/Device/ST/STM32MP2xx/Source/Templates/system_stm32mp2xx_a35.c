@@ -195,7 +195,8 @@ uint32_t Processing_FIQ_flag = 0xDEADBEEF;
 uint32_t FIQ_current_index = 0;
 uint32_t Spurious_IT_count = 0;
 
-#if defined(CR_CMSIS_IT_GROUP_MANAGEMENT) || defined(WA_CMSIS_ISSUE_IRQ_GETACTIVE)
+#if (defined(CR_CMSIS_IT_GROUP_MANAGEMENT) || defined(WA_CMSIS_ISSUE_IRQ_GETACTIVE)) && \
+  !(defined(A35_STARTUP_IN_ARM_MODE) && defined(FreeRTOS))
 static interrupt_infos_t current_interrupt_infos[A35_NB_CORES];
 #endif /* defined(CR_CMSIS_IT_GROUP_MANAGEMENT) || defined(WA_CMSIS_ISSUE_IRQ_GETACTIVE) */
 
@@ -414,12 +415,70 @@ static void SystemInit_IRQ_ErrorHandler(void)
   }
 }
 
+void SystemA35_DispatchActiveInterrupt( uint32_t interrupt_id )
+{
+  IRQHandler_t handler;
+  uint32_t interrupt_mode;
+
+  /* Check validity of IRQ */
+  if (interrupt_id >= MAX_IRQ_n)
+  {
+    IRQHandlingError = ERROR_IRQ_IDX_OUT_OF_RANGE;
+    SystemInit_IRQ_ErrorHandler();
+    return;
+  }
+
+  /* Clear pending interrupt at GIC400 input,  */
+  /* if it is in edge triggering mode to allow */
+  /* source to send another.                   */
+  interrupt_mode = IRQ_GetMode(interrupt_id);
+  if (IRQ_MODE_TRIG_EDGE == interrupt_mode)
+  {
+    IRQ_ClearPending(interrupt_id);
+  }
+
+  /* Get and check corresponding interrupt handler */
+  handler = IRQ_GetHandler(interrupt_id);
+  if (handler != (IRQHandler_t)Default_ITHandler)
+  {
+    /* Call interrupt handler */
+    handler();
+  }
+  else
+  {
+    /* Not configured handler case --> error ! */
+    IRQHandlingError = ERROR_UNDEFINED_IRQ_HANDLER;
+    SystemInit_IRQ_ErrorHandler();
+    return;
+  }
+
+  /* Clear pending interrupt at GIC400 input,   */
+  /* if it is in level triggering mode to allow */
+  /* source to send another.                    */
+  if (IRQ_MODE_TRIG_LEVEL == interrupt_mode)
+  {
+    IRQ_ClearPending(interrupt_id);
+  }
+}
+
 /**
   * @brief  Generic IRQ Handler for (non-secure) SGI, PPI & SPI interrupts
   *         routed on IRQ line from GIC400 to CPU
   * @param  None
   * @retval None
   */
+#if defined(A35_STARTUP_IN_ARM_MODE) && defined(FreeRTOS)
+extern void FreeRTOS_IRQ_Handler(void);
+
+void IRQ_Handler(void) __attribute__((naked));
+
+void IRQ_Handler(void)
+{
+  __asm volatile (
+    "b FreeRTOS_IRQ_Handler\n"
+  );
+}
+#else
 void __attribute__ ((interrupt ("IRQ")))IRQ_Handler(void)
 {
   IRQHandler_t handler;
@@ -516,6 +575,7 @@ void __attribute__ ((interrupt ("IRQ")))IRQ_Handler(void)
   }
   Processing_IRQ_flag = 0;
 }
+#endif /* defined(A35_STARTUP_IN_ARM_MODE) && defined(FreeRTOS) */
 
 /**
   * @brief  Generic FIQ Handler for (secure) SGI, PPI & SPI interrupts
@@ -523,6 +583,19 @@ void __attribute__ ((interrupt ("IRQ")))IRQ_Handler(void)
   * @param  None
   * @retval None
   */
+
+#if defined(A35_STARTUP_IN_ARM_MODE) && defined(FreeRTOS)
+extern void FreeRTOS_FIQ_Handler(void);
+
+void FIQ_Handler(void) __attribute__((naked));
+
+void FIQ_Handler(void)
+{
+  __asm volatile (
+    "b FreeRTOS_FIQ_Handler\n"
+  );
+}
+#else
 void __attribute__ ((interrupt ("FIQ")))FIQ_Handler(void)
 {
   uint32_t ItId;
@@ -615,6 +688,7 @@ void __attribute__ ((interrupt ("FIQ")))FIQ_Handler(void)
   }
   Processing_FIQ_flag = 0;
 }
+#endif /* defined(A35_STARTUP_IN_ARM_MODE) && defined(FreeRTOS) */
 
 /**
   * @brief  Ensure all BSS part of code is initialized with zeros

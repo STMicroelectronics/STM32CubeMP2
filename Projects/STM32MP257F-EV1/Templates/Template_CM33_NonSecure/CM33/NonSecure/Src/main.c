@@ -80,6 +80,11 @@ int main(void)
   {
     SystemClock_Config();
   }
+  else
+  {
+  SystemCoreClockUpdate();
+  }
+
 
   HAL_Init();
 
@@ -95,10 +100,11 @@ int main(void)
 
   if(!IS_DEVELOPER_BOOT_MODE())
   {
-     /* IPCC initialization */
-     MX_IPCC_Init();
-     /*Corpo Sync Initialization*/
-     CoproSync_Init();
+    /* IPCC initialization */
+    MX_IPCC_Init();
+    /*Corpo Sync Initialization*/
+    CoproSync_Init();
+    SystemCoreClockUpdate();
   }
 
   while (1)

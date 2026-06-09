@@ -8,7 +8,7 @@ MEMORY
   LWIP          (rwx)   : ORIGIN = 0x81100000,  LENGTH = 1M
   VIRTIO_SHMEM  (rw)    : ORIGIN = 0x812F8000,	LENGTH = 32K
   IPC_SHMEM     (rw)    : ORIGIN = 0x81200000,	LENGTH = 8M - LENGTH(VIRTIO_SHMEM)
-  SRAM   		(rwx) 	    : ORIGIN = 0x0A060000,  LENGTH = 128K
+  SRAM          (rwx)   : ORIGIN = 0x0A060000,  LENGTH = 128K
 }
 
  /* Symbols needed for OpenAMP to enable rpmsg */
@@ -206,16 +206,20 @@ SECTIONS
 		KEEP(*(.heap*))
 		__HeapLimit = .;
 	} > RAM
-	
-    .tcp_sec (NOLOAD) :
+
+	.eth_desc (NOLOAD) :
 	{
 		. = ALIGN(4);
-    	*(.RxDecripSection)
+		*(.RxDecripSection)
 		. = ALIGN(4);
-    	*(.TxDecripSection)
+		*(.TxDecripSection)
+	} > SRAM
+
+	.tcp_sec (NOLOAD) :
+	{
 		. = ALIGN(4);
-    	*(.Rx_PoolSection)
-  } > ETH
+		*(.Rx_PoolSection)
+	} > ETH
 
 	/* .stack_dummy section doesn't contains any symbols. It is only
 	 * used for linker to calculate size of stack sections, and assign

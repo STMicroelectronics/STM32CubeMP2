@@ -157,6 +157,10 @@ int main(void)
   {
 	SystemClock_Config();
   }
+  else
+  {
+    SystemCoreClockUpdate();
+  }
 
   /* USER CODE BEGIN SysInit */
 

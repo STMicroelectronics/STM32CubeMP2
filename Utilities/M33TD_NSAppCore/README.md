@@ -10,9 +10,10 @@ This stack provides the task-level building blocks needed to support the typical
 
 ## What you get
 
-- Portable CM33-NS tasks (Logger, RemoteProc, SCMI Manager, Watchdog Monitor, optional OpenAMP/Button/Display).
+- Portable CM33-NS tasks (required Logger, RemoteProc, SCMI Manager, Watchdog Monitor, plus optional UserApp, Button, OpenAMP, Display, Low Power Manager, and Firmware Update Manager).
 - Thin driver interfaces (in `Includes/`) so each project can provide its own board/peripheral integration without forking this stack.
 - Config templates (in `Config/`) to keep feature enablement and task sizing centralized.
+- Cross-task orchestration for suspend/resume, RPMsg control, and structured firmware-update flows without pushing board-specific logic into the utility.
 - A post-build utility (in `postbuild/`) to assemble/sign the final TF-M S/NS combined image and copy flashing-ready artifacts into a project-local `bin/` folder (created at `${BASE_DIR}/bin`).
 
 ---
@@ -57,16 +58,29 @@ NS Application Manager (your project)
             +-> ScmiMgrTask           (required)
             +-> RemoteProcTask        (required)
             +-> WdgMonitorTask        (required)
+            +-> LowPowerMgrTask       (optional)
             +-> UserAppTask           (optional)
             +-> BtnMonitorTask        (optional)
             +-> OpenAMPTask           (optional)
             +-> DisplayTask           (optional)
+            +-> FwuMgrTask            (optional)
 
 Each task typically:
    - Uses TF-M NS APIs for secure services (CPU/WDT/SCMI)
    - Calls a thin driver interface in Utilities/M33TD_NSAppCore/Includes/
       implemented by the project in CM33/.../M33TD_NSAppCore/AppDriver/
 ```
+
+Current initialization order in `NSCoreApp_Init()` is:
+
+- Logger
+- TF-M NS interface initialization + startup logs
+- Optional LowPowerMgr, UserApp, BtnMonitor, Display
+- ScmiMgr
+- Optional OpenAMP
+- RemoteProc
+- WdgMonitor
+- Optional FwuMgr
 
 ---
 
@@ -87,17 +101,25 @@ These are the baseline “Non‑Secure Application Manager” services and are e
 
 Inter-processor communication between Linux/A35 and CM33-NS is provided by **OpenAMPTask**.
 
-When `ENABLE_OPENAMP_TASK=1`, OpenAMPTask initializes OpenAMP/libmetal and creates RPMsg endpoints. In this stack, OpenAMPTask is intentionally focused on two categories of use-cases:
+When `ENABLE_OPENAMP_TASK=1`, OpenAMPTask initializes OpenAMP/libmetal and creates RPMsg endpoints. In the current stack, OpenAMPTask acts as the transport hub for four categories of use-cases:
 
 1. **Display-related RPMsg events (Linux → CM33)**
-  - When `ENABLE_DISPLAY_TASK=1`, OpenAMPTask registers a **Display RPMsg endpoint** and forwards inbound messages to the DisplayTask callback.
-  - This is used for Linux-driven display interactions such as stopping a splash screen and other display control flows.
-  - If DisplayTask is disabled, display-endpoint code is excluded from OpenAMPTask by conditional compilation.
+   - When `ENABLE_DISPLAY_TASK=1`, OpenAMPTask registers a **Display RPMsg endpoint** and forwards inbound messages to the DisplayTask callback.
+   - This is used for Linux-driven display interactions such as stopping a splash screen and starting reboot-related display flows.
+   - If DisplayTask is disabled, display-endpoint code is excluded from OpenAMPTask by conditional compilation.
 
 2. **M33-initiated power requests (CM33 → Linux/A35)**
-  - OpenAMPTask exposes a **Power RPMsg endpoint** used to send simple power-management commands to the remote side (e.g., `reboot` / `shutdown`).
-  - The reference wiring uses BtnMonitorTask to trigger a reboot request on a **very long press** (see `App/Src/openamp_task.c` and `App/Src/btn_monitor_task.c`).
-  - OpenAMPTask can also be used without BtnMonitorTask: any project code can post an OpenAMP command to request reboot/shutdown.
+   - OpenAMPTask exposes a **Power RPMsg endpoint** used to send simple power-management commands to the remote side (e.g., `reboot` / `shutdown`).
+   - The reference wiring uses BtnMonitorTask to trigger a reboot request on a **very long press** (see `App/Src/openamp_task.c` and `App/Src/btn_monitor_task.c`).
+   - OpenAMPTask can also be used without BtnMonitorTask: any project code can post an OpenAMP command to request reboot/shutdown.
+
+3. **Low-power policy control (Linux → CM33)**
+   - When `ENABLE_LOW_POWER_MGR_TASK=1`, OpenAMPTask registers a **Low Power RPMsg endpoint** and forwards policy commands to LowPowerMgrTask.
+   - This lets the remote side limit or restore the current suspend policy while LowPowerMgrTask remains the owner of the actual suspend/resume sequence.
+
+4. **Firmware update control and responses (Linux ↔ CM33)**
+   - When `ENABLE_FWU_MGR_TASK=1`, OpenAMPTask registers a **FWU RPMsg endpoint** used by FwuMgrTask to receive commands and return structured status/info responses.
+   - FWU support is transport-coupled to OpenAMP: `ENABLE_FWU_MGR_TASK=1` requires `ENABLE_OPENAMP_TASK=1`.
 
 **Project-level OpenAMP binding (required when `ENABLE_OPENAMP_TASK=1`)**
 
@@ -107,7 +129,25 @@ OpenAMPTask depends on a project-provided OpenAMP “glue layer” (OpenAMP MW i
 - For this OpenAmpTask, the template must be adapted (callbacks/transport) so that mailbox RX notifications are forwarded into the task. In particular, the `openamp.c/.h` used by your project should provide a **register API** so the OpenAMP MW can notify the stack on RX events.
 - Recommended approach: copy/adapt the OpenAMP integration from the **full featured application reference** listed in [Reference projects](#reference-projects) (OpenAMP MW glue: `openamp.c/.h`, `openamp_conf.h`, plus the project’s IPCC/MPU setup in `openamp_driver.c`).
 
-If your project does not need RPMsg (no display endpoint handling and no M33-initiated power requests), you can keep `ENABLE_OPENAMP_TASK=0`.
+If your project does not need RPMsg transport for display, power control, low-power policy control, or firmware-update messaging, you can keep `ENABLE_OPENAMP_TASK=0`.
+
+### Low-power orchestration
+
+LowPowerMgrTask centralizes suspend-policy ownership and low-power sequencing.
+
+- It is enabled with `ENABLE_LOW_POWER_MGR_TASK=1`.
+- It owns the aggregate suspend policy, combining a default policy (`LOW_POWER_DEFAULT_POLICY_ENABLE`) with optional runtime agent constraints.
+- It coordinates low-power entry and resume with RemoteProcTask, SCMI notifications, and project sleep hooks exposed through `Includes/low_power_mgr_driver.h`.
+- When OpenAMP is enabled, it can also accept RPMsg policy commands from the remote side.
+
+Low-power behavior spans multiple tasks by design:
+
+- **LowPowerMgrTask** owns the policy and state machine.
+- **ScmiMgrTask** forwards SCMI suspend-related notifications.
+- **RemoteProcTask** performs A35 suspend/resume transitions and state tracking.
+- **OpenAMPTask** optionally carries low-power RPMsg commands.
+- **BtnMonitorTask** and **WdgMonitorTask** can register listeners to mask inputs or ping the watchdog around deep sleep entry.
+
 
 ### Button Monitor usage
 
@@ -120,7 +160,7 @@ BtnMonitorTask is a generic button press classifier:
 
 Display functionality is split into:
 
-- **DisplayTask**: display control logic (splash, panel init, etc.).
+- **DisplayTask**: display control logic (splash, panel init, overlay/reboot-related flows, etc.).
 - **OpenAMPTask display endpoint**: RPMsg plumbing used to receive display-related messages from Linux and dispatch them to DisplayTask.
 
 This is why display-related RPMsg handling is typically enabled as a bundle:
@@ -128,6 +168,17 @@ This is why display-related RPMsg handling is typically enabled as a bundle:
 - `ENABLE_DISPLAY_TASK=1` + `ENABLE_OPENAMP_TASK=1`
 
 Projects commonly expose a “minimal/headless” build profile where the display pipeline is disabled. In that case, other tasks (including OpenAMPTask for power requests and BtnMonitorTask) can still be enabled if desired.
+
+### Firmware update flow
+
+FwuMgrTask provides a structured firmware-update control point on the CM33-NS side.
+
+- It is enabled with `ENABLE_FWU_MGR_TASK=1`.
+- It depends on OpenAMP transport and therefore requires `ENABLE_OPENAMP_TASK=1`.
+- It receives FWU commands over RPMsg, queries PSA FWU component information, tracks pending updates, and coordinates install/reboot flows.
+- When applying pending images, it stops the remote A35 side before writing staged images through PSA FWU APIs and requesting the reboot sequence.
+
+This task is utility-owned logic; the project remains responsible for providing the platform integration needed by OpenAMP and the PSA/TF-M FWU environment.
 
 For common end-to-end combinations of these tasks (profiles), see [Recommended profiles](#recommended-profiles-examples) in the **Feature toggles (generic)** section.
 
@@ -155,13 +206,13 @@ M33TD_NSAppCore/
   Public driver interfaces that projects must implement. The project provides the concrete drivers that bind tasks to the actual board/peripherals (UART/GPIO/display/etc.), typically under `CM33/.../M33TD_NSAppCore/AppDriver/`.
 
 - **Common/**  
-  Shared helpers used by multiple tasks, plus optional FaultMgr support under `Common/FaultMgr/`.
+  Shared helpers used by multiple tasks, plus optional FaultMgr support under `Common/FaultMgr/` and shared panel/display helpers under `Common/Panel/`.
 
 - **Config/**  
   Configuration header templates. Projects copy and adapt these (typically into `CM33/NonSecure/FREERTOS/App/`) to control feature enablement and task sizing.
 
 - **Assets/**  
-  Optional visual assets (splash screen, animations, etc.) for display-capable builds.
+  Optional visual assets (splash screen, animations, visual watchdog banners, OLED assets, etc.) for display-capable builds.
 
 - **postbuild/**  
   Standalone CMake post-build utility for assembling NS + Secure binaries, signing the combined image, and copying outputs into `${BASE_DIR}/bin/`.
@@ -215,11 +266,12 @@ Defaults shown below match the default macro values in:
 | Feature                 | Macro                              | Default | Values    | Notes                                                                  |
 |-------------------------|------------------------------------|---------|-----------|------------------------------------------------------------------------|
 | Auto-start CA35 at boot | `REMOTE_PROC_AUTO_START`          | `1`     | `0` / `1` | Used by RemoteProcTask to decide whether to request CA35 start.       |
+| Default low-power policy| `LOW_POWER_DEFAULT_POLICY_ENABLE` | `0`     | `0` / `1` | When `1`, LowPowerMgrTask starts from its default suspend policy.     |
 | Real-time debug log     | `REALTIME_DEBUG_LOG_ENABLED`      | `0`     | `0` / `1` | When `1`, logs print directly (printf) instead of via logger queue.   |
 | Fault exception         | `FAULT_EXCEPTION_ENABLE`          | `1`     | `0` / `1` | Enables FaultMgr exception capture/reporting (if FaultMgr is linked). |
 | Fault backtrace         | `FAULT_EXCEPTION_BACKTRACE_ENABLE`| `1`     | `0` / `1` | Enables backtrace capture when FaultMgr is enabled.                   |
 
-Task-level enable/disable (e.g. `ENABLE_OPENAMP_TASK`, `ENABLE_BTN_MONITOR_TASK`, `ENABLE_DISPLAY_TASK`) is controlled via `app_tasks_config.h` and can be overridden by project-level defines (typically via `nsappcore_config.h` or build flags).
+Task-level enable/disable (for example `ENABLE_OPENAMP_TASK`, `ENABLE_LOW_POWER_MGR_TASK`, `ENABLE_FWU_MGR_TASK`, `ENABLE_BTN_MONITOR_TASK`, `ENABLE_DISPLAY_TASK`) is controlled via `app_tasks_config.h` and can be overridden by project-level defines (typically via `nsappcore_config.h` or build flags).
 
 ### Task enable defaults and override precedence
 
@@ -232,10 +284,12 @@ The template task defaults come from:
 | ScmiMgrTask    | `ENABLE_SCMI_MGR_TASK`    | `1` (required)              |
 | RemoteProcTask | `ENABLE_REMOTEPROC_TASK`  | `1` (required)              |
 | WdgMonitorTask | `ENABLE_WDG_MONITOR_TASK` | `1` (required)              |
+| LowPowerMgrTask| `ENABLE_LOW_POWER_MGR_TASK` | `0`                       |
 | UserAppTask    | `ENABLE_USERAPP_TASK`     | `0`                         |
 | BtnMonitorTask | `ENABLE_BTN_MONITOR_TASK` | `0`                         |
 | OpenAMPTask    | `ENABLE_OPENAMP_TASK`     | `0`                         |
 | DisplayTask    | `ENABLE_DISPLAY_TASK`     | `0` (auto-forced to `1` if `DISPLAY_PANEL_ENABLED` is defined) |
+| FwuMgrTask     | `ENABLE_FWU_MGR_TASK`     | `0` (requires `ENABLE_OPENAMP_TASK=1`) |
 
 ### Recommended profiles (examples)
 
@@ -243,18 +297,21 @@ These examples show common combinations of tasks for typical end-to-end behavior
 
 In the table below, `0/1` means “optional depending on your application logic”.
 
-| Profile | `ENABLE_OPENAMP_TASK` | `ENABLE_DISPLAY_TASK` | `ENABLE_BTN_MONITOR_TASK` | Intended use |
-|---|---:|---:|---:|---|
-| Bare Minimum (no RPMsg) | 0 | 0 | 0 | RemoteProc + SCMI + watchdog; no inter-processor messaging |
-| Button only (no RPMsg) | 0 | 0 | 1 | Local button events for CM33-side logic; no Linux/A35 interaction |
-| Power control (M33 → Linux) | 1 | 0 | 0/1 | M33-initiated reboot/shutdown requests via Power RPMsg endpoint |
-| Display control (Linux → M33) | 1 | 1 | 0/1 | Linux-driven display events delivered to DisplayTask via RPMsg |
-| Full featured (display + button-triggered reboot) | 1 | 1 | 1 | Combined display endpoint + button monitoring with very-long-press triggering a power request |
+| Profile | `ENABLE_OPENAMP_TASK` | `ENABLE_DISPLAY_TASK` | `ENABLE_BTN_MONITOR_TASK` | `ENABLE_LOW_POWER_MGR_TASK` | `ENABLE_FWU_MGR_TASK` | Intended use |
+|---|---:|---:|---:|---:|---:|---|
+| Bare Minimum (no RPMsg) | 0 | 0 | 0 | 0 | 0 | RemoteProc + SCMI + watchdog; no inter-processor messaging |
+| Button only (no RPMsg) | 0 | 0 | 1 | 0 | 0 | Local button events for CM33-side logic; no Linux/A35 interaction |
+| Power control (M33 → Linux) | 1 | 0 | 0/1 | 0 | 0 | M33-initiated reboot/shutdown requests via the Power RPMsg endpoint |
+| Low-power control | 1 | 0 | 0/1 | 1 | 0 | Suspend policy owned by LowPowerMgrTask, optionally updated over RPMsg |
+| Display control (Linux → M33) | 1 | 1 | 0/1 | 0/1 | 0 | Linux-driven display events delivered to DisplayTask via RPMsg |
+| FWU-capable | 1 | 0/1 | 0/1 | 0/1 | 1 | Structured firmware-update messaging and install/reboot flows over RPMsg |
+| Full featured HMI/control | 1 | 1 | 1 | 1 | 0/1 | Combined display endpoint, low-power orchestration, and button-triggered remote power requests |
 
 **How this maps to the provided reference projects**
 
 - Template_StarterApp_M33TD is a good bare-minimum starting point and is closest to **Bare Minimum (no RPMsg)**.
-- StarterApp_M33TD is a full featured application reference and is closest to **Full featured (display + button-triggered reboot)**.
+- StarterApp_M33TD is a feature-rich application reference and is closest to **Full featured HMI/control**.
+- FWU and low-power capabilities are opt-in overlays on top of these baseline profiles; enable them only when the corresponding platform integration is present.
 
 See: [Reference projects](#reference-projects).
 
@@ -266,7 +323,7 @@ In the template `nsappcore_config_template.h`, the include order is:
 ```text
 nsappcore_config.h
    |
-  +-> (optional) higher-level build options map to ENABLE_* and feature macros
+   +-> (optional) higher-level build options map to ENABLE_* and feature macros
    +-> (optional) defines ENABLE_DISPLAY_TASK=1 if DISPLAY_PANEL_ENABLED is set
    +-> includes app_tasks_config.h  (defaults apply only if still undefined)
 ```
@@ -324,19 +381,23 @@ The stack follows a consistent pattern:
 |---------------|-------------------------------------------|-------------------------------------------------|--------------------------------------------|
 | NSCoreApp     | Bootstraps and starts enabled tasks       | Always                                          | FreeRTOS/CMSIS-RTOS2                       |
 | LoggerTask    | Central logging + sinks                   | Always (typically)                              | Project logger output driver               |
+| LowPowerMgrTask | Suspend policy owner and low-power sequencing | `ENABLE_LOW_POWER_MGR_TASK`                 | Project low-power hooks, RemoteProcTask, SCMI, optional OpenAMP transport |
 | UserAppTask   | Example app logic (LED, liveness demo)    | Enabled by config                               | Project LED driver                         |
-| RemoteProcTask| Start/stop/monitor CA35 via TF-M          | Enabled by config + `REMOTE_PROC_AUTO_START`    | TF-M CPU IOCTL, project remoteproc driver  |
-| ScmiMgrTask   | Handle SCMI notifications/events          | Enabled by config                               | TF-M SCMI + notification APIs              |
-| WdgMonitorTask| Watchdog ping/supervision                 | Enabled by config                               | TF-M WDT IOCTL                             |
-| BtnMonitorTask| Button press classification               | `ENABLE_BTN_MONITOR_TASK`                       | Project button driver                      |
-| OpenAMPTask   | RPMsg endpoints + control messages        | `ENABLE_OPENAMP_TASK`                           | OpenAMP/libmetal, mailbox/IPCC platform    |
-| DisplayTask   | Display control logic and UI flows        | `ENABLE_DISPLAY_TASK`                           | Project display driver (FULL builds), OpenAMPTask for Linux-driven display RPMsg |
+| RemoteProcTask| Start/stop/suspend/resume/monitor CA35 via TF-M | Enabled by config + `REMOTE_PROC_AUTO_START` | TF-M CPU IOCTL, project remoteproc driver, SCMI/LowPower/FWU interactions |
+| ScmiMgrTask   | Handle SCMI notifications and power events | Enabled by config                              | TF-M SCMI + notification APIs, optional LowPower/OpenAMP listeners |
+| WdgMonitorTask| Watchdog ping/supervision                 | Enabled by config                               | TF-M WDT IOCTL, optional LowPower listener |
+| BtnMonitorTask| Button press classification               | `ENABLE_BTN_MONITOR_TASK`                       | Project button driver, optional OpenAMP and LowPower listeners |
+| OpenAMPTask   | RPMsg endpoints + transport/control messages | `ENABLE_OPENAMP_TASK`                         | OpenAMP/libmetal, mailbox/IPCC platform, Display/LowPower/FWU task callbacks |
+| DisplayTask   | Display control logic and UI flows        | `ENABLE_DISPLAY_TASK`                           | Project display driver, optional OpenAMP transport for Linux-driven display control |
+| FwuMgrTask    | Structured firmware-update command handling | `ENABLE_FWU_MGR_TASK`                         | PSA FWU APIs, devicetree staging layout, RemoteProcTask, OpenAMPTask |
 
 ---
 
 ## Postbuild Utility: Binary Assembly and Signing
 
 The `postbuild/` directory contains a CMake project that automates the final steps of binary assembly and signing for STM32MP2 M33TD applications. It combines the built Non‑Secure (NS) application with Trusted Firmware‑M (TF‑M) Secure binaries, producing signed images and deployment artifacts.
+
+The utility works both when invoked standalone and when added as a subdirectory of a larger CMake project. In standalone mode, `NS_BUILD_DIR` defaults to the parent of the postbuild build directory; in subdirectory mode, it defaults to the current binary directory unless the parent project overrides it.
 
 ### What it does
 
@@ -347,6 +408,7 @@ The `postbuild/` directory contains a CMake project that automates the final ste
   - `tfm_s_ns_signed.bin` (signed TF-M S/NS combined image)
   - `bl2.stm32`
   - `ddr_phy_signed.bin`
+- Requires Python 3 to run the TF-M assembly/signing scripts.
 
 ### How to use
 
@@ -360,6 +422,7 @@ Invoke the postbuild utility directly using CMake, passing the required variable
 - `TFM_BUILD_DIR` — path to the TF‑M build directory containing Secure images and keys.
 - `NS_BUILD_DIR` — directory that contains the built NS artifacts (`${PROJECT_NAME}.elf/.bin`). Optional: in standalone mode this defaults to the parent of the postbuild build directory.
 - `BASE_DIR` — output base directory where the `bin/` folder will be created (commonly the CM33 project root).
+- `TFM_S_NS_SIGN_KEY` — optional override for the TF-M signing key. If the configured file is missing, postbuild falls back to the default key under `${TFM_BUILD_DIR}/api_ns/image_signing/keys/`.
 
 Example:
 
@@ -374,6 +437,8 @@ cmake --build build_post --target M33TD_NSAppCore_postbuild
 ```
 
 This is suitable when invoking post-build from STM32CubeIDE, or when running from the command line.
+
+If Python-based signing fails, first verify `TFM_BUILD_DIR`, `TFM_S_NS_SIGN_KEY`, and the signing-password variables used by your build wrapper. The current postbuild logic declares `TFM_S_NS_SIGN_KEY_PSWD` but passes `TFM_S_NS_SIGN_PSWD` to the wrapper script, so project wrappers should set the variable expected by the invocation path they use.
 
 #### 2. Subdirectory mode (CMake integration)
 
@@ -429,9 +494,51 @@ by adjusting the CMake variables passed to the postbuild project or by extending
 
 ---
 
+## Integration Verification Checklist
+
+After integrating this stack into a project, verify the points below before treating the port as stable:
+
+1. **Bootstrap and task profile**
+   - Confirm `NSCoreApp_Init()` starts the task set you expect for the project profile.
+   - Confirm project overrides in `nsappcore_config.h` and `app_tasks_config.h` match the intended `ENABLE_*` macros.
+
+2. **Remote processor lifecycle**
+   - Verify CA35 auto-start behavior matches `REMOTE_PROC_AUTO_START`.
+   - Verify crash detection and stop/start recovery paths through RemoteProcTask.
+
+3. **OpenAMP transport (when enabled)**
+   - Verify the required RPMsg endpoints are created for the selected profile:
+     - `power` at `0x58`
+     - `display` at `0x59`
+     - `low_power` at `0x5A`
+     - `fwu` at `0x5B`
+   - Verify the project-level OpenAMP integration forwards mailbox RX notifications into OpenAMPTask.
+
+4. **Low-power behavior (when enabled)**
+   - Verify SCMI suspend and shutdown notifications are routed into LowPowerMgrTask.
+   - Verify policy control commands `LIMIT_PM_DISABLED`, `LIMIT_PM_STOP2`, `LIMIT_PM_LP_STOP2`, and `LIMIT_PM_LPLV_STOP2` are accepted over the low-power RPMsg endpoint.
+   - Verify `LIMIT_PM_STANDBY` remains a recognized-but-ignored command unless the implementation changes.
+
+5. **FWU flow (when enabled)**
+   - Verify `ENABLE_FWU_MGR_TASK=1` is paired with `ENABLE_OPENAMP_TASK=1`.
+   - Verify the FWU endpoint is registered and that the update flow can query component information and drive install/reboot handling.
+
+6. **Display pipeline (when enabled)**
+   - Verify DisplayTask initialization and any display-side RPMsg message handling used by the project profile.
+
+7. **Postbuild outputs**
+   - Verify `${BASE_DIR}/bin/` contains the expected raw NS binary, signed TF-M S/NS image, `bl2.stm32`, and `ddr_phy_signed.bin`.
+   - If signing fails, verify both `TFM_S_NS_SIGN_KEY_PSWD` and `TFM_S_NS_SIGN_PSWD` in the build wrapper path you use.
+
+---
+
 ## Reference projects
 
 - `Firmware/Projects/STM32MP257F-EV1/Demonstrations/StarterApp_M33TD`  
-  (full featured application reference)
-- `Firmware/Projects/*/Templates/Template_StarterApp_M33TD`  
-  (bare-minimum starting point for new projects)
+  (feature-rich application reference)
+- `Firmware/Projects/STM32MP257F-EV1/Demonstrations/DisplayDemo_M33TD`  
+  (display-focused integration reference)
+- `Firmware/Projects/STM32MP257F-EV1/Templates/Template_StarterApp_M33TD`  
+  (bare-minimum starting point for STM32MP257 projects)
+- `Firmware/Projects/STM32MP215F-DK/Templates/Template_StarterApp_M33TD`  
+  (bare-minimum starting point for STM32MP215 projects)

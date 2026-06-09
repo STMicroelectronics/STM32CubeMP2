@@ -1,0 +1,466 @@
+/* USER CODE BEGIN Header */
+/**
+  ******************************************************************************
+  * @file    Application/SCMI/SCMI_DEMO/CM33/NonSecure/Src/main.c
+  * @author  MCD Application Team
+  * @brief   This example describes how to use SCMI.
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2026 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+/* USER CODE END Header */
+/* Includes ------------------------------------------------------------------*/
+#include "main.h"
+#include "copro_sync.h"
+#include <stdio.h>
+
+/* Private includes ----------------------------------------------------------*/
+/* USER CODE BEGIN Includes */
+
+/* USER CODE END Includes */
+
+/* Private typedef -----------------------------------------------------------*/
+
+/* USER CODE BEGIN PTD */
+
+/* USER CODE END PTD */
+
+/* Private define ------------------------------------------------------------*/
+
+/* USER CODE BEGIN PD */
+
+/* USER CODE END PD */
+
+/* Private macro -------------------------------------------------------------*/
+/* USER CODE BEGIN PM */
+
+/* USER CODE END PM */
+
+/* Private variables ---------------------------------------------------------*/
+
+#ifdef DEBUG
+volatile int debug = 1;
+#endif /* DEBUG */
+
+/* IPCC handler declaration */
+IPCC_HandleTypeDef        hipcc1;
+static __IO int32_t       g_message_received_flag = 0;
+uint32_t j=0;
+char clk_name[17]       = {0};
+unsigned int clk_rate_khz = 0;
+uint32_t clk_attributes = 0;
+/* USER CODE BEGIN PV */
+
+/* USER CODE END PV */
+
+/* Private function prototypes -----------------------------------------------*/
+static void SystemClock_Config(void);
+static void Get_SCMI_Clock_Attributes(void);
+static void MX_IPCC_Init(void);
+
+/* USER CODE BEGIN PFP */
+
+/* USER CODE END PFP */
+
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
+
+/**
+  * @brief  The application entry point.
+  * @retval int
+  */
+int main(void)
+{
+
+#ifdef DEBUG
+  while(debug==1);
+#endif /* DEBUG */
+
+  uint32_t flags=0;
+  uint32_t config=0;
+  uint32_t version =0;
+  uint32_t attributes=0;
+
+  /* Reset of all peripherals, Initializes the Flash interface and the Systick. */
+  HAL_Init();
+
+#if defined(__VALID_OUTPUT_TERMINAL_IO__) && defined (__GNUC__)
+  initialise_monitor_handles();
+#elif defined(__VALID_OUTPUT_UART_IO__)
+if(ResMgr_Request(RESMGR_RESOURCE_RIFSC, STM32MP21_RIFSC_UART4_ID) == RESMGR_STATUS_ACCESS_OK)
+{  COM_InitTypeDef COM_Conf;
+
+  COM_Conf.BaudRate   = 115200;
+  COM_Conf.HwFlowCtl  = COM_HWCONTROL_NONE;
+  COM_Conf.Parity     = COM_PARITY_NONE;
+  COM_Conf.StopBits   = COM_STOPBITS_1;
+  COM_Conf.WordLength = COM_WORDLENGTH_8B;
+
+  BSP_COM_Init(COM_VCP_CM33, &COM_Conf);
+}
+#endif  /* __VALID_OUTPUT_TERMINAL_IO__ or __VALID_OUTPUT_UART_IO__ */
+
+  /* Configure the system clock for dev mode*/
+  if(IS_DEVELOPER_BOOT_MODE())
+  {
+    SystemClock_Config();
+  }
+
+  /* USER CODE BEGIN Init */
+
+  /* USER CODE END Init */
+
+  /* USER CODE BEGIN SysInit */
+
+  /* USER CODE END SysInit */
+
+  /* Configure LED*/
+  BSP_LED_Init(LED3);
+
+  if(!IS_DEVELOPER_BOOT_MODE())
+  {
+    /* IPCC initialization */
+    MX_IPCC_Init();
+    /*Corpo Sync Initialization*/
+    CoproSync_Init();
+    /* Initialize MAILBOX with IPCC peripheral */
+    MAILBOX_SCMI_Init();
+  }
+
+  printf(" SCMI DEMO  execution started :\r\n");
+
+  printf("\n\r----------------------------------------------------------------------------------\n\r");
+
+/* API to check the SCMI Clock Protocol Version */
+  g_message_received_flag = scmi_clock_protocol_version(&scmi_channel,&version);
+  printf("\n\r SCMI Clock Protocol Version = 0x%lx ,Return received from SCMI server = %ld\n\r", version, g_message_received_flag);
+
+/* API to enable/disable the clock */
+  /* Enabling the clock having clock_id 7 */
+  g_message_received_flag= scmi_clock_gate(&scmi_channel, 7, 1);
+  printf("\n\r Return received from SCMI server = %ld\n\r", g_message_received_flag);
+  g_message_received_flag= scmi_clock_gate(&scmi_channel, 9, 1);
+  /* Enabling the clock having clock_id 9 */
+   printf("\n\r Return received from SCMI server = %ld\n\r", g_message_received_flag);
+   /* API to enable the clock */
+   /* Enabling the clock having clock_id 12 */
+   g_message_received_flag= scmi_clock_enable(&scmi_channel, 12);
+    printf("\n\r Return received from SCMI server = %ld\n\r", g_message_received_flag);
+
+    /* API to get the configuration of the clock having clock_id 7 */
+  g_message_received_flag = scmi_clock_get_config(&scmi_channel, 7, &flags, &attributes, &config);
+   printf("\n\r Configurations of the clock are : config = 0x%lx ,attributes = 0x%lx ,Return received from SCMI server = %ld\n\r", config, attributes, g_message_received_flag);
+   /* API to get the configuration of the clock having clock_id 9 */
+  g_message_received_flag = scmi_clock_get_config(&scmi_channel, 9, &flags, &attributes, &config);
+    printf("\n\r Configurations of the clock are : config = 0x%lx ,attributes = 0x%lx ,Return received from SCMI server = %ld\n\r", config, attributes, g_message_received_flag);
+    /* API to get the configuration of the clock having clock_id 12 */
+    g_message_received_flag = scmi_clock_get_config(&scmi_channel, 12, &flags, &attributes, &config);
+        printf("\n\r Configurations of the clock are : config = 0x%lx ,attributes = 0x%lx ,Return received from SCMI server = %ld\n\r", config, attributes, g_message_received_flag);
+
+/* Prints the clock attributes */
+ Get_SCMI_Clock_Attributes();
+
+
+ printf("\n\r----------------------------------------------------------------------------------\n\r");
+ /* API to enable/disable the clock */
+   /* Disabling the clock having clock_id 7 */
+    g_message_received_flag= scmi_clock_gate(&scmi_channel, 7, 0);
+      printf("\n\r Return received from SCMI server = %ld\n\r", g_message_received_flag);
+      /* Disabling the clock having clock_id 9 */
+    g_message_received_flag= scmi_clock_gate(&scmi_channel, 9, 0);
+      printf("\n\r Return received from SCMI server = %ld\n\r", g_message_received_flag);
+      /* API to enable the clock */
+       /* Disabling  the clock having clock_id 12 */
+      g_message_received_flag= scmi_clock_disable(&scmi_channel, 12);
+       printf("\n\r Return received from SCMI server = %ld\n\r", g_message_received_flag);
+       /* API to get the configuration of the clock having clock_id 7 */
+      g_message_received_flag = scmi_clock_get_config(&scmi_channel, 7, &flags, &attributes, &config);
+        printf("\n\r Configurations of the clock are : config = 0x%lx ,attributes = 0x%lx ,Return received from SCMI server = %ld\n\r", config, attributes, g_message_received_flag);
+        /* API to get the configuration of the clock having clock_id 9 */
+        g_message_received_flag = scmi_clock_get_config(&scmi_channel, 9, &flags, &attributes, &config);
+           printf("\n\r Configurations of the clock are : config = 0x%lx ,attributes = 0x%lx ,Return received from SCMI server = %ld\n\r", config, attributes, g_message_received_flag);
+           /* API to get the configuration of the clock having clock_id 12 */
+               g_message_received_flag = scmi_clock_get_config(&scmi_channel, 12, &flags, &attributes, &config);
+                   printf("\n\r Configurations of the clock are : config = 0x%lx ,attributes = 0x%lx ,Return received from SCMI server = %ld\n\r", config, attributes, g_message_received_flag);
+
+           /* Prints the clock attributes */
+            Get_SCMI_Clock_Attributes();
+
+
+  /* Infinite Loop */
+  while (1)
+  {
+
+	 BSP_LED_Toggle(LED3);
+	 HAL_Delay(1000);
+  }
+
+  /* USER CODE END 3 */
+}
+
+/**
+  * @brief  System Clock Configuration
+  * @param  None
+  * @retval None
+  */
+static void SystemClock_Config(void)
+{
+	RCC_OscInitTypeDef RCC_OscInitStruct = { 0 };
+	/* PLL 2 is configured by DDR initialization code */
+	/* PLL 3 is configured by GPU initialization code */
+	RCC_PLLInitTypeDef RCC_Pll4InitStruct = { 0 };
+	RCC_PLLInitTypeDef RCC_Pll5InitStruct = { 0 };
+	RCC_PLLInitTypeDef RCC_Pll6InitStruct = { 0 };
+	RCC_PLLInitTypeDef RCC_Pll7InitStruct = { 0 };
+	RCC_PLLInitTypeDef RCC_Pll8InitStruct = { 0 };
+	RCC_ClkInitTypeDef RCC_ClkInitStruct = { 0 };
+
+	RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI
+			| RCC_OSCILLATORTYPE_HSE |
+			RCC_OSCILLATORTYPE_LSE | RCC_OSCILLATORTYPE_LSI;
+	RCC_OscInitStruct.HSEState = RCC_HSE_ON;
+	RCC_OscInitStruct.LSEState = RCC_LSE_OFF;
+	RCC_OscInitStruct.HSIState = RCC_HSI_ON;
+	RCC_OscInitStruct.LSIState = RCC_LSI_OFF;
+	RCC_OscInitStruct.LSEDriveValue = RCC_LSEDRIVE_MEDIUMHIGH;
+
+	if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK) {
+		Error_Handler();
+	}
+	/* PLL 2 is configured by DDR initialization code */
+	/* PLL 3 is configured by GPU initialization code */
+
+	/* 1200MHz */
+	RCC_Pll4InitStruct.PLLSource = RCC_PLLSOURCE_HSE;
+	RCC_Pll4InitStruct.PLLMode = 0;
+	RCC_Pll4InitStruct.FBDIV = 30;
+	RCC_Pll4InitStruct.FREFDIV = 1;
+	RCC_Pll4InitStruct.FRACIN = 0;
+	RCC_Pll4InitStruct.POSTDIV1 = 1;
+	RCC_Pll4InitStruct.POSTDIV2 = 1;
+	RCC_Pll4InitStruct.PLLState = RCC_PLL_ON;
+
+	/* 532MHz */
+	RCC_Pll5InitStruct.PLLSource = RCC_PLLSOURCE_HSE;
+	RCC_Pll5InitStruct.PLLMode = 0;
+	RCC_Pll5InitStruct.FBDIV = 133;
+	RCC_Pll5InitStruct.FREFDIV = 5;
+	RCC_Pll5InitStruct.FRACIN = 0;
+	RCC_Pll5InitStruct.POSTDIV1 = 1;
+	RCC_Pll5InitStruct.POSTDIV2 = 2;
+	RCC_Pll5InitStruct.PLLState = RCC_PLL_ON;
+
+	/* 500MHz */
+	RCC_Pll6InitStruct.PLLSource = RCC_PLLSOURCE_HSE;
+	RCC_Pll6InitStruct.PLLMode = 0;
+	RCC_Pll6InitStruct.FBDIV = 25;
+	RCC_Pll6InitStruct.FREFDIV = 1;
+	RCC_Pll6InitStruct.FRACIN = 0;
+	RCC_Pll6InitStruct.POSTDIV1 = 1;
+	RCC_Pll6InitStruct.POSTDIV2 = 2;
+	RCC_Pll6InitStruct.PLLState = RCC_PLL_ON;
+
+	/* 835.512MHz */
+	RCC_Pll7InitStruct.PLLSource = RCC_PLLSOURCE_HSE;
+	RCC_Pll7InitStruct.PLLMode = 0;
+	RCC_Pll7InitStruct.FBDIV = 167;
+	RCC_Pll7InitStruct.FREFDIV = 8;
+	RCC_Pll7InitStruct.FRACIN = 1717047;
+	RCC_Pll7InitStruct.POSTDIV1 = 1;
+	RCC_Pll7InitStruct.POSTDIV2 = 1;
+	RCC_Pll7InitStruct.PLLState = RCC_PLL_ON;
+
+	/* 594MHz */
+	RCC_Pll8InitStruct.PLLSource = RCC_PLLSOURCE_HSE;
+	RCC_Pll8InitStruct.PLLMode = 0;
+	RCC_Pll8InitStruct.FBDIV = 297;
+	RCC_Pll8InitStruct.FREFDIV = 10;
+	RCC_Pll8InitStruct.FRACIN = 0;
+	RCC_Pll8InitStruct.POSTDIV1 = 1;
+	RCC_Pll8InitStruct.POSTDIV2 = 2;
+	RCC_Pll8InitStruct.PLLState = RCC_PLL_ON;
+
+	/* PLL 2 is configured by DDR initialization code */
+	/* PLL 3 is configured by GPU initialization code */
+
+	if (HAL_RCCEx_PLL4Config(&RCC_Pll4InitStruct) != HAL_OK) {
+		Error_Handler();
+	}
+
+	if (HAL_RCCEx_PLL5Config(&RCC_Pll5InitStruct) != HAL_OK) {
+		Error_Handler();
+	}
+
+	if (HAL_RCCEx_PLL6Config(&RCC_Pll6InitStruct) != HAL_OK) {
+		Error_Handler();
+	}
+
+	if (HAL_RCCEx_PLL7Config(&RCC_Pll7InitStruct) != HAL_OK) {
+		Error_Handler();
+	}
+
+	if (HAL_RCCEx_PLL8Config(&RCC_Pll8InitStruct) != HAL_OK) {
+		Error_Handler();
+	}
+
+	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_ICN_HS_MCU
+			| RCC_CLOCKTYPE_ICN_LS_MCU |
+			RCC_CLOCKTYPE_ICN_SDMMC | RCC_CLOCKTYPE_ICN_DDR |
+			RCC_CLOCKTYPE_ICN_DISPLAY | RCC_CLOCKTYPE_ICN_HCL |
+			RCC_CLOCKTYPE_ICN_NIC | RCC_CLOCKTYPE_ICN_VID |
+			RCC_CLOCKTYPE_ICN_APB1 | RCC_CLOCKTYPE_ICN_APB2 |
+			RCC_CLOCKTYPE_ICN_APB3 | RCC_CLOCKTYPE_ICN_APB4 |
+			RCC_CLOCKTYPE_ICN_APBDBG;
+
+	RCC_ClkInitStruct.ICN_HS_MCU.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
+	RCC_ClkInitStruct.ICN_HS_MCU.Div = 3;
+	RCC_ClkInitStruct.ICN_SDMMC.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
+	RCC_ClkInitStruct.ICN_SDMMC.Div = 6;
+	RCC_ClkInitStruct.ICN_DDR.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
+	RCC_ClkInitStruct.ICN_DDR.Div = 2;
+	RCC_ClkInitStruct.ICN_DISPLAY.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
+	RCC_ClkInitStruct.ICN_DISPLAY.Div = 3;
+	RCC_ClkInitStruct.ICN_HCL.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
+	RCC_ClkInitStruct.ICN_HCL.Div = 4;
+	RCC_ClkInitStruct.ICN_NIC.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
+	RCC_ClkInitStruct.ICN_NIC.Div = 3;
+	RCC_ClkInitStruct.ICN_VID.XBAR_ClkSrc = RCC_XBAR_CLKSRC_PLL4;
+	RCC_ClkInitStruct.ICN_VID.Div = 2;
+	RCC_ClkInitStruct.ICN_LSMCU_Div = RCC_LSMCU_DIV2;
+	RCC_ClkInitStruct.APB1_Div = RCC_APB1_DIV1;
+	RCC_ClkInitStruct.APB2_Div = RCC_APB2_DIV1;
+	RCC_ClkInitStruct.APB3_Div = RCC_APB3_DIV1;
+	RCC_ClkInitStruct.APB4_Div = RCC_APB4_DIV1;
+	RCC_ClkInitStruct.APBDBG_Div = RCC_APBDBG_DIV1;
+
+	if (HAL_RCC_ClockConfig(&RCC_ClkInitStruct, 0) != HAL_OK) {
+		Error_Handler();
+	}
+
+}
+/**
+  * @brief  Prints SCMI Clock Attributes
+  * @retval None
+  */
+static void Get_SCMI_Clock_Attributes(void)
+{
+	  for (int j= 0; j < 15; j++)
+	    {
+		  /* Get the clock attributes */
+		  g_message_received_flag = scmi_clock_get_attributes(&scmi_channel, j , (char*)&clk_name, j, &clk_attributes);
+		    printf("\n\r Clock Name = %s for domain %d, attributes = 0x%lx , Return received from SCMI server = %ld\n\r", (char*)&clk_name, j, clk_attributes, g_message_received_flag);
+
+		    /* Get the clock rate */
+	      g_message_received_flag = scmi_clock_get_rate(&scmi_channel, j, &clk_rate_khz);
+	      printf("\n\r Frequency (kHz) recevied = %d for domain %d, Return received from SCMI server = %ld\n\r", clk_rate_khz, j, g_message_received_flag);
+
+	    }
+}
+
+/**
+  * @brief  Initialize the IPCC Peripheral
+  * @retval None
+  */
+static void MX_IPCC_Init(void)
+{
+  IPCC_CommonTypeDef * pIPCC_Common_Cfg = NULL;
+
+  hipcc1.Instance = IPCC1;
+  if (HAL_IPCC_Init(&hipcc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+
+  if (hipcc1.Instance == IPCC1)
+  {
+#if defined(CORE_CM33)
+	  pIPCC_Common_Cfg = (IPCC_CommonTypeDef *)IPCC1_C2;
+#else   /* CORE_CM33 */
+	  pIPCC_Common_Cfg = (IPCC_CommonTypeDef *)IPCC1_C1;
+#endif  /* CORE_CA35 */
+  }
+
+  if (pIPCC_Common_Cfg == NULL)
+  {
+	  Error_Handler();
+  }
+
+  pIPCC_Common_Cfg->CR |= (IPCC_CR_SECRXOIE | IPCC_CR_SECTXFIE);
+
+  HAL_NVIC_SetPriority(IPCC1_RX_IRQn, DEFAULT_IRQ_PRIO, 0);
+  HAL_NVIC_EnableIRQ(IPCC1_RX_IRQn);
+}
+
+
+/**
+  * @brief  Callback from IPCC Interrupt Handler: Remote Processor asks local processor to shutdown
+  * @param  hipcc IPCC handle
+  * @param  ChannelIndex Channel number
+  * @param  ChannelDir Channel direction
+  * @retval None
+  */
+void CoproSync_ShutdownCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir)
+{
+	  /* DeInitialize MAILBOX with IPCC peripheral */
+	  MAILBOX_SCMI_DeInit();
+
+	/* Deinitialize the LED3 */
+	  BSP_LED_DeInit(LED3);
+
+	  /* When ready, notify the remote processor that we can be shut down */
+	  HAL_IPCC_NotifyCPU(hipcc, ChannelIndex, IPCC_CHANNEL_DIR_RX);
+
+	  /* Wait for complete shutdown */
+	  while(1);
+}
+
+/**
+  * @brief  This function is executed in case of error occurrence.
+  * @retval None
+  */
+void Error_Handler(void)
+{
+  /* USER CODE BEGIN Error_Handler_Debug */
+  /* Error if LED3 is ON */
+  BSP_LED_On(LED3);
+  printf("Error : Something went wrong\r\n");
+  while (1)
+  {
+    HAL_Delay(1000);
+  }
+  /* USER CODE END Error_Handler_Debug */
+}
+
+#ifdef  USE_FULL_ASSERT
+/**
+  * @brief  Reports the name of the source file and the source line number
+  *         where the assert_param error has occurred.
+  * @param  file: pointer to the source file name
+  * @param  line: assert_param error line source number
+  * @retval None
+  */
+void assert_failed(uint8_t *file, uint32_t line)
+{
+  /* USER CODE BEGIN 6 */
+  /* User can add his own implementation to report the file name and line number,
+    ex: printf("Wrong parameters value: file %s on line %d\r\n", file, line) */
+
+ /* Infinite loop */
+  while (1)
+  {
+  }
+  /* USER CODE END 6 */
+}
+#endif /* USE_FULL_ASSERT */
+
+

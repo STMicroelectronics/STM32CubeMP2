@@ -182,6 +182,12 @@
 		status = "disabled";
 	};
 
+	uio_fwu_shmem: uio-fwu-shmem@81300000 {
+		compatible = "uio-fwu-shmem";
+		reg = <0x0 0x81300000 0x0 0x00a00000>;
+		status = "okay";
+	};
+
 	vdiv_ana0: voltage-divider-ana0 {
 		compatible = "voltage-divider";
 		io-channels = <&adc1 0>;
@@ -382,7 +388,7 @@
 };
 
 &hpdma3 {
-	memory-region = <&hpdma3_lli>;
+	status = "disabled";
 };
 
 &i2c2 {
@@ -596,7 +602,8 @@
 			<&vdev0vring1>, <&vdev0buffer>;
 	/delete-property/resets;
 	/delete-property/reset-names;
-	keep-power-in-suspend;
+	/delete-property/power-domains;
+	/delete-property/power-domain-names;
 	st,auto-boot;
 	status = "okay";
 };

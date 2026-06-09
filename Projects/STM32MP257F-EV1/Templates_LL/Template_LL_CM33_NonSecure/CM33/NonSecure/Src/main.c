@@ -120,7 +120,11 @@ int main(void)
   /* Configure the system clock */
   if (IS_DEVELOPER_BOOT_MODE())
   {
-	SystemClock_Config();
+    SystemClock_Config();
+  }
+  else
+  {
+    SystemCoreClockUpdate();
   }
 
   SysTick_Config(400000000/1000);

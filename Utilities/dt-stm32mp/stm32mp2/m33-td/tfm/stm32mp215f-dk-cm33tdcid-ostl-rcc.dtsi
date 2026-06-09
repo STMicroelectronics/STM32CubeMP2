@@ -20,7 +20,6 @@
 
 &clk_lse {
 	clock-frequency = <32768>;
-	st,drive = <2>;
 };
 
 &clk_lsi {

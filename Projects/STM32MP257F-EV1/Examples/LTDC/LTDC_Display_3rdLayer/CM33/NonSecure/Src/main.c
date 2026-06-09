@@ -94,7 +94,11 @@ int main(void)
 
   if (IS_DEVELOPER_BOOT_MODE())
   {
-	  SystemClock_Config();
+    SystemClock_Config();
+  }
+  else
+  {
+    SystemCoreClockUpdate();
   }
 
   /* Initialize the BSP LED */

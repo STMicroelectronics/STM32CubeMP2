@@ -61,6 +61,18 @@ typedef enum
   DISPLAY_CMD_START_REBOOT,
 } DisplayCommand_t;
 
+#if OVERLAY_FEATURE_ENABLED
+/**
+  * @brief Generic overlay update events routed through DISPLAY_CMD_UPDATE_OVERLAY.
+  */
+typedef enum
+{
+  DISPLAY_OVERLAY_UPDATE_FRAME_EVENT = 0,
+  DISPLAY_OVERLAY_UPDATE_REBOOT_EVENT,
+  DISPLAY_OVERLAY_UPDATE_STATE_SYNC_EVENT,
+} DisplayOverlayUpdateType_t;
+#endif
+
 /**
   * @brief Display Task state machine states.
   *
@@ -78,9 +90,8 @@ typedef enum
 
 /**
   * @brief Display task command.
-  *
-  * Queue payload is value-based to avoid dangling-pointer issues.
-  * Interpretation of `param` is driver/project-defined.
+  * `param` is command-specific. For DISPLAY_CMD_UPDATE_OVERLAY it carries
+  * a DisplayOverlayUpdateType_t value.
   */
 typedef struct
 {

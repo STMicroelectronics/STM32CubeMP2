@@ -77,6 +77,7 @@
 									<listOptionValue builtIn="false" value="../../../../../../../../Utilities/M33TD_NSAppCore/Assets/anim_13fps_1024x600"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/api_ns/interface/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/api_ns/common/devicetree/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/generated/devicetree/platform_s}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/api_ns/common/stm32mp2xx/cmsis_driver/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/api_ns/common/stm32mp2xx/native_driver/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/api_ns/common/stm32mp2xx/secure/services/include/uapi}&quot;"/>
@@ -200,6 +201,7 @@
 									<listOptionValue builtIn="false" value="../../../../../../../../Utilities/M33TD_NSAppCore/Includes"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/api_ns/interface/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/api_ns/common/devicetree/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/generated/devicetree/platform_s}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/api_ns/common/stm32mp2xx/cmsis_driver/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/api_ns/common/stm32mp2xx/native_driver/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/api_ns/common/stm32mp2xx/secure/services/include/uapi}&quot;"/>
@@ -335,6 +337,7 @@
 									<listOptionValue builtIn="false" value="../../../../../../../../Utilities/M33TD_NSAppCore/Assets/anim_13fps_1024x600"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/api_ns/interface/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/api_ns/common/devicetree/include}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/generated/devicetree/platform_s}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/api_ns/common/stm32mp2xx/cmsis_driver/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/api_ns/common/stm32mp2xx/native_driver/include}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/StarterApp_M33TD_CM33_trusted-firmware-m/trusted-firmware-m/config_default/api_ns/common/stm32mp2xx/secure/services/include/uapi}&quot;"/>

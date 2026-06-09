@@ -298,31 +298,39 @@
 &pwr {
 	status = "okay";
 
-	vdda18adc {
+	pwr_rif: access-controller {
 		status = "okay";
-		regulator-min-microvolt = <1800000>;
-		regulator-max-microvolt = <1800000>;
-		vin-supply = <&vdda_1v8>;
 	};
 
-	vddio1 {
+	regulators {
 		status = "okay";
-		vin-supply = <&vddio_pmic>;
-	};
 
-	vddio2 {
-		status = "okay";
-		vin-supply = <&vdda_1v8>;
-	};
+		vdda18adc: vdda18adc {
+			status = "okay";
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <1800000>;
+			vin-supply = <&vdda_1v8>;
+		};
 
-	vddio3 {
-		status = "okay";
-		vin-supply = <&vddio_pmic>;
-	};
+		vddio1: vddio1 {
+			status = "okay";
+			vin-supply = <&vddio_pmic>;
+		};
 
-	vddio {
-		status = "okay";
-		vin-supply = <&vddio_pmic>;
+		vddio2: vddio2 {
+			status = "okay";
+			vin-supply = <&vdda_1v8>;
+		};
+
+		vddio3: vddio3 {
+			status = "okay";
+			vin-supply = <&vddio_pmic>;
+		};
+
+		vddio: vddio {
+			status = "okay";
+			vin-supply = <&vddio_pmic>;
+		};
 	};
 };
 
@@ -507,9 +515,42 @@
 	status = "okay";
 };
 
+&a35_rproc_srm {
+	status = "okay";
+};
+
+&a35_eth1 {
+	status = "okay";
+};
+
+&a35_usb {
+	status = "okay";
+};
+
+&a35_sdmmc1 {
+	status = "okay";
+};
+
+&a35_sdmmc2{
+	status = "okay";
+};
+
+&a35_sdmmc3 {
+	status = "okay";
+};
+
+&a35_dcmipp {
+	status = "okay";
+};
+
+&a35_hpdma {
+	status = "okay";
+};
+
 &cpu0 {
 	enable-method = "remoteproc";
 	remoteprocs = <&a35_rproc>;
+	cpu-supply = <&vddcpu>;
 };
 
 &risab3 {
@@ -546,7 +587,7 @@
 };
 
 &sau {
-	memory-region = <&cm33_cube_fw>, <&cm33_cube_data>, <&scmi_cid1_ns>, <&ipc_shmem>, <&ltdc_m33_layer>;
+	memory-region = <&cm33_cube_fw>, <&cm33_cube_data>, <&scmi_cid1_ns>, <&ipc_shmem>, <&ltdc_m33_layer>, <&fwu_shmem>;
 };
 
 &syscfg {

@@ -1,4 +1,4 @@
-/* USER CODE BEGIN Header */
+﻿/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    stm32mp2xx_hal_timebase_TIM.c
@@ -81,7 +81,6 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
         {
           /* Enable the TIM6 global Interrupt */
           HAL_NVIC_SetPriority(TIM6_IRQn, TickPriority, 0U);
-          // uwTickPrio = TickPriority;
         }
         else
         {
@@ -136,4 +135,5 @@ void HAL_ResumeTick(void)
   /* Enable TIM6 Update interrupt */
   __HAL_TIM_ENABLE_IT(&htim6, TIM_IT_UPDATE);
 }
+
 

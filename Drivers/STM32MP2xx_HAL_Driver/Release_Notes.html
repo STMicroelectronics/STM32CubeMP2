@@ -1505,25 +1505,18 @@ text-align: center;
 <div class="col-sm-12 col-lg-8">
 <h1 id="update-history">Update History</h1>
 <div class="collapse">
-<input type="checkbox" id="collapse-section2" checked aria-hidden="true"> <label for="collapse-section2" checked aria-hidden="true"><strong>V1.3.0 / 02-Feb-2026</strong></label>
+<input type="checkbox" id="collapse-section3" checked aria-hidden="true"> <label for="collapse-section3" checked aria-hidden="true"><strong>V1.3.1 / 20-May-2026</strong></label>
 <div>
 <h2 id="main-changes">Main Changes</h2>
-<p>This release is the <strong>v1.3.0 release of HAL and LL drivers</strong> for <strong>STM32MP2xxx</strong> devices</p>
+<p>This release is the <strong>v1.3.1 release of HAL and LL drivers</strong> for <strong>STM32MP2xxx</strong> devices</p>
 <h2 id="contents">Contents</h2>
 <ul>
 <li><strong>Minor update</strong> of drivers for STM32MP2xxx devices:
 <ul>
-<li>ADC: Additional check in calibration function.</li>
-<li>DCMIPP: Histogram interrupt error enabled by default.</li>
-<li>DMA: Compilation warning fixes.</li>
-<li>ETH: ETH_Prepare_Tx_Descriptors API Updated for Core CA35, MCUAStyle fixes</li>
-<li>EXTI: DisableEvent filtering API fix.</li>
-<li>Generic: ETH REF CLK Selection API’s declaration added for MP215</li>
-<li>GPIO: MISRA fix reverted</li>
-<li>RIF: Aligned rif driver for all MP2xx CPN numbers</li>
-<li>USB: STM32MP257Cxx changed to a single MP25 derivative macro STM32MP25xxxx</li>
+<li>PWR: Add DSB calls before WFI in low power functions.</li>
+<li>ETH: Aligned bit definitions with latest Ipxact.</li>
+<li>DMA: Fix incorrect check on the CxBR1 registers when using channelx (x&gt;11) and configuring BlkDestAddrOffset or BlkSrcAddrOffset with negative values.</li>
 </ul></li>
-<li><p>MISRA-C2012 compliance with IAR version 9.60.3</p></li>
 <li>List of HAL drivers implemented :
 <ul>
 <li>ADC, BSEC, CORTEX, CRC, CRYP, DCACHE, DCMI, DCMIPP(+CSIHOST), DDR, DMA, DSI, EXTI, GPIO, FDCAN, FMC, HASH, HSEM, I2C, I3C, ICACHE, I2S, IPCC, IRDA, IWDG, LPTIM, MDF, OTFDEC, OSPI, PKA, PSSI, PWR, RAMCFG, RCC, RIF, RNG, RTC, SAI, SDMMC, SPDIF-RX, SMARTCARD, SMBUS, SPI, TIM, UART, USART, USB3DRD-D, WWDG, ETH, LTDC</li>
@@ -1547,11 +1540,53 @@ text-align: center;
 </div>
 </div>
 <div class="collapse">
-<input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>V1.2.0 / 30-May-2025</strong></label>
+<input type="checkbox" id="collapse-section2" aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>V1.3.0 / 02-Feb-2026</strong></label>
 <div>
 <h2 id="main-changes-1">Main Changes</h2>
-<p>This release is the <strong>v1.2.0 release of HAL and LL drivers</strong> for <strong>STM32MP2xxx</strong> devices</p>
+<p>This release is the <strong>v1.3.0 release of HAL and LL drivers</strong> for <strong>STM32MP2xxx</strong> devices</p>
 <h2 id="contents-1">Contents</h2>
+<ul>
+<li><strong>Minor update</strong> of drivers for STM32MP2xxx devices:
+<ul>
+<li>ADC: Additional check in calibration function.</li>
+<li>DCMIPP: Histogram interrupt error enabled by default.</li>
+<li>DMA: Compilation warning fixes.</li>
+<li>ETH: ETH_Prepare_Tx_Descriptors API Updated for Core CA35, MCUAStyle fixes</li>
+<li>EXTI: DisableEvent filtering API fix.</li>
+<li>Generic: ETH REF CLK Selection API’s declaration added for MP215</li>
+<li>GPIO: MISRA fix reverted</li>
+<li>RIF: Aligned rif driver for all MP2xx CPN numbers</li>
+<li>USB: STM32MP257Cxx changed to a single MP25 derivative macro STM32MP25xxxx</li>
+</ul></li>
+<li><p>MISRA-C2012 compliance with IAR version 9.60.3</p></li>
+<li>List of HAL drivers implemented :
+<ul>
+<li>ADC, BSEC, CORTEX, CRC, CRYP, DCACHE, DCMI, DCMIPP(+CSIHOST), DDR, DMA, DSI, EXTI, GPIO, FDCAN, FMC, HASH, HSEM, I2C, I3C, ICACHE, I2S, IPCC, IRDA, IWDG, LPTIM, MDF, OTFDEC, OSPI, PKA, PSSI, PWR, RAMCFG, RCC, RIF, RNG, RTC, SAI, SDMMC, SPDIF-RX, SMARTCARD, SMBUS, SPI, TIM, UART, USART, USB3DRD-D, WWDG, ETH, LTDC</li>
+</ul></li>
+<li>List of LL drivers implemented :
+<ul>
+<li>ADC, BSEC, CRC, DCACHE, DMA, GPIO, EXTI, I2C, I3C, ICACHE, IWDG, LPTIM, PKA, PWR, RCC, RTC, SPI, TIM, UART/USART, USBPD, WWDG, CORTEX, HSEM, SYSCFG, IPCC</li>
+</ul></li>
+</ul>
+<h2 id="known-limitations-1">Known Limitations</h2>
+<ul>
+<li>Code static analysis with CodeSonar not done</li>
+</ul>
+<h2 id="supported-devices-1">Supported Devices</h2>
+<ul>
+<li>The drivers provided support the following devices :
+<ul>
+<li>STM32MP257Axx, STM32MP257Cxx, STM32MP215Fxx</li>
+</ul></li>
+</ul>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>V1.2.0 / 30-May-2025</strong></label>
+<div>
+<h2 id="main-changes-2">Main Changes</h2>
+<p>This release is the <strong>v1.2.0 release of HAL and LL drivers</strong> for <strong>STM32MP2xxx</strong> devices</p>
+<h2 id="contents-2">Contents</h2>
 <ul>
 <li><p><strong>Major update</strong> of drivers for STM32MP2xxx devices:</p>
 <ul>
@@ -1620,11 +1655,11 @@ text-align: center;
 <li>ADC, BSEC, CRC, DCACHE, DMA, GPIO, EXTI, I2C, I3C, ICACHE, IWDG, LPTIM, PKA, PWR, RCC, RTC, SPI, TIM, UART/USART, USBPD, WWDG, CORTEX, HSEM, SYSCFG, IPCC</li>
 </ul></li>
 </ul>
-<h2 id="known-limitations-1">Known Limitations</h2>
+<h2 id="known-limitations-2">Known Limitations</h2>
 <ul>
 <li>Code static analysis with CodeSonar not done</li>
 </ul>
-<h2 id="supported-devices-1">Supported Devices</h2>
+<h2 id="supported-devices-2">Supported Devices</h2>
 <ul>
 <li>The drivers provided support the following devices :
 <ul>
@@ -1636,11 +1671,11 @@ text-align: center;
 <div class="collapse">
 <input type="checkbox" id="collapse-section0" aria-hidden="true"> <label for="collapse-section0" checked aria-hidden="true"><strong>V1.0.0 / 31-May-2024</strong></label>
 <div>
-<h2 id="main-changes-2">Main Changes</h2>
+<h2 id="main-changes-3">Main Changes</h2>
 <ul>
 <li><strong>v1.0.0 release of HAL and LL drivers</strong> for <strong>STM32MP25xx</strong> devices</li>
 </ul>
-<h2 id="contents-2">Contents</h2>
+<h2 id="contents-3">Contents</h2>
 <h3 id="halll-changes"><strong>HAL|LL Changes</strong></h3>
 <h3 id="hal-drivers"><strong>HAL Drivers</strong></h3>
 <ul>
@@ -1676,12 +1711,12 @@ text-align: center;
 <li>All other IPs, similar to legacy MCU</li>
 </ul></li>
 </ul>
-<h2 id="known-limitations-2">Known Limitations</h2>
+<h2 id="known-limitations-3">Known Limitations</h2>
 <ul>
 <li>MISRA-C2012 compliance checked but no fix done</li>
 <li>Code static analysis with CodeSonar not done</li>
 </ul>
-<h2 id="supported-devices-2">Supported Devices</h2>
+<h2 id="supported-devices-3">Supported Devices</h2>
 <ul>
 <li>The drivers provided support the following devices :
 <ul>

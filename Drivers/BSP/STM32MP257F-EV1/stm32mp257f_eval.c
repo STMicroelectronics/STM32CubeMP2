@@ -273,13 +273,15 @@ static int32_t BSP_LED_MspInit(Led_TypeDef Led)
       LED1_GPIO_CLK_ENABLE();
     }
   }
-  else if (Led == LED2 && !(LED2_GPIO_IS_CLK_ENABLED()))
+  else if (Led == LED2)
   {
     if (IS_DEVELOPER_BOOT_MODE())
     {
       HAL_PWREx_EnableSupply(PWR_PVM_VDDIO3);
     }
-    if (RESMGR_STATUS_ACCESS_OK == ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(93)))
+
+    if (!(LED2_GPIO_IS_CLK_ENABLED())
+        && (RESMGR_STATUS_ACCESS_OK == ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(93))))
     {
       LED2_GPIO_CLK_ENABLE();
     }
@@ -933,9 +935,19 @@ static void USART_MspInit(UART_HandleTypeDef *huart)
     ResMgr_Request(RESMGR_RESOURCE_RIFSC, STM32MP25_RIFSC_USART2_ID);
 
     /* Enable USART clock */
-    COM_CA35_TX_GPIO_CLK_ENABLE();
-    COM_CA35_RX_GPIO_CLK_ENABLE();
-    COM_CA35_CLK_ENABLE();
+    if (!__HAL_RCC_GPIOA_IS_CLK_ENABLED())
+    {
+      COM_CA35_TX_GPIO_CLK_ENABLE();
+    }
+    if (!__HAL_RCC_GPIOA_IS_CLK_ENABLED())
+    {
+      COM_CA35_RX_GPIO_CLK_ENABLE();
+    }
+    if (!__HAL_RCC_USART2_IS_CLK_ENABLED())
+    {
+      COM_CA35_CLK_ENABLE();
+    }
+
     /* Configure USART Tx as alternate function */
     gpio_init_structure.Pin = COM_CA35_TX_PIN;
     gpio_init_structure.Alternate = COM_CA35_TX_AF;

@@ -68,9 +68,14 @@
 #if    (__ARM_ARCH_7A__      == 1U)
 /* CPSR mode bitmasks */
 #define CPSR_MODE_USER            0x10U
+#define CPSR_MODE_SUPERVISOR      0x13U
+#define CPSR_MODE_MONITOR         0x16U
 #define CPSR_MODE_SYSTEM          0x1FU
 
-#define IS_IRQ_MODE()             ((__get_mode() != CPSR_MODE_USER) && (__get_mode() != CPSR_MODE_SYSTEM))
+#define IS_IRQ_MODE()             ((__get_mode() != CPSR_MODE_USER)       && \
+                                   (__get_mode() != CPSR_MODE_SUPERVISOR) && \
+                                   (__get_mode() != CPSR_MODE_MONITOR)    && \
+                                   (__get_mode() != CPSR_MODE_SYSTEM))
 #else
 #define IS_IRQ_MODE()             (__get_IPSR() != 0U)
 #endif

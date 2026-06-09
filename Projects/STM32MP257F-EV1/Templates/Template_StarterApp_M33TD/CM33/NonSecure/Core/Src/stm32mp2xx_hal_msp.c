@@ -85,26 +85,6 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef *htim)
 }
 
 /**
-  * @brief  Initialize the PPP MSP.
-  * @retval None
-  */
-/*
-void HAL_PPP_MspInit(void)
-{
-}
-*/
-
-/**
-  * @brief  DeInitialize the PPP MSP.
-  * @retval None
-  */
-/*
-void HAL_PPP_MspDeInit(void)
-{
-}
-*/
-
-/**
   * @}
   */
 

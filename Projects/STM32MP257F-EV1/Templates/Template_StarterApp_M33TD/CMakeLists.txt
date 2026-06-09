@@ -111,6 +111,7 @@ set(APPLICATION_SRC
 	${TFM_BUILD_DIR}/api_ns/common/stm32mp2xx/secure/services/src/tfm_ioctl_cpu_api.c
 	${TFM_BUILD_DIR}/api_ns/common/stm32mp2xx/secure/services/src/tfm_ioctl_wdt_api.c
 	${TFM_BUILD_DIR}/api_ns/interface/src/tfm_ns_notif_api.c
+	${TFM_BUILD_DIR}/api_ns/common/stm32mp2xx/secure/services/src/tfm_pm_api.c
 	${TFM_BUILD_DIR}/api_ns/common/stm32mp2xx/secure/services/src/tfm_scmi_api.c
 )
 
@@ -131,16 +132,16 @@ target_include_directories(${PROJECT_NAME}.elf PRIVATE
 	${BASE_DIR}/../../../../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM33_NTZ/non_secure
 	${BASE_DIR}/../../../../Drivers/CMSIS/RTOS2/Include
 	${BASE_DIR}/../../../../Drivers/CMSIS/RTOS2/Template
+	${BASE_DIR}/../../../../Utilities/M33TD_NSAppCore/App/Inc
+	${BASE_DIR}/../../../../Utilities/M33TD_NSAppCore/Includes
+	${BASE_DIR}/../../../../Utilities/M33TD_NSAppCore/Common
+	${BASE_DIR}/../../../../Utilities/M33TD_NSAppCore/Common/FaultMgr
 	${TFM_BUILD_DIR}/api_ns/interface/include
 	${TFM_BUILD_DIR}/api_ns/common/stm32mp2xx/secure/services/include/uapi
 	${TFM_BUILD_DIR}/api_ns/common/stm32mp2xx/secure/services/include
 	${TFM_BUILD_DIR}/api_ns/common/stm32mp2xx/native_driver/include
 	${TFM_BUILD_DIR}/api_ns/common/stm32mp2xx/cmsis_driver/include
 	${TFM_BUILD_DIR}/api_ns/common/devicetree/include
-    ${BASE_DIR}/../../../../Utilities/M33TD_NSAppCore/App/Inc
-    ${BASE_DIR}/../../../../Utilities/M33TD_NSAppCore/Includes
-    ${BASE_DIR}/../../../../Utilities/M33TD_NSAppCore/Common
-    ${BASE_DIR}/../../../../Utilities/M33TD_NSAppCore/Common/FaultMgr
 )
 
 set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -Wl,-Map=${PROJECT_BINARY_DIR}/${PROJECT_NAME}.map -Wl,--gc-sections -static  -mfpu=fpv5-sp-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -z max-page-size=4096 -lc -lm -Wl,--end-group")

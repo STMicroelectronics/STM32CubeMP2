@@ -1,4 +1,4 @@
-/**
+﻿/**
   ******************************************************************************
   * @file    nsappcore_config.h
   * @author  Application Team
@@ -24,8 +24,8 @@
 #error "NSAppCore version header (nsappcore_version.h) is missing or not included."
 #endif
 
-#if (NSAPPCORE_VERSION_MAJOR < 1)
-#error "NSAppCore utility stack version 1.0.0 or higher is required."
+#if (NSAPPCORE_VERSION_MAJOR < 2)
+#error "NSAppCore utility stack version 2.0.0 or higher is required."
 #endif
 
 /* ---------------------------------------------------------------------------
@@ -69,6 +69,37 @@
 #ifndef REMOTE_PROC_AUTO_START
 #define REMOTE_PROC_AUTO_START 1
 #endif
+
+/* ---------------------------------------------------------------------------
+ * Default Low Power Policy
+ * ---------------------------------------------------------------------------
+ * Controls whether the Low Power Manager accepts suspend requests by default,
+ * before any runtime policy update arrives through RPMsg, button, OpenAMP, or
+ * another task.
+ *
+ * This macro does not select the target suspend mode directly.
+ * - 0: default low power entry disabled
+ * - 1: default low power entry enabled
+ *
+ * When enabled, the reset suspend policy initializes the allowed low power
+ * mode to the deepest low power mode currently supported by the manager,
+ * which is LPLV_STOP2.
+ * ------------------------------------------------------------------------- */
+#ifndef LOW_POWER_DEFAULT_POLICY_ENABLE
+#define LOW_POWER_DEFAULT_POLICY_ENABLE 0
+#endif
+/* ---------------------------------------------------------------------------
+ * Low Power Manager Capacity
+ * ---------------------------------------------------------------------------
+ * Optional project overrides for low-power runtime capacity:
+ * - LOW_POWER_MGR_MAX_AGENTS: number of runtime low-power agents.
+ * - LOW_POWER_MGR_MAX_LISTENERS: number of low-power event listeners.
+ *
+ * Increase LOW_POWER_MGR_MAX_LISTENERS when enabling more tasks that
+ * subscribe to low-power events.
+ * ------------------------------------------------------------------------- */
+/* #define LOW_POWER_MGR_MAX_AGENTS    2U */
+/* #define LOW_POWER_MGR_MAX_LISTENERS 8U */
 
 /* Optional task enables (project-level):
  * These tasks default to disabled in app_tasks_config.h.
@@ -212,7 +243,7 @@
 /* ---------------------------------------------------------------------------
  * Task Dependency Checks
  * ---------------------------------------------------------------------------
- * - Ensures that required tasks are enabled and cross-task dependencies are met.
+ * - Ensures that required core tasks are enabled.
  * ------------------------------------------------------------------------- */
 
 /* NSCoreApp_Init() always initializes these core tasks. */
@@ -224,17 +255,16 @@
 #error "SCMI Manager Task is required (NSCoreApp_Init always starts it). Set ENABLE_SCMI_MGR_TASK=1 in app_tasks_config.h."
 #endif
 
+#if !ENABLE_LOW_POWER_MGR_TASK
+#error "Low Power Manager Task is required (NSCoreApp_Init always starts it). Set ENABLE_LOW_POWER_MGR_TASK=1 in app_tasks_config.h."
+#endif
+
 #if !ENABLE_REMOTEPROC_TASK
 #error "RemoteProc Task is required (NSCoreApp_Init always starts it). Set ENABLE_REMOTEPROC_TASK=1 in app_tasks_config.h."
 #endif
 
 #if !ENABLE_WDG_MONITOR_TASK
 #error "Watchdog Monitor Task is required (NSCoreApp_Init always starts it). Set ENABLE_WDG_MONITOR_TASK=1 in app_tasks_config.h."
-#endif
-
-/* Cross-task dependencies */
-#if ENABLE_SCMI_MGR_TASK && !ENABLE_REMOTEPROC_TASK
-#error "SCMI Manager Task requires RemoteProc Task to be enabled. Set ENABLE_REMOTEPROC_TASK=1 in app_tasks_config.h."
 #endif
 
 /* ---------------------------------------------------------------------------

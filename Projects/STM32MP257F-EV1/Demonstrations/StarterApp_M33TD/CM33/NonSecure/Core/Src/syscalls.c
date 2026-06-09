@@ -1,4 +1,4 @@
-/**
+ï»¿/**
   *****************************************************************************
   **
   **  File        : syscalls.c
@@ -11,7 +11,7 @@
   **
   **  Environment : System Workbench for MCU
   **
-  **  Distribution: The file is distributed “as is,” without any warranty
+  **  Distribution: The file is distributed "as is" without any warranty
   **                of any kind.
   **
   **  (c)Copyright System Workbench for MCU.
@@ -37,7 +37,6 @@
 
 
 /* Variables */
-//#undef errno
 extern int errno;
 #define FreeRTOS
 #define MAX_STACK_SIZE 0x2000
@@ -127,8 +126,6 @@ caddr_t _sbrk(int incr)
   prev_heap_end = heap_end;
   if (heap_end + incr > stack_ptr)
   {
-//    write(1, "Heap and stack collision\n", 25);
-//    abort();
     errno = ENOMEM;
 #ifdef A35_DUAL_CORE_SMP
     unlock_mutex(&mutex);
@@ -211,3 +208,4 @@ int _execve(char *name, char **argv, char **env)
   errno = ENOMEM;
   return -1;
 }
+

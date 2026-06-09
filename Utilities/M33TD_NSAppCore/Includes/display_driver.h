@@ -76,6 +76,10 @@ typedef struct
 #if defined(OVERLAY_FEATURE_ENABLED)
   void (*show_overlay)(const void *param);
   void (*hide_overlay)(const void *param);
+  /* Generic non-lifecycle overlay updates are routed through this hook.
+   * For DISPLAY_CMD_UPDATE_OVERLAY the caller passes a DisplayOverlayUpdateType_t
+   * value encoded in the opaque param.
+   */
   void (*update_overlay)(const void *param);
 #endif
   DisplayType_t (*get_type)(void);

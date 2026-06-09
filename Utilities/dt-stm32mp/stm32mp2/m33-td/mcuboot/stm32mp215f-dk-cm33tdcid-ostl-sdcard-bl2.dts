@@ -67,6 +67,19 @@
 
 };
 
+&nvram {
+	status = "okay";
+
+	nvmem-layout {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		cm_fwu_info: tamp-bkp@124 {
+			#nvmem-cell-cells = <0>;
+			reg = <0x124 0x4>;
+		};
+	};
+};
+
 &uart4 {
 	pinctrl-names = "default";
 	pinctrl-0 = <&uart4_pins_a>;
@@ -182,31 +195,39 @@
 &pwr {
 	status = "okay";
 
-	vdda18adc {
+	pwr_rif: access-controller {
 		status = "okay";
-		regulator-min-microvolt = <1800000>;
-		regulator-max-microvolt = <1800000>;
-		vin-supply = <&vdda_1v8>;
 	};
 
-	vddio1 {
+	regulators {
 		status = "okay";
-		vin-supply = <&vddio_pmic>;
-	};
 
-	vddio2 {
-		status = "okay";
-		vin-supply = <&vdda_1v8>;
-	};
+		vdda18adc {
+			status = "okay";
+			regulator-min-microvolt = <1800000>;
+			regulator-max-microvolt = <1800000>;
+			vin-supply = <&vdda_1v8>;
+		};
 
-	vddio3 {
-		status = "okay";
-		vin-supply = <&vddio_pmic>;
-	};
+		vddio1 {
+			status = "okay";
+			vin-supply = <&vddio_pmic>;
+		};
 
-	vddio {
-		status = "okay";
-		vin-supply = <&vddio_pmic>;
+		vddio2 {
+			status = "okay";
+			vin-supply = <&vdda_1v8>;
+		};
+
+		vddio3 {
+			status = "okay";
+			vin-supply = <&vddio_pmic>;
+		};
+
+		vddio {
+			status = "okay";
+			vin-supply = <&vddio_pmic>;
+		};
 	};
 };
 

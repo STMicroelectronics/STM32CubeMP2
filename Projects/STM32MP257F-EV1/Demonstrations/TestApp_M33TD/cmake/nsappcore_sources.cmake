@@ -3,6 +3,7 @@ set(NSAPPCORE_SRC_FILES
     ${BASE_DIR}/../../../../Utilities/M33TD_NSAppCore/App/Src/btn_monitor_task.c
     ${BASE_DIR}/../../../../Utilities/M33TD_NSAppCore/App/Src/display_task.c
     ${BASE_DIR}/../../../../Utilities/M33TD_NSAppCore/App/Src/logger_task.c
+    ${BASE_DIR}/../../../../Utilities/M33TD_NSAppCore/App/Src/low_power_mgr_task.c
     ${BASE_DIR}/../../../../Utilities/M33TD_NSAppCore/App/Src/nscoreapp_init.c
     ${BASE_DIR}/../../../../Utilities/M33TD_NSAppCore/App/Src/openamp_task.c
     ${BASE_DIR}/../../../../Utilities/M33TD_NSAppCore/App/Src/remoteproc_task.c

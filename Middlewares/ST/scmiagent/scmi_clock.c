@@ -13,12 +13,12 @@
 
 #include "scmi.h"
 
-#define SCMI_CLOCK_NAME_LENGTH_MAX		16
+#define SCMI_CLOCK_NAME_LENGTH_MAX        16
 
 
 enum scmi_clock_message_id {
   /*
-   * Below message IDs were introduced in SMCI spec v1.0.
+   * Below message IDs were introduced in SCMI spec v1.0.
    * Requires SCMI procotol version 0x10000.
    */
   SCMI_CLOCK_PROTO_VERSION = SCMI_PROTOCOL_VERSION,
@@ -30,24 +30,24 @@ enum scmi_clock_message_id {
   SCMI_CLOCK_RATE_GET = 0x6,
   SCMI_CLOCK_CONFIG_SET = 0x7,
   /*
-   * Below message IDs were introduced in SMCI spec v3.1.
-   * Requires SCMI procotol version 0x20000.
+   * Below message IDs values are according to SCMI spec v4.0 ALP0 (May 2025).
+   * Requires SCMI procotol version 0x30000.
    */
-  SCMI_CLOCK_CONFIG_GET = 0x8,
-  SCMI_CLOCK_NAME_GET = 0x9,
-  SCMI_CLOCK_RATE_NOTIFY = 0xa,
-  SCMI_CLOCK_RATE_CHANGE_NOTIFY = 0xb,
+  SCMI_CLOCK_CONFIG_GET = 0xB,
+  SCMI_CLOCK_NAME_GET = 0x8,
+  SCMI_CLOCK_RATE_NOTIFY = 0x9,
+  SCMI_CLOCK_RATE_CHANGE_NOTIFY = 0xA,
   /*
-   * Below message IDs were introduced in SMCI spec v3.2.
-   * Requires SCMI procotol version 0x20001.
+   * Below message IDs values are according to SCMI spec v4.0 ALP0 (May 2025).
+   * Requires SCMI procotol version 0x30000.
    */
-  SCMI_CLOCK_POSSIBLE_PARENTS_GET = 0xc,
-  SCMI_CLOCK_PARENT_SET = 0xd,
-  SCMI_CLOCK_PARENT_GET = 0xe,
+  SCMI_CLOCK_POSSIBLE_PARENTS_GET = 0xC,
+  SCMI_CLOCK_PARENT_SET = 0xD,
+  SCMI_CLOCK_PARENT_GET = 0xE,
 };
 
 /*
- * ABI for SCMI_PROTOCOL_VERSION message payload
+ * ABI for PROTOCOL_VERSION message payload
  */
 struct scmi_clock_protocol_version_p2a {
   int32_t status;
@@ -175,6 +175,21 @@ struct scmi_clock_config_set_p2a {
 };
 
 /*
+ *  ABI for CLOCK_CONIG_GET message payload
+ */
+struct scmi_clock_config_get_a2p {
+  uint32_t clock_id;
+  uint32_t flags;
+};
+
+struct scmi_clock_config_get_p2a {
+  int32_t status;
+  uint32_t attributes1;
+  uint32_t config;
+  uint32_t extended_config_val;
+};
+
+/*
  * Clock Describe Rates
  */
 
@@ -283,6 +298,28 @@ struct scmi_clock_round_rate_get_a2p {
   uint32_t rate[2];
 };
 
+/*
+ * Protocol version of the SCMI framework
+ */
+int  scmi_clock_protocol_version(struct scmi_channel *channel, uint32_t *version)
+{
+  struct scmi_clock_protocol_version_p2a response={ };
+  struct scmi_message_data a2p = {
+    .channel = channel,
+    .protocol_id = SCMI_PROTOCOL_ID_CLOCK,
+    .message_id = SCMI_PROTOCOL_VERSION,
+    .message = NULL,
+    .message_size = 0,
+    .response = &response,
+    .response_size = sizeof(response),
+  };
+  int ret = 0;
+  ret = scmi_process_message(&a2p);
+  if (ret)
+    return ret;
+  *version= response.version;
+  return scmi_status_to_ret(response.status);
+}
 
 /*
  * Enabling and disabling a clock
@@ -312,6 +349,39 @@ int scmi_clock_gate(struct scmi_channel *channel, unsigned int clock_id, int ena
   return scmi_status_to_ret(response.status);
 }
 
+/*
+ * Get the configuration of the clock
+ */
+int scmi_clock_get_config(struct scmi_channel *channel, unsigned int clock_id, uint32_t *flags, uint32_t *attributes ,uint32_t *config)
+{
+  struct scmi_clock_config_get_p2a response = {};
+  struct scmi_clock_config_get_a2p message = {
+    .clock_id = clock_id,
+    .flags=*flags,
+  };
+  struct scmi_message_data a2p = {
+    .channel = channel,
+    .protocol_id = SCMI_PROTOCOL_ID_CLOCK,
+    .message_id = SCMI_CLOCK_CONFIG_GET,
+    .message = &message,
+    .message_size = sizeof(message),
+    .response = &response,
+    .response_size = sizeof(response),
+  };
+  int ret = 0;
+  ret = scmi_process_message(&a2p);
+  if (ret)
+  {
+    return ret;
+  }
+  *config =response.config;
+  *attributes = response.attributes1;
+  return scmi_status_to_ret(response.status);
+}
+
+/*
+ * Get the attributes of the clock
+ */
 int scmi_clock_get_attributes(struct scmi_channel *channel, unsigned int clock_id,
                               char *name, int len, uint32_t *attributes)
 {
@@ -337,8 +407,6 @@ int scmi_clock_get_attributes(struct scmi_channel *channel, unsigned int clock_i
   *attributes = response.attributes;
   return scmi_status_to_ret(response.status);
 }
-
-  
 
 /*
  * Get and set a clock rate

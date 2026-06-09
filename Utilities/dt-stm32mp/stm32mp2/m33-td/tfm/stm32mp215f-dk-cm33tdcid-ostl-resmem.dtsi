@@ -128,7 +128,7 @@
 			#memory-region-cells = <0>;
 		};
 
-		spare1: spare1@81300000 {
+		fwu_shmem: fwu-shmem@81300000 {
 			compatible = "reserved-memory";
 			reg = <0x0 0x81300000 0x0 0xcc0000>;
 			#memory-region-cells = <0>;

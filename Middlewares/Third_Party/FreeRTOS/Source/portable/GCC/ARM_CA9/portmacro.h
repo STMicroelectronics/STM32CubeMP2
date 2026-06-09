@@ -88,8 +88,14 @@ extern uint32_t ulPortYieldRequired;            \
 }
 
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
+#if defined(CORE_CA35)
+/* CA35 uses the architecturally current supervisor-call mnemonic SVC.
+It raises the same supervisor exception path handled by FreeRTOS_SWI_Handler,
+but avoids relying on the older SWI spelling kept in the legacy ARM_CA9 port. */
+#define portYIELD() __asm volatile ( "SVC 0" ::: "memory" );
+#else
 #define portYIELD() __asm volatile ( "SWI 0" ::: "memory" );
-
+#endif /* defined(CORE_CA35) */
 
 /*-----------------------------------------------------------
  * Critical section control
@@ -100,7 +106,7 @@ extern void vPortExitCritical( void );
 extern uint32_t ulPortSetInterruptMask( void );
 extern void vPortClearInterruptMask( uint32_t ulNewMaskValue );
 extern void vPortInstallFreeRTOSVectorTable( void );
-
+extern BaseType_t xPortIsInsideInterrupt( void );
 /* These macros do not globally disable/enable interrupts.  They do mask off
 interrupts that have a priority below configMAX_API_CALL_INTERRUPT_PRIORITY. */
 #define portENTER_CRITICAL()        vPortEnterCritical();

@@ -109,7 +109,11 @@ int main(void)
   if (IS_DEVELOPER_BOOT_MODE())
   {
 	  /* Configure the system clock */
-	  SystemClock_Config();
+    SystemClock_Config();
+  }
+  else
+  {
+    SystemCoreClockUpdate();
   }
 
   /* Configure LED3 */
@@ -122,6 +126,7 @@ int main(void)
 	
 	/*Corpo Sync Initialization*/
 	CoproSync_Init();
+
   }
   
   /* Initialize all configured peripherals */

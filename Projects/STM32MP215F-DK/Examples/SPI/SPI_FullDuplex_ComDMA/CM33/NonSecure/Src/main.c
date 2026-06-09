@@ -157,6 +157,10 @@ int main(void)
       BSP_LED_Off(LED1);
     }
   }
+  else
+  {
+    SystemCoreClockUpdate();
+  }
 
 #ifdef  MASTER_BOARD
   printf("\r\nLog : SPI example running (on SPI Master Board)\r\n");

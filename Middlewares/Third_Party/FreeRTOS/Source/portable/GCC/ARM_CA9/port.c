@@ -29,7 +29,6 @@
 /* Standard includes. */
 #include <stdlib.h>
 #include <string.h>
-
 /* Scheduler includes. */
 #include "FreeRTOS.h"
 #include "task.h"
@@ -111,6 +110,29 @@ point is zero. */
 /* The value of the mode bits in the APSR when the CPU is executing in user
 mode. */
 #define portAPSR_USER_MODE              ( 0x10 )
+
+/* The value of the mode bits in the CPSR for interrupt/exception modes. */
+#define portCPSR_FIQ_MODE                ( 0x11 )
+#define portCPSR_IRQ_MODE                ( 0x12 )
+#define portCPSR_SUPERVISOR_MODE         ( 0x13 )
+#define portCPSR_ABORT_MODE              ( 0x17 )
+#define portCPSR_UNDEFINED_MODE          ( 0x1B )
+#define portCPSR_SYSTEM_MODE             ( 0x1F )
+
+#if defined( CORE_CA35 )
+/* On STM32MP25 CA35, privileged thread/startup code can run in
+Supervisor mode, so classifying Supervisor as interrupt context causes
+false positives in task context.  Only true exception modes that cannot
+execute normal thread code are treated as interrupt context here:
+IRQ, FIQ, Abort, and Undefined. */
+#define portIS_INTERRUPT_CONTEXT( ulMode )                                             \
+    ( ( ( ulMode ) == portCPSR_IRQ_MODE ) || ( ( ulMode ) == portCPSR_FIQ_MODE ) ||    \
+        ( ( ulMode ) == portCPSR_ABORT_MODE ) || ( ( ulMode ) == portCPSR_UNDEFINED_MODE ) )
+#else
+#define portIS_INTERRUPT_CONTEXT( ulMode )                                             \
+    ( ( ( ulMode ) == portCPSR_IRQ_MODE ) || ( ( ulMode ) == portCPSR_FIQ_MODE ) ||    \
+        ( ( ulMode ) == portCPSR_SUPERVISOR_MODE ) )
+#endif
 
 /* The critical section macros only mask interrupts up to an application
 determined priority level.  Sometimes it is necessary to turn interrupt off in
@@ -206,6 +228,14 @@ volatile uint32_t ulPortYieldRequired = pdFALSE;
 /* Counts the interrupt nesting depth.  A context switch is only performed if
 if the nesting depth is 0. */
 volatile uint32_t ulPortInterruptNesting = 0UL;
+
+/**
+ * @brief Checks whether the current execution context is interrupt.
+ *
+ * @return pdTRUE if the current execution context is interrupt, pdFALSE
+ * otherwise.
+ */
+BaseType_t xPortIsInsideInterrupt( void );
 
 /* Used in the asm file. */
 __attribute__(( used )) const uint32_t ulICCIAR = portICCIAR_INTERRUPT_ACKNOWLEDGE_REGISTER_ADDRESS;
@@ -567,4 +597,21 @@ void vApplicationFPUSafeIRQHandler( uint32_t ulICCIAR )
 {
     ( void ) ulICCIAR;
     configASSERT( ( volatile void * ) NULL );
+}
+
+BaseType_t xPortIsInsideInterrupt (void)
+{
+    uint32_t ulCPSR;
+    uint32_t ulMode;
+
+    /* Read the Current Program Status Register (CPSR). */
+    __asm volatile ( "mrs %0, cpsr" : "=r" ( ulCPSR ) );
+    ulMode = ulCPSR & portAPSR_MODE_BITS_MASK;
+
+    if( portIS_INTERRUPT_CONTEXT( ulMode ) )
+    {
+        return pdTRUE;
+    }
+
+    return pdFALSE;
 }

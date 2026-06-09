@@ -34,6 +34,33 @@ Various template file are provided to easily build an application. They can be a
 # __Update History__
 
 ::: {.collapse}
+<input type="checkbox" id="collapse-section4" checked aria-hidden="true">
+<label for="collapse-section4" checked aria-hidden="true">__V1.3.1 / 20-May-2026__</label>
+<div>
+
+## Main Changes
+
+
+## Contents
+
+- Fix Malformed comment and missing Open parentheis in some definitions
+- Update ETH CMSIS definitions
+- General updates
+
+
+## Known Limitations
+
+None
+
+## Dependencies
+
+None
+
+</div>
+:::
+
+
+::: {.collapse}
 <input type="checkbox" id="collapse-section3" checked aria-hidden="true">
 <label for="collapse-section3" checked aria-hidden="true">__V1.3.0 / 02-Feb-2026__</label>
 <div>

@@ -6,9 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>README</title>
   <style>
-    /* Default styles provided by pandoc.
-    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -93,52 +90,26 @@
   <link rel="stylesheet" href="_htmresc/mini-st.css" />
 </head>
 <body>
-<h1 id="template_starterapp_m33td-application">Template_StarterApp_M33TD
-Application</h1>
+<h1
+id="template_starterapp_m33td-template-project">Template_StarterApp_M33TD
+Template Project</h1>
 <hr />
 <h2 id="application-description">Application Description</h2>
-<p>The Template_StarterApp_M33TD is to highlight the capabilities of the
-STM32MP2 platform for M33TDCID profile, showcasing the M33 as the
-primary CPU and the A35 as a high-performance coprocessor. This
-application emphasizes the ability to achieve a fast Cortex-M boot,
-bypassing the Cortex-A and the associated OpenSTLinux solution, which
-typically requires several seconds to initialize. By leveraging this
-approach, the system can quickly execute critical tasks in the
-non-secure environment while maintaining flexibility for
-high-performance operations on the A35. This project enables the
-Non‑Secure (NS) Application Manager functionality for the Cortex‑M33‑TD
-flavor. It integrates the common utility stack
-<code>Utilities/M33TD_NSAppCore</code> for portable tasks and thin
-driver abstractions, so projects can reuse task logic while keeping
-board specifics in project drivers (typically under
-<code>CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/</code>).</p>
+<p><code>Template_StarterApp_M33TD</code> is the STM32MP257F-EV1 starter
+template for a Cortex-M33 Non-Secure application built on
+<code>Utilities/M33TD_NSAppCore</code>.</p>
+<p>It provides a utility-integrated baseline: the required NSAppCore
+core tasks stay enabled, a simple UserApp task is added by default, and
+project-specific drivers remain local to the template under
+<code>CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/</code>.</p>
+<p>The intent is to give a clean starting point for a new M33TD project
+with the minimal common bootstrap, TF-M integration, watchdog
+supervision, and A35 lifecycle handling needed to bring up the full
+M33TD-OSTL ecosystem.</p>
 <hr />
-<h2 id="key-features">Key Features</h2>
-<ul>
-<li><strong>FreeRTOS Multitasking</strong>: The application is built on
-FreeRTOS, enabling multitasking in the non-secure environment.</li>
-<li><strong>LED Blinking</strong>: Uses the UserApp task to blink an LED
-every second.</li>
-<li><strong>A35 Coprocessor Management</strong>: Uses the RemoteProc
-task to manage the A35 core lifecycle via TF-M secure services.</li>
-<li><strong>Interrupt Handling</strong>: Configures the EXTI line to
-receive interrupts on NVIC line 4 of the M33 on the event IWDG RST.</li>
-<li><strong>Template for NS App Manager</strong>: Uses
-<code>M33TD_NSAppCore</code> stack as the baseline to implement the NS
-Application Manager with reusable tasks (Logger, RemoteProc, SCMI
-Manager, WdgMonitor, UserApp).</li>
-</ul>
-<hr />
-<h2 id="purpose">Purpose</h2>
-<p>This is a FreeRTOS-based multitask application running in the NS
-processing environment, while the TFM secure application operates in the
-secure processing environment. The secure application acts as a client
-to process secure services requested by both the A35 and M33 NS.</p>
-<p>As a Template, this project demonstrates how to implement the
-StarterApp functionality (Non‑Secure Application Manager) around the
-<code>Utilities/M33TD_NSAppCore</code> stack. The
-<code>NSCoreApp_Init()</code> bootstrap configures the stack and starts
-the enabled tasks below:</p>
+<h2 id="default-task-set">Default Task Set</h2>
+<p><code>NSCoreApp_Init()</code> starts the required utility core tasks
+plus the template’s example UserApp task:</p>
 <ol type="1">
 <li><strong>NSCoreApp (Bootstrap)</strong>:
 <ul>
@@ -146,111 +117,73 @@ the enabled tasks below:</p>
 </ul></li>
 <li><strong>Logger Task</strong>:
 <ul>
-<li>Centralized logging, with optional real-time output.</li>
-</ul></li>
-<li><strong>UserApp Task</strong>:
-<ul>
-<li>Example application task (LED activity) to validate system
-liveness.</li>
-</ul></li>
-<li><strong>RemoteProc Task</strong>:
-<ul>
-<li>Manages the A35 coprocessor lifecycle via TF-M secure services
-(optional auto-start, status retrieval, recovery).</li>
+<li>Centralized logging, with optional real-time debug output.</li>
 </ul></li>
 <li><strong>SCMI Manager Task</strong>:
 <ul>
 <li>Handles SCMI notifications and related TF-M forwarding.</li>
 </ul></li>
+<li><strong>RemoteProc Task</strong>:
+<ul>
+<li>Manages the A35 coprocessor lifecycle through TF-M secure
+services.</li>
+<li>Auto-start at boot is controlled by
+<code>REMOTE_PROC_AUTO_START</code>.</li>
+</ul></li>
 <li><strong>Watchdog Monitor Task</strong>:
 <ul>
-<li>Supervises system health and watchdog-related handling.</li>
+<li>Supervises watchdog-related health handling.</li>
+</ul></li>
+<li><strong>UserApp Task</strong>:
+<ul>
+<li>Provides the example project-side application hook enabled by
+default in the template.</li>
 </ul></li>
 </ol>
+<p>Additional task enables are configured in the project headers and can
+be adjusted as the new application grows.</p>
 <hr />
 <h2 id="prerequisite-hardware-software-environment-setup">Prerequisite
 Hardware &amp; Software Environment Setup</h2>
 <ul>
-<li><strong>Trusted Firmware-M</strong>: The source code must be
-installed under the <code>Middlewares/Third_Party</code> directory with
-the path <code>Middlewares/Third_Party/trusted-firmware-m</code>. Ensure
-the correct version is used as described in the STM32 MPU release
-note.</li>
-<li><strong>Supported Devices</strong>: This example runs on STM32MP25xx
-devices and has been tested with the STMicroelectronics STM32MP257F-EV1
-board. It can be tailored to other supported devices and development
-boards.</li>
+<li><strong>Trusted Firmware-M</strong>: Install the source code under
+<code>Middlewares/Third_Party/trusted-firmware-m</code>.</li>
+<li><strong>Supported Devices</strong>: This template targets
+STM32MP25xx devices and is provided for STM32MP257F-EV1.</li>
 <li><strong>ST-Link Connection</strong>: Connect the ST-Link cable to
 the PC USB port to display traces.</li>
 </ul>
 <h3 id="software-versions">Software Versions</h3>
 <ul>
 <li><strong>Trusted Firmware-M (TFM)</strong>: Refer to the <a
-href="https://wiki.st.com/stm32mpu/Category:Trusted_Firmware-M">Trusted
-Firmware-M wiki</a> for recommended versions and integration
-details.</li>
+href="https://wiki.st.com/stm32mpu/wiki/Category:Trusted_Firmware-M">Trusted
+Firmware-M wiki</a>.</li>
 <li><strong>External Device Tree (externalDT)</strong>: See the <a
-href="https://wiki.st.com/stm32mpu/External_device_tree">External
-Device Tree wiki</a> for guidance on obtaining and using external DT
-sources.</li>
-<li><strong>STM32CubeIDE</strong>: For supported IDE versions and
-ecosystem information, refer the <a
-href="https://wiki.st.com/stm32mpu/">STM32 MPU wiki</a>.</li>
+href="https://wiki.st.com/stm32mpu/wiki/External_device_tree">External
+Device Tree wiki</a>.</li>
+<li><strong>STM32CubeIDE</strong>: Refer to the <a
+href="https://wiki.st.com/stm32mpu/wiki/">STM32 MPU wiki</a>.</li>
 </ul>
-<hr />
-<h2 id="artifact-flow-build-sign-deploy">Artifact flow (build → sign →
-deploy)</h2>
-<p>This is a high-level view; the later sections in this README give the
-board-specific filenames and flashing steps.</p>
-<pre>
-┌──────────────┐
-│ TF-M build   │
-└─┬────────────┘
-  +-> bl2*.stm32
-  +-> ddr_phy*_Signed.bin
-  +-> tfm_s.bin
-
-┌───────────────────┐
-│ CM33-NS app build │
-└─┬─────────────────┘
-  +-> ${PROJECT_NAME}.bin
-
-┌─────────────────────────────┐
-│ postbuild (assemble + sign) │
-└─┬───────────────────────────┘
-  | inputs: ${PROJECT_NAME}.bin + tfm_s.bin
-  +-> tfm-*_s_ns_Signed.bin
-
-Deploy into OSTL image tree
-   bl2*.stm32            -> .../images/stm32mp2-m33td/arm-trusted-firmware-m/bl2
-   ddr_phy*_Signed.bin   -> .../images/stm32mp2-m33td/m33-firmware
-   tfm-*_s_ns_Signed.bin -> .../images/stm32mp2-m33td/m33-firmware
-</pre>
 <hr />
 <h2 id="to-build-cmake-project-for-m33tdcid-through-command-line">To
 Build CMake Project for M33TDCID (Through Command Line)</h2>
 <h3 id="compilation-instructions">Compilation Instructions</h3>
 <ul>
-<li>Export the path of any ARM cross-compiler toolchain with
-<code>arm-none-eabi-gcc</code> to your PC’s PATH environment variable.
-<ul>
-<li><p>Example for STM32CubeIDE’s 1.19.0.25A9 Toolchain:</p>
-<pre><code>C:\ST\STM32CubeIDE_1.19.0.25A9\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.1.0.202501171655\tools\bin</code></pre></li>
-</ul></li>
+<li>Ensure an ARM cross-compiler toolchain with
+<code>arm-none-eabi-gcc</code> is available in <code>PATH</code>.</li>
+<li>When using <code>-G"Unix Makefiles"</code> on Windows, also ensure
+<code>make</code> is available in <code>PATH</code>.</li>
 </ul>
 <hr />
 <h2 id="build-procedure">Build Procedure</h2>
 <h3 id="secure-build-tfm">Secure Build (TFM)</h3>
 <ol type="1">
-<li><p>Navigate to
-<code>Firmware/Middlewares/Third_Party/trusted-firmware-m</code>.</p></li>
-<li><p>For SD card development mode, execute the following command:</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-B</span> config_default <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-DTFM_PLATFORM</span><span class="op">=</span>stm/stm32mp257f_ev1 <span class="at">-DTFM_TOOLCHAIN_FILE</span><span class="op">=</span>toolchain_GNUARM.cmake <span class="at">-DSTM32_BOOT_DEV</span><span class="op">=</span>sdmmc1 <span class="at">-DTFM_PROFILE</span><span class="op">=</span>profile_medium <span class="at">-DSTM32_M33TDCID</span><span class="op">=</span>ON <span class="at">-DCMAKE_BUILD_TYPE</span><span class="op">=</span>Relwithdebinfo <span class="at">-DNS</span><span class="op">=</span>OFF <span class="at">-DDTS_EXT_DIR</span><span class="op">=&lt;</span>EXT_DT_DIR<span class="op">&gt;</span> -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-bl2.dts <span class="at">-DDTS_BOARD_S</span><span class="op">=</span>stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span> </span></code></pre></div></li>
-<li><p>Build the project:</p>
-<div class="sourceCode" id="cb3"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">--build</span> config_default <span class="at">--</span> install</span></code></pre></div></li>
+<li>Navigate to
+<code>Firmware/Middlewares/Third_Party/trusted-firmware-m</code>.</li>
+<li>For SD card development mode, execute the TF-M configure command
+matching STM32MP257F-EV1 and your selected boot-device DTS files.</li>
+<li>Build the project:
+<code>bash  cmake --build config_default -- install</code></li>
 </ol>
 <p><strong>Note</strong>: The external DT repository is placed in the
 <code>Utilities</code> directory.</p>
@@ -259,24 +192,27 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="
 id="non-secure-m33-firmware-build-template_starterapp_m33td-application">Non-Secure
 M33 Firmware Build (Template_StarterApp_M33TD Application)</h3>
 <ol type="1">
-<li><p>Navigate to
-<code>Firmware/Projects/STM32MP257F-EV1/Templates/Template_StarterApp_M33TD</code>.</p></li>
-<li><p>Run the following command:</p>
-<div class="sourceCode" id="cb4"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>   <span class="fu">cmake</span> <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-B</span> build <span class="at">-DTFM_BUILD_DIR</span><span class="op">=&lt;</span>TFM_BUILD_DIRECTORY<span class="op">&gt;</span> -DREMOTE_PROC_AUTO_START=ON</span></code></pre></div>
+<li>Navigate to
+<code>Firmware/Projects/STM32MP257F-EV1/Templates/Template_StarterApp_M33TD</code>.</li>
+<li>Run the following command:
+<code>bash  cmake -G"Unix Makefiles" -B build -DTFM_BUILD_DIR=&lt;TFM_BUILD_DIRECTORY&gt;</code>
 <ul>
 <li>If <code>TFM_BUILD_DIR</code> is not specified, the default path
 <code>Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default</code>
-will be used, assuming the TFM Secure Build step is completed.</li>
-<li>By default:
+is used.</li>
+<li>Current project CMake options:
 <ul>
-<li><code>REMOTE_PROC_AUTO_START</code> is set to <code>1</code> for
-Template_StarterApp_M33TD unless explicitly provided</li>
+<li><code>-DREMOTE_PROC_AUTO_START=ON|OFF</code> (default:
+<code>ON</code>)</li>
+<li><code>-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF</code> (default:
+<code>OFF</code>)</li>
+<li><code>-DFAULT_EXCEPTION_ENABLE=ON|OFF</code> (default:
+<code>ON</code>)</li>
+<li><code>-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF</code> (default:
+<code>ON</code>)</li>
 </ul></li>
 </ul></li>
-<li><p>Build the project:</p>
-<div class="sourceCode" id="cb5"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> <span class="at">-C</span> build all</span></code></pre></div></li>
+<li>Build the project: <code>bash  make -C build all</code></li>
 </ol>
 <hr />
 <h2 id="to-build-native-stm32cubeide-project">To Build Native
@@ -284,57 +220,25 @@ STM32CubeIDE Project</h2>
 <h3 id="project-structure">Project Structure</h3>
 <pre><code>Template_StarterApp_M33TD
 ├── Template_StarterApp_M33TD_CM33
-│   ├── Template_StarterApp_M33TD_CM33_NonSecure (Non-Secure STM32CubeIDE M33 project)
-│   └── Template_StarterApp_M33TD_CM33_trusted-firmware-m (Secure CMake project)</code></pre>
-<p><strong>Note</strong>: Refer to <a
-href="https://wiki.st.com/stm32mpu/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#">this
-wiki</a> for instructions on importing a CMake project.</p>
+│   ├── Template_StarterApp_M33TD_CM33_NonSecure
+│   └── Template_StarterApp_M33TD_CM33_trusted-firmware-m</code></pre>
+<p><strong>Note</strong>: Refer to the <a
+href="https://wiki.st.com/stm32mpu/wiki/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#">STM32
+MPU wiki</a> for project import guidance.</p>
 <h3 id="build-procedure-1">Build Procedure</h3>
 <h4 id="secure-tfm-firmware-build">Secure TFM Firmware Build</h4>
 <ol type="1">
-<li>Configure the CMake build options:
-<ul>
-<li><p>Navigate to
-<code>Template_StarterApp_M33TD_CM33_trusted-firmware-m</code> and
-update the CMake settings:</p>
-<pre><code>-DDEBUG_AUTHENTICATION=FULL  # Enabled for Debug Purpose, Default: this option is removed
--DTFM_PLATFORM=stm/stm32mp257f_ev1
--DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake
--DSTM32_BOOT_DEV=sdmmc1  # Building TFM for &quot;sdcard_sdcard&quot; bootdevice mode
--DTFM_PROFILE=profile_medium
--DSTM32_M33TDCID=ON
--DCMAKE_BUILD_TYPE=Relwithdebinfo
--DNS=OFF
--DDTS_EXT_DIR=../../../../../../../../../Firmware/Utilities/dt-stm32mp
--DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-bl2.dts  # External DT file for sdcard_sdcard bootdevice mode 
--DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts          # External DT file for sdcard_sdcard bootdevice mode 
--DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts               # External DT file common for all bootdevice modes</code></pre></li>
-</ul></li>
-<li>Configure the TFM CMake project:
-<ul>
-<li>Right-click on
-<code>Template_StarterApp_M33TD_CM33_trusted-firmware-m</code> -&gt;
-<code>CMake Configure</code>.</li>
-</ul></li>
-<li>Build the TFM CMake project:
-<ul>
-<li>Right-click on
-<code>Template_StarterApp_M33TD_CM33_trusted-firmware-m</code> -&gt;
-<code>Build Project</code>.</li>
-</ul></li>
+<li>Configure the TF-M CMake project with the same platform and DTS
+values used by the command-line flow.</li>
+<li>Run <code>CMake Configure</code> on
+<code>Template_StarterApp_M33TD_CM33_trusted-firmware-m</code>.</li>
+<li>Build the TF-M CMake project.</li>
 </ol>
 <h4 id="non-secure-stm32cubeide-project-build">Non-Secure STM32CubeIDE
 Project Build</h4>
 <ol type="1">
-<li>Build the project:
-<ul>
-<li>Select the build configuration as per the TFM version:
-<ul>
-<li>Choose <code>CM33TDCID_m33_ns_tfm_s_sign</code>.</li>
-</ul></li>
-<li>Right-click on <code>Template_StarterApp_M33TD_CM33_NonSecure</code>
--&gt; <code>Build Project</code>.</li>
-</ul></li>
+<li>Select the matching NonSecure build configuration.</li>
+<li>Build <code>Template_StarterApp_M33TD_CM33_NonSecure</code>.</li>
 </ol>
 <hr />
 <h2 id="output">Output</h2>
@@ -342,18 +246,18 @@ Project Build</h4>
 <li>The generated binaries will be located in the <code>bin</code>
 folder:</li>
 </ul>
-<pre><code>   cd bin/</code></pre>
+<pre><code>cd bin/</code></pre>
 <ul>
 <li><code>Template_StarterApp_M33TD_CM33_NonSecure.bin</code></li>
 <li><code>tfm_s_ns_signed.bin</code></li>
 <li><code>ddr_phy_signed.bin</code></li>
 <li><code>bl2.stm32</code></li>
 </ul>
-<p><strong>Note</strong>: For other boot device modes, TFM Secure Build
-commands need to be adjusted, and the generated binary should be renamed
-accordingly. Refer to the <a
-href="#how-to-generate-binaries-for-different-boot-modes">How to
-Generate Binaries for Different Boot Modes</a> section.</p>
+<p><strong>Note</strong>:
+<code>Template_StarterApp_M33TD_CM33_NonSecure.bin</code> is the raw
+Non-Secure application output. <code>tfm_s_ns_signed.bin</code> is the
+signed combined TF-M Secure + Non-Secure image produced by the postbuild
+flow.</p>
 <hr />
 <p>For detailed instructions on flashing the generated binaries to your
 device, see <a href="#how-to-flash-binaries">How to Flash
@@ -402,22 +306,10 @@ Creating an empty ITS flash layout.
 [NS] [INF] [WdgMonitor] watchdog timeout: 120000ms
 [NS] [INF] [RemoteProc] starting copro cpu@0... (pending)
 [NS] [INF] [RemoteProc] copro cpu@0 started.</code></pre>
-<h3 id="understanding-template-starterapp-logs">Understanding Template
-StarterApp Logs</h3>
+<h3 id="understanding-template-logs">Understanding Template Logs</h3>
 <p>This log demonstrates the CM33 boot sequence (MCUboot/TF-M),
-provisioning status, secure→non-secure handover, and the core Template
-StarterApp runtime tasks (Watchdog Monitor and RemoteProc).</p>
-<blockquote>
-<p><strong>Note:</strong> The
-<code>[RemoteProc] starting copro cpu@0... (pending)</code> message
-followed by <code>[RemoteProc] copro cpu@0 started.</code> indicates the
-A35 coprocessor was started during boot. This behavior is typically
-enabled by the <code>REMOTE_PROC_AUTO_START=ON</code> CMake option, as
-described in the <a
-href="#non-secure-m33-firmware-build-template_starterapp_m33td-application">Non-Secure
-M33 Firmware Build (Template_StarterApp_M33TD Application)</a>
-section.</p>
-</blockquote>
+provisioning status, secure-non-secure handover, and the baseline
+template runtime tasks (Watchdog Monitor and RemoteProc).</p>
 <p>The log also reflects the specific firmware and configuration used
 for the device boot:</p>
 <ul>
@@ -426,52 +318,53 @@ for the device boot:</p>
 <li><strong>TF-M version</strong>:
 <code>welcome to TF-M: ...</code></li>
 <li><strong>External device tree (DTS)</strong>:
-<code>dts: ...-sdcard-s.dts</code> (compare with the
-<code>-DDTS_BOARD_S=...</code> DTS passed to the TF-M secure build)</li>
+<code>dts: ...</code></li>
 <li><strong>Key runtime milestones</strong>:
 <ul>
-<li>A35 bring-up: <code>[RemoteProc] ... started.</code></li>
-<li>Watchdog monitor:
+<li>Watchdog monitor startup:
 <code>[WdgMonitor] watchdog timeout: ...</code></li>
+<li>A35 bring-up: <code>[RemoteProc] ... started.</code></li>
 </ul></li>
 </ul>
-<p>To verify that the correct configuration is reflected, compare the
-DTS filename(s) and firmware versions shown in the log with the TF-M
-secure-build CMake options and external DTS files specified during the
-secure build (see <a
-href="#how-to-generate-binaries-for-different-boot-modes">How to
-Generate Binaries for Different Boot Modes</a>).</p>
+<p>Any additional UserApp trace output depends on how the template’s
+project-side hook is implemented.</p>
 <h3 id="how-to-test-and-verify-system-behavior">How to Test and Verify
 System Behavior</h3>
-<p>Once the system has completed boot (e.g., you see
-<code>[RemoteProc] copro cpu@0 started.</code>), you can run the checks
-below. For each test, look for the corresponding activity on the
-<strong>CM33 UART console</strong>.</p>
+<p>Once the system has completed boot, you can run the checks below. For
+each test, look for the corresponding activity on the <strong>CM33 UART
+console</strong>.</p>
 <ol type="1">
-<li><strong>Simulate a Linux crash and observe recovery</strong>
+<li><strong>Power-on boot verification</strong>
 <ul>
-<li>On the Linux console (as <code>root</code>), run:
-<code>bash  sync; sleep 2; sync; echo c &gt; /proc/sysrq-trigger</code></li>
-<li>This forces a kernel crash on the A35 side. On the CM33 UART,
-RemoteProc should report crash detection and attempt recovery (for
-example: <code>Crash detected ... Attempting recovery...</code>, then a
-stop/restart sequence).</li>
+<li>Power up the board with the generated binaries flashed.</li>
+<li>Verify that the CM33 UART shows the boot banners, the watchdog
+monitor startup log, the A35 bring-up sequence, and any project-specific
+UserApp activity you enabled.</li>
 </ul></li>
 <li><strong>Cold reset from Linux</strong>
 <ul>
-<li>On Linux, run: <code>bash  reboot</code></li>
-<li>A cold reset typically reboots the full platform; you should see
-TF-M/MCUboot banners again on the CM33 UART. Depending on timing, you
-may also see an SCMI notification such as
-<code>SYS_POWER_COLD_RESET</code> before the reset.</li>
+<li><p>On Linux, run:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">reboot</span></span></code></pre></div></li>
+<li><p>Expected behavior: the full platform reboots and the CM33 UART
+shows the MCUboot and TF-M banners again.</p></li>
 </ul></li>
 <li><strong>Warm reset from Linux</strong>
 <ul>
-<li>On Linux, run:
-<code>bash  echo warm &gt;&gt; /sys/kernel/reboot/mode  reboot</code></li>
-<li>A warm reset typically restarts the A35 while keeping CM33 running;
-on the CM33 UART you should see <code>SYS_POWER_WARM_RESET</code> and a
-RemoteProc stop/start sequence.</li>
+<li><p>On Linux, run:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> warm <span class="op">&gt;&gt;</span> /sys/kernel/reboot/mode</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">reboot</span></span></code></pre></div></li>
+<li><p>Expected behavior: the CM33 UART shows the SCMI warm-reset
+notification and the RemoteProc stop/start sequence.</p></li>
+</ul></li>
+<li><strong>Template application hook verification</strong>
+<ul>
+<li>Build and run the template with your project-side UserApp behavior
+enabled.</li>
+<li>Verify that the board-level activity you added to the template, such
+as LED toggling or periodic logging, continues once the core stack has
+completed initialization.</li>
 </ul></li>
 </ol>
 <hr />
@@ -480,29 +373,21 @@ RemoteProc stop/start sequence.</li>
 runtime, <strong>LED3 will blink at a 100 ms interval</strong> to
 indicate the error state.</p>
 <hr />
-<h2 id="assumptions">Assumptions</h2>
-<hr />
-<h2 id="known-limitations">Known Limitations</h2>
-<hr />
-<h2 id="keywords">Keywords</h2>
-<p>Security, TFM, Secure, SD Card, Non-Secure</p>
-<hr />
 <h2 id="how-to-flash-binaries">How to Flash Binaries</h2>
 <ol type="1">
-<li><p><strong>Build/Compile the Project</strong><br />
-Follow the <a href="#build-procedure">Build Procedure</a> to generate
-the required binaries.</p></li>
-<li><p><strong>Copy and Rename Generated Binaries</strong><br />
-Before copying, <strong>rename the generated binaries</strong>
+<li><p><strong>Build/Compile the Project</strong>: Follow the <a
+href="#build-procedure">Build Procedure</a> to generate the required
+binaries.</p></li>
+<li><p><strong>Copy and Rename Generated Binaries</strong>: Before
+copying, <strong>rename the generated binaries</strong>
 (<code>bl2.stm32</code>, <code>ddr_phy_signed.bin</code>, and
 <code>tfm_s_ns_signed.bin</code>) according to the names specified in
-the <strong>Required Binaries</strong> section of the relevant flash
-layout under <a
-href="#reference-use-cases-for-mp25-ev1-board-starterapp-project">Reference
-Use Cases for MP25-EV1 Board (Template StarterApp Project)</a>.<br />
-Then, navigate to the <code>bin/</code> folder and copy the renamed
-binaries to the following paths:</p>
-<pre><code>&lt;OSTL-IMAGE-PATH&gt;/images/stm32mp2-m33td/arm-trusted-firmware-m/bl2</code></pre>
+the <strong>Required Binaries</strong> section under <a
+href="#reference-use-cases-for-mp25-ev1-board-template_starterapp-project">Reference
+Use Cases for MP25-EV1 Board (Template_StarterApp Project)</a>.</p>
+<p>Then, navigate to the <code>bin/</code> folder and copy the renamed
+binaries to the following paths:
+<code>&lt;OSTL-IMAGE-PATH&gt;/images/stm32mp2-m33td/arm-trusted-firmware-m/bl2</code></p>
 <ul>
 <li>Place the renamed <code>bl2</code> binary in this directory.</li>
 </ul>
@@ -511,24 +396,21 @@ binaries to the following paths:</p>
 <li>Place the renamed <code>ddr_phy</code> and
 <code>tfm-starterapp</code> binaries in this directory.</li>
 </ul></li>
-<li><p><strong>Modify Flashlayout (TSV)</strong><br />
-Select the relevant TSV file under
+<li><p><strong>Modify Flashlayout (TSV)</strong>: Select the relevant
+TSV file under
 <code>&lt;OSTL-IMAGE-PATH&gt;/images/stm32mp2-m33td/flashlayout_st-image-weston/optee</code>
 as per specific dev mode (see <a
 href="#flash-layouts-for-mp25-ev1-board">Flash Layouts for MP25-EV1
-Board</a>). And then modify the TSV file, by replacing the existing TF-M
-NS signed binary name with the name of your renamed
-<code>tfm-starterapp-..._s_ns_Signed.bin</code> that corresponds to your
-chosen boot mode.</p></li>
-<li><p><strong>Connect the Device</strong><br />
-Use a Type-C cable to connect the device to the Type-C
-connector.</p></li>
-<li><p><strong>Flash the Image</strong><br />
-Refer to the <a href="https://wiki.st.com/stm32mpu/">STM32 MPU
-wiki</a> for detailed flashing instructions.</p></li>
-<li><p><strong>Perform a Power-On Reset</strong><br />
-After flashing, perform a power-on reset to complete the
-process.</p></li>
+Board</a>). Replace the existing TF-M NS signed binary name with the
+name of your renamed <code>tfm-starterapp-..._s_ns_Signed.bin</code>
+that corresponds to your chosen boot mode.</p></li>
+<li><p><strong>Connect the Device</strong>: Use a Type-C cable to
+connect the device to the Type-C connector.</p></li>
+<li><p><strong>Flash the Image</strong>: Refer to the <a
+href="https://wiki.st.com/stm32mpu/wiki/">STM32 MPU wiki</a> for
+detailed flashing instructions.</p></li>
+<li><p><strong>Perform a Power-On Reset</strong>: After flashing,
+perform a power-on reset to complete the process.</p></li>
 </ol>
 <hr />
 <h2 id="different-boot-device-modes-for-mp25-ev1-board">Different Boot
@@ -537,35 +419,29 @@ Device Modes for MP25-EV1 Board</h2>
 <ol type="1">
 <li><strong>emmc_emmc</strong>:
 <ul>
-<li>MCUBOOT/TFM(S/NS) → eMMC<br />
-</li>
-<li>OSTL → eMMC</li>
+<li>MCUBOOT/TFM(S/NS) -&gt; eMMC</li>
+<li>OSTL -&gt; eMMC</li>
 </ul></li>
 <li><strong>nor_emmc</strong>:
 <ul>
-<li>MCUBOOT/TFM(S/NS) → Serial NOR<br />
-</li>
-<li>OSTL → eMMC</li>
+<li>MCUBOOT/TFM(S/NS) -&gt; Serial NOR</li>
+<li>OSTL -&gt; eMMC</li>
 </ul></li>
 <li><strong>nor_nor_sdcard</strong>:
 <ul>
-<li>MCUBOOT/TFM(S/NS) → Serial NOR<br />
-</li>
-<li>TF-A/FIP → Serial NOR<br />
-</li>
-<li>OSTL filesystem → SD card</li>
+<li>MCUBOOT/TFM(S/NS) -&gt; Serial NOR</li>
+<li>TF-A/FIP -&gt; Serial NOR</li>
+<li>OSTL filesystem -&gt; SD card</li>
 </ul></li>
 <li><strong>nor_sdcard</strong>:
 <ul>
-<li>MCUBOOT/TFM(S/NS) → Serial NOR<br />
-</li>
-<li>OSTL → SD card</li>
+<li>MCUBOOT/TFM(S/NS) -&gt; Serial NOR</li>
+<li>OSTL -&gt; SD card</li>
 </ul></li>
 <li><strong>sdcard_sdcard</strong>:
 <ul>
-<li>MCUBOOT/TFM(S/NS) → SD card<br />
-</li>
-<li>OSTL → SD card</li>
+<li>MCUBOOT/TFM(S/NS) -&gt; SD card</li>
+<li>OSTL -&gt; SD card</li>
 </ul></li>
 </ol>
 <hr />
@@ -582,116 +458,112 @@ the M33TDCID profile:</p>
 </ul>
 <p><strong>Note</strong>: Each TSV requires three sets of binaries.
 Refer to the <a
-href="#reference-use-cases-for-mp25-ev1-board-starterapp-project">Reference
-Use Cases for MP25-EV1 Board (Template StarterApp Project)</a> section
+href="#reference-use-cases-for-mp25-ev1-board-template_starterapp-project">Reference
+Use Cases for MP25-EV1 Board (Template_StarterApp Project)</a> section
 for details.</p>
 <hr />
 <h2 id="how-to-generate-binaries-for-different-boot-modes">How to
 Generate Binaries for Different Boot Modes</h2>
 <ol type="1">
-<li><p><strong>Configure and Build TFM Secure</strong>:<br />
-Use specific CMake options defined for each boot mode as described in
-the <strong>Required CMake Options</strong> section under <a
-href="#reference-use-cases-for-mp25-ev1-board-starterapp-project">Reference
-Use Cases for MP25-EV1 Board (Template StarterApp Project)</a>.</p></li>
-<li><p><strong>Build Template StarterApp Project</strong>:<br />
-Compile the Template StarterApp project after building the TFM secure
+<li><p><strong>Configure and Build TFM Secure</strong>: Use specific
+CMake options defined for each boot mode as described in the
+<strong>Required CMake Options</strong> section under <a
+href="#reference-use-cases-for-mp25-ev1-board-template_starterapp-project">Reference
+Use Cases for MP25-EV1 Board (Template_StarterApp Project)</a>.</p></li>
+<li><p><strong>Build Template_StarterApp Project</strong>: Compile the
+Template_StarterApp project after building the TFM secure
 binaries.</p></li>
-<li><p><strong>Rename Generated Binaries</strong>:<br />
-Rename the binaries in the <code>bin/</code> folder to match the
-required binaries for the specific TSV as described in the
-<strong>Required Binaries</strong> section under <a
-href="#reference-use-cases-for-mp25-ev1-board-starterapp-project">Reference
-Use Cases for MP25-EV1 Board (Template StarterApp Project)</a>.</p></li>
+<li><p><strong>Rename Generated Binaries</strong>: Rename the binaries
+in the <code>bin/</code> folder to match the required binaries for the
+specific TSV as described in the <strong>Required Binaries</strong>
+section under <a
+href="#reference-use-cases-for-mp25-ev1-board-template_starterapp-project">Reference
+Use Cases for MP25-EV1 Board (Template_StarterApp Project)</a>.</p></li>
 </ol>
 <hr />
 <h2
-id="reference-use-cases-for-mp25-ev1-board-template-starterapp-project">Reference
-Use Cases for MP25-EV1 Board (Template StarterApp Project)</h2>
+id="reference-use-cases-for-mp25-ev1-board-template_starterapp-project">Reference
+Use Cases for MP25-EV1 Board (Template_StarterApp Project)</h2>
 <h3
 id="flashlayout_emmc_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv-emmc_emmc-boot-mode">1.
 FlashLayout_emmc_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv (emmc_emmc
 Boot Mode)</h3>
-<p><strong>Required Binaries</strong>:<br />
-- <code>bl2-stm32mp257f-ev1-cm33tdcid-ostl-emmc.stm32</code><br />
--
-<code>ddr_phy-stm32mp257f-ev1-cm33tdcid-ostl-emmc_Signed.bin</code><br />
--
+<p><strong>Required Binaries</strong>: -
+<code>bl2-stm32mp257f-ev1-cm33tdcid-ostl-emmc.stm32</code> -
+<code>ddr_phy-stm32mp257f-ev1-cm33tdcid-ostl-emmc_Signed.bin</code> -
 <code>tfm-starterapp-stm32mp257f-ev1-cm33tdcid-ostl-emmc-emmc_s_ns_Signed.bin</code></p>
 <p><strong>Required CMake Options</strong>:</p>
-<div class="sourceCode" id="cb12"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=sdmmc2</span>  <span class="co"># eMMC</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-emmc-bl2.dts</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-emmc-s.dts</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=sdmmc2</span>  <span class="co"># eMMC</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-emmc-bl2.dts</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-emmc-s.dts</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
 <hr />
 <h3
 id="flashlayout_nor-emmc_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv-nor_emmc-boot-mode">2.
 FlashLayout_nor-emmc_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv (nor_emmc
 Boot Mode)</h3>
-<p><strong>Required Binaries</strong>:<br />
-- <code>bl2-stm32mp257f-ev1-cm33tdcid-ostl-nor.stm32</code><br />
--
-<code>ddr_phy-stm32mp257f-ev1-cm33tdcid-ostl-nor_Signed.bin</code><br />
--
+<p><strong>Required Binaries</strong>: -
+<code>bl2-stm32mp257f-ev1-cm33tdcid-ostl-nor.stm32</code> -
+<code>ddr_phy-stm32mp257f-ev1-cm33tdcid-ostl-nor_Signed.bin</code> -
 <code>tfm-starterapp-stm32mp257f-ev1-cm33tdcid-ostl-nor-emmc_s_ns_Signed.bin</code></p>
 <p><strong>Required CMake Options</strong>:</p>
-<div class="sourceCode" id="cb13"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=ospi</span>  <span class="co"># Serial NOR</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-emmc-s.dts</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=ospi</span>  <span class="co"># Serial NOR</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-emmc-s.dts</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
 <hr />
 <h3
 id="flashlayout_nor-nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv-nor_nor_sdcard-boot-mode">3.
 FlashLayout_nor-nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv
 (nor_nor_sdcard Boot Mode)</h3>
-<p><strong>Required Binaries</strong>:<br />
-- <code>bl2-stm32mp257f-ev1-cm33tdcid-ostl-nor.stm32</code><br />
--
-<code>ddr_phy-stm32mp257f-ev1-cm33tdcid-ostl-nor_Signed.bin</code><br />
--
+<p><strong>Required Binaries</strong>: -
+<code>bl2-stm32mp257f-ev1-cm33tdcid-ostl-nor.stm32</code> -
+<code>ddr_phy-stm32mp257f-ev1-cm33tdcid-ostl-nor_Signed.bin</code> -
 <code>tfm-starterapp-stm32mp257f-ev1-cm33tdcid-ostl-nor-nor_s_ns_Signed.bin</code></p>
 <p><strong>Required CMake Options</strong>:</p>
-<div class="sourceCode" id="cb14"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=ospi</span>  <span class="co"># Serial NOR</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-snor-s.dts</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-DTFM_PARTITION_PROTECTED_STORAGE=OFF</span>     <span class="co">#For this dev mode , Protected Storage feature needs to be disabled </span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=ospi</span>  <span class="co"># Serial NOR</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-snor-s.dts</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-DTFM_PARTITION_PROTECTED_STORAGE=OFF</span></span></code></pre></div>
 <hr />
 <h3
 id="flashlayout_nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv-nor_sdcard-boot-mode">4.
 FlashLayout_nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv
 (nor_sdcard Boot Mode)</h3>
-<p><strong>Required Binaries</strong>:<br />
-- <code>bl2-stm32mp257f-ev1-cm33tdcid-ostl-nor.stm32</code><br />
--
-<code>ddr_phy-stm32mp257f-ev1-cm33tdcid-ostl-nor_Signed.bin</code><br />
--
+<p><strong>Required Binaries</strong>: -
+<code>bl2-stm32mp257f-ev1-cm33tdcid-ostl-nor.stm32</code> -
+<code>ddr_phy-stm32mp257f-ev1-cm33tdcid-ostl-nor_Signed.bin</code> -
 <code>tfm-starterapp-stm32mp257f-ev1-cm33tdcid-ostl-nor-sdcard_s_ns_Signed.bin</code></p>
 <p><strong>Required CMake Options</strong>:</p>
-<div class="sourceCode" id="cb15"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=ospi</span>  <span class="co"># Serial NOR</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=ospi</span>  <span class="co"># Serial NOR</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
 <hr />
 <h3
 id="flashlayout_sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv-sdcard_sdcard-boot-mode">5.
 FlashLayout_sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv
 (sdcard_sdcard Boot Mode)</h3>
-<p><strong>Required Binaries</strong>:<br />
-- <code>bl2-stm32mp257f-ev1-cm33tdcid-ostl-sdcard.stm32</code><br />
--
-<code>ddr_phy-stm32mp257f-ev1-cm33tdcid-ostl-sdcard_Signed.bin</code><br />
--
+<p><strong>Required Binaries</strong>: -
+<code>bl2-stm32mp257f-ev1-cm33tdcid-ostl-sdcard.stm32</code> -
+<code>ddr_phy-stm32mp257f-ev1-cm33tdcid-ostl-sdcard_Signed.bin</code> -
 <code>tfm-starterapp-stm32mp257f-ev1-cm33tdcid-ostl-sdcard-sdcard_s_ns_Signed.bin</code></p>
 <p><strong>Required CMake Options</strong>:</p>
-<div class="sourceCode" id="cb16"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=sdmmc1</span>  <span class="co"># SD card</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-bl2.dts</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=sdmmc1</span>  <span class="co"># SD card</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-bl2.dts</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
+<hr />
+<h2 id="integration-intent">Integration Intent</h2>
+<p>Use this template when creating a new M33TD project that should
+inherit the common NSAppCore services first and then selectively enable
+optional features such as OpenAMP, LowPowerMgr, Button Monitor, or
+Display according to the final product profile.</p>
 </body>
 </html>

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US">
+<head>
+<title>_htmresc\ReleaseNotes_Patch.html</title>
+</head>
+
+<body style="font-size: 10pt; font-family: Verdana;">
+
+<h3 style="color: blue; text-decoration: underline;">Patch Release for STM32CubeMP2 Firmware Package V1.3.1 / 03-June-2026</h3>
+
+<div style="margin-left: 18pt;">
+<p>
+<b><u>Main Changes</u></b>
+</p>
+
+
+<p>
+<b>v1.3.1 release</b>
+
+<p>
+<ul>
+<li>Firmware update is now supported for STM32CubeMP2 <strong>M33TDCID</strong> Boot configuration.</li>
+<li>Low Power management support is expanded. Shutdown is now supported</li>
+<li>StarterApp (M33 NonSecure application manager) is updated.
+<ul><li>It now handles Low power state transitions and management.</li>
+<li>A new FreeRTOS Low Power management task added to process the system requests for low power transitions and interfaces with appropriate TFM API calls.</li>
+<li>RPMsg requests (coming from Cortex-A35) are now supported to configure low power states.</li>
+</ul></li>
+<li>Template StarterApp is updated for low power management.</li>
+<li>Utility M33TD_NSAppCore is updated for low power and firmware update management.</li>
+<li>PWR HAL is updated to add DSB before WFI in low power functions.</li>
+<li>Bugfix for CMSIS Device headers to correct malformed comment delimiters and missing opening parenthesis for some definitions.</li>
+<li>Miscellaneous bug fixes.</li>
+</ul>
+</p>
+
+</div>
+</body>
+</html>

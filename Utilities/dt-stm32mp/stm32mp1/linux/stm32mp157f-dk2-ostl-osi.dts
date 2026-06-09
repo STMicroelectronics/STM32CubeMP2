@@ -50,6 +50,10 @@
 	status = "disabled";
 };
 
+&dts {
+	status = "disabled";
+};
+
 &ethernet0 {
 	status = "disabled";
 };

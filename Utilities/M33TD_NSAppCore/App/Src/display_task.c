@@ -107,13 +107,13 @@ int DisplayTask_RpmsgCallback(struct rpmsg_endpoint *ept, void *data,
   if (strncmp((const char *)data, DISPLAY_CMD_START_REBOOT_MSG,
               sizeof(DISPLAY_CMD_START_REBOOT_MSG) - 1U) == 0)
   {
-    const DisplayTaskCommand_t cmd = { .type = DISPLAY_CMD_START_REBOOT, .param = 0U };
+    const DisplayTaskCommand_t cmd = { .type = DISPLAY_CMD_REQUEST_REBOOT, .param = 0U };
     (void)DisplayTask_PostCommand(&cmd);
     return 0;
   }
 
-  APP_LOG_WARN("DisplayTask", "Unknown RPMsg command: %s", (char *)data);
-  return -1;
+  APP_LOG_WARN("DisplayTask", "Unknown RPMsg command");
+  return 0;
 }
 
 /**
@@ -207,6 +207,11 @@ static void DisplayTask(void *argument)
           else if (cmd.type == DISPLAY_CMD_REQUEST_REBOOT)
           {
             DisplayTask_TransitionState(DISPLAY_CMD_STATE_REBOOT);
+
+            {
+              const DisplayTaskCommand_t reboot_cmd = { .type = DISPLAY_CMD_START_REBOOT, .param = 0U };
+              (void)DisplayTask_PostCommand(&reboot_cmd);
+            }
           }
           break;
 
@@ -222,6 +227,16 @@ static void DisplayTask(void *argument)
 #else
             DisplayTask_TransitionState(DISPLAY_TASK_STATE_IDLE);
 #endif
+          }
+          else if (cmd.type == DISPLAY_CMD_REQUEST_REBOOT)
+          {
+            display_driver.hide_splash(NULL);
+            DisplayTask_TransitionState(DISPLAY_CMD_STATE_REBOOT);
+
+            {
+              const DisplayTaskCommand_t reboot_cmd = { .type = DISPLAY_CMD_START_REBOOT, .param = 0U };
+              (void)DisplayTask_PostCommand(&reboot_cmd);
+            }
           }
 #if defined(SPLASH_ANIMATION_ENABLED)
           else if (cmd.type == DISPLAY_CMD_DECODE_ANIMATION_FRAME)
@@ -242,7 +257,7 @@ static void DisplayTask(void *argument)
         case DISPLAY_TASK_STATE_OVERLAY:
           if (cmd.type == DISPLAY_CMD_UPDATE_OVERLAY)
           {
-            display_driver.update_overlay(NULL);
+            display_driver.update_overlay((const void *)(uintptr_t)((DisplayOverlayUpdateType_t)cmd.param));
           }
           else if (cmd.type == DISPLAY_CMD_HIDE_OVERLAY)
           {
@@ -253,33 +268,42 @@ static void DisplayTask(void *argument)
           {
             display_driver.show_overlay(NULL);
           }
-          else if (cmd.type == DISPLAY_CMD_REQUEST_REBOOT)
-          {
-            DisplayTask_TransitionState(DISPLAY_CMD_STATE_REBOOT);
-          }
           else if (cmd.type == DISPLAY_CMD_HIDE_SPLASH)
           {
-            /* Demo behavior: receiving HIDE_SPLASH while overlay is active is treated as an update.
-             * Project can interpret param=0 as 'RUNNING'.
-             */
-            display_driver.update_overlay(NULL);
+            display_driver.update_overlay((const void *)(uintptr_t)DISPLAY_OVERLAY_UPDATE_STATE_SYNC_EVENT);
+          }
+          else if (cmd.type == DISPLAY_CMD_REQUEST_REBOOT)
+          {
+            display_driver.update_overlay((const void *)(uintptr_t)DISPLAY_OVERLAY_UPDATE_REBOOT_EVENT);
+            DisplayTask_TransitionState(DISPLAY_CMD_STATE_REBOOT);
+
+            {
+              const DisplayTaskCommand_t reboot_cmd = { .type = DISPLAY_CMD_START_REBOOT, .param = 0U };
+              (void)DisplayTask_PostCommand(&reboot_cmd);
+            }
           }
           break;
 #endif
 
         case DISPLAY_CMD_STATE_REBOOT:
-          if ((cmd.type == DISPLAY_CMD_REQUEST_REBOOT) || (cmd.type == DISPLAY_CMD_START_REBOOT))
+          if (cmd.type == DISPLAY_CMD_START_REBOOT)
           {
             /* Reboot is an intermediate state; project decides overlay behavior.
              * Default implementation asks OpenAMP to reboot the remote processor.
              */
-#if defined(ENABLE_OPENAMP_TASK)
-            OpenampTaskCommand_t openamp_cmd = { .type = OPENAMP_CMD_REBOOT, .param = 0U };
+#if ENABLE_OPENAMP_TASK
+            OpenampTaskCommand_t openamp_cmd = { .type = OPENAMP_CMD_REBOOT, .payload.param = 0U };
             (void)OpenampTask_PostCommand(&openamp_cmd);
 #endif
 #if defined(OVERLAY_FEATURE_ENABLED)
-            DisplayTask_TransitionState(DISPLAY_TASK_STATE_OVERLAY);
-            display_driver.show_overlay(NULL);
+            if (DisplayTaskState.previous_state == DISPLAY_TASK_STATE_OVERLAY)
+            {
+              DisplayTask_TransitionState(DISPLAY_TASK_STATE_OVERLAY);
+            }
+            else
+            {
+              DisplayTask_TransitionState(DISPLAY_TASK_STATE_IDLE);
+            }
 #else
             DisplayTask_TransitionState(DISPLAY_TASK_STATE_IDLE);
 #endif

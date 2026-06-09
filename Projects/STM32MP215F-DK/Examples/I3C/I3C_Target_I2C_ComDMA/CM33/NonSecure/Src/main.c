@@ -125,6 +125,10 @@ int main(void)
       Error_Handler();
     }
   }
+  else
+  {
+    SystemCoreClockUpdate();
+  }
 
   /* Configure LED3 */
   BSP_LED_Init(LED3);

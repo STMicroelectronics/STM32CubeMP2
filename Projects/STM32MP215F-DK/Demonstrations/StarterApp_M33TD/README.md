@@ -4,25 +4,30 @@
 
 ## Application Description
 
-The StarterApp_M33TD demonstration is to highlight the capabilities of the STM32MP2 platform for M33TDCID profile, showcasing the M33 as the primary CPU and the A35 as a high-performance coprocessor. This application emphasizes the ability to achieve a fast Cortex-M boot, bypassing the Cortex-A and the associated OpenSTLinux solution, which typically requires several seconds to initialize. By leveraging this approach, the system can quickly execute critical tasks in the non-secure environment while maintaining flexibility for high-performance operations on the A35. This project enables the CM33-NS **Non‑Secure Application Manager** functionality using the common utility stack `Utilities/M33TD_NSAppCore` as the bootstrap/task base and keeps board-specific implementations in the project under `CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/`.
+The StarterApp_M33TD demonstration is to highlight the capabilities of the STM32MP2 platform for M33TDCID profile, showcasing the M33 as the primary CPU and the A35 as a high-performance coprocessor. This application emphasizes the ability to achieve a fast Cortex-M boot, bypassing the Cortex-A and the associated OpenSTLinux solution, which typically requires several seconds to initialize. By leveraging this approach, the system can quickly execute critical tasks in the non-secure environment while maintaining flexibility for high-performance operations on the A35. This project enables the CM33-NS **Non-Secure Application Manager** functionality using the common utility stack `Utilities/M33TD_NSAppCore` as the bootstrap/task base and keeps board-specific implementations in the project under `CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/`.
+
+The StarterApp configuration enables OpenAMP, button handling, low-power orchestration, and FWU transport by default, while the display path is enabled when the project is built with `BUILD_CONFIG=FULL`.
 
 ---
 
 ## Key Features
 
-- **FreeRTOS Multitasking**: The application is built on FreeRTOS, enabling multitasking in the non-secure environment.
-- **LED Blinking**: Uses the UserApp task to blink an LED every second.
-- **A35 Coprocessor Management**: Uses the RemoteProc task to manage the A35 core lifecycle via TF-M secure services.
-- **Interrupt Handling**: Configures the EXTI line to receive interrupts on NVIC line 4 of the M33 on the event IWDG RST.
-- **Integrate Utility Stack**: Uses `Utilities/M33TD_NSAppCore` for reusable tasks and thin driver abstractions.
+- **FreeRTOS Multitasking**: Runs the NS application as a multi-task FreeRTOS system.
+- **Utility Stack Integration**: Uses `Utilities/M33TD_NSAppCore` for bootstrap, shared tasks, and common driver abstractions.
+- **UserApp Task**: Keeps the example LED activity enabled.
+- **A35 Coprocessor Management**: Uses the RemoteProc task to manage the A35 lifecycle through TF-M secure services.
+- **OpenAMP and Button Handling**: Enables RPMsg services together with local button-triggered system actions.
+- **Low-Power Orchestration**: Includes the LowPowerMgr task in the default StarterApp profile.
+- **FWU Transport Path**: Includes the FWU manager task and RPMsg endpoint used to query components and drive the secure FWU flow with install, accept, and reject actions.
+- **Optional Display Pipeline**: `BUILD_CONFIG=FULL` enables the display path; `BUILD_CONFIG=MINIMUM` keeps the non-display profile.
 
 ---
 
 ## Purpose
 
-This is a FreeRTOS-based multitask application running in the NS processing environment, while the TFM secure application operates in the secure processing environment. The secure application acts as a client to process secure services requested by both the A35 and M33 NS.
+This is a FreeRTOS-based multi-task application running in the non-secure (NS) environment while TF-M runs in the secure environment and provides secure services to the system.
 
-This application implements the StarterApp functionality (Non‑Secure Application Manager) around the `Utilities/M33TD_NSAppCore` stack. The `NSCoreApp_Init()` bootstrap configures the stack and starts the enabled tasks below:
+In the STM32MP215F-DK StarterApp profile, `NSCoreApp_Init()` starts the enabled utility tasks below:
 
 1. **NSCoreApp (Bootstrap)**:
    - Initializes the common stack and starts the enabled tasks.
@@ -30,74 +35,74 @@ This application implements the StarterApp functionality (Non‑Secure Applicati
 2. **Logger Task**:
    - Centralized logging, with optional real-time output.
 
-3. **UserApp Task**:
-   - Example application task (LED activity) to validate system liveness.
+3. **LowPowerMgr Task**:
+   - Owns low-power policy handling and suspend/resume coordination for the full StarterApp profile.
 
-4. **RemoteProc Task**:
-   - Manages the A35 coprocessor lifecycle via TF-M secure services (optional auto-start, status retrieval, recovery).
+4. **UserApp Task**:
+   - Keeps the example NS application activity enabled.
 
-5. **SCMI Manager Task**:
+5. **Button Monitor Task**:
+   - Monitors the USER button and dispatches board-side events.
+
+6. **Display Task (optional)**:
+   - Added automatically when `BUILD_CONFIG=FULL` enables the display pipeline.
+
+7. **SCMI Manager Task**:
    - Handles SCMI notifications and related TF-M forwarding.
 
-6. **Watchdog Monitor Task**:
-   - Supervises system health and watchdog-related handling.
+8. **OpenAMP Task**:
+   - Provides the RPMsg transport used by the StarterApp profile.
+   - Exposes the power, display, low-power, and FWU transport paths required by this profile.
 
-7. **OpenAMP Task**:
-   - Provides the RPMsg communication layer used by StarterApp to interact with the A35/Linux side.
-   - Exposes RPMsg endpoints used by this project:
-     - **Power endpoint**: used to send M33-initiated power requests (e.g., reboot/shutdown) to the remote processor.
-     - **Display endpoint**: used when the display pipeline is enabled (see **Display Task**) to exchange display messages with Linux.
+9. **RemoteProc Task**:
+   - Manages A35 lifecycle control, status reporting, and recovery flows.
 
-8. **Button Monitor Task**:
-   - Monitors the USER button and can trigger M33-initiated power requests through the OpenAMP power endpoint (e.g., very long press).
+10. **Watchdog Monitor Task**:
+    - Supervises system health and watchdog-related handling.
 
-9. **Display Task (optional)**:
-   - Available when the display pipeline is enabled in the build (see `BUILD_CONFIG=FULL`).
-   - When built with `BUILD_CONFIG=MINIMUM`, the display pipeline is disabled, but OpenAMP + Button Monitor remain available for M33-initiated reboot/shutdown use-cases.
+11. **FWU Manager Task**:
+    - Receives FWU RPMsg commands from the OpenAMP transport, tracks pending component updates, and forwards the secure FWU actions used by StarterApp such as install, accept, reject, cancel, info, and reboot.
 
 ---
-
 
 ## Prerequisite Hardware & Software Environment Setup
 
-- **Trusted Firmware-M**: The source code must be installed under the `Middlewares/Third_Party` directory with the path `Middlewares/Third_Party/trusted-firmware-m`. Ensure the correct version is used as described in the STM32 MPU release note.
-- **Supported Devices**: This example runs on STM32MP21xx devices and has been tested with the STMicroelectronics STM32MP215F-DK board. It can be tailored to other supported devices and development boards.
+- **Trusted Firmware-M**: Install the source code under `Middlewares/Third_Party/trusted-firmware-m`.
+- **Supported Devices**: This example targets STM32MP21xx devices and has been validated on STM32MP215F-DK.
 - **ST-Link Connection**: Connect the ST-Link cable to the PC USB port to display traces.
 
 ### Software Versions
-- **Trusted Firmware-M (TFM)**: Refer to the [Trusted Firmware-M wiki](https://wiki.st.com/stm32mpu/Category:Trusted_Firmware-M) for recommended versions and integration details.
-- **External Device Tree (externalDT)**: See the [External Device Tree wiki](https://wiki.st.com/stm32mpu/External_device_tree) for guidance on obtaining and using external DT sources.
-- **STM32CubeIDE**: For supported IDE versions and ecosystem information, refer the [STM32 MPU wiki](https://wiki.st.com/stm32mpu/).
+- **Trusted Firmware-M (TFM)**: Refer to the [Trusted Firmware-M wiki](https://wiki.st.com/stm32mpu/wiki/Category:Trusted_Firmware-M).
+- **External Device Tree (externalDT)**: See the [External Device Tree wiki](https://wiki.st.com/stm32mpu/wiki/External_device_tree).
+- **STM32CubeIDE**: Refer to the [STM32 MPU wiki](https://wiki.st.com/stm32mpu/wiki/).
 
 ---
 
-## Artifact flow (build → sign → deploy)
-
-This is a high-level view; the later sections in this README give the board-specific filenames and flashing steps.
+## Artifact flow (build -> sign -> deploy)
 
 <pre>
-┌──────────────┐
-│ TF-M build   │
-└─┬────────────┘
++----------------+
+| TF-M build     |
++----------------+
   +-> bl2*.stm32
-  +-> ddr_phy*_Signed.bin
+   +-> ddr_phy*_Signed.bin
   +-> tfm_s.bin
 
-┌───────────────────┐
-│ CM33-NS app build │
-└─┬─────────────────┘
-  +-> ${PROJECT_NAME}.bin
++---------------------+
+| CM33-NS app build   |
++---------------------+
+   +-> ${PROJECT_NAME}.bin
 
-┌─────────────────────────────┐
-│ postbuild (assemble + sign) │
-└─┬───────────────────────────┘
-  | inputs: ${PROJECT_NAME}.bin + tfm_s.bin
-  +-> tfm-*_s_ns_Signed.bin
++------------------------------+
+| postbuild (assemble + sign)  |
++------------------------------+
+   | inputs: ${PROJECT_NAME}.bin + tfm_s.bin
+   +-> tfm-*_s_ns_Signed.bin
 
 Deploy into OSTL image tree
-   bl2*.stm32            -> .../images/stm32mp2-m33td/arm-trusted-firmware-m/bl2
-   ddr_phy*_Signed.bin   -> .../images/stm32mp2-m33td/m33-firmware
-   tfm-*_s_ns_Signed.bin -> .../images/stm32mp2-m33td/m33-firmware
+    bl2*.stm32            -> .../images/stm32mp2-m33td/arm-trusted-firmware-m/bl2
+    ddr_phy*_Signed.bin   -> .../images/stm32mp2-m33td/m33-firmware
+    tfm-*_s_ns_Signed.bin -> .../images/stm32mp2-m33td/m33-firmware
 </pre>
 
 ---
@@ -105,11 +110,8 @@ Deploy into OSTL image tree
 ## To Build CMake Project for M33TDCID (Through Command Line)
 
 ### Compilation Instructions
-- Export the path of any ARM cross-compiler toolchain with `arm-none-eabi-gcc` to your PC's PATH environment variable.
-  - Example for STM32CubeIDE's 1.19.0.25A9 Toolchain:
-    ```
-    C:\ST\STM32CubeIDE_1.19.0.25A9\STM32CubeIDE\plugins\com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.12.3.rel1.win32_1.1.0.202501171655\tools\bin
-    ```
+- Ensure an ARM cross-compiler toolchain with `arm-none-eabi-gcc` is available in `PATH`.
+- When using `-G"Unix Makefiles"` on Windows, also ensure `make` is available in `PATH`.
 
 ---
 
@@ -119,8 +121,7 @@ Deploy into OSTL image tree
 1. Navigate to `Firmware/Middlewares/Third_Party/trusted-firmware-m`.
 2. For SD card development mode, execute the following command:
    ```bash
-   cmake -B config_default -G"Unix Makefiles" -DTFM_PLATFORM=stm/stm32mp215f_dk -DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake -DSTM32_BOOT_DEV=sdmmc1 -DTFM_PROFILE=profile_medium -DSTM32_M33TDCID=ON -DCMAKE_BUILD_TYPE=Relwithdebinfo -DNS=OFF -DDTS_EXT_DIR=<EXT_DT_DIR> -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts 
-   -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts 
+   cmake -B config_default -G"Unix Makefiles" -DTFM_PLATFORM=stm/stm32mp215f_dk -DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake -DSTM32_BOOT_DEV=sdmmc1 -DTFM_PROFILE=profile_medium -DSTM32_M33TDCID=ON -DCMAKE_BUILD_TYPE=Relwithdebinfo -DNS=OFF -DDTS_EXT_DIR=<EXT_DT_DIR> -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts
    ```
 3. Build the project:
    ```bash
@@ -135,12 +136,18 @@ Deploy into OSTL image tree
 1. Navigate to `Firmware/Projects/STM32MP215F-DK/Demonstrations/StarterApp_M33TD`.
 2. Run the following command:
    ```bash
-      cmake -G"Unix Makefiles" -B build -DTFM_BUILD_DIR=<TFM_BUILD_DIRECTORY> -DREMOTE_PROC_AUTO_START=ON
+   cmake -G"Unix Makefiles" -B build -DTFM_BUILD_DIR=<TFM_BUILD_DIRECTORY>
    ```
-      - If `TFM_BUILD_DIR` is not specified, the default path `Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default` will be used, assuming the TFM Secure Build step is completed.
-      - By default:
-        - `REMOTE_PROC_AUTO_START` is set to `1` for StarterApp_M33TD unless explicitly provided
-
+   - If `TFM_BUILD_DIR` is not specified, the default path `Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default` is used.
+   - Project CMake options:
+     - `-DBUILD_CONFIG=FULL|MINIMUM` (default: `FULL`)
+     - `-DBOOT_SPLASHSCREEN=DYNAMIC|STATIC` (default: `DYNAMIC`, meaningful with `BUILD_CONFIG=FULL`)
+     - `-DREMOTE_PROC_AUTO_START=ON|OFF` (default: `ON`)
+     - `-DLOW_POWER_DEFAULT_POLICY_ENABLE=ON|OFF` (default: `OFF`)
+     - `-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF` (default: `OFF`)
+     - `-DFAULT_EXCEPTION_ENABLE=ON|OFF` (default: `ON`)
+     - `-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF` (default: `ON`)
+   - `ENABLE_FWU_MGR_TASK` is part of the fixed StarterApp project profile and therefore documented here, not exposed as a separate public CMake option.
 3. Build the project:
    ```bash
    make -C build all
@@ -154,43 +161,22 @@ Deploy into OSTL image tree
 ```
 StarterApp_M33TD
 ├── StarterApp_M33TD_CM33
-│   ├── StarterApp_M33TD_CM33_NonSecure (Non-Secure STM32CubeIDE M33 project)
-│   └── StarterApp_M33TD_CM33_trusted-firmware-m (Secure CMake project)
+│   ├── StarterApp_M33TD_CM33_NonSecure
+│   └── StarterApp_M33TD_CM33_trusted-firmware-m
 ```
 
-**Note**: Refer to [this wiki](https://wiki.st.com/stm32mpu/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#) for instructions on importing a CMake project.
+**Note**: Refer to the [STM32 MPU wiki](https://wiki.st.com/stm32mpu/wiki/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#) for project import guidance.
 
 ### Build Procedure
 
 #### Secure TFM Firmware Build
-1. Configure the CMake build options:
-    - Navigate to `StarterApp_M33TD_CM33_trusted-firmware-m` and update the CMake settings:
-      ```
-      -DDEBUG_AUTHENTICATION=FULL  # Enabled for Debug Purpose, Default: this option is removed
-      -DTFM_PLATFORM=stm/stm32mp215f_dk
-      -DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake
-      -DSTM32_BOOT_DEV=sdmmc1  # Building TFM for "sdcard_sdcard" bootdevice mode
-      -DTFM_PROFILE=profile_medium
-      -DSTM32_M33TDCID=ON
-      -DCMAKE_BUILD_TYPE=Relwithdebinfo
-      -DNS=OFF
-      -DDTS_EXT_DIR=../../../../../../../../../Firmware/Utilities/dt-stm32mp
-      -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts  # External DT file for sdcard_sdcard bootdevice mode 
-      -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts          # External DT file for sdcard_sdcard bootdevice mode 
-      -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts               # External DT file common for all bootdevice modes
-      ```
-
-      
-2. Configure the TFM CMake project:
-    - Right-click on `StarterApp_M33TD_CM33_trusted-firmware-m` -> `CMake Configure`.
-3. Build the TFM CMake project:
-    - Right-click on `StarterApp_M33TD_CM33_trusted-firmware-m` -> `Build Project`.
+1. Configure the TF-M CMake project with the same platform and DTS values used by the command-line flow.
+2. Run `CMake Configure` on `StarterApp_M33TD_CM33_trusted-firmware-m`.
+3. Build the TF-M CMake project.
 
 #### Non-Secure STM32CubeIDE Project Build
-1. Build the project:
-    - Select the build configuration as per the TFM version:
-      - Choose `CM33TDCID_m33_ns_tfm_s_sign`.
-    - Right-click on `StarterApp_M33TD_CM33_NonSecure` -> `Build Project`.
+1. Select the matching NonSecure build configuration.
+2. Build `StarterApp_M33TD_CM33_NonSecure`.
 
 ---
 
@@ -205,7 +191,7 @@ StarterApp_M33TD
    - `ddr_phy_signed.bin`
    - `bl2.stm32`
 
-   **Note**: For other boot device modes, TFM Secure Build commands need to be adjusted, and the generated binary should be renamed accordingly. Refer to the [How to Generate Binaries for Different Boot Modes](#how-to-generate-binaries-for-different-boot-modes) section.
+   **Note**: `StarterApp_M33TD_CM33_NonSecure.bin` is the raw NS output. `tfm_s_ns_signed.bin` remains the signed combined TF-M Secure + Non-Secure image used by the postbuild flow. For other boot device modes, TFM Secure Build commands need to be adjusted, and the generated binary should be renamed accordingly. Refer to the [How to Generate Binaries for Different Boot Modes](#how-to-generate-binaries-for-different-boot-modes) section.
 
 ---
 
@@ -265,7 +251,7 @@ Creating an empty ITS flash layout.
 
 ### Understanding StarterApp Logs
 
-This log demonstrates the CM33 boot sequence (MCUboot/TF-M), provisioning status, secure→non-secure handover, and the main StarterApp runtime tasks (DisplayTask, Watchdog Monitor, RemoteProc, OpenAMP).
+This log demonstrates the CM33 boot sequence (MCUboot/TF-M), provisioning status, secure-non-secure handover, and the main StarterApp runtime tasks (DisplayTask, Watchdog Monitor, RemoteProc, OpenAMP).
 
 > **Note:** The `[RemoteProc] starting copro cpu@0... (pending)` message followed by `[RemoteProc] copro cpu@0 started.` indicates the A35 coprocessor was started during boot. This behavior is typically enabled by the `REMOTE_PROC_AUTO_START=ON` CMake option, as described in the [Non-Secure M33 Firmware Build (StarterApp_M33TD Application)](#non-secure-m33-firmware-build-starterapp_m33td-application) section.
 
@@ -290,7 +276,7 @@ Once the system has completed boot (e.g., you see `[RemoteProc] copro cpu@0 star
 
 1. **Button-triggered A35 reboot (USER2, very long press)**
     - Press **USER2** for **at least 5 seconds**.
-    - This uses the Button Monitor task to trigger a reboot request via the OpenAMP “power” RPMsg endpoint (see `Utilities/M33TD_NSAppCore/App/Src/openamp_task.c`).
+    - This uses the Button Monitor task to trigger a reboot request via the OpenAMP "power" RPMsg endpoint (see `Utilities/M33TD_NSAppCore/App/Src/openamp_task.c`).
     - Expected CM33 logs (may vary by build options):
        - `[OpenAMP] request remote processor reboot`
        - A35 restart sequence may be reflected by RemoteProc messages (e.g., crash/recovery and/or stop/start messages).
@@ -316,6 +302,68 @@ Once the system has completed boot (e.g., you see `[RemoteProc] copro cpu@0 star
        reboot
        ```
     - A warm reset typically restarts the A35 while keeping CM33 running; on the CM33 UART you should see `SYS_POWER_WARM_RESET` and a RemoteProc stop/start sequence. When OpenAMP is enabled, you should also see `OpenAMP reinit requested`.
+
+5. **Prepare the LowPowerMgr RPMsg endpoint on Linux**
+   - StarterApp enables the firmware low-power endpoint by default through OpenAMP. In the firmware, `OpenampTask_LowPowerEndpointRegister()` registers the RPMsg service named `low_power` at address `0x5A`.
+   - On Linux, first bind or create an `rpmsg_char` endpoint for that `low_power` service. Once the endpoint is created, it appears as a `/dev/rpmsgX` node. The example commands below assume that node is `/dev/rpmsg2`.
+
+6. **Suspend policy test: STOP2**
+   - This command limits the firmware suspend policy to STOP2 before Linux enters suspend:
+      ```bash
+      echo "LIMIT_PM_STOP2" > /dev/rpmsg2
+      echo deep > /sys/power/mem_sleep
+      rtcwake -m mem -s 10
+      ```
+   - Expected behavior: Linux requests suspend, the firmware keeps the low-power target at STOP2, and the system wakes up after the RTC timeout.
+
+7. **Suspend policy test: LP_STOP2**
+   - This command allows the low-power manager to enter LP_STOP2 instead of plain STOP2:
+      ```bash
+      echo "LIMIT_PM_LP_STOP2" > /dev/rpmsg2
+      echo deep > /sys/power/mem_sleep
+      rtcwake -m mem -s 10
+      ```
+   - Expected behavior: Linux suspend still uses the RTC wake-up, but the firmware low-power target is constrained to LP_STOP2.
+
+8. **Suspend policy test: LPLV_STOP2**
+   - This command allows the deepest STOP-class mode currently exposed over the low-power endpoint:
+      ```bash
+      echo "LIMIT_PM_LPLV_STOP2" > /dev/rpmsg2
+      echo deep > /sys/power/mem_sleep
+      rtcwake -m mem -s 10
+      ```
+   - Expected behavior: the firmware low-power manager accepts the deeper STOP-class mode and the system resumes after the RTC wake-up.
+
+9. **RUN2 test with RTC wake-up**
+   - `LIMIT_PM_DISABLED` disables low-power entry in the firmware. Linux can still enter its suspend path, but the M33 side stays in RUN2 while waiting for the wake-up source:
+      ```bash
+      echo "LIMIT_PM_DISABLED" > /dev/rpmsg2
+      echo deep > /sys/power/mem_sleep
+      rtcwake -m mem -s 10
+      ```
+   - Expected behavior: the CM33 logs should show the low-power request was rejected locally while the system still exercises the RUN2/D1 standby synchronization path.
+
+10. **RUN2 test without RTC wake-up**
+    - This variant keeps low-power entry disabled but lets Linux use its standard suspend flow without programming `rtcwake`:
+      ```bash
+      echo "LIMIT_PM_DISABLED" > /dev/rpmsg2
+      echo deep > /sys/power/mem_sleep
+      systemctl suspend
+      ```
+    - Expected behavior: wake-up depends on the platform wake-up source configured by Linux or the board environment. Use this flow to validate the no-RTC wake-up case.
+
+11. **Linux-initiated shutdown**
+    - On Linux, run:
+      ```bash
+      shutdown -h now
+      ```
+    - Expected behavior: SCMI reports `SYS_POWER_SHUTDOWN`, LowPowerMgr switches to its one-way shutdown path, and the firmware prepares the `STANDBY2` shutdown mode instead of a resumable suspend mode.
+
+12. **Firmware update manager reference test**
+    - StarterApp enables the FWU manager transport path by default. The firmware registers a dedicated FWU RPMsg endpoint through OpenAMP and routes FWU commands into `FwuMgrTask`, which supports component listing and info queries plus the secure FWU control actions used by the reference flow: install, reboot-to-apply, accept, reject, and cancel.
+    - Use the ST reference procedure for end-to-end FWU validation:
+      `https://wiki.st.com/stm32mpu/wiki/M33-TD_flavor_Secure_Firmware_Update`
+    - In this project, the README intentionally references the secure firmware update flow instead of duplicating the full update procedure here.
 
 ---
 
@@ -364,7 +412,7 @@ Security, TFM, Secure, SD Card, Non-Secure
   Use a Type-C cable to connect the device to the Type-C connector.
 
 5. **Flash the Image**  
-  Refer to the [STM32 MPU wiki](https://wiki.st.com/stm32mpu/) for detailed flashing instructions.
+  Refer to the [STM32 MPU wiki](https://wiki.st.com/stm32mpu/wiki/) for detailed flashing instructions.
 
 6. **Perform a Power-On Reset**  
   After flashing, perform a power-on reset to complete the process.
@@ -376,8 +424,8 @@ Security, TFM, Secure, SD Card, Non-Secure
 The MP21-DK board supports the following boot device modes:
 
 1. **sdcard_sdcard**:  
-   - MCUBOOT/TFM(S/NS) → SD card  
-   - OSTL → SD card  
+   - MCUBOOT/TFM(S/NS) -> SD card  
+   - OSTL -> SD card  
 
 ---
 

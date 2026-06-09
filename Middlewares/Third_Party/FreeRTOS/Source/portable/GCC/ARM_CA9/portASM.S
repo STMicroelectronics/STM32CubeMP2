@@ -32,6 +32,7 @@
     .set SYS_MODE,  0x1f
     .set SVC_MODE,  0x13
     .set IRQ_MODE,  0x12
+    .set FIQ_MODE,  0x11
 
     /* Hardware registers. */
     .extern ulICCIAR
@@ -48,6 +49,7 @@
     .extern ulPortTaskHasFPUContext
 
     .global FreeRTOS_IRQ_Handler
+    .global FreeRTOS_FIQ_Handler
     .global FreeRTOS_SWI_Handler
     .global vPortRestoreTaskContext
 
@@ -257,6 +259,105 @@ switch_before_exit:
     vTaskSwitchContext() if vTaskSwitchContext() uses LDRD or STRD
     instructions, or 8 byte aligned stack allocated data.  LR does not need
     saving as a new LR will be loaded by portRESTORE_CONTEXT anyway. */
+    LDR     R0, vTaskSwitchContextConst
+    BLX     R0
+
+    /* Restore the context of, and branch to, the task selected to execute
+    next. */
+    portRESTORE_CONTEXT
+
+
+.align 4
+.type FreeRTOS_FIQ_Handler, %function
+FreeRTOS_FIQ_Handler:
+    /* Return to the interrupted instruction. */
+    SUB     lr, lr, #4
+
+    /* Push the return address and SPSR. */
+    PUSH    {lr}
+    MRS     lr, SPSR
+    PUSH    {lr}
+
+    /* Change to supervisor mode to allow reentry. */
+    CPS     #SVC_MODE
+
+    /* Push used registers. */
+    PUSH    {r0-r4, r12}
+
+    /* Increment nesting count.  r3 holds the address of ulPortInterruptNesting
+    for future use.  r1 holds the original ulPortInterruptNesting value for
+    future use. */
+    LDR     r3, ulPortInterruptNestingConst
+    LDR     r1, [r3]
+    ADD     r4, r1, #1
+    STR     r4, [r3]
+
+    /* Read value from the interrupt acknowledge register, which is stored in r0
+    for future parameter and interrupt clearing use. */
+    LDR     r2, ulICCIARConst
+    LDR     r2, [r2]
+    LDR     r0, [r2]
+
+    /* Ensure bit 2 of the stack pointer is clear. */
+    MOV     r2, sp
+    AND     r2, r2, #4
+    SUB     sp, sp, r2
+
+    /* Call the interrupt handler. */
+    PUSH    {r0-r4, lr}
+    LDR     r1, vApplicationIRQHandlerConst
+    BLX     r1
+    POP     {r0-r4, lr}
+    ADD     sp, sp, r2
+
+    CPSID   i
+    DSB
+    ISB
+
+    /* Write the value read from ICCIAR to ICCEOIR. */
+    LDR     r4, ulICCEOIRConst
+    LDR     r4, [r4]
+    STR     r0, [r4]
+
+    /* Restore the old nesting count. */
+    STR     r1, [r3]
+
+    /* A context switch is never performed if the nesting count is not 0. */
+    CMP     r1, #0
+    BNE     fiq_exit_without_switch
+
+    /* Did the interrupt request a context switch? */
+    LDR     r1, =ulPortYieldRequired
+    LDR     r0, [r1]
+    CMP     r0, #0
+    BNE     fiq_switch_before_exit
+
+fiq_exit_without_switch:
+    /* No context switch.  Restore used registers, LR_fiq and SPSR before
+    returning. */
+    POP     {r0-r4, r12}
+    CPS     #FIQ_MODE
+    POP     {LR}
+    MSR     SPSR_cxsf, LR
+    POP     {LR}
+    MOVS    PC, LR
+
+fiq_switch_before_exit:
+    /* A context switch is to be performed.  Clear the context switch pending
+    flag. */
+    MOV     r0, #0
+    STR     r0, [r1]
+
+    /* Restore used registers, LR_fiq and SPSR before saving the context
+    to the task stack. */
+    POP     {r0-r4, r12}
+    CPS     #FIQ_MODE
+    POP     {LR}
+    MSR     SPSR_cxsf, LR
+    POP     {LR}
+    portSAVE_CONTEXT
+
+    /* Select the next task to run. */
     LDR     R0, vTaskSwitchContextConst
     BLX     R0
 

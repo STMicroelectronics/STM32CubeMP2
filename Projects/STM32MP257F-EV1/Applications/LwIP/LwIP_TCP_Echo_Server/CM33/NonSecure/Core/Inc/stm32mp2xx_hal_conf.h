@@ -188,8 +188,8 @@
 
 #define  USE_RTOS                     0U
 #define  PREFETCH_ENABLE              0U
-#define  INSTRUCTION_CACHE_ENABLE     0U
-#define  DATA_CACHE_ENABLE            0U
+#define  INSTRUCTION_CACHE_ENABLE     1U
+#define  DATA_CACHE_ENABLE            1U
 
 /* ########################### Ethernet Configuration ######################### */
 #define ETH_TX_DESC_CNT   32  /* number of Ethernet Tx DMA descriptors */

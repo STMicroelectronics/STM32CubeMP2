@@ -2,7 +2,7 @@
   ******************************************************************************
   * @file    openamp_task.h
   * @author  MCD Application Team
-  * @brief   Thread Openamp header file
+  * @brief   Header file for OpenAMP task implementation.
   ******************************************************************************
   * @attention
   *
@@ -26,6 +26,10 @@
 /* Includes ------------------------------------------------------------------*/
 #include "nsappcore_config.h"
 
+#if ENABLE_FWU_MGR_TASK
+#include "fwu_mgr_task.h"
+#endif
+
 /**
   * @brief  Enumeration for OpenAMP task commands.
   */
@@ -36,35 +40,50 @@ typedef enum
   OPENAMP_CMD_REINIT,
   OPENAMP_CMD_SHUTDOWN,
   OPENAMP_CMD_REBOOT,
+#if ENABLE_FWU_MGR_TASK
+  OPENAMP_CMD_FWU_TX,
+#endif
 } OpenampCommand_t;
 
 /**
-  * @brief OpenAMP task command.
+  * @brief  OpenAMP task payload.
+  * @note   Scalar commands use `param`; FWU transmit commands use `fwuMessage`.
+  */
+typedef union
+{
+  uint32_t param;
+#if ENABLE_FWU_MGR_TASK
+  FwuMgrMessage_t fwuMessage;
+#endif
+} OpenampTaskPayload_t;
+
+/**
+  * @brief  OpenAMP task command.
   */
 typedef struct
 {
   OpenampCommand_t type;
-  uint32_t param;
+  OpenampTaskPayload_t payload;
 } OpenampTaskCommand_t;
 
 /**
-  * @brief Initialize the OpenAMP task thread and resources.
-  *        Creates the OpenAMP thread with attributes defined in the module.
+  * @brief  Initialize the OpenAMP Task and its resources.
+  *         Creates the OpenAMP thread with attributes defined in the module.
   * @retval None
   */
 void OpenampTask_Init(void);
 
 /**
-  * @brief Deinitialize the OpenAMP task and release resources.
-  *        Terminates the OpenAMP thread and deinitializes OpenAMP.
+  * @brief  De-initialize the OpenAMP Task and release resources.
+  *         Terminates the OpenAMP thread and deinitializes OpenAMP.
   * @retval None
   */
 void OpenampTask_DeInit(void);
 
 /**
   * @brief  Post a command to the OpenAMP task queue.
-  * @param  cmd: Command to post
-  * @retval true if posted successfully, false otherwise
+  * @param  cmd: Command to post.
+  * @retval true if posted successfully, false otherwise.
   */
 bool OpenampTask_PostCommand(const OpenampTaskCommand_t *cmd);
 

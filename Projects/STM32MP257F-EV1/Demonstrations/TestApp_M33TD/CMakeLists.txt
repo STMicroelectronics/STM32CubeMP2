@@ -26,12 +26,21 @@ set_property(CACHE BOOT_SPLASHSCREEN PROPERTY STRINGS DYNAMIC STATIC)
 # Define the REMOTE_PROC_AUTO_START option
 option(REMOTE_PROC_AUTO_START "Enable remote processor auto-start" ON)
 
+# Define the default low power policy option
+option(LOW_POWER_DEFAULT_POLICY_ENABLE "Enable default low power entry policy" OFF)
+
 # Pass REMOTE_PROC_AUTO_START to the compiler as a 0/1 definition.
 # This matches the config template behavior which treats the macro as numeric.
 if(REMOTE_PROC_AUTO_START)
 	add_definitions(-DREMOTE_PROC_AUTO_START=1)
 else()
 	add_definitions(-DREMOTE_PROC_AUTO_START=0)
+endif()
+
+if(LOW_POWER_DEFAULT_POLICY_ENABLE)
+	add_definitions(-DLOW_POWER_DEFAULT_POLICY_ENABLE=1)
+else()
+	add_definitions(-DLOW_POWER_DEFAULT_POLICY_ENABLE=0)
 endif()
 
 # Option for REALTIME_DEBUG_LOG_ENABLED (enables REALTIME_DEBUG_LOG_ENABLED macro)
@@ -80,6 +89,7 @@ message("Enabled Options:")
 message("  BUILD_CONFIG: ${BUILD_CONFIG}")
 message("  BOOT_SPLASHSCREEN: ${BOOT_SPLASHSCREEN}")
 message("  REMOTE_PROC_AUTO_START: ${REMOTE_PROC_AUTO_START}")
+message("  LOW_POWER_DEFAULT_POLICY_ENABLE: ${LOW_POWER_DEFAULT_POLICY_ENABLE}")
 message("  FAULT_EXCEPTION_ENABLE: ${FAULT_EXCEPTION_ENABLE}")
 message("  ENABLE_AUTO_TEST: ${ENABLE_AUTO_TEST}")
 
@@ -164,6 +174,7 @@ set(APPLICATION_SRC
 	${CMSIS_SRC_FILES}
     ${NSAPPCORE_SRC_FILES}	
     ${BASE_DIR}/CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/led_driver.c
+	${BASE_DIR}/CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/low_power_mgr_driver.c
     ${BASE_DIR}/CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/logger_output_driver.c
 	${BASE_DIR}/CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/remoteproc_driver.c
     ${BASE_DIR}/CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/openamp_driver.c
@@ -189,6 +200,7 @@ set(APPLICATION_SRC
 	${TFM_BUILD_DIR}/api_ns/common/stm32mp2xx/secure/services/src/tfm_ioctl_cpu_api.c
 	${TFM_BUILD_DIR}/api_ns/common/stm32mp2xx/secure/services/src/tfm_ioctl_wdt_api.c
 	${TFM_BUILD_DIR}/api_ns/interface/src/tfm_ns_notif_api.c
+	${TFM_BUILD_DIR}/api_ns/common/stm32mp2xx/secure/services/src/tfm_pm_api.c
 	${TFM_BUILD_DIR}/api_ns/common/stm32mp2xx/secure/services/src/tfm_scmi_api.c
 	${VIRT_UART_FILE}
 )

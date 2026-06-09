@@ -192,9 +192,9 @@
       </tr>
 	<!--================= 1 Templates_LL End ==========================================-->
 
-	<!-- ================= 13 Applications Start ========================================== -->
+	<!-- ================= 15 Applications Start ========================================== -->
       <tr align=center>
-        <td style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" rowspan=14><p id="Applications">Applications</p></td>
+        <td style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" rowspan=15><p id="Applications">Applications</p></td>
         <td align=left rowspan=4><p id="FreeRTOS">FreeRTOS</p></td>
         <td align=left><p id="FreeRTOS_MsgQueue">FreeRTOS_MsgQueue</p></td>
         <td align=left>Demonstrate MsgQueue API</td>
@@ -228,6 +228,16 @@
 		<td><font size="5" color=green >X</font></td>
       </tr>
 
+	<!--================= ROW ==========================================-->
+      <tr align=center>
+        <td align=left rowspan=1><p id="SCMI">SCMI</p></td>
+        <td align=left><p id="SCMI_DEMO">SCMI_DEMO</p></td>
+        <td align=left>	This Application demonstrates how you could use the scmiagent middleware in your Cube Firmware to communicate using ARM SCMI protocol and enable/disable clocks controlled by CA35 (Trusted processor of the system). CA35 in this case is running an SCMI server and controls system resources.</td>
+        <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
+	<td><font size="5" color=green>X</font></td>
+      </tr>
 	<!--================= ROW ==========================================-->
       <tr align=center>
         <td align=left rowspan=1><p id="USBPD">USBPD</p></td>
@@ -366,10 +376,10 @@
 
 
 
-	<!--================= 31 Examples Start ==========================================-->
+	<!--================= 32 Examples Start ==========================================-->
 	<!--================= I3C(4) ==========================================-->
       <tr align=center>
-        <td style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" rowspan=31><p id="Examples">Examples</p></td>
+        <td style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" rowspan=32><p id="Examples">Examples</p></td>
         <td align=left rowspan=4><p id="I3C">I3C</p></td>
         <td align=left><p id="I3C_Controller_I2C_ComDMA">I3C_Controller_I2C_ComDMA</p></td>
         <td align=left>How to handle I2C communication as I3C Controller data buffer transmission/reception between two boards, using DMA.</td>
@@ -402,15 +412,23 @@
         <td><font size="5" color=green></font></td>
 		<td><font size="5" color=green >X</font></td>
       </tr>
-	<!--================= SPI(1) ==========================================-->
+	<!--================= SPI(2) ==========================================-->
       <tr align=center>
-        <td align=left rowspan=1><p id="SPI">SPI</p></td>
+        <td align=left rowspan=2><p id="SPI">SPI</p></td>
         <td align=left><p id="SPI_FullDuplex_ComDMA">SPI_FullDuplex_ComDMA</p></td>
         <td align=left>This example shows how to perform SPI data buffer transmission/reception between two boards via DMA.</td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
         <td><font size="5" color=green>X</font></td>
 		<td><font size="5" color=green >X</font></td>
+      </tr>
+      <tr align=center>
+        <td align=left><p id="SPI_FullDuplex_ComDMA_LinkedList">SPI_FullDuplex_ComDMA_LinkedList</p></td>
+        <td align=left>This example shows how to perform a full-duplex SPI transfer between two boards using SPI3 and HPDMA3 in Linked-List mode.</td>
+        <td><font size="5" color=green>X</font></td>
+        <td><font size="5" color=green></font></td>
+        <td><font size="5" color=green></font></td>
+	<td><font size="5" color=green ></font></td>
       </tr>
 	<!--================= LPTIM(1) ==========================================-->
       <tr align=center>
@@ -644,13 +662,13 @@
 	<td><font size="5" color=green >X</font></td>
       </tr>
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-        <td colspan="8"><b>Total number of Examples: 76</b></td>
+        <td colspan="8"><b>Total number of Examples: 78</b></td>
       </tr>
 	<!--================= 31 Examples End ==========================================-->
 
 
       <tr style="background-repeat: no-repeat;background-position: right center;background-color: #39A9DC;color: #FFF;" align=center>
-      	<td colspan="8"><b>Total number of projects: 140</b></td>
+      	<td colspan="8"><b>Total number of projects: 142</b></td>
       </tr>
     </table>
 

@@ -92,7 +92,7 @@
    =============================================
    [..]
      Below the list of most used macros in SPDIFRX HAL driver.
-      (+) __HAL_SPDIFRX_IDLE: Disable the specified SPDIFRX peripheral (IDEL State)
+      (+) __HAL_SPDIFRX_IDLE: Disable the specified SPDIFRX peripheral (IDLE State)
       (+) __HAL_SPDIFRX_SYNC: Enable the synchronization state of the specified SPDIFRX peripheral (SYNC State)
       (+) __HAL_SPDIFRX_RCV: Enable the receive state of the specified SPDIFRX peripheral (RCV State)
       (+) __HAL_SPDIFRX_ENABLE_IT : Enable the specified SPDIFRX interrupts
@@ -175,8 +175,13 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
-#define SPDIFRX_TIMEOUT_VALUE  0xFFFFU
-
+/** @defgroup SPDIFRX_Private_Defines SPDIFRX Private Defines
+  * @{
+  */
+#define SPDIFRX_TIMEOUT_VALUE  10U
+/**
+  * @}
+  */
 /* Private macro -------------------------------------------------------------*/
 /* Private variables ---------------------------------------------------------*/
 /* Private function prototypes -----------------------------------------------*/
@@ -1326,8 +1331,14 @@ HAL_StatusTypeDef HAL_SPDIFRX_DMAStop(SPDIFRX_HandleTypeDef *hspdif)
   hspdif->Instance->CR &= (uint16_t)(~SPDIFRX_CR_CBDMAEN);
 
   /* Disable the SPDIFRX DMA channel */
-  __HAL_DMA_DISABLE(hspdif->hdmaDrRx);
-  __HAL_DMA_DISABLE(hspdif->hdmaCsRx);
+  if (hspdif->hdmaDrRx != NULL)
+  {
+    __HAL_DMA_DISABLE(hspdif->hdmaDrRx);
+  }
+  if (hspdif->hdmaCsRx != NULL)
+  {
+    __HAL_DMA_DISABLE(hspdif->hdmaCsRx);
+  }
 
   /* Disable SPDIFRX peripheral */
   __HAL_SPDIFRX_IDLE(hspdif);

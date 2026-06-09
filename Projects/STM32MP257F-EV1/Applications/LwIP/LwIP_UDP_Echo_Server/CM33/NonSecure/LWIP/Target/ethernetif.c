@@ -27,6 +27,10 @@
 #include <string.h>
 
 /* Private typedef -----------------------------------------------------------*/
+#if defined(INSTRUCTION_CACHE_ENABLE) && (INSTRUCTION_CACHE_ENABLE == 1U)
+extern DCACHE_HandleTypeDef hdcache;
+#endif
+
 /* Private define ------------------------------------------------------------*/
 /* Network interface name */
 #define IFNAME0 's'
@@ -90,6 +94,8 @@ ETH_TxPacketConfigTypeDef TxConfig;
 
 extern struct netif gnetif;
 
+uint8_t RxCplFlag = 0;
+uint8_t TxCplFlag = 0;
 /* Private function prototypes -----------------------------------------------*/
 u32_t sys_now(void);
 
@@ -225,8 +231,11 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
 	TxConfig.TxBuffer = Txbuffer;
 	TxConfig.pData = p;
 
-  HAL_ETH_Transmit_IT(&heth, &TxConfig);
+	pbuf_ref(p);
+    HAL_ETH_Transmit_IT(&heth, &TxConfig);
+	while(!TxCplFlag);
 
+    HAL_ETH_ReleaseTxPacket(&heth);
 	return errval;
 }
 
@@ -262,17 +271,21 @@ static struct pbuf * low_level_input(struct netif *netif)
 void ethernetif_input(struct netif *netif)
 {
   struct pbuf *p = NULL;
-    do
-    {
-      p = low_level_input( netif );
-      if (p != NULL)
-      {
-        if (netif->input( p, netif) != ERR_OK )
-        {
-          pbuf_free(p);
-        }
-      }
-    } while(p!=NULL);
+  if(RxCplFlag)
+  {
+	RxCplFlag = 0;
+	do
+	{
+	  p = low_level_input( netif );
+	  if (p != NULL)
+	  {
+	    if (netif->input( p, netif) != ERR_OK )
+	    {
+	      pbuf_free(p);
+	    }
+	  }
+	} while(p!=NULL);
+  }
 }
 
 /**
@@ -430,6 +443,7 @@ void ethernet_link_check_state(struct netif *netif)
   ETH_MACConfigTypeDef MACConf = {0};
   int32_t PHYLinkState = 0U;
   uint32_t linkchanged = 0U, speed = 0U, duplex =0U;
+  FunctionalState port_select = DISABLE;
 
   PHYLinkState = RTL8211_GetLinkState(&RTL8211);
 
@@ -446,32 +460,38 @@ void ethernet_link_check_state(struct netif *netif)
 	  case RTL8211_STATUS_1000MBITS_FULLDUPLEX:
 		duplex = ETH_FULLDUPLEX_MODE;
 		speed = ETH_SPEED_1000M;
+		port_select = DISABLE;
 		linkchanged = 1;
 		break;
 	  case RTL8211_STATUS_1000MBITS_HALFDUPLEX:
 		duplex = ETH_HALFDUPLEX_MODE;
 		speed = ETH_SPEED_1000M;
+		port_select = DISABLE;
 		linkchanged = 1;
 		break;
 	#endif
 	  case RTL8211_STATUS_100MBITS_FULLDUPLEX:
 				duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_100M;
+				port_select = ENABLE;
 				linkchanged = 1;
 				break;
 	  case RTL8211_STATUS_100MBITS_HALFDUPLEX:
 				duplex = ETH_HALFDUPLEX_MODE;
 				speed = ETH_SPEED_100M;
+				port_select = ENABLE;
 				linkchanged = 1;
 				break;
 	  case RTL8211_STATUS_10MBITS_FULLDUPLEX:
 				duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_10M;
+				port_select = ENABLE;
 				linkchanged = 1;
 				break;
 	  case RTL8211_STATUS_10MBITS_HALFDUPLEX:
 				duplex = ETH_HALFDUPLEX_MODE;
 				speed = ETH_SPEED_10M;
+				port_select = ENABLE;
 				linkchanged = 1;
 				break;
 	  default:
@@ -483,8 +503,9 @@ void ethernet_link_check_state(struct netif *netif)
       HAL_ETH_GetMACConfig(&heth, &MACConf);
       MACConf.DuplexMode = duplex;
       MACConf.Speed = speed;
+      MACConf.PortSelect = port_select;
       HAL_ETH_SetMACConfig(&heth, &MACConf);
-	  HAL_ETH_Start_IT(&heth);
+      HAL_ETH_Start_IT(&heth);
       netif_set_up(netif);
       netif_set_link_up(netif);
     }
@@ -547,10 +568,10 @@ void HAL_ETH_RxLinkCallback(void **pStart, void **pEnd, uint8_t *buff, uint16_t 
     p->tot_len += Length;
   }
 
+#if defined(INSTRUCTION_CACHE_ENABLE) && (INSTRUCTION_CACHE_ENABLE == 1U)
   /* Invalidate data cache because Rx DMA's writing to physical memory makes it stale. */
-//  SCB_InvalidateDCache_by_Addr((uint32_t *)buff, Length);
-
-/* USER CODE END HAL ETH RxLinkCallback */
+  HAL_DCACHE_InvalidateByAddr(&hdcache,(uint32_t *)buff, Length);
+#endif
 }
 
 void HAL_ETH_TxFreeCallback(uint32_t * buff)
@@ -562,3 +583,26 @@ void HAL_ETH_TxFreeCallback(uint32_t * buff)
 /* USER CODE END HAL ETH TxFreeCallback */
 }
 
+/**
+  * @brief  Rx Transfer completed callbacks.
+  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+  *         the configuration information for ETHERNET module
+  * @retval None
+  */
+void HAL_ETH_RxCpltCallback(ETH_HandleTypeDef *heth)
+{
+    /* Receive Complete Flag is set on receiving the packet */
+	RxCplFlag=1;
+}
+
+/**
+  * @brief  Tx Transfer completed callbacks.
+  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+  *         the configuration information for ETHERNET module
+  * @retval None
+  */
+void HAL_ETH_TxCpltCallback(ETH_HandleTypeDef *heth)
+{
+    /* Transmission Complete Flag is set on receiving the packet */
+	TxCplFlag=1;
+}

@@ -115,7 +115,8 @@ int main(void)
   if (!IS_DEVELOPER_BOOT_MODE())
   {
     /* Copro Sync Initialization */
-	CoproSync_Init();
+    CoproSync_Init();
+    SystemCoreClockUpdate();
   }
 
 #if defined (RPMSG_LATE_ATTACH)

@@ -25,11 +25,11 @@
 #ifndef NSAPPCORE_VERSION_H
 #define NSAPPCORE_VERSION_H
 
-#define NSAPPCORE_VERSION_MAJOR    1    /**< Major version number */
+#define NSAPPCORE_VERSION_MAJOR    2    /**< Major version number */
 #define NSAPPCORE_VERSION_MINOR    0    /**< Minor version number */
 #define NSAPPCORE_VERSION_PATCH    0    /**< Patch version number */
 
-#define NSAPPCORE_VERSION_STRING   "1.0.0" /**< Version as string */
+#define NSAPPCORE_VERSION_STRING   "2.0.0" /**< Version as string */
 
 /** @} */
 

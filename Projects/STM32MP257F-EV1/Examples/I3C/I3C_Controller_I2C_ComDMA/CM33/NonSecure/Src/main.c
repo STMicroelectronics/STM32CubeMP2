@@ -143,7 +143,11 @@ int main(void)
   /* Configure the system clock */
   if (IS_DEVELOPER_BOOT_MODE())
   {
-	  SystemClock_Config();
+    SystemClock_Config();
+  }
+  else
+  {
+    SystemCoreClockUpdate();
   }
 
   /* USER CODE BEGIN SysInit */
@@ -152,7 +156,7 @@ int main(void)
 
   /* Configure LED3 */
   BSP_LED_Init(LED3);
-  
+
   if(!IS_DEVELOPER_BOOT_MODE())
   {
 	/* IPCC initialization */
@@ -161,7 +165,7 @@ int main(void)
 	/*Corpo Sync Initialization*/
 	CoproSync_Init();
   }
-  
+
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   MX_DMA_Init();

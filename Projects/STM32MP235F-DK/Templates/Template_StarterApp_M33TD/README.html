@@ -6,9 +6,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>README</title>
   <style>
-    /* Default styles provided by pandoc.
-    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
-    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -93,52 +90,27 @@
   <link rel="stylesheet" href="_htmresc/mini-st.css" />
 </head>
 <body>
-<h1 id="template_starterapp_m33td-application">Template_StarterApp_M33TD
-Application</h1>
+<h1
+id="template_starterapp_m33td-template-project">Template_StarterApp_M33TD
+Template Project</h1>
 <hr />
 <h2 id="application-description">Application Description</h2>
-<p>The Template_StarterApp_M33TD is to highlight the capabilities of the
-STM32MP2 platform for M33TDCID profile, showcasing the M33 as the
-primary CPU and the A35 as a high-performance coprocessor. This
-application emphasizes the ability to achieve a fast Cortex-M boot,
-bypassing the Cortex-A and the associated OpenSTLinux solution, which
-typically requires several seconds to initialize. By leveraging this
-approach, the system can quickly execute critical tasks in the
-non-secure environment while maintaining flexibility for
-high-performance operations on the A35. This project enables the
-Non‑Secure (NS) Application Manager functionality for the Cortex‑M33‑TD
-flavor. It integrates the common utility stack
-<code>Utilities/M33TD_NSAppCore</code> for portable tasks and thin
-driver abstractions, so projects can reuse task logic while keeping
-board specifics in project drivers (typically under
-<code>CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/</code>).</p>
+<p><code>Template_StarterApp_M33TD</code> is the STM32MP235F-DK starter
+template for a Cortex-M33 Non-Secure application built on
+<code>Utilities/M33TD_NSAppCore</code>.</p>
+<p>It provides a utility-integrated baseline: the required NSAppCore
+core tasks stay enabled, a simple UserApp task is added by default, and
+project-specific drivers remain local to the template under
+<code>CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/</code>.</p>
+<p>The intent is to give a clean starting point for a new M33TD project
+with the minimal common bootstrap, TF-M integration, watchdog
+supervision, and A35 lifecycle handling needed to bring up the full
+M33TD-OSTL ecosystem.</p>
 <hr />
-<h2 id="key-features">Key Features</h2>
-<ul>
-<li><strong>FreeRTOS Multitasking</strong>: The application is built on
-FreeRTOS, enabling multitasking in the non-secure environment.</li>
-<li><strong>LED Blinking</strong>: Uses the UserApp task to blink an LED
-every second.</li>
-<li><strong>A35 Coprocessor Management</strong>: Uses the RemoteProc
-task to manage the A35 core lifecycle via TF-M secure services.</li>
-<li><strong>Interrupt Handling</strong>: Configures the EXTI line to
-receive interrupts on NVIC line 4 of the M33 on the event IWDG RST.</li>
-<li><strong>Template for NS App Manager</strong>: Uses
-<code>M33TD_NSAppCore</code> stack as the baseline to implement the NS
-Application Manager with reusable tasks (Logger, RemoteProc, SCMI
-Manager, WdgMonitor, UserApp).</li>
-</ul>
+<h2 id="default-task-set">Default Task Set</h2>
+<p><code>NSCoreApp_Init()</code> starts the required utility core tasks
+plus the template’s example UserApp task:</p>
 <hr />
-<h2 id="purpose">Purpose</h2>
-<p>This is a FreeRTOS-based multitask application running in the NS
-processing environment, while the TFM secure application operates in the
-secure processing environment. The secure application acts as a client
-to process secure services requested by both the A35 and M33 NS.</p>
-<p>As a Template, this project demonstrates how to implement the
-StarterApp functionality (Non‑Secure Application Manager) around the
-<code>Utilities/M33TD_NSAppCore</code> stack. The
-<code>NSCoreApp_Init()</code> bootstrap configures the stack and starts
-the enabled tasks below:</p>
 <ol type="1">
 <li><strong>NSCoreApp (Bootstrap)</strong>:
 <ul>
@@ -146,22 +118,32 @@ the enabled tasks below:</p>
 </ul></li>
 <li><strong>Logger Task</strong>:
 <ul>
-<li>Centralized logging, with optional real-time output.</li>
-</ul></li>
-<li><strong>UserApp Task</strong>:
-<ul>
-<li>Example application task (LED activity) to validate system
-liveness.</li>
-</ul></li>
-<li><strong>RemoteProc Task</strong>:
-<ul>
-<li>Manages the A35 coprocessor lifecycle via TF-M secure services
-(optional auto-start, status retrieval, recovery).</li>
+<li>Centralized logging, with optional real-time debug output.</li>
 </ul></li>
 <li><strong>SCMI Manager Task</strong>:
 <ul>
 <li>Handles SCMI notifications and related TF-M forwarding.</li>
 </ul></li>
+<li><strong>RemoteProc Task</strong>:
+<ul>
+<li>Manages the A35 coprocessor lifecycle through TF-M secure
+services.</li>
+<li>Auto-start at boot is controlled by
+<code>REMOTE_PROC_AUTO_START</code>.</li>
+</ul></li>
+<li><strong>Watchdog Monitor Task</strong>:
+<ul>
+<li>Supervises watchdog-related health handling.</li>
+</ul></li>
+<li><strong>UserApp Task</strong>:
+<ul>
+<li>Provides the example project-side application hook enabled by
+default in the template.</li>
+</ul></li>
+</ol>
+<p>Additional task enables are configured in the project headers and can
+be adjusted as the new application grows.</p>
+<ol start="6" type="1">
 <li><strong>Watchdog Monitor Task</strong>:
 <ul>
 <li>Supervises system health and watchdog-related handling.</li>
@@ -186,16 +168,16 @@ the PC USB port to display traces.</li>
 <h3 id="software-versions">Software Versions</h3>
 <ul>
 <li><strong>Trusted Firmware-M (TFM)</strong>: Refer to the <a
-href="https://wiki.st.com/stm32mpu/Category:Trusted_Firmware-M">Trusted
+href="https://wiki.st.com/stm32mpu/wiki/Category:Trusted_Firmware-M">Trusted
 Firmware-M wiki</a> for recommended versions and integration
 details.</li>
 <li><strong>External Device Tree (externalDT)</strong>: See the <a
-href="https://wiki.st.com/stm32mpu/External_device_tree">External
+href="https://wiki.st.com/stm32mpu/wiki/External_device_tree">External
 Device Tree wiki</a> for guidance on obtaining and using external DT
 sources.</li>
 <li><strong>STM32CubeIDE</strong>: For supported IDE versions and
 ecosystem information, refer the <a
-href="https://wiki.st.com/stm32mpu/">STM32 MPU wiki</a>.</li>
+href="https://wiki.st.com/stm32mpu/wiki/">STM32 MPU wiki</a>.</li>
 </ul>
 <hr />
 <h2 id="artifact-flow-build-sign-deploy">Artifact flow (build → sign →
@@ -286,7 +268,7 @@ STM32CubeIDE Project</h2>
 │   ├── Template_StarterApp_M33TD_CM33_NonSecure (Non-Secure STM32CubeIDE M33 project)
 │   └── Template_StarterApp_M33TD_CM33_trusted-firmware-m (Secure CMake project)</code></pre>
 <p><strong>Note</strong>: Refer to <a
-href="https://wiki.st.com/stm32mpu/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#">this
+href="https://wiki.st.com/stm32mpu/wiki/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#">this
 wiki</a> for instructions on importing a CMake project.</p>
 <h3 id="build-procedure-1">Build Procedure</h3>
 <h4 id="secure-tfm-firmware-build">Secure TFM Firmware Build</h4>
@@ -523,7 +505,7 @@ chosen boot mode.</p></li>
 Use a Type-C cable to connect the device to the Type-C
 connector.</p></li>
 <li><p><strong>Flash the Image</strong><br />
-Refer to the <a href="https://wiki.st.com/stm32mpu/">STM32 MPU
+Refer to the <a href="https://wiki.st.com/stm32mpu/wiki/">STM32 MPU
 wiki</a> for detailed flashing instructions.</p></li>
 <li><p><strong>Perform a Power-On Reset</strong><br />
 After flashing, perform a power-on reset to complete the

@@ -23,6 +23,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "scmi_mgr_task.h"
 #include "remoteproc_task.h"
+#if ENABLE_LOW_POWER_MGR_TASK
+#include "low_power_mgr_task.h"
+#endif
 #include "tfm_ns_notif_api.h"
 #include "psa_manifest/sid.h"
 #include <dt-bindings/scmi/stm32mp2-agents.h>
@@ -42,6 +45,8 @@
 #define SYS_POWER_STATE_NOTIFY (0x5)
 #define ENABLE_NOTIFY (0x1)
 #define GRACEFUL (0x1)
+#define SCMI_MGR_NS_NOTIF_MASK (TFM_SP_IPCC_RSE_NS_EVT | TFM_SP_IPCC_SCMI_CA35_NS_EVT | TFM_SP_IPCC_SCMI_CA35_BL31_NS_EVT)
+#define SCMI_MGR_NS_NOTIF_UNMASK 0U
 
 /* Private types -------------------------------------------------------------*/
 /**
@@ -187,7 +192,7 @@ void ScmiMgrTask_Init(void)
         NSAppCore_ErrorHandler();
     }
 
-    /* Activate SCMI system power notification (port from tfm_ns_plat_init.c) */
+    /* Enable SCMI system power notifications for non-secure power events. */
     uint32_t in_buf[2];
     uint32_t out_buf[2];
     size_t out_sz, in_sz;
@@ -220,6 +225,9 @@ static void ScmiMgr_HandleSysPowerStateNotif(uint32_t agent_id, bool graceful, e
     switch (event) {
     case SYS_POWER_SHUTDOWN:
         APP_LOG_INF("ScmiMgr", "agent %s %s SYS_POWER_SHUTDOWN", name, graceful_str);
+#if ENABLE_LOW_POWER_MGR_TASK
+      LowPowerMgrTask_PostEvent(LOW_POWER_MGR_EVENT_SHUTDOWN, 0U);
+#endif
         notify_event = SCMI_POWER_EVENT_SHUTDOWN;
         break;
     case SYS_POWER_COLD_RESET:
@@ -236,6 +244,9 @@ static void ScmiMgr_HandleSysPowerStateNotif(uint32_t agent_id, bool graceful, e
         break;
     case SYS_POWER_SUSPEND:
         APP_LOG_INF("ScmiMgr", "agent %s %s SYS_POWER_SUSPEND", name, graceful_str);
+  #if ENABLE_LOW_POWER_MGR_TASK
+        LowPowerMgrTask_PostEvent(LOW_POWER_MGR_EVENT_SUSPEND, 0U);
+  #endif
         notify_event = SCMI_POWER_EVENT_SUSPEND;
         break;
     default:
@@ -255,6 +266,29 @@ static void ScmiMgr_HandleSysPowerStateNotif(uint32_t agent_id, bool graceful, e
 void ScmiMgrTask_Signal(void)
 {
   (void)osSemaphoreRelease(ScmiMgrSemaphoreHandle);
+}
+
+/**
+  * @brief  Mask SCMI-related non-secure notifications during critical stop sequences.
+  * @retval None
+  */
+void ScmiMgrTask_DisableNotifications(void)
+{
+  tfm_ns_notif_set_mask(SCMI_MGR_NS_NOTIF_MASK);
+}
+
+/**
+  * @brief  Reset SCMI shared state and re-enable SCMI-related notifications.
+  * @retval None
+  */
+void ScmiMgrTask_ResetAndEnableNotifications(void)
+{
+  uint32_t trashed_event;
+
+  tfm_secure_scmi_reset();
+  tfm_ns_notif_set_mask(SCMI_MGR_NS_NOTIF_UNMASK);
+  (void)tfm_ns_notif_get(&trashed_event);
+  (void)tfm_ns_notif_get_pending(SCMI_MGR_NS_NOTIF_MASK);
 }
 
 /* Private function definitions ----------------------------------------------*/

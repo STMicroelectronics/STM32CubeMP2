@@ -22,7 +22,7 @@
 <div class="row">
 <div class="col-sm-12 col-lg-8">
 <h2 id="usbpd_drp_ucsi-application-description"><b>USBPD_DRP_UCSI Application Description</b></h2>
-<p>This application provides an example running on STM32MP25xx Cortex-M33 acting as an <strong>UCSI</strong> (USB Type-CTM Connector System Software Interface) <strong>Platform Policy Manager</strong> (<strong>PPM</strong>). The PPM is a combination of hardware and firmware that manages the USB Type-C connectors on the platform. The Cortex-A35 has a role of <strong>UCSI OS Policy Manager</strong> (<strong>OPM</strong>) to interface with the PPM, via <strong>OpenAMP-rpmsg Virtual I2C</strong> with the <strong>UCSI interface</strong>. This application also features the <strong>TCPP02-M18/TCPP03-M20 USB Type-C port protection</strong> device.</p>
+<p>This application provides an example running on STM32MP23xx Cortex-M33 acting as an <strong>UCSI</strong> (USB Type-CTM Connector System Software Interface) <strong>Platform Policy Manager</strong> (<strong>PPM</strong>). The PPM is a combination of hardware and firmware that manages the USB Type-C connectors on the platform. The Cortex-A35 has a role of <strong>UCSI OS Policy Manager</strong> (<strong>OPM</strong>) to interface with the PPM, via <strong>OpenAMP-rpmsg Virtual I2C</strong> with the <strong>UCSI interface</strong>. This application also features the <strong>TCPP02-M18/TCPP03-M20 USB Type-C port protection</strong> device.</p>
 <p>For debug purpose, TRACER_EMB utility is enabled in this application. STM32CubeMonUCPD can be used to display USB-PD traces. Tool can be found at the following link: <a href="https://www.st.com/en/development-tools/stm32cubemonucpd.html">https://www.st.com/en/development-tools/stm32cubemonucpd.html</a>.</p>
 <p>Note: The application needs to ensure that the SysTick time base is always set to 1 millisecond to have correct operation.</p>
 <h4 id="expected-success-behavior"><b>Expected success behavior</b></h4>
@@ -33,48 +33,19 @@
 <p>User is familiar with USB-PD 3.1 “Universal Serial BUS Power Delivery” Specification.</p>
 <h4 id="known-limitations"><b>Known limitations</b></h4>
 <p>Only compilation with -Os (size) optimization option is supported for now. -Ofast (speed) option is known to make USBPD communications instable.</p>
-<h4 id="threadx-usage-hints"><b>ThreadX usage hints</b></h4>
+<h4 id="freertos-usage-hints"><b>FreeRTOS usage hints</b></h4>
 <ul>
-<li>ThreadX uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.</li>
-<li>ThreadX is configured with 1000 ticks/sec by default, this should be taken into account when using delays or timeouts at application. It is always possible to reconfigure it in the “tx_user.h”, the “TX_TIMER_TICKS_PER_SECOND” define,but this should be reflected in “tx_initialize_low_level.s” file too.</li>
-<li>ThreadX is disabling all interrupts during kernel start-up to avoid any unexpected behavior, therefore all system related calls (HAL, BSP) should be done either at the beginning of the application or inside the thread entry functions.</li>
-<li>ThreadX offers the “tx_application_define()” function, that is automatically called by the tx_kernel_enter() API. It is highly recommended to use it to create all applications ThreadX related resources (threads, semaphores, memory pools…) but it should not in any way contain a system API call (HAL or BSP).</li>
-<li>Using dynamic memory allocation requires to apply some changes to the linker file. ThreadX needs to pass a pointer to the first free memory location in RAM to the tx_application_define() function, using the “first_unused_memory” argument. This require changes in the linker files to expose this memory location.
-<ul>
-<li>For EWARM add the following section into the .icf file:</li>
-</ul>
-<pre><code>place in RAM_region    { last section FREE_MEM };</code></pre>
-<ul>
-<li>For MDK-ARM:</li>
-</ul>
-<pre><code>either define the RW_IRAM1 region in the &quot;.sct&quot; file
-or modify the line below in &quot;tx_low_level_initilize.s to match the memory region being used
-    LDR r1, =|Image$$RW_IRAM1$$ZI$$Limit|</code></pre>
-<ul>
-<li>For STM32CubeIDE add the following section into the .ld file:</li>
-</ul>
-<pre><code>._threadx_heap :
-  {
-     . = ALIGN(8);
-     __RAM_segment_used_end__ = .;
-     . = . + 64K;
-     . = ALIGN(8);
-   } &gt;RAM_D1 AT&gt; RAM_D1</code></pre>
-<pre><code>The simplest way to provide memory for ThreadX is to define a new section, see ._threadx_heap above.
-In the example above the ThreadX heap size is set to 64KBytes.
-The ._threadx_heap must be located between the .bss and the ._user_heap_stack sections in the linker script.  
-Caution: Make sure that ThreadX does not need more than the provided heap memory (64KBytes in this example).  
-Read more in STM32CubeIDE User Guide, chapter: &quot;Linker script&quot;.</code></pre>
-<ul>
-<li>The “tx_initialize_low_level.s” should be also modified to enable the “USE_DYNAMIC_MEMORY_ALLOCATION” flag.</li>
-</ul></li>
+<li>FreeRTOS uses the Systick as time base, thus it is mandatory that the HAL uses a separate time base through the TIM IPs.</li>
+<li>The FreeRTOS heap size configTOTAL_HEAP_SIZE defined in FreeRTOSConfig.h is set accordingly to the OS resources memory requirements of the application with +10% margin and rounded to the upper Kbyte boundary.</li>
+<li>For more details about FreeRTOS implementation on STM32Cube, please refer to <a href="https://www.st.com/resource/en/user_manual/dm00105262-developing-applications-on-stm32cube-with-rtos-stmicroelectronics.pdf">UM1722 (Developing Applications on STM32Cube with RTOS)</a> .</li>
+<li>This application uses FreeRTOS through CMSIS-RTOS2.</li>
 </ul>
 <h3 id="keywords"><b>Keywords</b></h3>
-<p>Connectivity, USBPD, ThreadX, UART/USART, USB_PD_Lib, UCPD, Type C, USBPD, UCSI</p>
+<p>Connectivity, USBPD, FreeRTOS, UART/USART, USB_PD_Lib, UCPD, Type C, USBPD, UCSI</p>
 <h3 id="hardware-and-software-environment"><b>Hardware and Software environment</b></h3>
 <ul>
-<li>This example runs on STM32MP25xx devices</li>
-<li><p>This example has been tested with STMicroelectronics STM32MP257F-EV1. and can be easily tailored to any other supported device and development board.</p></li>
+<li>This example runs on STM32MP23xx devices</li>
+<li><p>This example has been tested with STMicroelectronics STM32MP235F-DK and can be easily tailored to any other supported device and development board.</p></li>
 <li><p>Connect ST-Link cable to the PC USB port to display trace data on STM32CubeMonUCPD, if _TRACE is enabled.</p></li>
 </ul>
 <h3 id="how-to-use-it"><b>How to use it ?</b></h3>

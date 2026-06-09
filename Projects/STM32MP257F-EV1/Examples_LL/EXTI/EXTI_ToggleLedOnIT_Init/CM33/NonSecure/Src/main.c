@@ -121,7 +121,11 @@ int main(void)
   /* Configure the system clock */
   if (IS_DEVELOPER_BOOT_MODE())
   {
-	  SystemClock_Config();
+    SystemClock_Config();
+  }
+  else
+  {
+    SystemCoreClockUpdate();
   }
   /* Initialize all configured peripherals */
   MX_GPIO_Init();

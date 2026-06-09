@@ -184,6 +184,12 @@
 		status = "okay";
 	};
 
+	uio_fwu_shmem: uio-fwu-shmem@81300000 {
+		compatible = "uio-fwu-shmem";
+		reg = <0x0 0x81300000 0x0 0x00a00000>;
+		status = "okay";
+	};
+
 	wifi_pwrseq: wifi-pwrseq {
 		compatible = "mmc-pwrseq-simple";
 		reset-gpios = <&gpiob 2 GPIO_ACTIVE_LOW>;
@@ -321,8 +327,7 @@
 };
 
 &hpdma3 {
-	memory-region = <&hpdma3_lli>;
-	lli-bus-interface = <1>;
+	status = "disabled";
 };
 
 &i2c2 {
@@ -336,8 +341,9 @@
 	goodix: goodix-ts@5d {
 		compatible = "goodix,gt911";
 		reg = <0x5d>;
-		pinctrl-names = "default";
+		pinctrl-names = "default", "sleep";
 		pinctrl-0 = <&goodix_pins_a>;
+		pinctrl-1 = <&goodix_sleep_pins_a>;
 		interrupt-parent = <&gpiof>;
 		interrupts = <4 IRQ_TYPE_EDGE_FALLING>;
 		AVDD28-supply = <&scmi_v3v3>;
@@ -418,7 +424,8 @@
 			<&vdev0vring1>, <&vdev0buffer>;
 	/delete-property/resets;
 	/delete-property/reset-names;
-	keep-power-in-suspend;
+	/delete-property/power-domains;
+	/delete-property/power-domain-names;
 	st,auto-boot;
 	status = "okay";
 };

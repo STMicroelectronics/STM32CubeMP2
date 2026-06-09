@@ -24,6 +24,9 @@
 /* Includes ------------------------------------------------------------------*/
 #include "nscoreapp_init.h"
 #include "logger_task.h"
+#if ENABLE_LOW_POWER_MGR_TASK
+#include "low_power_mgr_task.h"
+#endif
 #include "scmi_mgr_task.h"
 #include "remoteproc_task.h"
 #include "wdg_monitor_task.h"
@@ -38,6 +41,9 @@
 #endif
 #if ENABLE_DISPLAY_TASK
 #include "display_task.h"
+#endif
+#if ENABLE_FWU_MGR_TASK
+#include "fwu_mgr_task.h"
 #endif
 
 /**
@@ -64,6 +70,10 @@ void NSCoreApp_Init(void)
     }
 
     /* Initialize other core stack modules. */
+#if ENABLE_LOW_POWER_MGR_TASK
+    LowPowerMgrTask_Init();
+#endif
+
 #if ENABLE_USERAPP_TASK
     UserAppTask_Init();
 #endif
@@ -84,6 +94,10 @@ void NSCoreApp_Init(void)
 #endif
     RemoteProcTask_Init();
     WdgMonitorTask_Init();
+#if ENABLE_FWU_MGR_TASK
+
+    FwuMgrTask_Init();
+#endif
 }
 
 /**
@@ -94,6 +108,10 @@ void NSCoreApp_DeInit(void)
 {
     WdgMonitorTask_DeInit();
     RemoteProcTask_DeInit();
+
+#if ENABLE_FWU_MGR_TASK
+    FwuMgrTask_DeInit();
+#endif
 
 #if ENABLE_OPENAMP_TASK
     OpenampTask_DeInit();
@@ -112,6 +130,9 @@ void NSCoreApp_DeInit(void)
 #endif
 #if ENABLE_USERAPP_TASK
     UserAppTask_DeInit();
+#endif
+#if ENABLE_LOW_POWER_MGR_TASK
+    LowPowerMgrTask_DeInit();
 #endif
     LoggerTask_DeInit();
 }

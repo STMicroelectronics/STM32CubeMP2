@@ -43,8 +43,10 @@ int main(void)
 {
 
   /* USER CODE BEGIN Init */
+#if FAULT_EXCEPTION_ENABLE
   /* Initialize fault and any pre-HAL hooks */
   FAULT_Init();
+#endif
   /* USER CODE END Init */
 
 #ifdef DEBUG
@@ -62,7 +64,7 @@ int main(void)
 
   HAL_Init();
 
-  osKernelInitialize();  /* Call init function for freertos objects (in freertos.c) */
+  osKernelInitialize();  /* Initialize the CMSIS-RTOS2 kernel. */
 
   /* USER CODE BEGIN AppInit */
   /* Initialize application tasks and modules */

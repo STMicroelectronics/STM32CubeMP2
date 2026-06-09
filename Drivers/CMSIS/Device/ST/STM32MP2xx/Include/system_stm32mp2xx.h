@@ -209,6 +209,9 @@ void SecurePhysicalTimer_IRQHandler_CallBack(void);
 void NonSecurePhysicalTimer_IRQHandler_CallBack(void);
 void VirtualTimer_IRQHandler_CallBack(void);
 
+/* Shared interrupt-dispatch helper used by generic handlers and RTOS wrappers. */
+void SystemA35_DispatchActiveInterrupt( uint32_t interrupt_id );
+
 #endif /* CORE_CA35 */
 
 /**

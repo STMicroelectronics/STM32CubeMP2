@@ -100,7 +100,11 @@ int main(void)
   if (IS_DEVELOPER_BOOT_MODE())
   {
 	/* Configure the system clock */
-	SystemClock_Config();
+    SystemClock_Config();
+  }
+  else
+  {
+    SystemCoreClockUpdate();
   }
 
   /* Configure LED3 */
@@ -112,6 +116,8 @@ int main(void)
     MX_IPCC_Init();
     /*Corpo Sync Initialization*/
     CoproSync_Init();
+
+
   }
 
   /* Configure USER2 push-button in interrupt mode */

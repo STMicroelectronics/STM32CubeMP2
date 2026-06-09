@@ -140,6 +140,10 @@ int main(void)
       printf("error :  BSP PMIC Mode init fail\r\n");
     }
   }
+  else
+  {
+    SystemCoreClockUpdate();
+  }
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();

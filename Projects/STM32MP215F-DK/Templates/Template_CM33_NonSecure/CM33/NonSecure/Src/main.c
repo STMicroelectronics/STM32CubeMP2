@@ -90,6 +90,10 @@ int main(void)
       printf("error :  BSP PMIC Mode init fail\r\n");
     }
   }
+  else
+  {
+    SystemCoreClockUpdate();
+  }
 
 #if defined(__VALID_OUTPUT_TERMINAL_IO__) && defined (__GNUC__)
   initialise_monitor_handles();

@@ -84,6 +84,10 @@ int main(void)
   {
 	SystemClock_Config();
   }
+  else
+  {
+    SystemCoreClockUpdate();
+  }
 
 
   /* Initialize LEDs */

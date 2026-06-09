@@ -25,6 +25,9 @@
 #include "ethernetif.h"
 #include "rtl8211.h"
 #include <string.h>
+#if (DATA_CACHE_ENABLE == 1U) && (INSTRUCTION_CACHE_ENABLE == 1U)
+extern DCACHE_HandleTypeDef hdcache;
+#endif
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -121,29 +124,6 @@ void pbuf_free_custom(struct pbuf *p);
   */
 static void low_level_init(struct netif *netif)
 {
-  /* Start ETH HAL Init */
-#if 0  // done in main.c MX_ETH_Init()
-  uint8_t macaddress[6]= {ETH_MAC_ADDR0, ETH_MAC_ADDR1, ETH_MAC_ADDR2, ETH_MAC_ADDR3, ETH_MAC_ADDR4, ETH_MAC_ADDR5};
-
-  heth.Instance = ETH;
-  heth.Init.MACAddr = macaddress;
-  heth.Init.MediaInterface = HAL_ETH_RMII_MODE;
-  heth.Init.RxDesc = DMARxDscrTab;
-  heth.Init.TxDesc = DMATxDscrTab;
-  heth.Init.RxBuffLen = ETH_RX_BUFFER_SIZE;
-
-  /* configure ethernet peripheral (GPIOs, clocks, MAC, DMA) */
-  HAL_ETH_Init(&heth);
-
-  /* Set Tx packet config common parameters */
-  memset(&TxConfig, 0 , sizeof(ETH_TxPacketConfig_t));
-  TxConfig.Attributes = ETH_TX_PACKETS_FEATURES_CSUM | ETH_TX_PACKETS_FEATURES_CRCPAD;
-  TxConfig.ChecksumCtrl = ETH_CHECKSUM_IPHDR_PAYLOAD_INSERT_PHDR_CALC;
-  TxConfig.CRCPadCtrl = ETH_CRC_PAD_INSERT;
-
-#endif
-  /* End ETH HAL Init */
-
   /* set MAC hardware address length */
   netif->hwaddr_len = ETH_HWADDR_LEN;
 
@@ -163,7 +143,6 @@ static void low_level_init(struct netif *netif)
   netif->flags |= NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP;
 
   HAL_ETH_RegisterRxAllocateCallback(&heth, HAL_ETH_RxAllocateCallback);
-
 
   /* Set PHY IO functions */
   RTL8211_RegisterBusIO(&RTL8211, &RTL8211_IOCtx);
@@ -217,17 +196,14 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
     {
       Txbuffer[i].next = NULL;
     }
-
     i++;
   }
 
-	TxConfig.Length = p->tot_len;
-	TxConfig.TxBuffer = Txbuffer;
-	TxConfig.pData = p;
-
+  TxConfig.Length = p->tot_len;
+  TxConfig.TxBuffer = Txbuffer;
+  TxConfig.pData = p;
   HAL_ETH_Transmit_IT(&heth, &TxConfig);
-
-	return errval;
+  return errval;
 }
 
 
@@ -430,7 +406,7 @@ void ethernet_link_check_state(struct netif *netif)
   ETH_MACConfigTypeDef MACConf = {0};
   int32_t PHYLinkState = 0U;
   uint32_t linkchanged = 0U, speed = 0U, duplex =0U;
-
+  FunctionalState portselect = DISABLE;
   PHYLinkState = RTL8211_GetLinkState(&RTL8211);
 
 	/* Get link state */
@@ -446,32 +422,38 @@ void ethernet_link_check_state(struct netif *netif)
 	  case RTL8211_STATUS_1000MBITS_FULLDUPLEX:
 		duplex = ETH_FULLDUPLEX_MODE;
 		speed = ETH_SPEED_1000M;
+    portselect = DISABLE;
 		linkchanged = 1;
 		break;
 	  case RTL8211_STATUS_1000MBITS_HALFDUPLEX:
 		duplex = ETH_HALFDUPLEX_MODE;
 		speed = ETH_SPEED_1000M;
+    portselect = DISABLE;
 		linkchanged = 1;
 		break;
 	#endif
 	  case RTL8211_STATUS_100MBITS_FULLDUPLEX:
 				duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_100M;
+				portselect = ENABLE;
 				linkchanged = 1;
 				break;
 	  case RTL8211_STATUS_100MBITS_HALFDUPLEX:
 				duplex = ETH_HALFDUPLEX_MODE;
 				speed = ETH_SPEED_100M;
+				portselect = ENABLE;
 				linkchanged = 1;
 				break;
 	  case RTL8211_STATUS_10MBITS_FULLDUPLEX:
 				duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_10M;
+				portselect = ENABLE;
 				linkchanged = 1;
 				break;
 	  case RTL8211_STATUS_10MBITS_HALFDUPLEX:
 				duplex = ETH_HALFDUPLEX_MODE;
 				speed = ETH_SPEED_10M;
+				portselect = ENABLE;
 				linkchanged = 1;
 				break;
 	  default:
@@ -483,14 +465,15 @@ void ethernet_link_check_state(struct netif *netif)
       HAL_ETH_GetMACConfig(&heth, &MACConf);
       MACConf.DuplexMode = duplex;
       MACConf.Speed = speed;
+      MACConf.PortSelect = portselect;
       HAL_ETH_SetMACConfig(&heth, &MACConf);
-	  HAL_ETH_Start_IT(&heth);
+      HAL_ETH_Start_IT(&heth);
       netif_set_up(netif);
       netif_set_link_up(netif);
     }
   }
-
 }
+
 void HAL_ETH_RxAllocateCallback(uint8_t **buff)
 {
 /* USER CODE BEGIN HAL ETH RxAllocateCallback */
@@ -547,8 +530,10 @@ void HAL_ETH_RxLinkCallback(void **pStart, void **pEnd, uint8_t *buff, uint16_t 
     p->tot_len += Length;
   }
 
+#if defined(DATA_CACHE_ENABLE) && (DATA_CACHE_ENABLE == 1U)
   /* Invalidate data cache because Rx DMA's writing to physical memory makes it stale. */
-//  SCB_InvalidateDCache_by_Addr((uint32_t *)buff, Length);
+  HAL_DCACHE_InvalidateByAddr(&hdcache,(uint32_t *)buff, Length);
+#endif
 
 /* USER CODE END HAL ETH RxLinkCallback */
 }

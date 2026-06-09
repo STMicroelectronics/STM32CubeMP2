@@ -68,6 +68,7 @@ add_custom_command(
         --public-key-format full
         --align 1
         --pad
+        --confirm
         --pad-header -H 0x800
         -s 1
         -L 128

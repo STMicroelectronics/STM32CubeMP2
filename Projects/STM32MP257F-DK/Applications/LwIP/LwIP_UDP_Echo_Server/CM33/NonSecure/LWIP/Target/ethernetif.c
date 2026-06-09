@@ -430,7 +430,7 @@ void ethernet_link_check_state(struct netif *netif)
   ETH_MACConfigTypeDef MACConf = {0};
   int32_t PHYLinkState = 0U;
   uint32_t linkchanged = 0U, speed = 0U, duplex =0U;
-
+  FunctionalState portselect = DISABLE;
   PHYLinkState = RTL8211_GetLinkState(&RTL8211);
 
 	/* Get link state */
@@ -446,35 +446,45 @@ void ethernet_link_check_state(struct netif *netif)
 	  case RTL8211_STATUS_1000MBITS_FULLDUPLEX:
 		duplex = ETH_FULLDUPLEX_MODE;
 		speed = ETH_SPEED_1000M;
+    portselect = DISABLE;
 		linkchanged = 1;
 		break;
 	  case RTL8211_STATUS_1000MBITS_HALFDUPLEX:
 		duplex = ETH_HALFDUPLEX_MODE;
 		speed = ETH_SPEED_1000M;
+    portselect = DISABLE;
 		linkchanged = 1;
 		break;
 	#endif
 	  case RTL8211_STATUS_100MBITS_FULLDUPLEX:
 				duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_100M;
+        portselect = ENABLE;
 				linkchanged = 1;
 				break;
 	  case RTL8211_STATUS_100MBITS_HALFDUPLEX:
 				duplex = ETH_HALFDUPLEX_MODE;
 				speed = ETH_SPEED_100M;
+        portselect = ENABLE;
 				linkchanged = 1;
 				break;
 	  case RTL8211_STATUS_10MBITS_FULLDUPLEX:
 				duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_10M;
+        portselect = ENABLE;
 				linkchanged = 1;
 				break;
 	  case RTL8211_STATUS_10MBITS_HALFDUPLEX:
 				duplex = ETH_HALFDUPLEX_MODE;
 				speed = ETH_SPEED_10M;
+        portselect = ENABLE;
 				linkchanged = 1;
 				break;
 	  default:
+				duplex = ETH_FULLDUPLEX_MODE;
+				speed = ETH_SPEED_100M;
+        portselect = ENABLE;
+				linkchanged = 1;
 				break;
     }
 
@@ -483,14 +493,15 @@ void ethernet_link_check_state(struct netif *netif)
       HAL_ETH_GetMACConfig(&heth, &MACConf);
       MACConf.DuplexMode = duplex;
       MACConf.Speed = speed;
+      MACConf.PortSelect = portselect;
       HAL_ETH_SetMACConfig(&heth, &MACConf);
-	  HAL_ETH_Start_IT(&heth);
+      HAL_ETH_Start_IT(&heth);
       netif_set_up(netif);
       netif_set_link_up(netif);
     }
   }
-
 }
+
 void HAL_ETH_RxAllocateCallback(uint8_t **buff)
 {
 /* USER CODE BEGIN HAL ETH RxAllocateCallback */

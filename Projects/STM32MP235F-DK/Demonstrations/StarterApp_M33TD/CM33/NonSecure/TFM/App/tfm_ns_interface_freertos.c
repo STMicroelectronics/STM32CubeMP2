@@ -16,7 +16,7 @@
 #include <stdint.h>
 #include "tfm_ns_interface.h"
 #include "cmsis_os2.h"
-
+#include "stdio.h"
 static osMutexId_t ns_mutex_id = NULL;
 
 int32_t tfm_ns_interface_dispatch(veneer_fn fn,
@@ -24,9 +24,20 @@ int32_t tfm_ns_interface_dispatch(veneer_fn fn,
                                   uint32_t arg2, uint32_t arg3)
 {
     int32_t result;
+    uint32_t timeout = osWaitForever;
+    osKernelState_t kernel_state;
+
+    if ((ns_mutex_id == NULL) || (fn == NULL)) {
+        return (int32_t)PSA_ERROR_GENERIC_ERROR;
+    }
+
+    kernel_state = osKernelGetState();
+    if ((kernel_state == osKernelLocked) || (kernel_state == osKernelSuspended)) {
+        timeout = 0U;
+    }
 
     /* Acquire the mutex to ensure thread safety */
-    while (osMutexAcquire(ns_mutex_id, osWaitForever) != osOK) {
+    if (osMutexAcquire(ns_mutex_id, timeout) != osOK) {
         return (int32_t)PSA_ERROR_GENERIC_ERROR;
     }
 
@@ -34,7 +45,7 @@ int32_t tfm_ns_interface_dispatch(veneer_fn fn,
     result = fn(arg0, arg1, arg2, arg3);
 
     /* Release the mutex after operation */
-    while (osMutexRelease(ns_mutex_id) != osOK) {
+    if (osMutexRelease(ns_mutex_id) != osOK) {
         return (int32_t)PSA_ERROR_GENERIC_ERROR;
     }
 

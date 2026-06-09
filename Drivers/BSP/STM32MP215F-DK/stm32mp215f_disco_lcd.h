@@ -142,6 +142,7 @@ typedef struct
 #define LCD_RST_GPIO_PORT                GPIOI
 #define LCD_RST_GPIO_CLK_ENABLE()        __HAL_RCC_GPIOI_CLK_ENABLE()
 #define LCD_RST_GPIO_CLK_DISABLE()       __HAL_RCC_GPIOI_CLK_ENABLE()
+#define IS_LCD_RST_GPIO_CLK_ENABLED()    __HAL_RCC_GPIOI_IS_CLK_ENABLED()
 
 /* Back-light control pin */
 #define LCD_BL_CTRL_PIN                       GPIO_PIN_9

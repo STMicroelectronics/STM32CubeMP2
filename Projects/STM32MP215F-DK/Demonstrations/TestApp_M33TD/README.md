@@ -4,30 +4,29 @@
 
 ## Application Description
 
-The TestApp_M33TD demonstration highlights the capabilities of the STM32MP2 platform for the M33TDCID profile, showcasing the Cortex‑M33 as the primary CPU and the Cortex‑A35 as a high-performance coprocessor.
+The TestApp_M33TD demonstration highlights the STM32MP2 M33TDCID profile with Cortex-M33 as the primary CPU and Cortex-A35 as a managed coprocessor.
 
-This project uses the “Utility-integrated” design and enables the CM33‑NS **Non‑Secure Application Manager** bootstrap based on the shared utility stack `Utilities/M33TD_NSAppCore` (Logger, RemoteProc, SCMI Manager, Watchdog Monitor, OpenAMP, etc.). Board-specific drivers and adaptations for this demonstration are implemented under `CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/`.
-
-TestApp then demonstrates how to build a custom application on top of this common stack by adding a dedicated **TestApp Task**, which runs a sequence of HAL-based functional tests to validate platform configuration and example peripherals in the non-secure (NS) environment.
+This project is built on the shared `Utilities/M33TD_NSAppCore` stack and demonstrates how to layer a project-specific validation task on top of the common utility profile. Board-specific drivers and local adaptations are implemented under `CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/`.
 
 ---
 
 ## Key Features
 
 - **FreeRTOS Multitasking**: Runs multiple tasks in the non-secure environment.
-- **Integrate Utility Stack**: Uses `Utilities/M33TD_NSAppCore` for reusable tasks and thin driver abstractions.
-- **A35 Coprocessor Management**: Uses the RemoteProc task to manage the A35 core lifecycle via TF‑M secure services.
-- **UserApp Task**: LED activity task to validate system liveness.
-- **TestApp Task**: Runs a suite of tests sequentially (automatic/manual behavior controlled by build options).
-- **Optional Display Pipeline**: Same build-time display option support as the shared stack (see `BUILD_CONFIG` / `BOOT_SPLASHSCREEN`).
+- **Utility Stack Integration**: Uses `Utilities/M33TD_NSAppCore` for reusable bootstrap, task logic, and thin driver abstractions.
+- **A35 Coprocessor Management**: Uses the RemoteProc task to manage the A35 lifecycle through TF-M secure services.
+- **Low-Power Orchestration**: Includes the LowPowerMgr task in the default TestApp profile.
+- **UserApp Task**: Keeps the example LED activity enabled.
+- **TestApp Task**: Runs a sequence of platform tests in the NS environment.
+- **Optional Display Pipeline**: `BUILD_CONFIG=FULL` enables the display path; `BUILD_CONFIG=MINIMUM` keeps the non-display profile.
 
 ---
 
 ## Purpose
 
-This is a FreeRTOS-based multitask application running in the NS processing environment, while the TF‑M secure application operates in the secure processing environment. The secure application acts as a client to process secure services requested by both the A35 and CM33‑NS.
+This is a FreeRTOS-based multi-task application running in the NS processing environment while TF-M runs in the secure environment and provides secure services.
 
-TestApp implements the Non‑Secure Application Manager around the `Utilities/M33TD_NSAppCore` stack. The `NSCoreApp_Init()` bootstrap configures the stack and starts the enabled tasks below:
+In the current STM32MP215F-DK TestApp profile, UserApp, LowPowerMgr, Button Monitor, and OpenAMP are enabled by default; DisplayTask is added automatically in `BUILD_CONFIG=FULL`. `NSCoreApp_Init()` starts the tasks below:
 
 1. **NSCoreApp (Bootstrap)**:
    - Initializes the common stack and starts the enabled tasks.
@@ -36,74 +35,72 @@ TestApp implements the Non‑Secure Application Manager around the `Utilities/M3
    - Centralized logging, with optional real-time output.
 
 3. **UserApp Task**:
-   - Example application task (LED activity) to validate system liveness.
+   - Keeps the example LED activity enabled.
 
-4. **RemoteProc Task**:
-   - Manages the A35 coprocessor lifecycle via TF‑M secure services:
-     - Optional auto-start at boot (`REMOTE_PROC_AUTO_START`).
-     - CPU status retrieval.
-     - Crash detection and recovery (stop/start sequence).
+4. **LowPowerMgr Task**:
+   - Owns the low-power policy and suspend/resume sequencing used by the TestApp profile.
 
 5. **SCMI Manager Task**:
-   - Handles SCMI notifications and related TF‑M forwarding.
+   - Handles SCMI notifications and related TF-M forwarding.
 
-6. **Watchdog Monitor Task**:
+6. **OpenAMP Task**:
+   - Provides the RPMsg transport used by the project profile.
+
+7. **RemoteProc Task**:
+   - Manages A35 lifecycle control, status reporting, and recovery flows.
+
+8. **Watchdog Monitor Task**:
    - Supervises system health and watchdog-related handling.
 
-7. **OpenAMP Task**:
-   - Provides the RPMsg communication layer used by the stack to interact with the A35/Linux side.
+9. **Button Monitor Task**:
+   - Monitors the USER button and dispatches project-side actions.
 
-8. **Button Monitor Task**:
-   - Monitors the USER button and can trigger application-defined actions (implementation may vary by build configuration).
+10. **Display Task (optional)**:
+    - Added automatically when `BUILD_CONFIG=FULL` enables the display pipeline.
 
-9. **Display Task (optional)**:
-   - Available when the display pipeline is enabled in the build (see `BUILD_CONFIG=FULL`).
-
-10. **TestApp Task**:
-   - Executes a sequence of tests to validate the M33 example functionality under the M33TDCID profile.
+11. **TestApp Task**:
+    - Executes the platform and example test sequence.
 
 ---
 
 ## Prerequisite Hardware & Software Environment Setup
 
-- **Trusted Firmware-M**: The source code must be installed under the `Middlewares/Third_Party` directory with the path `Middlewares/Third_Party/trusted-firmware-m`. Ensure the correct version is used as described in the STM32 MPU release note.
-- **Supported Devices**: This example runs on STM32MP21xx devices and has been tested with the STMicroelectronics STM32MP215F-DK board. It can be tailored to other supported devices and development boards.
+- **Trusted Firmware-M**: Install the source code under `Middlewares/Third_Party/trusted-firmware-m`.
+- **Supported Devices**: This example targets STM32MP21xx devices and has been validated on STM32MP215F-DK.
 - **ST-Link Connection**: Connect the ST-Link cable to the PC USB port to display traces.
 
 ### Software Versions
-- **Trusted Firmware-M (TFM)**: Refer to the [Trusted Firmware-M wiki](https://wiki.st.com/stm32mpu/Category:Trusted_Firmware-M) for recommended versions and integration details.
-- **External Device Tree (externalDT)**: See the [External Device Tree wiki](https://wiki.st.com/stm32mpu/External_device_tree) for guidance on obtaining and using external DT sources.
-- **STM32CubeIDE**: For supported IDE versions and ecosystem information, refer the [STM32 MPU wiki](https://wiki.st.com/stm32mpu/).
+- **Trusted Firmware-M (TFM)**: Refer to the [Trusted Firmware-M wiki](https://wiki.st.com/stm32mpu/wiki/Category:Trusted_Firmware-M).
+- **External Device Tree (externalDT)**: See the [External Device Tree wiki](https://wiki.st.com/stm32mpu/wiki/External_device_tree).
+- **STM32CubeIDE**: Refer to the [STM32 MPU wiki](https://wiki.st.com/stm32mpu/wiki/).
 
 ---
 
-## Artifact flow (build → sign → deploy)
-
-This is a high-level view; the later sections in this README give the board-specific filenames and flashing steps.
+## Artifact flow (build -> sign -> deploy)
 
 <pre>
-┌──────────────┐
-│ TF-M build   │
-└─┬────────────┘
++----------------+
+| TF-M build     |
++----------------+
   +-> bl2*.stm32
-  +-> ddr_phy*_Signed.bin
+   +-> ddr_phy*_Signed.bin
   +-> tfm_s.bin
 
-┌───────────────────┐
-│ CM33-NS app build │
-└─┬─────────────────┘
-  +-> ${PROJECT_NAME}.bin
++---------------------+
+| CM33-NS app build   |
++---------------------+
+   +-> ${PROJECT_NAME}.bin
 
-┌─────────────────────────────┐
-│ postbuild (assemble + sign) │
-└─┬───────────────────────────┘
-  | inputs: ${PROJECT_NAME}.bin + tfm_s.bin
-   +-> tfm-testapp-*_s_ns_Signed.bin
++------------------------------+
+| postbuild (assemble + sign)  |
++------------------------------+
+   | inputs: ${PROJECT_NAME}.bin + tfm_s.bin
+   +-> tfm-*_s_ns_Signed.bin
 
 Deploy into OSTL image tree
-   bl2*.stm32            -> .../images/stm32mp2-m33td/arm-trusted-firmware-m/bl2
-   ddr_phy*_Signed.bin   -> .../images/stm32mp2-m33td/m33-firmware
-   tfm-testapp-*_s_ns_Signed.bin -> .../images/stm32mp2-m33td/m33-firmware
+    bl2*.stm32            -> .../images/stm32mp2-m33td/arm-trusted-firmware-m/bl2
+    ddr_phy*_Signed.bin   -> .../images/stm32mp2-m33td/m33-firmware
+    tfm-*_s_ns_Signed.bin -> .../images/stm32mp2-m33td/m33-firmware
 </pre>
 
 ---
@@ -122,8 +119,7 @@ Deploy into OSTL image tree
 1. Navigate to `Firmware/Middlewares/Third_Party/trusted-firmware-m`.
 2. For SD card development mode, execute the following command:
    ```bash
-   cmake -B config_default -G"Unix Makefiles" -DTFM_PLATFORM=stm/stm32mp215f_dk -DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake -DSTM32_BOOT_DEV=sdmmc1 -DTFM_PROFILE=profile_medium -DSTM32_M33TDCID=ON -DCMAKE_BUILD_TYPE=Relwithdebinfo -DNS=OFF -DDTS_EXT_DIR=<EXT_DT_DIR> -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts \
-   -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts
+   cmake -B config_default -G"Unix Makefiles" -DTFM_PLATFORM=stm/stm32mp215f_dk -DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake -DSTM32_BOOT_DEV=sdmmc1 -DTFM_PROFILE=profile_medium -DSTM32_M33TDCID=ON -DCMAKE_BUILD_TYPE=Relwithdebinfo -DNS=OFF -DDTS_EXT_DIR=<EXT_DT_DIR> -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts
    ```
 3. Build the project:
    ```bash
@@ -138,25 +134,18 @@ Deploy into OSTL image tree
 1. Navigate to `Firmware/Projects/STM32MP215F-DK/Demonstrations/TestApp_M33TD`.
 2. Run the following command:
    ```bash
-   cmake -G"Unix Makefiles" -B build \
-     -DTFM_BUILD_DIR=<TFM_BUILD_DIRECTORY> \
-     -DENABLE_AUTO_TEST=ON
+   cmake -G"Unix Makefiles" -B build -DTFM_BUILD_DIR=<TFM_BUILD_DIRECTORY> -DENABLE_AUTO_TEST=ON
    ```
-
-   - If `TFM_BUILD_DIR` is not specified, the default path `Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default` will be used (assuming the TF‑M secure build step is completed).
-   - Common build options (see `CMakeLists.txt`):
+   - If `TFM_BUILD_DIR` is not specified, the default path `Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default` is used.
+   - Current project CMake options:
      - `-DBUILD_CONFIG=FULL|MINIMUM` (default: `FULL`)
-       - `FULL`: enables display pipeline (adds display panel files and HAL LTDC/LVDS dependencies)
-       - `MINIMUM`: disables display pipeline
-     - `-DBOOT_SPLASHSCREEN=DYNAMIC|STATIC` (default: `DYNAMIC`, only meaningful when `BUILD_CONFIG=FULL`)
+     - `-DBOOT_SPLASHSCREEN=DYNAMIC|STATIC` (default: `DYNAMIC`, meaningful with `BUILD_CONFIG=FULL`)
      - `-DREMOTE_PROC_AUTO_START=ON|OFF` (default: `ON`)
-       - `-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF` (default: `OFF`)
+     - `-DLOW_POWER_DEFAULT_POLICY_ENABLE=ON|OFF` (default: `OFF`)
+     - `-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF` (default: `OFF`)
      - `-DFAULT_EXCEPTION_ENABLE=ON|OFF` (default: `ON`)
      - `-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF` (default: `ON`)
-       - `-DENABLE_AUTO_TEST=ON|OFF` (default: `ON`)
-
-    **Note**: These CMake options are converted into numeric compile-time macros (`...=1` or `...=0`) by the project CMake logic.
-
+     - `-DENABLE_AUTO_TEST=ON|OFF` (default: `ON`)
 3. Build the project:
    ```bash
    make -C build all
@@ -170,42 +159,22 @@ Deploy into OSTL image tree
 ```
 TestApp_M33TD
 ├── TestApp_M33TD_CM33
-│   ├── TestApp_M33TD_CM33_NonSecure (Non-Secure STM32CubeIDE M33 project)
-│   └── TestApp_M33TD_CM33_trusted-firmware-m (Secure CMake project)
+│   ├── TestApp_M33TD_CM33_NonSecure
+│   └── TestApp_M33TD_CM33_trusted-firmware-m
 ```
 
-**Note**: Refer to [this wiki](https://wiki.st.com/stm32mpu/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#) for instructions on importing a CMake project.
+**Note**: Refer to the [STM32 MPU wiki](https://wiki.st.com/stm32mpu/wiki/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#) for project import guidance.
 
 ### Build Procedure
 
 #### Secure TFM Firmware Build
-1. Configure the CMake build options:
-   - Navigate to `TestApp_M33TD_CM33_trusted-firmware-m` and update the CMake settings:
-     ```
-     -DDEBUG_AUTHENTICATION=FULL  # Enabled for Debug Purpose, Default: this option is removed
-     -DTFM_PLATFORM=stm/stm32mp215f_dk
-     -DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake
-
-     -DSTM32_BOOT_DEV=sdmmc1  # Building TFM for "sdcard_sdcard" bootdevice mode
-     -DTFM_PROFILE=profile_medium
-     -DSTM32_M33TDCID=ON
-     -DCMAKE_BUILD_TYPE=Relwithdebinfo
-     -DNS=OFF
-     -DDTS_EXT_DIR=../../../../../../../../../Firmware/Utilities/dt-stm32mp
-     -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts
-     -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts
-     -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts
-     ```
-2. Configure the TFM CMake project:
-   - Right-click on `TestApp_M33TD_CM33_trusted-firmware-m` -> `CMake Configure`.
-3. Build the TFM CMake project:
-   - Right-click on `TestApp_M33TD_CM33_trusted-firmware-m` -> `Build Project`.
+1. Configure the TF-M CMake project with the same platform and DTS values used by the command-line flow.
+2. Run `CMake Configure` on `TestApp_M33TD_CM33_trusted-firmware-m`.
+3. Build the TF-M CMake project.
 
 #### Non-Secure STM32CubeIDE Project Build
-1. Build the project:
-   - Select the build configuration as per the TFM version:
-     - Choose `CM33TDCID_m33_ns_tfm_s_sign`.
-   - Right-click on `TestApp_M33TD_CM33_NonSecure` -> `Build Project`.
+1. Select the matching NonSecure build configuration.
+2. Build `TestApp_M33TD_CM33_NonSecure`.
 
 ---
 
@@ -215,10 +184,12 @@ TestApp_M33TD
 ```
 cd bin/
 ```
-   - `${PROJECT_NAME}.bin`
-   - `tfm-testapp-*_s_ns_Signed.bin`
-   - `ddr_phy*_Signed.bin`
-   - `bl2*.stm32`
+   - `TestApp_M33TD_CM33_NonSecure.bin`
+   - `tfm_s_ns_signed.bin`
+   - `ddr_phy_signed.bin`
+   - `bl2.stm32`
+
+   **Note**: `TestApp_M33TD_CM33_NonSecure.bin` is the raw Non-Secure application output. `tfm_s_ns_signed.bin` is the signed combined TF-M Secure + Non-Secure image produced by the postbuild flow. For other boot device modes, the TF-M secure build commands and final deployed binary names must be adjusted as described later in the README.
 
 ---
 
@@ -241,13 +212,13 @@ While building the `TestApp_M33TD`, the test execution behavior can be controlle
 #### **Scenario 1: ENABLE_AUTO_TEST is ON (Set to 1)**
 - **Behavior**:
   - The TestApp will execute automatically.
-  - **AUTO** tests will be fully executed, including all steps (AcquireResource → Init → Run → Deinit → ReleaseResource).
-  - **MANUAL** tests will be partially executed, performing only the resource acquisition and release steps (AcquireResource → ReleaseResource).
+  - **AUTO** tests will be fully executed, including all steps (AcquireResource -> Init -> Run -> Deinit -> ReleaseResource).
+  - **MANUAL** tests will be partially executed, performing only the resource acquisition and release steps (AcquireResource -> ReleaseResource).
 
 #### **Scenario 2: ENABLE_AUTO_TEST is OFF (Set to 0)**
 - **Behavior**:
   - The TestApp will execute tests fully based on **User Button 2** actions.
-  - Both **AUTO** and **MANUAL** tests will be executed completely (AcquireResource → Init → Run → Deinit → ReleaseResource).
+  - Both **AUTO** and **MANUAL** tests will be executed completely (AcquireResource -> Init -> Run -> Deinit -> ReleaseResource).
 
 ### How to Run Manual Tests
 
@@ -313,7 +284,7 @@ Below is a sample UART log output from the CM33 during the boot and runtime sequ
 
 ### Understanding TestApp Logs
 
-This log demonstrates the CM33 boot sequence (MCUboot/TF-M), secure→non-secure handover, and the TestApp test execution flow.
+This log demonstrates the CM33 boot sequence (MCUboot/TF-M), secure-non-secure handover, and the TestApp test execution flow.
 
 > **Note:** The presence of `Skipping manual test in auto Test mode: ...` indicates the project was built with `ENABLE_AUTO_TEST=1` (for example via `-DENABLE_AUTO_TEST=ON`).
 
@@ -381,6 +352,55 @@ Once the system has completed boot (for example, you see `[RemoteProc] copro cpu
       ```
    - A warm reset typically restarts the A35 while keeping CM33 running; on the CM33 UART you should see the relevant SCMI notification and RemoteProc/OpenAMP re-init sequence (messages may vary by build options).
 
+7. **Prepare the LowPowerMgr RPMsg endpoint on Linux**
+   - TestApp enables the firmware low-power endpoint by default through OpenAMP. In the firmware, `OpenampTask_LowPowerEndpointRegister()` registers the RPMsg service named `low_power` at address `0x5A`.
+   - On Linux, first bind or create an `rpmsg_char` endpoint for that `low_power` service. Once the endpoint is created, it appears as a `/dev/rpmsgX` node. The example commands below assume that node is `/dev/rpmsg2`.
+
+8. **Suspend policy test: STOP2**
+   - Limit the firmware suspend policy to STOP2 before Linux enters suspend:
+      ```bash
+      echo "LIMIT_PM_STOP2" > /dev/rpmsg2
+      echo deep > /sys/power/mem_sleep
+      rtcwake -m mem -s 10
+      ```
+   - Expected behavior: Linux requests suspend, the firmware keeps the low-power target at STOP2, and the system wakes up after the RTC timeout.
+
+9. **Suspend policy test: LP_STOP2**
+   - Allow the low-power manager to enter LP_STOP2 instead of plain STOP2:
+      ```bash
+      echo "LIMIT_PM_LP_STOP2" > /dev/rpmsg2
+      echo deep > /sys/power/mem_sleep
+      rtcwake -m mem -s 10
+      ```
+   - Expected behavior: Linux suspend still uses the RTC wake-up, but the firmware low-power target is constrained to LP_STOP2.
+
+10. **Suspend policy test: LPLV_STOP2**
+    - Allow the deepest STOP-class mode currently exposed over the low-power endpoint:
+      ```bash
+      echo "LIMIT_PM_LPLV_STOP2" > /dev/rpmsg2
+      echo deep > /sys/power/mem_sleep
+      rtcwake -m mem -s 10
+      ```
+    - Expected behavior: the firmware low-power manager accepts the deeper STOP-class mode and the system resumes after the RTC wake-up.
+
+11. **RUN2 test with RTC wake-up**
+    - `LIMIT_PM_DISABLED` disables low-power entry in the firmware. Linux can still enter its suspend path, but the M33 side stays in RUN2 while waiting for the wake-up source:
+      ```bash
+      echo "LIMIT_PM_DISABLED" > /dev/rpmsg2
+      echo deep > /sys/power/mem_sleep
+      rtcwake -m mem -s 10
+      ```
+    - Expected behavior: the CM33 logs should show the low-power request was rejected locally while the system still exercises the RUN2/D1 standby synchronization path.
+
+12. **RUN2 test without RTC wake-up**
+    - This variant keeps low-power entry disabled but lets Linux use its standard suspend flow without programming `rtcwake`:
+      ```bash
+      echo "LIMIT_PM_DISABLED" > /dev/rpmsg2
+      echo deep > /sys/power/mem_sleep
+      systemctl suspend
+      ```
+    - Expected behavior: wake-up depends on the platform wake-up source configured by Linux or the board environment. Use this flow to validate the no-RTC wake-up case.
+
 ## Error Behaviors
 If an error occurs during initialization or system configuration at runtime, **LED3 will blink at a 100 ms interval** to indicate the error state.
 
@@ -422,8 +442,8 @@ Security, TFM, Secure, SD Card, Non-Secure
 ## Different Boot Device Modes for MP21-DK Board
 
 1. **sdcard_sdcard**:
-   - MCUBOOT/TFM(S/NS) → SD card
-   - OSTL → SD card
+   - MCUBOOT/TFM(S/NS) -> SD card
+   - OSTL -> SD card
 
 ---
 
@@ -431,7 +451,7 @@ Security, TFM, Secure, SD Card, Non-Secure
 
 - `FlashLayout_sdcard_stm32mp215f-dk-cm33tdcid-ostl-optee.tsv`
 
-**Note**: This TSV requires three binaries (BL2, DDR PHY firmware, and the combined TF‑M S+NS signed image). Refer to the [Reference Use Cases for MP21-DK Board (TestApp Project)](#reference-use-cases-for-mp21-dk-board-testapp-project) section.
+**Note**: This TSV requires three binaries (BL2, DDR PHY firmware, and the combined TF-M S+NS signed image). Refer to the [Reference Use Cases for MP21-DK Board (TestApp Project)](#reference-use-cases-for-mp21-dk-board-testapp-project) section.
 
 ---
 
@@ -453,5 +473,3 @@ Security, TFM, Secure, SD Card, Non-Secure
 
 ```
 ---
-
-

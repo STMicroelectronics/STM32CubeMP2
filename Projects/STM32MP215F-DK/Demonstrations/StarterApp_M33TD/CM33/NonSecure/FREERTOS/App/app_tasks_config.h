@@ -58,7 +58,7 @@
 #define ENABLE_LOGGER_TASK             1
 #endif
 #define LOGGER_TASK_STACK_SIZE         1024 /**< Stack size for Logger Task. */
-#define LOGGER_TASK_PRIORITY           osPriorityLow /**< Lowest priority for UART logging. */
+#define LOGGER_TASK_PRIORITY           osPriorityBelowNormal /**< Below-normal priority for UART logging. */
 
 /*------------------- SCMI Manager Task -------------------*/
 /**
@@ -69,6 +69,16 @@
 #endif
 #define SCMI_MGR_TASK_STACK_SIZE       1024 /**< Stack size for SCMI Manager Task. */
 #define SCMI_MGR_TASK_PRIORITY         osPriorityNormal /**< Standard priority for IPCC/SCMI management. */
+
+/*------------------- Low Power Manager Task -------------------*/
+/**
+  * @brief  Stack size, priority, and enable switch for Low Power Manager Task.
+  */
+#ifndef ENABLE_LOW_POWER_MGR_TASK
+#define ENABLE_LOW_POWER_MGR_TASK      1
+#endif
+#define LOW_POWER_MGR_TASK_STACK_SIZE  1024 /**< Stack size for Low Power Manager Task. */
+#define LOW_POWER_MGR_TASK_PRIORITY    osPriorityLow /**< Low priority for low power sequencing. */
 
 /*------------------- Button Monitor Task -------------------*/
 /**
@@ -99,6 +109,16 @@
 #endif
 #define DISPLAY_TASK_STACK_SIZE        1024 /**< Stack size for Display Task. */
 #define DISPLAY_TASK_PRIORITY          osPriorityNormal /**< Standard priority for display state machine. */
+
+/*------------------- Firmware Update Manager Task -------------------*/
+/**
+  * @brief  Stack size, priority, and enable switch for Firmware Update Manager Task.
+  */
+#ifndef ENABLE_FWU_MGR_TASK
+#define ENABLE_FWU_MGR_TASK            0
+#endif
+#define FWU_MGR_TASK_STACK_SIZE        1024 /**< Stack size for Firmware Update Manager Task. */
+#define FWU_MGR_TASK_PRIORITY          osPriorityNormal /**< Standard priority for Firmware Update Manager Task. */
 
 
 #endif /* APP_TASKS_CONFIG_H */

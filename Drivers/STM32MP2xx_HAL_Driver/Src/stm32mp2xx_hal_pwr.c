@@ -101,7 +101,9 @@ static void ClearStandbyRequest();
 static void SetStandbyRequest(uint8_t STANDBYType);
 #endif /* CORE_CM0PLUS */
 static void SetRegulatorStopModeIndicator(uint32_t Regulator);
+#if defined(CORE_CM33)
 static void ClearRegulatorStopModeIndicator(void);
+#endif /* CORE_CM33 */
 HAL_StatusTypeDef HAL_PWR_ConfigWioResourceAttributes(uint16_t Resource, uint32_t ResourceAttributes);
 HAL_StatusTypeDef HAL_PWR_GetConfigWioResourceAttributes(uint16_t Resource, uint32_t *pResourceAttributes);
 HAL_StatusTypeDef HAL_PWR_ConfigNonShareableResourceAttributes(uint16_t Resource, uint32_t ResourceAttributes);
@@ -782,6 +784,9 @@ void HAL_PWR_EnterSLEEPMode(__attribute__((unused))uint32_t Regulator, uint8_t S
   /*check  request to system standby not set*/
   ClearStandbyRequest();
 
+  /* ARM recommand DSB after programming in System Control Space (SCS) */
+  __DSB();
+
   /* Select SLEEP mode entry -------------------------------------------------*/
   if (SLEEPEntry == PWR_SLEEPENTRY_WFI)
   {
@@ -833,6 +838,9 @@ void HAL_PWR_EnterSTOPMode(uint32_t Regulator, uint8_t STOPEntry)
   /* Ensure core enters in  CSTOP mode on sleep (core and core-subsystem  clock are gated) */
   GateCortexSubsystemClockOnSleepEntry();
 
+  /* ARM recommand DSB after programming in System Control Space (SCS) */
+  __DSB();
+
   /* Select Stop mode entry --------------------------------------------------*/
   if ((STOPEntry == PWR_STOPENTRY_WFI))
   {
@@ -850,10 +858,6 @@ void HAL_PWR_EnterSTOPMode(uint32_t Regulator, uint8_t STOPEntry)
   {
     /* do nothing */
   }
-  /*remove any low power indication for regulator when CPU is in stop mode
-    not mandatory as low power PWR output signal are not active when system is in RUN mode,
-    but cleaner  to clear these bit inside PWR register*/
-  ClearRegulatorStopModeIndicator();
 
   /* remove 'clock gating on sleep entry' request  */
   KeepCortexSubsystemClockOnSleepEntry();
@@ -881,9 +885,11 @@ void HAL_PWR_EnterSTANDBYMode(uint8_t STANDBYType)
   /*set request to allow system standby*/
   SetStandbyRequest(STANDBYType);
 
+  /* ARM recommand DSB after programming in System Control Space (SCS) */
+  __DSB();
 
   /* This option is used to ensure that store operations are completed */
-#if defined ( __CC_ARM)
+#if defined (__CC_ARM)
   __force_stores();
 #endif /* __CC_ARM */
   /* Request Wait For Interrupt */
@@ -894,17 +900,11 @@ void HAL_PWR_EnterSTANDBYMode(uint8_t STANDBYType)
   only in case of wake-up from sleep/stop (case STD-BY not granted due to other cores activities
   */
 
-  /*remove CPU regulator from power saving state*/
-  /*not mandatory as low power PWR output signal are not active when system is in RUN mode,
-    but cleaner  to clear these bit inside PWR register*/
-  ClearRegulatorStopModeIndicator();
-
   /* remove 'clock gating on sleep entry' request  */
   KeepCortexSubsystemClockOnSleepEntry();
 
   /*clear request to allow system standby*/
   ClearStandbyRequest();
-
 }
 #endif /*defined(CORE_CM33)||defined(CORE_CA35)*/
 
@@ -979,7 +979,9 @@ void HAL_PWR_DisableStopOnExit(void)
   /*remove any low power indication for regulator when CPU is in stop mode*/
   /*not mandatory as low power PWR output signal are not active when system is in RUN mode,
     but cleaner  to clear these bit inside PWR register*/
+#if defined(CORE_CM33)
   ClearRegulatorStopModeIndicator();
+#endif /* CORE_CM33 */
 }
 #endif /*(CORE_CM33)||defined(CORE_CM0PLUS)*/
 
@@ -989,7 +991,7 @@ void HAL_PWR_DisableStopOnExit(void)
   * @note not relevant if cpu is M0+
   * @retval None
   */
-void SetRegulatorStopModeIndicator(uint32_t Regulator)
+static void SetRegulatorStopModeIndicator(uint32_t Regulator)
 {
 #if defined(CORE_CM0PLUS)
   UNUSED(Regulator);
@@ -1011,32 +1013,25 @@ void SetRegulatorStopModeIndicator(uint32_t Regulator)
 #endif /* CORE_CM0PLUS */
 }
 
-
+#if defined(CORE_CM33)
 /**
   * @brief clear CPU regulator constraint when cpu is in stop mode
   * @note thru this API CPU removes any  low power assertion on its domain regulator
   * @retval None
   */
-void ClearRegulatorStopModeIndicator()
+static void ClearRegulatorStopModeIndicator(void)
 {
-#ifdef CORE_CA35
-#define LP_LV_CLR_MSK (PWR_CPU1CR_LPDS_D1_Msk|PWR_CPU1CR_LVDS_D1_Msk)
-#define REGU_SHIFT_CLR PWR_CPU1CR_LPDS_D1_Pos
-  MODIFY_REG(PWR->CPU1CR, LP_LV_CLR_MSK, PWR_REGULATOR_LP_OFF << REGU_SHIFT_CLR);
-#endif /*  CORE_CA35 */
-#ifdef CORE_CM33
 #define LP_LV_CLR_MSK (PWR_CPU2CR_LPDS_D2_Msk|PWR_CPU2CR_LVDS_D2_Msk)
 #define REGU_SHIFT_CLR PWR_CPU2CR_LPDS_D2_Pos
   MODIFY_REG(PWR->CPU2CR, LP_LV_CLR_MSK, PWR_REGULATOR_LP_OFF << REGU_SHIFT_CLR);
-#endif /* CORE_CM33 */
 }
-
+#endif /* CORE_CM33 */
 
 /**
   * @brief request to gate cortex subsystem clock (e.g. GIC/NVIC, cache, ..) when CPU enters sleep mode
   * @retval None
   */
-void GateCortexSubsystemClockOnSleepEntry(void)
+static void GateCortexSubsystemClockOnSleepEntry(void)
 {
 #if defined(CORE_CM33)||defined(CORE_CM0PLUS)
   /* Set DEEP SLEEP bit of Cortex System Control Register */
@@ -1051,7 +1046,7 @@ void GateCortexSubsystemClockOnSleepEntry(void)
   * @brief forbid  gating of cortex subsystem clock (e.g. GIC/NVIC, cache, ..) when CPU enters sleep mode
   * @retval None
   */
-void KeepCortexSubsystemClockOnSleepEntry(void)
+static void KeepCortexSubsystemClockOnSleepEntry(void)
 {
 #if defined(CORE_CM33)||defined(CORE_CM0PLUS)
   /* clear DEEP SLEEP bit of Cortex System Control Register */
@@ -1065,7 +1060,7 @@ void KeepCortexSubsystemClockOnSleepEntry(void)
   * @brief forbid  system to go in any standby mode
   * @retval None
   */
-void ClearStandbyRequest(void)
+static void ClearStandbyRequest(void)
 {
 #ifdef CORE_CA35
   CLEAR_BIT(PWR->CPU1CR, SYSTEM_STANDBY_REQUEST);
@@ -1089,7 +1084,7 @@ void ClearStandbyRequest(void)
   * @note Beware request may not be granted by PWR (case activity on others CPUs)
   * @retval None
   */
-void SetStandbyRequest(uint8_t STANDBYType)
+static void SetStandbyRequest(uint8_t STANDBYType)
 {
   /*clear all standby flag, mandatory otherwise  standby flags are not relevant  at reset (except if reset is pon !)*/
   __HAL_PWR_CLEAR_FLAG();

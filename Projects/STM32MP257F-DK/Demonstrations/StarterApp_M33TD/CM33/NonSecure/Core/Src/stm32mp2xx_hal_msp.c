@@ -1,4 +1,4 @@
-/**
+﻿/**
   ******************************************************************************
   * @file    stm32mp2xx_hal_msp.c
   * @author  MCD Application Team
@@ -175,26 +175,6 @@ void HAL_LVDS_MspDeInit(LVDS_HandleTypeDef* hlvds)
 
 
 /**
-  * @brief  Initialize the PPP MSP.
-  * @retval None
-  */
-/*
-void HAL_PPP_MspInit(void)
-{
-}
-*/
-
-/**
-  * @brief  DeInitialize the PPP MSP.
-  * @retval None
-  */
-/*
-void HAL_PPP_MspDeInit(void)
-{
-}
-*/
-
-/**
   * @}
   */
 
@@ -207,3 +187,4 @@ void HAL_PPP_MspDeInit(void)
   */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
+

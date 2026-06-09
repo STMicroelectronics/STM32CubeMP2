@@ -23,6 +23,10 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "wdg_monitor_task.h"
+
+#if ENABLE_LOW_POWER_MGR_TASK
+#include "low_power_mgr_task.h"
+#endif
 #include "tfm_ioctl_wdt_api.h"
 
 #define WDG_MONITOR_WDG_TIMEOUT_MS     (120000U)
@@ -34,6 +38,44 @@ static const osThreadAttr_t WdgMonitorTaskAttr = {
     .priority = (osPriority_t)WDG_MONITOR_TASK_PRIORITY,
     .stack_size = WDG_MONITOR_TASK_STACK_SIZE
 };
+
+/**
+    * @brief  Low-power manager listener for watchdog handling.
+    * @param  notif: Low-power manager notif.
+    * @param  mode: Low-power mode associated with the event.
+    * @param  context: User context pointer.
+    * @retval None
+    */
+#if ENABLE_LOW_POWER_MGR_TASK
+static void WdgMonitorTask_LowPowerListener(LowPowerMgrNotif_t notif, LowPowerMgrMode_t mode, void *context);
+
+/**
+    * @brief  Handle low-power notifications for the watchdog task.
+    * @param  notif: Low-power manager notif.
+    * @param  mode: Low-power mode associated with the event.
+    * @param  context: User context pointer.
+    * @retval None
+    */
+static void WdgMonitorTask_LowPowerListener(LowPowerMgrNotif_t notif, LowPowerMgrMode_t mode, void *context)
+{
+    int err;
+
+    (void)mode;
+    (void)context;
+
+    if ((notif == LOW_POWER_MGR_NOTIF_PREPARE_STOP) ||
+        (notif == LOW_POWER_MGR_NOTIF_PREPARE_STANDBY))
+    {
+        err = tfm_platform_wdt_ping();
+        if (err != TFM_PLATFORM_ERR_SUCCESS)
+        {
+            APP_LOG_ERR("WdgMonitor", "watchdog ping fail on %s:%d",
+                        (notif == LOW_POWER_MGR_NOTIF_PREPARE_STOP) ? "prepare_stop" : "prepare_standby",
+                        err);
+        }
+    }
+}
+#endif
 
 /**
   * @brief  Main function for the Watchdog Monitor Task.
@@ -95,6 +137,13 @@ void WdgMonitorTask_Init(void)
     {
         NSAppCore_ErrorHandler();
     }
+
+#if ENABLE_LOW_POWER_MGR_TASK
+    if (LowPowerMgrTask_RegisterListener(WdgMonitorTask_LowPowerListener, NULL) != HAL_OK)
+    {
+        NSAppCore_ErrorHandler();
+    }
+#endif
 }
 
 /**
@@ -103,6 +152,10 @@ void WdgMonitorTask_Init(void)
   */
 void WdgMonitorTask_DeInit(void)
 {
+#if ENABLE_LOW_POWER_MGR_TASK
+    (void)LowPowerMgrTask_UnregisterListener(WdgMonitorTask_LowPowerListener);
+#endif
+
     if (WdgMonitorTaskHandle)
     {
         osThreadTerminate(WdgMonitorTaskHandle);

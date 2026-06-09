@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="_htmresc/mini-st.css" />
+</head>
+<body>
+<h1
+id="visualwatchdog_m33td-demonstration-application">VisualWatchdog_M33TD
+Demonstration Application</h1>
+<hr />
+<h2 id="application-description">Application Description</h2>
+<p>The VisualWatchdog_M33TD demonstration highlights the STM32MP2
+M33TDCID profile with Cortex-M33 as the primary CPU and Cortex-A35 as a
+managed coprocessor. It is a utility-integrated project built on
+<code>Utilities/M33TD_NSAppCore</code>, with board-specific display and
+peripheral drivers kept in the project under
+<code>CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/</code>.</p>
+<p>This demo uses a fixed visual configuration: display, overlay
+rendering, splash animation assets, OpenAMP transport, button handling,
+and the watchdog-oriented UI are part of the default setup.</p>
+<hr />
+<h2 id="key-features">Key Features</h2>
+<ul>
+<li><strong>FreeRTOS Multitasking</strong>: Runs the NS application as a
+multi-task FreeRTOS system.</li>
+<li><strong>Utility Stack Integration</strong>: Uses
+<code>Utilities/M33TD_NSAppCore</code> for shared bootstrap and task
+logic.</li>
+<li><strong>Visual Display Pipeline</strong>: Keeps the display task
+enabled with overlay content and splash animation assets in the project
+profile.</li>
+<li><strong>OpenAMP and Button Handling</strong>: Enables the RPMsg
+transport together with board-side button interaction.</li>
+<li><strong>A35 Coprocessor Management</strong>: Uses the RemoteProc
+task to manage the A35 lifecycle through TF-M secure services.</li>
+<li><strong>Watchdog Visualization</strong>: Focuses on
+watchdog-oriented visual status rendering on the local display.</li>
+</ul>
+<hr />
+<h2 id="purpose">Purpose</h2>
+<p>This is a FreeRTOS-based multi-task application running in the NS
+environment while TF-M runs in the secure environment and provides
+secure services.</p>
+<p>In the current STM32MP215F-DK VisualWatchdog profile,
+<code>NSCoreApp_Init()</code> starts the enabled utility tasks
+below:</p>
+<ol type="1">
+<li><strong>NSCoreApp (Bootstrap)</strong>:
+<ul>
+<li>Initializes the common stack and starts the enabled tasks.</li>
+</ul></li>
+<li><strong>Logger Task</strong>:
+<ul>
+<li>Centralized logging, with optional real-time output.</li>
+</ul></li>
+<li><strong>UserApp Task</strong>:
+<ul>
+<li>Keeps the example local application activity enabled.</li>
+</ul></li>
+<li><strong>Button Monitor Task</strong>:
+<ul>
+<li>Monitors the USER button and dispatches project-side actions.</li>
+</ul></li>
+<li><strong>Display Task</strong>:
+<ul>
+<li>Drives the display pipeline and watchdog-oriented UI updates.</li>
+</ul></li>
+<li><strong>SCMI Manager Task</strong>:
+<ul>
+<li>Handles SCMI notifications and related TF-M forwarding.</li>
+</ul></li>
+<li><strong>OpenAMP Task</strong>:
+<ul>
+<li>Provides the RPMsg transport used by the VisualWatchdog
+profile.</li>
+</ul></li>
+<li><strong>RemoteProc Task</strong>:
+<ul>
+<li>Manages A35 lifecycle control and recovery flows.</li>
+</ul></li>
+<li><strong>Watchdog Monitor Task</strong>:
+<ul>
+<li>Supervises the watchdog path and feeds the visual status model.</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="prerequisite-hardware-software-environment-setup">Prerequisite
+Hardware &amp; Software Environment Setup</h2>
+<ul>
+<li><strong>Trusted Firmware-M</strong>: Install the source code under
+<code>Middlewares/Third_Party/trusted-firmware-m</code>.</li>
+<li><strong>Supported Devices</strong>: This example targets STM32MP21xx
+devices and has been validated on STM32MP215F-DK.</li>
+<li><strong>ST-Link Connection</strong>: Connect the ST-Link cable to
+the PC USB port to display traces.</li>
+</ul>
+<h3 id="software-versions">Software Versions</h3>
+<ul>
+<li><strong>Trusted Firmware-M (TFM)</strong>: Refer to the <a
+href="https://wiki.st.com/stm32mpu/wiki/Category:Trusted_Firmware-M">Trusted
+Firmware-M wiki</a>.</li>
+<li><strong>External Device Tree (externalDT)</strong>: See the <a
+href="https://wiki.st.com/stm32mpu/wiki/External_device_tree">External
+Device Tree wiki</a>.</li>
+<li><strong>STM32CubeIDE</strong>: Refer to the <a
+href="https://wiki.st.com/stm32mpu/wiki/">STM32 MPU wiki</a>.</li>
+</ul>
+<hr />
+<h2 id="artifact-flow-build---sign---deploy">Artifact flow (build -&gt;
+sign -&gt; deploy)</h2>
+<pre>
++----------------+
+| TF-M build     |
++----------------+
+  +-> bl2*.stm32
+   +-> ddr_phy*_Signed.bin
+  +-> tfm_s.bin
+
++---------------------+
+| CM33-NS app build   |
++---------------------+
+   +-> ${PROJECT_NAME}.bin
+
++------------------------------+
+| postbuild (assemble + sign)  |
++------------------------------+
+   | inputs: ${PROJECT_NAME}.bin + tfm_s.bin
+   +-> tfm-*_s_ns_Signed.bin
+
+Deploy into OSTL image tree
+    bl2*.stm32            -> .../images/stm32mp2-m33td/arm-trusted-firmware-m/bl2
+    ddr_phy*_Signed.bin   -> .../images/stm32mp2-m33td/m33-firmware
+    tfm-*_s_ns_Signed.bin -> .../images/stm32mp2-m33td/m33-firmware
+</pre>
+<hr />
+<h2 id="to-build-cmake-project-for-m33tdcid-through-command-line">To
+Build CMake Project for M33TDCID (Through Command Line)</h2>
+<h3 id="compilation-instructions">Compilation Instructions</h3>
+<ul>
+<li>Ensure an ARM cross-compiler toolchain with
+<code>arm-none-eabi-gcc</code> is available in <code>PATH</code>.</li>
+<li>When using <code>-G"Unix Makefiles"</code> on Windows, also ensure
+<code>make</code> is available in <code>PATH</code>.</li>
+</ul>
+<hr />
+<h2 id="build-procedure">Build Procedure</h2>
+<h3 id="secure-build-tfm">Secure Build (TFM)</h3>
+<ol type="1">
+<li><p>Navigate to
+<code>Firmware/Middlewares/Third_Party/trusted-firmware-m</code>.</p></li>
+<li><p>For SD card development mode, execute the following command:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-B</span> config_default <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-DTFM_PLATFORM</span><span class="op">=</span>stm/stm32mp215f_dk <span class="at">-DTFM_TOOLCHAIN_FILE</span><span class="op">=</span>toolchain_GNUARM.cmake <span class="at">-DSTM32_BOOT_DEV</span><span class="op">=</span>sdmmc1 <span class="at">-DTFM_PROFILE</span><span class="op">=</span>profile_medium <span class="at">-DSTM32_M33TDCID</span><span class="op">=</span>ON <span class="at">-DCMAKE_BUILD_TYPE</span><span class="op">=</span>Relwithdebinfo <span class="at">-DNS</span><span class="op">=</span>OFF <span class="at">-DDTS_EXT_DIR</span><span class="op">=&lt;</span>EXT_DT_DIR<span class="op">&gt;</span> -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts <span class="at">-DDTS_BOARD_S</span><span class="op">=</span>stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts <span class="at">-DDTS_BOARD_NS</span><span class="op">=</span>stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts</span></code></pre></div></li>
+<li><p>Build the project:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">--build</span> config_default <span class="at">--</span> install</span></code></pre></div></li>
+</ol>
+<p><strong>Note</strong>: The external DT repository is placed in the
+<code>Utilities</code> directory.</p>
+<hr />
+<h3
+id="non-secure-m33-firmware-build-visualwatchdog_m33td-application">Non-Secure
+M33 Firmware Build (VisualWatchdog_M33TD Application)</h3>
+<ol type="1">
+<li><p>Navigate to
+<code>Firmware/Projects/STM32MP215F-DK/Demonstrations/VisualWatchdog_M33TD</code>.</p></li>
+<li><p>Run the following command:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-B</span> build <span class="at">-DTFM_BUILD_DIR</span><span class="op">=&lt;</span>TFM_BUILD_DIRECTORY<span class="op">&gt;</span></span></code></pre></div>
+<ul>
+<li>If <code>TFM_BUILD_DIR</code> is not specified, the default path
+<code>Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default</code>
+is used.</li>
+<li>The display panel, overlay rendering, and splash animation assets
+are enabled by the project configuration.</li>
+</ul></li>
+<li><p>Build the project:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> <span class="at">-C</span> build all</span></code></pre></div></li>
+</ol>
+<hr />
+<h2 id="to-build-native-stm32cubeide-project">To Build Native
+STM32CubeIDE Project</h2>
+<h3 id="project-structure">Project Structure</h3>
+<pre><code>VisualWatchdog_M33TD
+├── VisualWatchdog_M33TD_CM33
+│   ├── VisualWatchdog_M33TD_CM33_NonSecure
+│   └── VisualWatchdog_M33TD_CM33_trusted-firmware-m</code></pre>
+<p><strong>Note</strong>: Refer to the <a
+href="https://wiki.st.com/stm32mpu/wiki/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#">STM32
+MPU wiki</a> for project import guidance.</p>
+<h3 id="build-procedure-1">Build Procedure</h3>
+<h4 id="secure-tfm-firmware-build">Secure TFM Firmware Build</h4>
+<ol type="1">
+<li>Configure the TF-M CMake project with the same platform and DTS
+values used by the command-line flow.</li>
+<li>Run <code>CMake Configure</code> on
+<code>VisualWatchdog_M33TD_CM33_trusted-firmware-m</code>.</li>
+<li>Build the TF-M CMake project.</li>
+</ol>
+<h4 id="non-secure-stm32cubeide-project-build">Non-Secure STM32CubeIDE
+Project Build</h4>
+<ol type="1">
+<li>Select the matching NonSecure build configuration.</li>
+<li>Build <code>VisualWatchdog_M33TD_CM33_NonSecure</code>.</li>
+</ol>
+<hr />
+<h2 id="output">Output</h2>
+<ul>
+<li>The generated binaries will be located in the <code>bin</code>
+folder:</li>
+</ul>
+<pre><code>   cd bin/</code></pre>
+<ul>
+<li><code>VisualWatchdog_M33TD_CM33_NonSecure.bin</code></li>
+<li><code>tfm_s_ns_signed.bin</code></li>
+<li><code>ddr_phy_signed.bin</code></li>
+<li><code>bl2.stm32</code></li>
+</ul>
+<p><strong>Note</strong>:
+<code>VisualWatchdog_M33TD_CM33_NonSecure.bin</code> is the raw
+Non-Secure application output. <code>tfm_s_ns_signed.bin</code> is the
+signed combined TF-M Secure + Non-Secure image produced by the postbuild
+flow. For other boot device modes, the TF-M secure build commands and
+final deployed binary names must be adjusted as described later in the
+README.</p>
+<hr />
+<p>For detailed instructions on flashing the generated binaries to your
+device, see <a href="#how-to-flash-binaries">How to Flash
+Binaries</a>.</p>
+<hr />
+<h4 id="uart-console-output">UART Console Output</h4>
+<p>Below is a sample UART log output from the CM33 during the boot and
+runtime sequence:</p>
+<pre><code>[WRN] This device was provisioned with dummy keys.
+
+[WRN] This device is NOT SECURE
+
+[INF] NV_MM_COUNTER_INIT: counters are initialized.
+
+[INF] PSA Crypto init done, sig_type: EC-P256
+[INF] Primary   slot: version=0.1.0+0
+[INF] Image 1 Secondary slot: Image not found
+[INF] Image 1 RAM loading to 0xe060000 is succeeded.
+[INF] Image 1 loaded from the primary slot
+[INF] BL2: image 1, enable DDR-FW
+[INF] Primary   slot: version=2.1.0+0
+[INF] Image 0 Secondary slot: Image not found
+[INF] Image 0 RAM loading to 0x80000000 is succeeded.
+[INF] Image 0 loaded from the primary slot
+[INF] Bootloader chainload address offset: 0x104400
+[INF] Jumping to the first image slot
+[INF] init:pmic@33 STPMIC:20 V1.1
+[INF] Enable Macronix quad support
+[INF] welcome to TF-M: v2.1.3-stm32mp-r2-rc7
+[INF] board: stm32mp215f dk
+[INF] dts: stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts
+Booting TF-M v2.1.3
+[WAR] This device was provisioned with dummy keys.
+[WAR] This device is NOT SECURE
+[Sec Thread] Secure image initializing!
+TF-M isolation level is: 0x00000002
+[    0.000000] SCP-firmware v2.13.0-stm32mp-r3-rc4
+[    0.000000]
+[    0.000000] [FWK] Module initialization complete!
+Creating an empty ITS flash layout.
+[INF][PS] Encryption alg: 0x5500100
+[INF][Crypto] Init HW accelerator...
+[INF][Crypto] Init HW accelerator... complete.
+[NS] [INF] Non-Secure system starting...
+[NS] [INF] STM32Cube FW version: v1.2.0-rc0
+[NS] [INF] [DisplayTask] Display is initialized and ready...
+[NS] [INF] [WdgMonitor] watchdog timeout: 120000ms
+[NS] [INF] [OpenAMP] waiting remote processor initialisation...
+[NS] [INF] [RemoteProc] starting copro cpu@0... (pending)
+[NS] [INF] [RemoteProc] copro cpu@0 started.
+[NS] [INF] [OpenAMP]  Ready for RPMsg communication</code></pre>
+<h3 id="understanding-visualwatchdog-logs">Understanding VisualWatchdog
+Logs</h3>
+<p>This log demonstrates the CM33 boot sequence (MCUboot/TF-M),
+provisioning status, secure-non-secure handover, and the main
+VisualWatchdog runtime tasks (DisplayTask, Watchdog Monitor, RemoteProc,
+OpenAMP).</p>
+<blockquote>
+<p><strong>Note:</strong> The
+<code>[RemoteProc] starting copro cpu@0... (pending)</code> message
+followed by <code>[RemoteProc] copro cpu@0 started.</code> indicates the
+A35 coprocessor was started during boot. This behavior is typically
+enabled by the <code>REMOTE_PROC_AUTO_START=ON</code> CMake option, as
+described in the <a
+href="#non-secure-m33-firmware-build-visualwatchdog_m33td-application">Non-Secure
+M33 Firmware Build (VisualWatchdog_M33TD Application)</a> section.</p>
+</blockquote>
+<p>The log also reflects the specific firmware and configuration used
+for the device boot:</p>
+<ul>
+<li><strong>STM32Cube FW version</strong>:
+<code>STM32Cube FW version: ...</code></li>
+<li><strong>TF-M version</strong>:
+<code>welcome to TF-M: ...</code></li>
+<li><strong>External device tree (DTS)</strong>:
+<code>dts: ...-sdcard-s.dts</code> (compare with the
+<code>-DDTS_BOARD_S=...</code> DTS passed to the TF-M secure build)</li>
+<li><strong>Key runtime milestones</strong>:
+<ul>
+<li>Display enabled:
+<code>[DisplayTask] Display is initialized and ready...</code></li>
+<li>A35 bring-up: <code>[RemoteProc] ... started.</code></li>
+<li>RPMsg ready:
+<code>[OpenAMP]  Ready for RPMsg communication</code></li>
+<li>Watchdog monitor:
+<code>[WdgMonitor] watchdog timeout: ...</code></li>
+</ul></li>
+</ul>
+<p>To verify that the correct configuration is reflected, compare the
+DTS filename(s) and firmware versions shown in the log with the TF-M
+secure-build CMake options and external DTS files specified during the
+secure build (see <a
+href="#how-to-generate-binaries-for-different-boot-modes">How to
+Generate Binaries for Different Boot Modes</a>).</p>
+<p>VisualWatchdog also implements remote processor crash detection and
+automatic recovery; see <a
+href="#how-to-test-and-verify-system-behavior">How to Test and Verify
+System Behavior</a>.</p>
+<h3 id="how-to-test-and-verify-system-behavior">How to Test and Verify
+System Behavior</h3>
+<p>Once the system has completed boot (e.g., you see
+<code>[RemoteProc] copro cpu@0 started.</code> and, when enabled,
+<code>[OpenAMP]  Ready for RPMsg communication</code>), you can run the
+checks below. For each test, look for the corresponding activity on the
+<strong>CM33 UART console</strong>.</p>
+<ol type="1">
+<li><strong>Linux HMI-triggered A35 reboot and status-bar
+transition</strong>
+<ul>
+<li>On the Linux HMI, press the UI Launcher
+<code>A35 Reboot/Crash</code> reboot control.</li>
+<li>Expected local display behavior during the restart sequence:
+<ul>
+<li>the A35 status bar changes from <strong>Running</strong> to
+<strong>Rebooting</strong></li>
+<li>the reboot animation is shown while the A35 is restarting</li>
+</ul></li>
+<li>Once the reboot completes and Linux is back up, the local status bar
+returns to <strong>Running</strong>.</li>
+<li>On the CM33 UART, you may also see the A35 stop/start or recovery
+sequence, depending on timing and build options.</li>
+</ul></li>
+<li><strong>Button-triggered A35 reboot (USER2, very long
+press)</strong>
+<ul>
+<li>Press <strong>USER2</strong> for <strong>at least 5
+seconds</strong>.</li>
+<li>Expected behavior:
+<ul>
+<li><code>[OpenAMP] request remote processor reboot</code></li>
+<li>the A35 restart sequence may be reflected by RemoteProc messages and
+the local status bar may briefly show <strong>Rebooting</strong> before
+returning to <strong>Running</strong></li>
+</ul></li>
+</ul></li>
+<li><strong>Simulate a Linux crash and observe recovery</strong>
+<ul>
+<li>On the Linux console (as <code>root</code>), run:
+<code>bash  sync; sleep 2; sync; echo c &gt; /proc/sysrq-trigger</code></li>
+<li>This forces a kernel crash on the A35 side. On the CM33 UART,
+RemoteProc should report crash detection and attempt recovery (for
+example: <code>Crash detected ... Attempting recovery...</code>, then a
+stop/restart sequence).</li>
+</ul></li>
+<li><strong>Cold reset from Linux</strong>
+<ul>
+<li>On Linux, run: <code>bash  reboot</code></li>
+<li>A cold reset typically reboots the full platform; you should see
+TF-M/MCUboot banners again on the CM33 UART. Depending on timing, you
+may also see an SCMI notification such as
+<code>SYS_POWER_COLD_RESET</code> before the reset.</li>
+</ul></li>
+<li><strong>Warm reset from Linux</strong>
+<ul>
+<li>On Linux, run:
+<code>bash  echo warm &gt;&gt; /sys/kernel/reboot/mode  reboot</code></li>
+<li>A warm reset typically restarts the A35 while keeping CM33 running;
+on the CM33 UART you should see <code>SYS_POWER_WARM_RESET</code> and a
+RemoteProc stop/start sequence. When OpenAMP is enabled, you should also
+see <code>OpenAMP reinit requested</code>.</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="error-behaviors">Error Behaviors</h2>
+<p>If an error occurs during initialization or system configuration at
+runtime, <strong>LED3 will blink at a 100 ms interval</strong> to
+indicate the error state.</p>
+<hr />
+<h2 id="assumptions">Assumptions</h2>
+<hr />
+<h2 id="known-limitations">Known Limitations</h2>
+<hr />
+<h2 id="keywords">Keywords</h2>
+<p>Security, TFM, Secure, SD Card, Non-Secure</p>
+<hr />
+<h2 id="how-to-flash-binaries">How to Flash Binaries</h2>
+<ol type="1">
+<li><p><strong>Build/Compile the Project</strong><br />
+Follow the <a href="#build-procedure">Build Procedure</a> to generate
+the required binaries.</p></li>
+<li><p><strong>Copy and Rename Generated Binaries</strong><br />
+Before copying, <strong>rename the generated binaries</strong>
+(<code>bl2.stm32</code>, <code>ddr_phy_signed.bin</code>, and
+<code>tfm_s_ns_signed.bin</code>) according to the names specified in
+the <strong>Required Binaries</strong> section of the relevant flash
+layout under <a
+href="#reference-use-cases-for-mp21-dk-board-visualwatchdog-project">Reference
+Use Cases for MP21-DK Board (VisualWatchdog Project)</a>.<br />
+Then, navigate to the <code>bin/</code> folder and copy the renamed
+binaries to the following paths:</p>
+<pre><code>&lt;OSTL-IMAGE-PATH&gt;/images/stm32mp2-m33td/arm-trusted-firmware-m/bl2</code></pre>
+<ul>
+<li>Place the renamed <code>bl2</code> binary in this directory.</li>
+</ul>
+<pre><code>&lt;OSTL-IMAGE-PATH&gt;/images/stm32mp2-m33td/m33-firmware</code></pre>
+<ul>
+<li>Place the renamed <code>ddr_phy</code> and
+<code>tfm-visualwatchdog</code> binaries in this directory.</li>
+</ul></li>
+<li><p><strong>Modify Flashlayout (TSV)</strong><br />
+Select the relevant TSV file under
+<code>&lt;OSTL-IMAGE-PATH&gt;/images/stm32mp2-m33td/flashlayout_st-image-weston/optee</code>
+as per specific dev mode (see <a
+href="#flash-layouts-for-mp21-dk-board">Flash Layouts for MP21-DK
+Board</a>). And then modify the TSV file, by replacing the existing TF-M
+NS signed binary name with the name of your renamed
+<code>tfm-visualwatchdog-..._s_ns_Signed.bin</code> that corresponds to
+your chosen boot mode.</p></li>
+<li><p><strong>Connect the Device</strong><br />
+Use a Type-C cable to connect the device to the Type-C
+connector.</p></li>
+<li><p><strong>Flash the Image</strong><br />
+Refer to the <a href="https://wiki.st.com/stm32mpu/wiki/">STM32 MPU
+wiki</a> for detailed flashing instructions.</p></li>
+<li><p><strong>Perform a Power-On Reset</strong><br />
+After flashing, perform a power-on reset to complete the
+process.</p></li>
+</ol>
+<hr />
+<h2 id="different-boot-device-modes-for-mp21-dk-board">Different Boot
+Device Modes for MP21-DK Board</h2>
+<p>The MP21-DK board supports the following boot device modes:</p>
+<ol type="1">
+<li><strong>sdcard_sdcard</strong>:
+<ul>
+<li>MCUBOOT/TFM(S/NS) -&gt; SD card<br />
+</li>
+<li>OSTL -&gt; SD card</li>
+</ul></li>
+</ol>
+<hr />
+<h2 id="flash-layouts-for-mp21-dk-board">Flash Layouts for MP21-DK
+Board</h2>
+<p>For the MP21-DK board, only one TSV flavor is provided to flash under
+the M33TDCID profile:</p>
+<ul>
+<li><code>FlashLayout_sdcard_stm32mp215f-dk-cm33tdcid-ostl-optee.tsv</code></li>
+</ul>
+<p><strong>Note</strong>: Each TSV requires three sets of binaries.
+Refer to the <a
+href="#reference-use-cases-for-mp21-dk-board-visualwatchdog-project">Reference
+Use Cases for MP21-DK Board (VisualWatchdog Project)</a> section for
+details.</p>
+<hr />
+<h2 id="how-to-generate-binaries-for-different-boot-modes">How to
+Generate Binaries for Different Boot Modes</h2>
+<ol type="1">
+<li><p><strong>Configure and Build TFM Secure</strong>:<br />
+Use specific CMake options defined for each boot mode as described in
+the <strong>Required CMake Options</strong> section under <a
+href="#reference-use-cases-for-mp21-dk-board-visualwatchdog-project">Reference
+Use Cases for MP21-DK Board (VisualWatchdog Project)</a>.</p></li>
+<li><p><strong>Build VisualWatchdog Project</strong>:<br />
+Compile the VisualWatchdog project after building the TFM secure
+binaries.</p></li>
+<li><p><strong>Rename Generated Binaries</strong>:<br />
+Rename the binaries in the <code>bin/</code> folder to match the
+required binaries for the specific TSV as described in the
+<strong>Required Binaries</strong> section under <a
+href="#reference-use-cases-for-mp21-dk-board-visualwatchdog-project">Reference
+Use Cases for MP21-DK Board (VisualWatchdog Project)</a>.</p></li>
+</ol>
+<hr />
+<h2
+id="reference-use-cases-for-mp21-dk-board-visualwatchdog-project">Reference
+Use Cases for MP21-DK Board (VisualWatchdog Project)</h2>
+<h3
+id="flashlayout_sdcard_stm32mp215f-dk-cm33tdcid-ostl-optee.tsv-sdcard_sdcard-boot-mode">1.
+FlashLayout_sdcard_stm32mp215f-dk-cm33tdcid-ostl-optee.tsv
+(sdcard_sdcard Boot Mode)</h3>
+<p><strong>Required Binaries</strong>:<br />
+- <code>bl2-stm32mp215f-dk-cm33tdcid-ostl-sdcard.stm32</code><br />
+-
+<code>ddr_phy-stm32mp215f-dk-cm33tdcid-ostl-sdcard_Signed.bin</code><br />
+-
+<code>tfm-visualwatchdog-stm32mp215f-dk-cm33tdcid-ostl-sdcard-sdcard_s_ns_Signed.bin</code></p>
+<p><strong>Required CMake Options</strong>:</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_BOOT_DEV=sdmmc1</span>  <span class="co"># SD card</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts</span></span></code></pre></div>
+</body>
+</html>

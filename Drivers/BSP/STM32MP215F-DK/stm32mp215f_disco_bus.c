@@ -270,7 +270,7 @@ int32_t BSP_I2C1_Init(void)
         osSemaphoreDef(BSP_I2C_SEM);
         BspI2cSemaphore = osSemaphoreCreate(osSemaphore(BSP_I2C_SEM), 1);
 
-        if(BspI2cSemaphore == NULL)
+        if (BspI2cSemaphore == NULL)
         {
           ret = BSP_ERROR_UNKNOWN_FAILURE;
         }
@@ -652,13 +652,13 @@ int32_t BSP_I2C2_Init(void)
     I2c2InitCounter++;
 
     /* Acquire the resources */
-    if (ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(91)) == RESMGR_STATUS_ACCESS_OK)
+    if (!IS_BUS_I2C2_SCL_GPIO_CLK_ENABLED())
     {
       /* Enable SCL GPIO clock */
       BUS_I2C2_SCL_GPIO_CLK_ENABLE();
     }
 
-    if (ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(93)) == RESMGR_STATUS_ACCESS_OK)
+    if (!IS_BUS_I2C2_SDA_GPIO_CLK_ENABLED())
     {
       /* Enable SDA GPIO clock */
       BUS_I2C2_SDA_GPIO_CLK_ENABLE();
@@ -689,7 +689,7 @@ int32_t BSP_I2C2_Init(void)
         osSemaphoreDef(BSP_I2C_SEM);
         BspI2cSemaphore = osSemaphoreCreate(osSemaphore(BSP_I2C_SEM), 1);
 
-        if(BspI2cSemaphore == NULL)
+        if (BspI2cSemaphore == NULL)
         {
           ret = BSP_ERROR_UNKNOWN_FAILURE;
         }
@@ -1109,7 +1109,7 @@ int32_t BSP_I2C3_Init(void)
         osSemaphoreDef(BSP_I2C_SEM);
         BspI2cSemaphore = osSemaphoreCreate(osSemaphore(BSP_I2C_SEM), 1);
 
-        if(BspI2cSemaphore == NULL)
+        if (BspI2cSemaphore == NULL)
         {
           ret = BSP_ERROR_UNKNOWN_FAILURE;
         }
@@ -2069,9 +2069,16 @@ static void I2C2_MspInit(I2C_HandleTypeDef *hI2c)
 
   /*** Configure the GPIOs ***/
   /* Enable SCL GPIO clock */
-  BUS_I2C2_SCL_GPIO_CLK_ENABLE();
+  if (!IS_BUS_I2C2_SCL_GPIO_CLK_ENABLED())
+  {
+    BUS_I2C2_SCL_GPIO_CLK_ENABLE();
+  }
+
   /* Enable SDA GPIO clock */
-  BUS_I2C2_SDA_GPIO_CLK_ENABLE();
+  if (!IS_BUS_I2C2_SDA_GPIO_CLK_ENABLED())
+  {
+    BUS_I2C2_SDA_GPIO_CLK_ENABLE();
+  }
 
   /*** Configure the GPIOs ***/
 

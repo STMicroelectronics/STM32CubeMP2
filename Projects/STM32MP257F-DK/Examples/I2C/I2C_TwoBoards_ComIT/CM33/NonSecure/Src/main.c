@@ -106,8 +106,12 @@ int main(void)
 
   if (IS_DEVELOPER_BOOT_MODE())
   {
-	  /* Configure the system clock */
-	  SystemClock_Config();
+    /* Configure the system clock */
+    SystemClock_Config();
+  }
+  else
+  {
+    SystemCoreClockUpdate();
   }
 
   /* Configure LED3 */

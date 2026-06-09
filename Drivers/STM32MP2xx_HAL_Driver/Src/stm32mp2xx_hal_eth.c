@@ -441,12 +441,12 @@ HAL_StatusTypeDef HAL_ETH_Init(ETH_HandleTypeDef *heth)
                              ((uint32_t)(heth->Init.MACAddr[1]) << 8) | (uint32_t)heth->Init.MACAddr[0]);
 
   /* Disable Rx MMC Interrupts */
-  SET_BIT(heth->Instance->MMCRXIMR, ETH_MMCRXIMR_RXLPITRCIM | ETH_MMCRXIMR_RXLPIUSCIM | \
-          ETH_MMCRXIMR_RXUCGPIM | ETH_MMCRXIMR_RXALGNERPIM | ETH_MMCRXIMR_RXCRCERPIM);
+  SET_BIT(heth->Instance->MMC_RX_INTERRUPT_MASK, ETH_MMC_RX_INTERRUPT_MASK_RXLPITRCIM | ETH_MMC_RX_INTERRUPT_MASK_RXLPIUSCIM | \
+          ETH_MMC_RX_INTERRUPT_MASK_RXUCGPIM | ETH_MMC_RX_INTERRUPT_MASK_RXALGNERPIM | ETH_MMC_RX_INTERRUPT_MASK_RXCRCERPIM);
 
   /* Disable Tx MMC Interrupts */
-  SET_BIT(heth->Instance->MMCTXIMR, ETH_MMCTXIMR_TXLPITRCIM | ETH_MMCTXIMR_TXLPIUSCIM | \
-          ETH_MMCTXIMR_TXGPKTIM | ETH_MMCTXIMR_TXMCOLGPIM | ETH_MMCTXIMR_TXSCOLGPIM);
+  SET_BIT(heth->Instance->MMC_TX_INTERRUPT_MASK, ETH_MMC_TX_INTERRUPT_MASK_TXLPITRCIM | ETH_MMC_TX_INTERRUPT_MASK_TXLPIUSCIM | \
+          ETH_MMC_TX_INTERRUPT_MASK_TXGPKTIM | ETH_MMC_TX_INTERRUPT_MASK_TXMCOLGPIM | ETH_MMC_TX_INTERRUPT_MASK_TXSCOLGPIM);
 
   heth->ErrorCode = HAL_ETH_ERROR_NONE;
   heth->gState = HAL_ETH_STATE_READY;
@@ -2317,8 +2317,8 @@ HAL_StatusTypeDef HAL_ETH_GetMACConfig(const ETH_HandleTypeDef *heth, ETH_MACCon
                                     ? ENABLE : DISABLE;
   macconf->ExtendedInterPacketGapVal = READ_BIT(heth->Instance->MACECR, ETH_MACECR_EIPG) >> 25;
 
-  macconf->ProgrammableWatchdog = ((READ_BIT(heth->Instance->MACWTR, ETH_MACWTR_PWE) >> 8) > 0U) ? ENABLE : DISABLE;
-  macconf->WatchdogTimeout = READ_BIT(heth->Instance->MACWTR, ETH_MACWTR_WTO);
+  macconf->ProgrammableWatchdog = ((READ_BIT(heth->Instance->MACWJBTR, ETH_MACWJBTR_PWE) >> 8) > 0U) ? ENABLE : DISABLE;
+  macconf->WatchdogTimeout = READ_BIT(heth->Instance->MACWJBTR, ETH_MACWJBTR_WTO);
 
   macconf->TransmitFlowControl = ((READ_BIT(heth->Instance->MACQ0TXFCR,
                                             ETH_MACQ0TXFCR_TFE) >> 1) > 0U) ? ENABLE : DISABLE;
@@ -2853,7 +2853,7 @@ static void ETH_SetMACConfig(ETH_HandleTypeDef *heth, const ETH_MACConfigTypeDef
                macconf->WatchdogTimeout);
 
   /* Write to MACWTR */
-  MODIFY_REG(heth->Instance->MACWTR, ETH_MACWTR_MASK, macregval);
+  MODIFY_REG(heth->Instance->MACWJBTR, ETH_MACWTR_MASK, macregval);
 
   /*------------------------ MACRXQC0R Configuration --------------------*/
   MODIFY_REG(heth->Instance->MACRXQC0R, ETH_MACRXQC0R_MASK, ETH_RECEIVEQUEUE_ENABLE_ALL);
@@ -2989,7 +2989,7 @@ static void ETH_MACDMAConfig(ETH_HandleTypeDef *heth)
   macDefaultConf.UnicastPausePacketDetect = DISABLE;
   macDefaultConf.UnicastSlowProtocolPacketDetect = DISABLE;
   macDefaultConf.Watchdog = ENABLE;
-  macDefaultConf.WatchdogTimeout =  ETH_MACWTR_WTO_2KB;
+  macDefaultConf.WatchdogTimeout =  ETH_MACWJBTR_WTO_2KB;
   macDefaultConf.ZeroQuantaPause = ENABLE;
 
   /* MAC default configuration */

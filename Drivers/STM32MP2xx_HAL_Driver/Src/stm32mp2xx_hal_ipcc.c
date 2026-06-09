@@ -995,7 +995,6 @@ void IPCC_Reset_Register(IPCC_HandleTypeDef *hipcc)
   */
 IPCC_CommonTypeDef *IPCC_GetCurrentInstance(const IPCC_HandleTypeDef *hipcc)
 {
-
 #if defined(IPCC1)
   if (hipcc->Instance == IPCC1)
   {
@@ -1027,27 +1026,25 @@ IPCC_CommonTypeDef *IPCC_GetCurrentInstance(const IPCC_HandleTypeDef *hipcc)
   */
 IPCC_CommonTypeDef *IPCC_GetOtherInstance(const IPCC_HandleTypeDef *hipcc)
 {
-  const IPCC_CommonTypeDef *currentInstance = IPCC_GetCurrentInstance(hipcc);
-
-#if defined (IPCC1)
-  if (currentInstance == IPCC1_C1)
+#if defined(IPCC1)
+  if (hipcc->Instance == IPCC1)
   {
-    return  IPCC1_C2;
-  }
-  else
-  {
+#if defined(CORE_CM33)
     return IPCC1_C1;
+#else   /* CORE_CM33 */
+    return IPCC1_C2;
+#endif  /* CORE_CM33 */
   }
 #endif /* IPCC1 */
 
-#if defined (IPCC2)
-  if (currentInstance == IPCC2_C1)
+#if  defined(IPCC2)
+  if (hipcc->Instance == IPCC2)
   {
-    return IPCC2_C2;
-  }
-  else
-  {
+#if defined (CORE_CA35) || defined(CORE_CM33)
     return IPCC2_C1;
+#else   /* (CORE_CA35) || (CORE_CM33) */
+    return IPCC2_C2;
+#endif  /* (CORE_CA35) || (CORE_CM33) */
   }
 #endif /* IPCC2 */
 

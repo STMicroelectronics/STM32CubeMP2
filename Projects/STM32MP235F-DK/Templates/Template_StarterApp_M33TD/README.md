@@ -1,43 +1,43 @@
-# Template_StarterApp_M33TD  Application
+# Template_StarterApp_M33TD Template Project
 
 ---
 
 ## Application Description
 
-The Template_StarterApp_M33TD  is to highlight the capabilities of the STM32MP2 platform for M33TDCID profile, showcasing the M33 as the primary CPU and the A35 as a high-performance coprocessor. This application emphasizes the ability to achieve a fast Cortex-M boot, bypassing the Cortex-A and the associated OpenSTLinux solution, which typically requires several seconds to initialize. By leveraging this approach, the system can quickly execute critical tasks in the non-secure environment while maintaining flexibility for high-performance operations on the A35. This project enables the Non‑Secure (NS) Application Manager functionality for the Cortex‑M33‑TD flavor. It integrates the common utility stack `Utilities/M33TD_NSAppCore` for portable tasks and thin driver abstractions, so projects can reuse task logic while keeping board specifics in project drivers (typically under `CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/`).
+`Template_StarterApp_M33TD` is the STM32MP235F-DK starter template for a Cortex-M33 Non-Secure application built on `Utilities/M33TD_NSAppCore`.
+
+It provides a utility-integrated baseline: the required NSAppCore core tasks stay enabled, a simple UserApp task is added by default, and project-specific drivers remain local to the template under `CM33/NonSecure/FREERTOS/M33TD_NSAppCore/AppDriver/`.
+
+The intent is to give a clean starting point for a new M33TD project with the minimal common bootstrap, TF-M integration, watchdog supervision, and A35 lifecycle handling needed to bring up the full M33TD-OSTL ecosystem.
 
 ---
 
-## Key Features
+## Default Task Set
 
-- **FreeRTOS Multitasking**: The application is built on FreeRTOS, enabling multitasking in the non-secure environment.
-- **LED Blinking**: Uses the UserApp task to blink an LED every second.
-- **A35 Coprocessor Management**: Uses the RemoteProc task to manage the A35 core lifecycle via TF-M secure services.
-- **Interrupt Handling**: Configures the EXTI line to receive interrupts on NVIC line 4 of the M33 on the event IWDG RST.
-- **Template for NS App Manager**: Uses `M33TD_NSAppCore` stack as the baseline to implement the NS Application Manager with reusable tasks (Logger, RemoteProc, SCMI Manager, WdgMonitor, UserApp).
+`NSCoreApp_Init()` starts the required utility core tasks plus the template's example UserApp task:
 
 ---
-
-## Purpose
-
-This is a FreeRTOS-based multitask application running in the NS processing environment, while the TFM secure application operates in the secure processing environment. The secure application acts as a client to process secure services requested by both the A35 and M33 NS.
-
-As a Template, this project demonstrates how to implement the StarterApp functionality (Non‑Secure Application Manager) around the `Utilities/M33TD_NSAppCore` stack. The `NSCoreApp_Init()` bootstrap configures the stack and starts the enabled tasks below:
 
 1. **NSCoreApp (Bootstrap)**:
    - Initializes the common stack and starts the enabled tasks.
 
 2. **Logger Task**:
-   - Centralized logging, with optional real-time output.
+   - Centralized logging, with optional real-time debug output.
 
-3. **UserApp Task**:
-   - Example application task (LED activity) to validate system liveness.
+3. **SCMI Manager Task**:
+   - Handles SCMI notifications and related TF-M forwarding.
 
 4. **RemoteProc Task**:
-   - Manages the A35 coprocessor lifecycle via TF-M secure services (optional auto-start, status retrieval, recovery).
+   - Manages the A35 coprocessor lifecycle through TF-M secure services.
+   - Auto-start at boot is controlled by `REMOTE_PROC_AUTO_START`.
 
-5. **SCMI Manager Task**:
-   - Handles SCMI notifications and related TF-M forwarding.
+5. **Watchdog Monitor Task**:
+   - Supervises watchdog-related health handling.
+
+6. **UserApp Task**:
+   - Provides the example project-side application hook enabled by default in the template.
+
+Additional task enables are configured in the project headers and can be adjusted as the new application grows.
 
 6. **Watchdog Monitor Task**:
    - Supervises system health and watchdog-related handling.
@@ -52,9 +52,9 @@ As a Template, this project demonstrates how to implement the StarterApp functio
 - **ST-Link Connection**: Connect the ST-Link cable to the PC USB port to display traces.
 
 ### Software Versions
-- **Trusted Firmware-M (TFM)**: Refer to the [Trusted Firmware-M wiki](https://wiki.st.com/stm32mpu/Category:Trusted_Firmware-M) for recommended versions and integration details.
-- **External Device Tree (externalDT)**: See the [External Device Tree wiki](https://wiki.st.com/stm32mpu/External_device_tree) for guidance on obtaining and using external DT sources.
-- **STM32CubeIDE**: For supported IDE versions and ecosystem information, refer the [STM32 MPU wiki](https://wiki.st.com/stm32mpu/).
+- **Trusted Firmware-M (TFM)**: Refer to the [Trusted Firmware-M wiki](https://wiki.st.com/stm32mpu/wiki/Category:Trusted_Firmware-M) for recommended versions and integration details.
+- **External Device Tree (externalDT)**: See the [External Device Tree wiki](https://wiki.st.com/stm32mpu/wiki/External_device_tree) for guidance on obtaining and using external DT sources.
+- **STM32CubeIDE**: For supported IDE versions and ecosystem information, refer the [STM32 MPU wiki](https://wiki.st.com/stm32mpu/wiki/).
 
 ---
 
@@ -143,7 +143,7 @@ Template_StarterApp_M33TD
 │   └── Template_StarterApp_M33TD_CM33_trusted-firmware-m (Secure CMake project)
 ```
 
-**Note**: Refer to [this wiki](https://wiki.st.com/stm32mpu/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#) for instructions on importing a CMake project.
+**Note**: Refer to [this wiki](https://wiki.st.com/stm32mpu/wiki/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE#) for instructions on importing a CMake project.
 
 ### Build Procedure
 
@@ -334,7 +334,7 @@ Security, TFM, Secure, SD Card, Non-Secure
   Use a Type-C cable to connect the device to the Type-C connector.
 
 5. **Flash the Image**  
-  Refer to the [STM32 MPU wiki](https://wiki.st.com/stm32mpu/) for detailed flashing instructions.
+  Refer to the [STM32 MPU wiki](https://wiki.st.com/stm32mpu/wiki/) for detailed flashing instructions.
 
 6. **Perform a Power-On Reset**  
   After flashing, perform a power-on reset to complete the process.

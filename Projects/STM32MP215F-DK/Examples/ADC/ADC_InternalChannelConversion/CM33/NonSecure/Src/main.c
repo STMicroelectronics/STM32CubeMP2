@@ -171,6 +171,10 @@ int main(void)
       BSP_LED_Off(LED1);
     }
   }
+  else
+  {
+    SystemCoreClockUpdate();
+  }
 
   /* USER CODE BEGIN Init */
 

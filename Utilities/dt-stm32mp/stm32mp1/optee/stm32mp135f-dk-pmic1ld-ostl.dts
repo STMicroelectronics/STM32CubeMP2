@@ -233,7 +233,7 @@
 
 				lp-stop {
 					regulator-on-in-suspend;
-					regulator-suspend-microvolt = <900000>;
+					regulator-suspend-microvolt = <1250000>;
 				};
 				lplv-stop {
 					regulator-on-in-suspend;
@@ -254,9 +254,11 @@
 				regulator-over-current-protection;
 
 				lp-stop {
+					regulator-on-in-suspend;
 					regulator-suspend-microvolt = <1250000>;
 				};
 				lplv-stop {
+					regulator-on-in-suspend;
 					regulator-suspend-microvolt = <900000>;
 				};
 				standby-ddr-sr {

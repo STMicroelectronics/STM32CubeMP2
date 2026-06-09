@@ -274,9 +274,9 @@ HAL_StatusTypeDef HAL_ETHEx_SetL3FilterConfig(ETH_HandleTypeDef *heth, uint32_t 
       /* Set Bits[63:32] of 128-bit IP addr */
       WRITE_REG(heth->Instance->MACL3A10R, pL3FilterConfig->Ip6Addr[1]);
       /* update Bits[95:64] of 128-bit IP addr */
-      WRITE_REG(heth->Instance->MACL3A20, pL3FilterConfig->Ip6Addr[2]);
+      WRITE_REG(heth->Instance->MACL3A20R, pL3FilterConfig->Ip6Addr[2]);
       /* update Bits[127:96] of 128-bit IP addr */
-      WRITE_REG(heth->Instance->MACL3A30, pL3FilterConfig->Ip6Addr[3]);
+      WRITE_REG(heth->Instance->MACL3A30R, pL3FilterConfig->Ip6Addr[3]);
     }
     else /* IPv4 protocol is selected */
     {
@@ -354,8 +354,8 @@ HAL_StatusTypeDef HAL_ETHEx_GetL3FilterConfig(const ETH_HandleTypeDef *heth, uin
     {
       WRITE_REG(pL3FilterConfig->Ip6Addr[0], heth->Instance->MACL3A00R);
       WRITE_REG(pL3FilterConfig->Ip6Addr[1], heth->Instance->MACL3A10R);
-      WRITE_REG(pL3FilterConfig->Ip6Addr[2], heth->Instance->MACL3A20);
-      WRITE_REG(pL3FilterConfig->Ip6Addr[3], heth->Instance->MACL3A30);
+      WRITE_REG(pL3FilterConfig->Ip6Addr[2], heth->Instance->MACL3A20R);
+      WRITE_REG(pL3FilterConfig->Ip6Addr[3], heth->Instance->MACL3A30R);
     }
     else
     {

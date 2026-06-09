@@ -522,7 +522,7 @@
 #else
 #define GIC_PRIO_BITS                 5U
 #endif /* defined(A35_NON_SECURE) */
-
+#define GIC_PRIORITY(x)               ((x)<<(8U-GIC_PRIO_BITS))
 #include "core_ca.h"
 
 /**
@@ -1375,232 +1375,396 @@ typedef struct
 
 /**
   * @brief Ethernet MAC
-   * COPY from STM32MP13 - IPXACT for MP2 NOT YET AVAILABLE
   */
 typedef struct
 {
-  __IO uint32_t MACCR;            /*!< Operating mode configuration register                      Address offset: 0x0000 */
-  __IO uint32_t MACECR;           /*!< Extended operating mode configuration register             Address offset: 0x0004 */
-  __IO uint32_t MACPFR;           /*!< Packet filtering control register                          Address offset: 0x0008 */
-  __IO uint32_t MACWTR;           /*!< Watchdog timeout register                                  Address offset: 0x000C */
-  __IO uint32_t MACHT0R;          /*!< Hash Table 0 register                                      Address offset: 0x0010 */
-  __IO uint32_t MACHT1R;          /*!< Hash Table 1 register                                      Address offset: 0x0014 */
-       uint32_t RESERVED0[14];    /*!< Reserved                                                   Address offset: 0x0018-0x004C */
-  __IO uint32_t MACVTCR;          /*!< VLAN tag control register                                  Address offset: 0x0050 */
-  __IO uint32_t MACVTDR;          /*!< VLAN tag data register                                     Address offset: 0x0054 */
-  __IO uint32_t MACVHTR;          /*!< VLAN Hash table register                                   Address offset: 0x0058 */
-       uint32_t RESERVED2;        /*!< Reserved                                                   Address offset: 0x005C */
-  __IO uint32_t MACVIR;           /*!< VLAN inclusion register                                    Address offset: 0x0060 */
-  __IO uint32_t MACIVIR;          /*!< Inner VLAN inclusion register                              Address offset: 0x0064 */
-       uint32_t RESERVED3[2];     /*!< Reserved                                                   Address offset: 0x0068-0x006C */
-  __IO uint32_t MACQ0TXFCR;       /*!< Tx Queue 0 flow control register                           Address offset: 0x0070 */
-       uint32_t RESERVED4[7];     /*!< Reserved                                                   Address offset: 0x0074-0x008C */
-  __IO uint32_t MACRXFCR;         /*!< Rx flow control register                                   Address offset: 0x0090 */
-       uint32_t MACRXQCR;         /*!< Rx Queue control register                                  Address offset: 0x0094 */
-  __IO uint32_t RESERVED5[2];     /*!< Reserved                                                   Address offset: 0x0098-0x009C */
-  __IO uint32_t MACRXQC0R;        /*!< Rx queue control 0 register                                Address offset: 0x00A0 */
-  __IO uint32_t MACRXQC1R;        /*!< Rx queue control 1 register                                Address offset: 0x00A4 */
-  __IO uint32_t MACRXQC2R;        /*!< Rx queue control 2 register                                Address offset: 0x00A8 */
-       uint32_t RESERVED6;        /*!< Reserved                                                   Address offset: 0x00AC */
-  __IO uint32_t MACISR;           /*!< Interrupt status register                                  Address offset: 0x00B0 */
-  __IO uint32_t MACIER;           /*!< Interrupt enable register                                  Address offset: 0x00B4 */
-  __IO uint32_t MACRXTXSR;        /*!< Rx Tx status register                                      Address offset: 0x00B8 */
-       uint32_t RESERVED7;        /*!< Reserved                                                   Address offset: 0x00BC */
-  __IO uint32_t MACPCSR;          /*!< PMT control status register                                Address offset: 0x00C0 */
-  __IO uint32_t MACRWKPFR;        /*!< Remote wakeup packet filter register                       Address offset: 0x00C4 */
-       uint32_t RESERVED8[2];     /*!< Reserved                                                   Address offset: 0x00C8-0x00CC */
-  __IO uint32_t MACLCSR;          /*!< LPI control status register                                Address offset: 0x00D0 */
-  __IO uint32_t MACLTCR;          /*!< LPI timers control register                                Address offset: 0x00D4 */
-  __IO uint32_t MACLETR;          /*!< LPI entry timer register                                   Address offset: 0x00D8 */
-  __IO uint32_t MAC1USTCR;        /*!< microsecond-tick counter register                          Address offset: 0x00DC */
-       uint32_t RESERVED9[6];     /*!< Reserved                                                   Address offset: 0x00E0-0x00F4 */
-  __IO uint32_t MACPHYCSR;        /*!< PHYIF control status register                              Address offset: 0x00F8 */
-       uint32_t RESERVED10[5];    /*!< Reserved                                                   Address offset: 0x00FC-0x010C */
-  __IO uint32_t MACVR;            /*!< Version register                                           Address offset: 0x0110 */
-  __IO uint32_t MACDR;            /*!< Debug register                                             Address offset: 0x0114 */
-       uint32_t RESERVED11;       /*!< Reserved                                                   Address offset: 0x0118 */
-  __IO uint32_t MACHWF0R;         /*!< HW feature 0 register                                      Address offset: 0x011C */
-  __IO uint32_t MACHWF1R;         /*!< HW feature 1 register                                      Address offset: 0x0120 */
-  __IO uint32_t MACHWF2R;         /*!< HW feature 2 register                                      Address offset: 0x0124 */
-  __IO uint32_t MACHWF3R;         /*!< HW feature 3 register                                      Address offset: 0x0128 */
-       uint32_t RESERVED12[53];   /*!< Reserved                                                   Address offset: 0x012C-0x01FC */
-  __IO uint32_t MACMDIOAR;        /*!< MDIO address register                                      Address offset: 0x0200 */
-  __IO uint32_t MACMDIODR;        /*!< MDIO data register                                         Address offset: 0x0204 */
-       uint32_t RESERVED13[2];    /*!< Reserved                                                   Address offset: 0x0208-0x020C */
-  __IO uint32_t MACARPAR;         /*!< ARP address register                                       Address offset: 0x0210 */
-       uint32_t RESERVED14[7];    /*!< Reserved                                                   Address offset: 0x0214-0x022C */
-  __IO uint32_t MACCSRSWCR;       /*!< CSR software control register                              Address offset: 0x0230 */
-       uint32_t RESERVED15[51];   /*!< Reserved                                                   Address offset: 0x0234-0x02FC */
-  __IO uint32_t MACA0HR;          /*!< MAC Address 0 high register                                Address offset: 0x0300 */
-  __IO uint32_t MACA0LR;          /*!< MAC Address 0 low register                                 Address offset: 0x0304 */
-  __IO uint32_t MACA1HR;          /*!< MAC Address 1 high register                                Address offset: 0x0308 */
-  __IO uint32_t MACA1LR;          /*!< MAC Address 1 low register                                 Address offset: 0x030C */
-  __IO uint32_t MACA2HR;          /*!< MAC Address 2 high register                                Address offset: 0x0310 */
-  __IO uint32_t MACA2LR;          /*!< MAC Address 2 low register                                 Address offset: 0x0314 */
-  __IO uint32_t MACA3HR;          /*!< MAC Address 3 high register                                Address offset: 0x0318 */
-  __IO uint32_t MACA3LR;          /*!< MAC Address 3 low register                                 Address offset: 0x031C */
-       uint32_t RESERVED16[248];  /*!< Reserved                                                   Address offset: 0x0320-0x06FC */
-  __IO uint32_t MMCCR;            /*!< MMC control register                                       Address offset: 0x0700 */
-  __IO uint32_t MMCRXIR;          /*!< MMC Rx interrupt register                                  Address offset: 0x704 */
-  __IO uint32_t MMCTXIR;          /*!< MMC Tx interrupt register                                  Address offset: 0x708 */
-  __IO uint32_t MMCRXIMR;         /*!< MMC Rx interrupt mask register                             Address offset: 0x70C */
-  __IO uint32_t MMCTXIMR;         /*!< MMC Tx interrupt mask register                             Address offset: 0x710 */
-       uint32_t RESERVED17[14];   /*!< Reserved                                                   Address offset: 0x0714-0x0748 */
-  __IO uint32_t MMCTXSCGPR;       /*!< Tx single collision good packets register                  Address offset: 0x74C */
-  __IO uint32_t MMCTXMCGPR;       /*!< Tx multiple collision good packets register                Address offset: 0x750 */
-       uint32_t RESERVED18[5];    /*!< Reserved                                                   Address offset: 0x0754-0x0764 */
-  __IO uint32_t MMCTXPCGR;        /*!< Tx packet count good register                              Address offset: 0x768 */
-       uint32_t RESERVED19[10];   /*!< Reserved                                                   Address offset: 0x076C-0x0790 */
-  __IO uint32_t MMCRXCRCEPR;      /*!< Rx CRC error packets register                              Address offset: 0x794 */
-  __IO uint32_t MMCRXAEPR;        /*!< Rx alignment error packets register                        Address offset: 0x798 */
-       uint32_t RESERVED20[10];   /*!< Reserved                                                   Address offset: 0x079C-0x07C0 */
-  __IO uint32_t MMCRXUPGR;        /*!< Rx unicast packets good register                           Address offset: 0x7C4 */
-       uint32_t RESERVED21[9];    /*!< Reserved                                                   Address offset: 0x07C8-0x07E8 */
-  __IO uint32_t MMCTXLPIMSTR;     /*!< Tx LPI microsecond timer register                          Address offset: 0x7EC */
-  __IO uint32_t MMCTXLPITCR;      /*!< Tx LPI transition counter register                         Address offset: 0x7F0 */
-  __IO uint32_t MMCRXLPIMSTR;     /*!< Rx LPI microsecond counter register                        Address offset: 0x7F4 */
-  __IO uint32_t MMCRXLPITCR;      /*!< Rx LPI transition counter register                         Address offset: 0x7F8 */
-       uint32_t RESERVED22[65];   /*!< Reserved                                                   Address offset: 0x07FC-0x08FC */
-  __IO uint32_t MACL3L4C0R;       /*!< L3 and L4 control 0 register                               Address offset: 0x0900 */
-  __IO uint32_t MACL4A0R;         /*!< Layer4 address filter 0 register                           Address offset: 0x0904 */
-       uint32_t RESERVED23[2];    /*!< Reserved                                                   Address offset: 0x0908-0x090C */
-  __IO uint32_t MACL3A00R;        /*!< Layer 3 Address 0 filter 0 register                        Address offset: 0x0910 */
-  __IO uint32_t MACL3A10R;        /*!< Layer3 address 1 filter 0 register                         Address offset: 0x0914 */
-  __IO uint32_t MACL3A20;         /*!< Layer3 Address 2 filter 0 register                         Address offset: 0x0918 */
-  __IO uint32_t MACL3A30;         /*!< Layer3 Address 3 filter 0 register                         Address offset: 0x091C */
-       uint32_t RESERVED24[4];    /*!< Reserved                                                   Address offset: 0x0920-0x092C */
-  __IO uint32_t MACL3L4C1R;       /*!< L3 and L4 control 1 register                               Address offset: 0x0930 */
-  __IO uint32_t MACL4A1R;         /*!< Layer 4 address filter 1 register                          Address offset: 0x0934 */
-       uint32_t RESERVED25[2];    /*!< Reserved                                                   Address offset: 0x0938-0x093C */
-  __IO uint32_t MACL3A01R;        /*!< Layer3 address 0 filter 1 Register                         Address offset: 0x0940 */
-  __IO uint32_t MACL3A11R;        /*!< Layer3 address 1 filter 1 register                         Address offset: 0x0944 */
-  __IO uint32_t MACL3A21R;        /*!< Layer3 address 2 filter 1 Register                         Address offset: 0x0948 */
-  __IO uint32_t MACL3A31R;        /*!< Layer3 address 3 filter 1 register                         Address offset: 0x094C */
-       uint32_t RESERVED26[108];  /*!< Reserved                                                   Address offset: 0x0950-0x0AFC */
-  __IO uint32_t MACTSCR;          /*!< Timestamp control Register                                 Address offset: 0x0B00 */
-  __IO uint32_t MACSSIR;          /*!< Sub-second increment register                              Address offset: 0x0B04 */
-  __IO uint32_t MACSTSR;          /*!< System time seconds register                               Address offset: 0x0B08 */
-  __IO uint32_t MACSTNR;          /*!< System time nanoseconds register                           Address offset: 0x0B0C */
-  __IO uint32_t MACSTSUR;         /*!< System time seconds update register                        Address offset: 0x0B10 */
-  __IO uint32_t MACSTNUR;         /*!< System time nanoseconds update register                    Address offset: 0x0B14 */
-  __IO uint32_t MACTSAR;          /*!< Timestamp addend register                                  Address offset: 0x0B18 */
-       uint32_t RESERVED27;       /*!< Reserved                                                   Address offset: 0x0B1C */
-  __IO uint32_t MACTSSR;          /*!< Timestamp status register                                  Address offset: 0x0B20 */
-       uint32_t RESERVED28[3];    /*!< Reserved                                                   Address offset: 0x0B24-0x0B2C */
-  __IO uint32_t MACTXTSSNR;       /*!< Tx timestamp status nanoseconds register                   Address offset: 0x0B30 */
-  __IO uint32_t MACTXTSSSR;       /*!< Tx timestamp status seconds register                       Address offset: 0x0B34 */
-       uint32_t RESERVED29[2];    /*!< Reserved                                                   Address offset: 0x0B38-0x0B3C */
-  __IO uint32_t MACACR;           /*!< Auxiliary control register                                 Address offset: 0x0B40 */
-       uint32_t RESERVED30;       /*!< Reserved                                                   Address offset: 0x0B44 */
-  __IO uint32_t MACATSNR;         /*!< Auxiliary timestamp nanoseconds register                   Address offset: 0x0B48 */
-  __IO uint32_t MACATSSR;         /*!< Auxiliary timestamp seconds register                       Address offset: 0x0B4C */
-  __IO uint32_t MACTSIACR;        /*!< Timestamp Ingress asymmetric correction register           Address offset: 0x0B50 */
-  __IO uint32_t MACTSEACR;        /*!< Timestamp Egress asymmetric correction register            Address offset: 0x0B54 */
-  __IO uint32_t MACTSICNR;        /*!< Timestamp Ingress correction nanosecond register           Address offset: 0x0B58 */
-  __IO uint32_t MACTSECNR;        /*!< Timestamp Egress correction nanosecond register            Address offset: 0x0B5C */
-       uint32_t RESERVED31[4];    /*!< Reserved                                                   Address offset: 0x0B60-0x0B6C */
-  __IO uint32_t MACPPSCR;         /*!< PPS control register [alternate]                           Address offset: 0x0B70 */
-       uint32_t RESERVED32[3];    /*!< Reserved                                                   Address offset: 0x0B74-0x0B7C */
-  __IO uint32_t MACPPSTTSR;       /*!< PPS target time seconds register                           Address offset: 0x0B80 */
-  __IO uint32_t MACPPSTTNR;       /*!< PPS target time nanoseconds register                       Address offset: 0x0B84 */
-  __IO uint32_t MACPPSIR;         /*!< PPS interval register                                      Address offset: 0x0B88 */
-  __IO uint32_t MACPPSWR;         /*!< PPS width register                                         Address offset: 0x0B8C */
-       uint32_t RESERVED33[12];   /*!< Reserved                                                   Address offset: 0x0B90-0x0BBC */
-  __IO uint32_t MACPOCR;          /*!< PTP Offload control register                               Address offset: 0x0BC0 */
-  __IO uint32_t MACSPI0R;         /*!< PTP Source Port Identity 0 Register                        Address offset: 0x0BC4 */
-  __IO uint32_t MACSPI1R;         /*!< PTP Source port identity 1 register                        Address offset: 0x0BC8 */
-  __IO uint32_t MACSPI2R;         /*!< PTP Source port identity 2 register                        Address offset: 0x0BCC */
-  __IO uint32_t MACLMIR;          /*!< Log message interval register                              Address offset: 0x0BD0 */
-       uint32_t RESERVED34[11];   /*!< Reserved                                                   Address offset: 0x0BD4-0x0BFC */
-  __IO uint32_t MTLOMR;           /*!< Operating mode Register                                    Address offset: 0x0C00 */
-       uint32_t RESERVED35[7];    /*!< Reserved                                                   Address offset: 0x0C04-0x0C1C */
-  __IO uint32_t MTLISR;           /*!< Interrupt status Register                                  Address offset: 0x0C20 */
-       uint32_t RESERVED36[55];   /*!< Reserved                                                   Address offset: 0x0C24-0x0CFC */
-  __IO uint32_t MTLTXQ0OMR;       /*!< Tx queue 0 operating mode Register                         Address offset: 0x0D00 */
-  __IO uint32_t MTLTXQ0UR;        /*!< Tx queue 0 underflow register                              Address offset: 0x0D04 */
-  __IO uint32_t MTLTXQ0DR;        /*!< Tx queue 0 debug Register                                  Address offset: 0x0D08 */
-       uint32_t RESERVED37[2];    /*!< Reserved                                                   Address offset: 0x0D0C-0x0D10 */
-  __IO uint32_t MTLTXQ0ESR;       /*!< Tx queue 0 ETS status Register                             Address offset: 0x0D14 */
-  __IO uint32_t MTLTXQ0QWR;       /*!< Tx queue 0 quantum weight Register                         Address offset: 0x0D18 */
-       uint32_t RESERVED38[4];    /*!< Reserved                                                   Address offset: 0x0D1C-0x0D28 */
-  __IO uint32_t MTLQ0ICSR;        /*!< Queue 0 interrupt control status Register                  Address offset: 0x0D2C */
-  __IO uint32_t MTLRXQ0OMR;       /*!< Rx queue 0 operating mode register                         Address offset: 0x0D30 */
-  __IO uint32_t MTLRXQ0MPOCR;     /*!< Rx queue 0 missed packet and overflow counter register     Address offset: 0x0D34 */
-  __IO uint32_t MTLRXQ0DR;        /*!< Rx queue 0 debug register                                  Address offset: 0x0D38 */
-  __IO uint32_t MTLRXQ0CR;        /*!< Rx queue 0 control register                                Address offset: 0x0D3C */
-  __IO uint32_t MTLTXQ1OMR;       /*!< Tx queue 1 operating mode Register                         Address offset: 0x0D40 */
-  __IO uint32_t MTLTXQ1UR;        /*!< Tx queue 1 underflow register                              Address offset: 0x0D44 */
-  __IO uint32_t MTLTXQ1DR;        /*!< Tx queue 1 debug Register                                  Address offset: 0x0D48 */
-       uint32_t RESERVED39;       /*!< Reserved                                                   Address offset: 0x0D4C */
-  __IO uint32_t MTLTXQ1ECR;       /*!< Tx queue 1 ETS control Register                            Address offset: 0x0D50 */
-       uint32_t MTLTXTXQ1ESR;     /*!< Tx queue 1 ETS status Register                             Address offset: 0x0D54 */
-  __IO uint32_t MTLTXQ1QWR;       /*!< Tx queue 1 quantum weight register                         Address offset: 0x0D58 */
-  __IO uint32_t MTLTXQ1SSCR;      /*!< Tx queue 1 send slope credit Register                      Address offset: 0x0D5C */
-  __IO uint32_t MTLTXQ1HCR;       /*!< Tx Queue 1 hiCredit register                               Address offset: 0x0D60 */
-  __IO uint32_t MTLTXQ1LCR;       /*!< Tx queue 1 loCredit register                               Address offset: 0x0D64 */
-       uint32_t RESERVED40;       /*!< Reserved                                                   Address offset: 0x0D68 */
-  __IO uint32_t MTLQ1ICSR;        /*!< Queue 1 interrupt control status Register                  Address offset: 0x0D6C */
-  __IO uint32_t MTLRXQ1OMR;       /*!< Rx queue 1 operating mode register                         Address offset: 0x0D70 */
-  __IO uint32_t MTLRXQ1MPOCR;     /*!< Rx queue 1 missed packet and overflow counter register     Address offset: 0x0D74 */
-  __IO uint32_t MTLRXQ1DR;        /*!< Rx queue 1 debug register                                  Address offset: 0x0D78 */
-  __IO uint32_t MTLRXQ1CR;        /*!< Rx queue 1 control register                                Address offset: 0x0D7C */
-       uint32_t RESERVED42[160];  /*!< Reserved                                                   Address offset: 0x0D80-0x0FFC */
-  __IO uint32_t DMAMR;            /*!< DMA mode register                                          Address offset: 0x1000 */
-  __IO uint32_t DMASBMR;          /*!< System bus mode register                                   Address offset: 0x1004 */
-  __IO uint32_t DMAISR;           /*!< Interrupt status register                                  Address offset: 0x1008 */
-  __IO uint32_t DMADSR;           /*!< Debug status register                                      Address offset: 0x100C */
-       uint32_t RESERVED43[4];    /*!< Reserved                                                   Address offset: 0x1010-0x101C */
-  __IO uint32_t DMAA4TXACR;       /*!< AXI4 transmit channel ACE control register                 Address offset: 0x1020 */
-  __IO uint32_t DMAA4RXACR;       /*!< AXI4 receive channel ACE control register                  Address offset: 0x1024 */
-  __IO uint32_t DMAA4DACR;        /*!< AXI4 descriptor ACE control register                       Address offset: 0x1028 */
-       uint32_t RESERVED44[5];    /*!< Reserved                                                   Address offset: 0x102C-0x103C */
-  __IO uint32_t DMALPIEI;         /*!< AXI4 LPI Entry Interval register                           Address offset: 0x1040 */
-       uint32_t RESERVED45[47];   /*!< Reserved                                                   Address offset: 0x1044-0x10FC */
-  __IO uint32_t DMAC0CR;          /*!< Channel 0 control register                                 Address offset: 0x1100 */
-  __IO uint32_t DMAC0TXCR;        /*!< Channel 0 transmit control register                        Address offset: 0x1104 */
-  __IO uint32_t DMAC0RXCR;        /*!< Channel 0 receive control register                         Address offset: 0x1108 */
-       uint32_t RESERVED46[2];    /*!< Reserved                                                   Address offset: 0x110C-0x1110 */
-  __IO uint32_t DMAC0TXDLAR;      /*!< Channel 0 Tx descriptor list address register              Address offset: 0x1114 */
-       uint32_t RESERVED47;       /*!< Reserved                                                   Address offset: 0x1118 */
-  __IO uint32_t DMAC0RXDLAR;      /*!< Channel 0 Rx descriptor list address register              Address offset: 0x111C */
-  __IO uint32_t DMAC0TXDTPR;      /*!< Channel 0 Tx descriptor tail pointer register              Address offset: 0x1120 */
-       uint32_t RESERVED48;       /*!< Reserved                                                   Address offset: 0x1124 */
-  __IO uint32_t DMAC0RXDTPR;      /*!< Channel 0 Rx descriptor tail pointer register              Address offset: 0x1128 */
-  __IO uint32_t DMAC0TXRLR;       /*!< Channel 0 Tx descriptor ring length register               Address offset: 0x112C */
-  __IO uint32_t DMAC0RXRLR;       /*!< Channel 0 Rx descriptor ring length register               Address offset: 0x1130 */
-  __IO uint32_t DMAC0IER;         /*!< Channel 0 interrupt enable register                        Address offset: 0x1134 */
-  __IO uint32_t DMAC0RXIWTR;      /*!< Channel 0 Rx interrupt watchdog timer register             Address offset: 0x1138 */
-  __IO uint32_t DMAC0SFCSR;       /*!< Channel 0 slot function control status register            Address offset: 0x113C */
-       uint32_t RESERVED49;       /*!< Reserved                                                   Address offset: 0x1140 */
-  __IO uint32_t DMAC0CATXDR;      /*!< Channel 0 current application transmit descriptor register Address offset: 0x1144 */
-       uint32_t RESERVED50;       /*!< Reserved                                                   Address offset: 0x1148 */
-  __IO uint32_t DMAC0CARXDR;      /*!< Channel 0 current application receive descriptor register  Address offset: 0x114C */
-       uint32_t RESERVED51;       /*!< Reserved                                                   Address offset: 0x1150 */
-  __IO uint32_t DMAC0CATXBR;      /*!< Channel 0 current application transmit buffer register     Address offset: 0x1154 */
-       uint32_t RESERVED52;       /*!< Reserved                                                   Address offset: 0x1158 */
-  __IO uint32_t DMAC0CARXBR;      /*!< Channel 0 current application receive buffer register      Address offset: 0x115C */
-  __IO uint32_t DMAC0SR;          /*!< Channel 0 status register                                  Address offset: 0x1160 */
-  __IO uint32_t DMAC0MFCR;        /*!< Channel 0 missed frame count register                      Address offset: 0x1164 */
-       uint32_t RESERVED53[6];    /*!< Reserved                                                   Address offset: 0x1168-0x117C */
-  __IO uint32_t DMAC1CR;          /*!< Channel 1 control register                                 Address offset: 0x1180 */
-  __IO uint32_t DMAC1TXCR;        /*!< Channel 1 transmit control register                        Address offset: 0x1184 */
-       uint32_t RESERVED54[3];    /*!< Reserved                                                   Address offset: 0x1188-0x1190 */
-  __IO uint32_t DMAC1TXDLAR;      /*!< Channel 1 Tx descriptor list address register              Address offset: 0x1194 */
-       uint32_t RESERVED55[2];    /*!< Reserved                                                   Address offset: 0x1198-0x119C */
-  __IO uint32_t DMAC1TXDTPR;      /*!< Channel 1 Tx descriptor tail pointer register              Address offset: 0x11A0 */
-       uint32_t RESERVED56[2];    /*!< Reserved                                                   Address offset: 0x11A4-0x11A8 */
-  __IO uint32_t DMAC1TXRLR;       /*!< Channel 1 Tx descriptor ring length register               Address offset: 0x11AC */
-       uint32_t RESERVED57;       /*!< Reserved                                                   Address offset: 0x11B0 */
-  __IO uint32_t DMAC1IER;         /*!< Channel 1 interrupt enable register                        Address offset: 0x11B4 */
-       uint32_t RESERVED58;       /*!< Reserved                                                   Address offset: 0x11B8 */
-  __IO uint32_t DMAC1SFCSR;       /*!< Channel 1 slot function control status register            Address offset: 0x11BC */
-       uint32_t RESERVED59;       /*!< Reserved                                                   Address offset: 0x11C0 */
-  __IO uint32_t DMAC1CATXDR;      /*!< Channel 1 current application transmit descriptor register Address offset: 0x11C4 */
-       uint32_t RESERVED60[3];    /*!< Reserved                                                   Address offset: 0x11C8-0x11D0 */
-  __IO uint32_t DMAC1CATXBR;      /*!< Channel 1 current application transmit buffer register     Address offset: 0x11D4 */
-       uint32_t RESERVED61[2];    /*!< Reserved                                                   Address offset: 0x11D8-0x11DC */
-  __IO uint32_t DMAC1SR;          /*!< Channel 1 status register                                  Address offset: 0x11E0 */
-  __IO uint32_t DMAC1MFCR;        /*!< Channel 1 missed frame count register                      Address offset: 0x11E4 */
+  __IO uint32_t MACCR;                                /*!< Operating mode configuration register                      Address offset: 0x0000 */
+  __IO uint32_t MACECR;                               /*!< Extended operating mode configuration register             Address offset: 0x0004 */
+  __IO uint32_t MACPFR;                               /*!< Packet filtering control register                          Address offset: 0x0008 */
+  __IO uint32_t MACWJBTR;                             /*!< Watchdog and jabber timeout register                       Address offset: 0x000C */
+  __IO uint32_t MACHT0R;                              /*!< Hash Table 0 register                                      Address offset: 0x0010 */
+  __IO uint32_t MACHT1R;                              /*!< Hash Table 1 register                                      Address offset: 0x0014 */
+       uint32_t RESERVED0[14];                        /*!< Reserved                                                   Address offset: 0x0018-0x004C */
+  __IO uint32_t MACVTCR;                              /*!< VLAN tag Control register                                  Address offset: 0x0050 */
+  __IO uint32_t MACVTDR;                              /*!< VLAN tag data register                                     Address offset: 0x0054 */
+  __IO uint32_t MACVHTR;                              /*!< VLAN Hash table register                                   Address offset: 0x0058 */
+       uint32_t RESERVED1;                            /*!< Reserved                                                   Address offset: 0x005C */
+  __IO uint32_t MACVIR;                               /*!< VLAN inclusion register                                    Address offset: 0x0060 */
+  __IO uint32_t MACIVIR;                              /*!< Inner VLAN inclusion register                              Address offset: 0x0064 */
+       uint32_t RESERVED2[2];                         /*!< Reserved                                                   Address offset: 0x0068-0x006C */
+  __IO uint32_t MACQ0TXFCR;                           /*!< Tx Queue 0 flow control register                           Address offset: 0x0070 */
+       uint32_t RESERVED3[7];                         /*!< Reserved                                                   Address offset: 0x0074-0x008C */
+  __IO uint32_t MACRXFCR;                             /*!< Rx flow control register                                   Address offset: 0x0090 */
+  __IO uint32_t MACRXQCR;                             /*!< Rx Queue control register                                  Address offset: 0x0094 */
+       uint32_t RESERVED4[2];                         /*!< Reserved                                                   Address offset: 0x0098-0x009C */
+  __IO uint32_t MACRXQC0R;                            /*!< Rx queue control 0 register                                Address offset: 0x00A0 */
+  __IO uint32_t MACRXQC1R;                            /*!< Rx queue control 1 register                                Address offset: 0x00A4 */
+  __IO uint32_t MACRXQC2R;                            /*!< Rx queue control 2 register                                Address offset: 0x00A8 */
+       uint32_t RESERVED5;                            /*!< Reserved                                                   Address offset: 0x00AC */
+  __IO uint32_t MACISR;                               /*!< Interrupt status register                                  Address offset: 0x00B0 */
+  __IO uint32_t MACIER;                               /*!< Interrupt enable register                                  Address offset: 0x00B4 */
+  __IO uint32_t MACRXTXSR;                            /*!< Rx Tx status register                                      Address offset: 0x00B8 */
+       uint32_t RESERVED6;                            /*!< Reserved                                                   Address offset: 0x00BC */
+  __IO uint32_t MACPCSR;                              /*!< PMT control status register                                Address offset: 0x00C0 */
+  __IO uint32_t MACRWKPFR;                            /*!< Remote wake-up packet filter register                      Address offset: 0x00C4 */
+       uint32_t RESERVED7[2];                         /*!< Reserved                                                   Address offset: 0x00C8-0x00CC */
+  __IO uint32_t MACLCSR;                              /*!< LPI control and status register                            Address offset: 0x00D0 */
+  __IO uint32_t MACLTCR;                              /*!< LPI timers control register                                Address offset: 0x00D4 */
+  __IO uint32_t MACLETR;                              /*!< LPI entry timer register                                   Address offset: 0x00D8 */
+  __IO uint32_t MAC1USTCR;                            /*!< One-microsecond-tick counter register                      Address offset: 0x00DC */
+       uint32_t RESERVED8[6];                         /*!< Reserved                                                   Address offset: 0x00E0-0x00F4 */
+  __IO uint32_t MACPHYCSR;                            /*!< PHYIF control status register                              Address offset: 0x00F8 */
+       uint32_t RESERVED9[5];                         /*!< Reserved                                                   Address offset: 0x00FC-0x010C */
+  __IO uint32_t MACVR;                                /*!< Version register                                           Address offset: 0x0110 */
+  __IO uint32_t MACDR;                                /*!< Debug register                                             Address offset: 0x0114 */
+       uint32_t RESERVED10;                           /*!< Reserved                                                   Address offset: 0x0118 */
+  __IO uint32_t MACHWF0R;                             /*!< HW feature 0 register                                      Address offset: 0x011C */
+  __IO uint32_t MACHWF1R;                             /*!< HW feature 1 register                                      Address offset: 0x0120 */
+  __IO uint32_t MACHWF2R;                             /*!< HW feature 2 register                                      Address offset: 0x0124 */
+  __IO uint32_t MACHWF3R;                             /*!< HW feature 3 register                                      Address offset: 0x0128 */
+       uint32_t RESERVED11[53];                       /*!< Reserved                                                   Address offset: 0x012C-0x01FC */
+  __IO uint32_t MACMDIOAR;                            /*!< MDIO address register                                      Address offset: 0x0200 */
+  __IO uint32_t MACMDIODR;                            /*!< MDIO data register                                         Address offset: 0x0204 */
+       uint32_t RESERVED12[2];                        /*!< Reserved                                                   Address offset: 0x0208-0x020C */
+  __IO uint32_t MACARPAR;                             /*!< ARP address register                                       Address offset: 0x0210 */
+       uint32_t RESERVED13[7];                        /*!< Reserved                                                   Address offset: 0x0214-0x022C */
+  __IO uint32_t MACCSRSWCR;                           /*!< CSR software control register                              Address offset: 0x0230 */
+  __IO uint32_t MACFPECSR;                            /*!< FPE control and status register                            Address offset: 0x0234 */
+       uint32_t RESERVED14[2];                        /*!< Reserved                                                   Address offset: 0x0238-0x023C */
+  __IO uint32_t MACPRSTIMR;                           /*!< MAC presentation time register                             Address offset: 0x0240 */
+  __IO uint32_t MACPRSTIMUR;                          /*!< MAC presentation time update register                      Address offset: 0x0244 */
+       uint32_t RESERVED15[46];                       /*!< Reserved                                                   Address offset: 0x0248-0x02FC */
+  __IO uint32_t MACA0HR;                              /*!< MAC Address 0 high register                                Address offset: 0x0300 */
+  __IO uint32_t MACA0LR;                              /*!< MAC Address 0 low register                                 Address offset: 0x0304 */
+  __IO uint32_t MACA1HR;                              /*!< MAC Address 1 high register                                Address offset: 0x0308 */
+  __IO uint32_t MACA1LR;                              /*!< MAC Address 1 low register                                 Address offset: 0x030C */
+  __IO uint32_t MACA2HR;                              /*!< MAC Address 2 high register                                Address offset: 0x0310 */
+  __IO uint32_t MACA2LR;                              /*!< MAC Address 2 low register                                 Address offset: 0x0314 */
+  __IO uint32_t MACA3HR;                              /*!< MAC Address 3 high register                                Address offset: 0x0318 */
+  __IO uint32_t MACA3LR;                              /*!< MAC Address 3 low register                                 Address offset: 0x031C */
+       uint32_t RESERVED16[248];                      /*!< Reserved                                                   Address offset: 0x0320-0x06FC */
+  __IO uint32_t MMC_CONTROL;                          /*!< MMC control register                                       Address offset: 0x0700 */
+  __IO uint32_t MMC_RX_INTERRUPT;                     /*!< MMC Rx interrupt register                                  Address offset: 0x0704 */
+  __IO uint32_t MMC_TX_INTERRUPT;                     /*!< MMC Tx interrupt register                                  Address offset: 0x0708 */
+  __IO uint32_t MMC_RX_INTERRUPT_MASK;                /*!< MMC Rx interrupt mask register                             Address offset: 0x070C */
+  __IO uint32_t MMC_TX_INTERRUPT_MASK;                /*!< MMC Tx interrupt mask register                             Address offset: 0x0710 */
+  __IO uint32_t TX_OCTET_COUNT_GOOD_BAD;              /*!< Tx octet count good bad register                           Address offset: 0x0714 */
+  __IO uint32_t TX_PACKET_COUNT_GOOD_BAD;             /*!< Tx packet count good bad register                          Address offset: 0x0718 */
+  __IO uint32_t TX_BROADCAST_PACKETS_GOOD;            /*!< Tx broadcast packets good register                         Address offset: 0x071C */
+  __IO uint32_t TX_MULTICAST_PACKETS_GOOD;            /*!< Tx multicast packets good register                         Address offset: 0x0720 */
+  __IO uint32_t TX_64OCTETS_PACKETS_GOOD_BAD;         /*!< Tx 64 octets packets good bad register                     Address offset: 0x0724 */
+  __IO uint32_t TX_64TO127OCTETS_PACKETS_GOOD_BAD;    /*!< Tx 65 to 127 octets packets good bad register              Address offset: 0x0728 */
+  __IO uint32_t TX_128TO255OCTETS_PACKETS_GOOD_BAD;   /*!< Tx 128 to 255 octets packets good bad register             Address offset: 0x072C */
+  __IO uint32_t TX_256TO511OCTETS_PACKETS_GOOD_BAD;   /*!< Tx 256 to 511 octets packets good bad register             Address offset: 0x0730 */
+  __IO uint32_t TX_512TO1023OCTETS_PACKETS_GOOD_BAD;  /*!< Tx 512 to 1023 octets packets good bad register            Address offset: 0x0734 */
+  __IO uint32_t TX_1024TOMAXOCTETS_PACKETS_GOOD_BAD;  /*!< Tx 1024 to max octets packets good bad register            Address offset: 0x0738 */
+  __IO uint32_t TX_UNICAST_PACKETS_GOOD_BAD;          /*!< Tx unicast packets good bad register                       Address offset: 0x073C */
+  __IO uint32_t TX_MULTICAST_PACKETS_GOOD_BAD;        /*!< Tx multicast packets good bad register                     Address offset: 0x0740 */
+  __IO uint32_t TX_BROADCAST_PACKETS_GOOD_BAD;        /*!< Tx broadcast packets good bad register                     Address offset: 0x0744 */
+  __IO uint32_t TX_UNDERFLOW_ERROR_PACKETS;           /*!< Tx underflow error packets register                        Address offset: 0x0748 */
+  __IO uint32_t TX_SINGLE_COLLISION_GOOD_PACKETS;     /*!< Tx single collision good packets register                  Address offset: 0x074C */
+  __IO uint32_t TX_MULTIPLE_COLLISION_GOOD_PACKETS;   /*!< Tx multiple collision good packets register                Address offset: 0x0750 */
+  __IO uint32_t TX_DEFERRED_PACKETS;                  /*!< Tx deferred packets register                               Address offset: 0x0754 */
+  __IO uint32_t TX_LATE_COLLISION_PACKETS;            /*!< Tx late collision packets register                         Address offset: 0x0758 */
+  __IO uint32_t TX_EXCESSIVE_COLLISION_PACKETS;       /*!< Tx excessive collision packets register                    Address offset: 0x075C */
+  __IO uint32_t TX_CARRIER_ERROR_PACKETS;             /*!< Tx carrier error packets register                          Address offset: 0x0760 */
+  __IO uint32_t TX_OCTET_COUNT_GOOD;                  /*!< Tx octet count good register                               Address offset: 0x0764 */
+  __IO uint32_t TX_PACKET_COUNT_GOOD;                 /*!< Tx packet count good register                              Address offset: 0x0768 */
+  __IO uint32_t TX_EXCESSIVE_DEFERRAL_ERROR;          /*!< Tx excessive deferral error register                       Address offset: 0x076C */
+  __IO uint32_t TX_PAUSE_PACKETS;                     /*!< Tx pause packets register                                  Address offset: 0x0770 */
+  __IO uint32_t TX_VLAN_PACKETS_GOOD;                 /*!< Tx VLAN packets good register                              Address offset: 0x0774 */
+  __IO uint32_t TX_OSIZE_PACKETS_GOOD;                /*!< Tx OSsize packets good register                            Address offset: 0x0778 */
+       uint32_t RESERVED17;                           /*!< Reserved                                                   Address offset: 0x077C */
+  __IO uint32_t RX_PACKETS_COUNT_GOOD_BAD;            /*!< Rx packets count good bad register                         Address offset: 0x0780 */
+  __IO uint32_t RX_OCTET_COUNT_GOOD_BAD;              /*!< Rx octet count good bad register                           Address offset: 0x0784 */
+  __IO uint32_t RX_OCTET_COUNT_GOOD;                  /*!< Rx octet count good register                               Address offset: 0x0788 */
+  __IO uint32_t RX_BROADCAST_PACKETS_GOOD;            /*!< Rx broadcast packets good register                         Address offset: 0x078C */
+  __IO uint32_t RX_MULTICAST_PACKETS_GOOD;            /*!< Rx multicast packets good register                         Address offset: 0x0790 */
+  __IO uint32_t RX_CRC_ERROR_PACKETS;                 /*!< Rx CRC error packets register                              Address offset: 0x0794 */
+  __IO uint32_t RX_ALIGNMENT_ERROR_PACKETS;           /*!< Rx alignment error packets register                        Address offset: 0x0798 */
+  __IO uint32_t RX_RUNT_ERROR_PACKETS;                /*!< Rx runt error packets register                             Address offset: 0x079C */
+  __IO uint32_t RX_JABBER_ERROR_PACKETS;              /*!< Rx jabber error packets register                           Address offset: 0x07A0 */
+  __IO uint32_t RX_UNDERSIZE_PACKETS_GOOD;            /*!< Rx undersize packets good register                         Address offset: 0x07A4 */
+  __IO uint32_t RX_OVERSIZE_PACKETS_GOOD;             /*!< Rx oversize packets good register                          Address offset: 0x07A8 */
+  __IO uint32_t RX_64OCTETS_PACKETS_GOOD_BAD;         /*!< Rx 64 octets packets good bad register                     Address offset: 0x07AC */
+  __IO uint32_t RX_65TO127OCTETS_PACKETS_GOOD_BAD;    /*!< Rx 65 to 127 octets packets good bad register              Address offset: 0x07B0 */
+  __IO uint32_t RX_128TO255OCTETS_PACKETS_GOOD_BAD;   /*!< Rx 128 to 255 octets packets good bad register             Address offset: 0x07B4 */
+  __IO uint32_t RX_256TO511OCTETS_PACKETS_GOOD_BAD;   /*!< Rx 256 to 511 octets packets good bad register             Address offset: 0x07B8 */
+  __IO uint32_t RX_512TO1023OCTETS_PACKETS_GOOD_BAD;  /*!< Rx 512 to 1023 octets packets good bad register            Address offset: 0x07BC */
+  __IO uint32_t RX_1024TOMAXOCTETS_PACKETS_GOOD_BAD;  /*!< Rx 1024 to max octets packets good bad register            Address offset: 0x07C0 */
+  __IO uint32_t RX_UNICAST_PACKETS_GOOD;              /*!< Rx unicast packets good register                           Address offset: 0x07C4 */
+  __IO uint32_t RX_LENGTH_ERROR_PACKETS;              /*!< Rx length error packets register                           Address offset: 0x07C8 */
+  __IO uint32_t RX_OUT_OF_RANGE_PACKETS;              /*!< Rx out of range type packets register                      Address offset: 0x07CC */
+  __IO uint32_t RX_PAUSE_PACKETS;                     /*!< Rx pause packets register                                  Address offset: 0x07D0 */
+  __IO uint32_t RX_FIFO_OVERFLOW_PACKETS;             /*!< Rx FIFO overflow packets register                          Address offset: 0x07D4 */
+  __IO uint32_t RX_VLAN_PACKETS_GOOD_BAD;             /*!< Rx VLAN packets good bad register                          Address offset: 0x07D8 */
+  __IO uint32_t RX_WATCHDOG_ERROR_PACKETS;            /*!< Rx watchdog error packets register                         Address offset: 0x07DC */
+  __IO uint32_t RX_RECEIVE_ERROR;                     /*!< Rx receive error register                                  Address offset: 0x07E0 */
+  __IO uint32_t RX_CONTROL_PACKETS_GOOD;              /*!< Rx control packets good register                           Address offset: 0x07E4 */
+       uint32_t RESERVED18;                           /*!< Reserved                                                   Address offset: 0x07E8 */
+  __IO uint32_t TX_LPI_USEC_CNTR;                     /*!< Tx LPI microsecond timer register                          Address offset: 0x07EC */
+  __IO uint32_t TX_LPI_TRAN_CNTR;                     /*!< Tx LPI transition counter register                         Address offset: 0x07F0 */
+  __IO uint32_t RX_LPI_USEC_CNTR;                     /*!< Rx LPI microsecond counter register                        Address offset: 0x07F4 */
+  __IO uint32_t RX_LPI_TRAN_CNTR;                     /*!< Rx LPI transition counter register                         Address offset: 0x07F8 */
+       uint32_t RESERVED19[41];                       /*!< Reserved                                                   Address offset: 0x07FC-0x089C */
+  __IO uint32_t MMC_FPE_TX_ISR;                       /*!< MMC FPE Tx interrupt status register                       Address offset: 0x08A0 */
+  __IO uint32_t MMC_FPE_TX_IMR;                       /*!< MMC FPE Tx interrupt mask register                         Address offset: 0x08A4 */
+  __IO uint32_t MMC_FPE_TX_FCR;                       /*!< MMC FPE Tx fragment counter register                       Address offset: 0x08A8 */
+  __IO uint32_t MMC_TX_HRCR;                          /*!< MMC Tx hold request counter register                       Address offset: 0x08AC */
+       uint32_t RESERVED20[4];                        /*!< Reserved                                                   Address offset: 0x08B0-0x08BC */
+  __IO uint32_t MMC_FPE_RX_ISR;                       /*!< MMC FPE Rx interrupt status register                       Address offset: 0x08C0 */
+  __IO uint32_t MMC_FPE_RX_IMR;                       /*!< MMC FPE Rx interrupt mask register                         Address offset: 0x08C4 */
+  __IO uint32_t RX_PACKET_ASM_ERR;                    /*!< MMC Rx packet assembly error register                      Address offset: 0x08C8 */
+  __IO uint32_t RX_PACKET_SMD_ERR;                    /*!< MMC Rx packet SMD error register                           Address offset: 0x08CC */
+  __IO uint32_t RX_PACKET_ASM_OKR;                    /*!< MMC Rx packet assembly OK register                         Address offset: 0x08D0 */
+  __IO uint32_t RX_FPE_FRAG_CR;                       /*!< MMC Rx FPE fragments counter register                      Address offset: 0x08D4 */
+       uint32_t RESERVED21[10];                       /*!< Reserved                                                   Address offset: 0x08D8-0x08FC */
+  __IO uint32_t MACL3L4C0R;                           /*!< L3 and L4 control 0 register                               Address offset: 0x0900 */
+  __IO uint32_t MACL4A0R;                             /*!< Layer4 Address filter 0 register                           Address offset: 0x0904 */
+       uint32_t RESERVED22[2];                        /*!< Reserved                                                   Address offset: 0x0908-0x090C */
+  __IO uint32_t MACL3A00R;                            /*!< Layer3 Address 0 filter 0 register                         Address offset: 0x0910 */
+  __IO uint32_t MACL3A10R;                            /*!< Layer3 Address 1 filter 0 register                         Address offset: 0x0914 */
+  __IO uint32_t MACL3A20R;                            /*!< Layer3 Address 2 filter 0 register                         Address offset: 0x0918 */
+  __IO uint32_t MACL3A30R;                            /*!< Layer3 Address 3 filter 0 register                         Address offset: 0x091C */
+       uint32_t RESERVED23[4];                        /*!< Reserved                                                   Address offset: 0x0920-0x092C */
+  __IO uint32_t MACL3L4C1R;                           /*!< L3 and L4 control 1 register                               Address offset: 0x0930 */
+  __IO uint32_t MACL4A1R;                             /*!< Layer 4 address filter 1 register                          Address offset: 0x0934 */
+       uint32_t RESERVED24[2];                        /*!< Reserved                                                   Address offset: 0x0938-0x093C */
+  __IO uint32_t MACL3A01R;                            /*!< Layer3 address 0 filter 1 Register                         Address offset: 0x0940 */
+  __IO uint32_t MACL3A11R;                            /*!< Layer3 address 1 filter 1 register                         Address offset: 0x0944 */
+  __IO uint32_t MACL3A21R;                            /*!< Layer3 address 2 filter 1 Register                         Address offset: 0x0948 */
+  __IO uint32_t MACL3A31R;                            /*!< Layer3 address 3 filter 1 register                         Address offset: 0x094C */
+       uint32_t RESERVED25[72];                       /*!< Reserved                                                   Address offset: 0x0950-0x0A6C */
+  __IO uint32_t MAC_IACR;                             /*!< MAC Indirect Access Control register                       Address offset: 0x0A70 */
+  __IO uint32_t MAC_TMRQR;                            /*!< MAC type-based Rx Queue mapping register                   Address offset: 0x0A74 */
+       uint32_t RESERVED26[34];                       /*!< Reserved                                                   Address offset: 0x0A78-0x0AFC */
+  __IO uint32_t MACTSCR;                              /*!< Timestamp control Register                                 Address offset: 0x0B00 */
+  __IO uint32_t MACSSIR;                              /*!< Subsecond increment register                               Address offset: 0x0B04 */
+  __IO uint32_t MACSTSR;                              /*!< System time seconds register                               Address offset: 0x0B08 */
+  __IO uint32_t MACSTNR;                              /*!< System time nanoseconds register                           Address offset: 0x0B0C */
+  __IO uint32_t MACSTSUR;                             /*!< System time seconds update register                        Address offset: 0x0B10 */
+  __IO uint32_t MACSTNUR;                             /*!< System time nanoseconds update register                    Address offset: 0x0B14 */
+  __IO uint32_t MACTSAR;                              /*!< Timestamp addend register                                  Address offset: 0x0B18 */
+       uint32_t RESERVED27;                           /*!< Reserved                                                   Address offset: 0x0B1C */
+  __IO uint32_t MACTSSR;                              /*!< Timestamp status register                                  Address offset: 0x0B20 */
+  __IO uint32_t MACRXDTI;                             /*!< Rx domain time increment register                          Address offset: 0x0B24 */
+  __IO uint32_t MACTXDTI;                             /*!< Tx domain time increment register                          Address offset: 0x0B28 */
+       uint32_t RESERVED28;                           /*!< Reserved                                                   Address offset: 0x0B2C */
+  __IO uint32_t MACTXTSSNR;                           /*!< Tx timestamp status nanoseconds register                   Address offset: 0x0B30 */
+  __IO uint32_t MACTXTSSSR;                           /*!< Tx timestamp status seconds register                       Address offset: 0x0B34 */
+       uint32_t RESERVED29[2];                        /*!< Reserved                                                   Address offset: 0x0B38-0x0B3C */
+  __IO uint32_t MACACR;                               /*!< Auxiliary control register                                 Address offset: 0x0B40 */
+       uint32_t RESERVED30;                           /*!< Reserved                                                   Address offset: 0x0B44 */
+  __IO uint32_t MACATSNR;                             /*!< Auxiliary timestamp nanoseconds register                   Address offset: 0x0B48 */
+  __IO uint32_t MACATSSR;                             /*!< Auxiliary timestamp seconds register                       Address offset: 0x0B4C */
+  __IO uint32_t MACTSIACR;                            /*!< Timestamp ingress asymmetric correction register           Address offset: 0x0B50 */
+  __IO uint32_t MACTSEACR;                            /*!< Timestamp egress asymmetric correction register            Address offset: 0x0B54 */
+  __IO uint32_t MACTSICNR;                            /*!< Timestamp Ingress correction nanosecond register           Address offset: 0x0B58 */
+  __IO uint32_t MACTSECNR;                            /*!< Timestamp egress correction nanosecond register            Address offset: 0x0B5C */
+       uint32_t RESERVED31[2];                        /*!< Reserved                                                   Address offset: 0x0B60-0x0B64 */
+  __IO uint32_t MACTSILR;                             /*!< Timestamp Ingress Latency register                         Address offset: 0x0B68 */
+  __IO uint32_t MACTSELR;                             /*!< Timestamp Egress Latency register                          Address offset: 0x0B6C */
+  __IO uint32_t MACPPSCR;                             /*!< PPS control register                                       Address offset: 0x0B70 */
+       uint32_t RESERVED32[3];                        /*!< Reserved                                                   Address offset: 0x0B74-0x0B7C */
+  __IO uint32_t MACPPSTTS0R;                          /*!< PPS 0 target time seconds register                         Address offset: 0x0B80 */
+  __IO uint32_t MACPPSTTN0R;                          /*!< PPS 0 target time nanoseconds register                     Address offset: 0x0B84 */
+  __IO uint32_t MACPPSI0R;                            /*!< PPS 0 interval register                                    Address offset: 0x0B88 */
+  __IO uint32_t MACPPSW0R;                            /*!< PPS 0 width register                                       Address offset: 0x0B8C */
+  __IO uint32_t MACPPSTTS1R;                          /*!< PPS 1 target time seconds register                         Address offset: 0x0B90 */
+  __IO uint32_t MACPPSTTN1R;                          /*!< PPS 1 target time nanoseconds register                     Address offset: 0x0B94 */
+  __IO uint32_t MACPPSI1R;                            /*!< PPS 1 interval register                                    Address offset: 0x0B98 */
+  __IO uint32_t MACPPSW1R;                            /*!< PPS 1 width register                                       Address offset: 0x0B9C */
+       uint32_t RESERVED33[8];                        /*!< Reserved                                                   Address offset: 0x0BA0-0x0BBC */
+  __IO uint32_t MACPOCR;                              /*!< PTP Offload control register                               Address offset: 0x0BC0 */
+  __IO uint32_t MACSPI0R;                             /*!< PTP Source Port Identity 0 Register                        Address offset: 0x0BC4 */
+  __IO uint32_t MACSPI1R;                             /*!< PTP Source port identity 1 register                        Address offset: 0x0BC8 */
+  __IO uint32_t MACSPI2R;                             /*!< PTP Source port identity 2 register                        Address offset: 0x0BCC */
+  __IO uint32_t MACLMIR;                              /*!< Log message interval register                              Address offset: 0x0BD0 */
+       uint32_t RESERVED34[11];                       /*!< Reserved                                                   Address offset: 0x0BD4-0x0BFC */
+  __IO uint32_t MTLOMR;                               /*!< Operating mode register                                    Address offset: 0x0C00 */
+       uint32_t RESERVED35[7];                        /*!< Reserved                                                   Address offset: 0x0C04-0x0C1C */
+  __IO uint32_t MTLISR;                               /*!< Interrupt status register                                  Address offset: 0x0C20 */
+       uint32_t RESERVED36[3];                        /*!< Reserved                                                   Address offset: 0x0C24-0x0C2C */
+  __IO uint32_t MTLRXQDMAMR;                          /*!< Rx Queue and DMA Channel Mapping register                  Address offset: 0x0C30 */
+       uint32_t RESERVED37[3];                        /*!< Reserved                                                   Address offset: 0x0C34-0x0C3C */
+  __IO uint32_t MTLTBSCR;                             /*!< TBS control register                                       Address offset: 0x0C40 */
+       uint32_t RESERVED38[3];                        /*!< Reserved                                                   Address offset: 0x0C44-0x0C4C */
+  __IO uint32_t MTLESTCR;                             /*!< EST Control register                                       Address offset: 0x0C50 */
+  __IO uint32_t MTLESTECR;                            /*!< EST Extended Control register                              Address offset: 0x0C54 */
+  __IO uint32_t MTLESTSR;                             /*!< EST Status register                                        Address offset: 0x0C58 */
+       uint32_t RESERVED39;                           /*!< Reserved                                                   Address offset: 0x0C5C */
+  __IO uint32_t MTLESTSCHER;                          /*!< EST Schedule Error register                                Address offset: 0x0C60 */
+  __IO uint32_t MTLESTFSER;                           /*!< EST Frame size Error register                              Address offset: 0x0C64 */
+  __IO uint32_t MTLESTFSCR;                           /*!< EST Frame size Capture register                            Address offset: 0x0C68 */
+       uint32_t RESERVED40;                           /*!< Reserved                                                   Address offset: 0x0C6C */
+  __IO uint32_t MTLESTIER;                            /*!< EST Interrupt Enable register                              Address offset: 0x0C70 */
+       uint32_t RESERVED41[3];                        /*!< Reserved                                                   Address offset: 0x0C74-0x0C7C */
+  __IO uint32_t MTLESTGCLCR;                          /*!< EST Gate Control List register                             Address offset: 0x0C80 */
+  __IO uint32_t MTLESTGCLDR;                          /*!< EST Gate Control List Data register                        Address offset: 0x0C84 */
+       uint32_t RESERVED42[2];                        /*!< Reserved                                                   Address offset: 0x0C88-0x0C8C */
+  __IO uint32_t MTLFPECSR;                            /*!< FPE Frame Preemption Control Status register               Address offset: 0x0C90 */
+  __IO uint32_t MTLFPEAR;                             /*!< FPE Frame Preemption Advance register                      Address offset: 0x0C94 */
+       uint32_t RESERVED43[26];                       /*!< Reserved                                                   Address offset: 0x0C98-0x0CFC */
+  __IO uint32_t MTLTXQ0OMR;                           /*!< T0 queue 0 operating mode register                         Address offset: 0x0D00 */
+  __IO uint32_t MTLTXQ0UR;                            /*!< T0 queue 0 underflow register                              Address offset: 0x0D04 */
+  __IO uint32_t MTLTXQ0DR;                            /*!< T0 queue 0 debug register                                  Address offset: 0x0D08 */
+       uint32_t RESERVED44[2];                        /*!< Reserved                                                   Address offset: 0x0D0C-0x0D10 */
+  __IO uint32_t MTLTXQ0ESR;                           /*!< T0 queue 0 ETS status register                             Address offset: 0x0D14 */
+  __IO uint32_t MTLTXQ0QWR;                           /*!< T0 queue 0 quantum weight register                         Address offset: 0x0D18 */
+       uint32_t RESERVED45[4];                        /*!< Reserved                                                   Address offset: 0x0D1C-0x0D28 */
+  __IO uint32_t MTLQ0ICSR;                            /*!< Queue 0 interrupt control status register                  Address offset: 0x0D2C */
+  __IO uint32_t MTLRXQ0OMR;                           /*!< R0 queue 0 operating mode register                         Address offset: 0x0D30 */
+  __IO uint32_t MTLRXQ0MPOCR;                         /*!< R0 queue 0 missed packet and overflow counter register     Address offset: 0x0D34 */
+  __IO uint32_t MTLRXQ0DR;                            /*!< R0 queue 0 debug register                                  Address offset: 0x0D38 */
+  __IO uint32_t MTLRXQ0CR;                            /*!< R0 queue 0 control register                                Address offset: 0x0D3C */
+  __IO uint32_t MTLTXQ1OMR;                           /*!< T1 queue 1 operating mode register                         Address offset: 0x0D40 */
+  __IO uint32_t MTLTXQ1UR;                            /*!< T1 queue 1 underflow register                              Address offset: 0x0D44 */
+  __IO uint32_t MTLTXQ1DR;                            /*!< T1 queue 1 debug register                                  Address offset: 0x0D48 */
+       uint32_t RESERVED46;                           /*!< Reserved                                                   Address offset: 0x0D4C */
+  __IO uint32_t MTLTXQ1ECR;                           /*!< T1 queue 1 ETS control register                            Address offset: 0x0D50 */
+  __IO uint32_t MTLTXQ1ESR;                           /*!< T1 queue 1 ETS status register                             Address offset: 0x0D54 */
+  __IO uint32_t MTLTXQ1QWR;                           /*!< T1 queue 1 quantum weight register                         Address offset: 0x0D58 */
+  __IO uint32_t MTLTXQ1SSCR;                          /*!< T1 queue 1 send slope credit register                      Address offset: 0x0D5C */
+  __IO uint32_t MTLTXQ1HCR;                           /*!< T1 Queue 1 hiCredit register                               Address offset: 0x0D60 */
+  __IO uint32_t MTLTXQ1LCR;                           /*!< T1 queue 1 loCredit register                               Address offset: 0x0D64 */
+       uint32_t RESERVED47;                           /*!< Reserved                                                   Address offset: 0x0D68 */
+  __IO uint32_t MTLQ1ICSR;                            /*!< Queue 1 interrupt control status register                  Address offset: 0x0D6C */
+  __IO uint32_t MTLRXQ1OMR;                           /*!< R1 queue 1 operating mode register                         Address offset: 0x0D70 */
+  __IO uint32_t MTLRXQ1MPOCR;                         /*!< R1 queue 1 missed packet and overflow counter register     Address offset: 0x0D74 */
+  __IO uint32_t MTLRXQ1DR;                            /*!< R1 queue 1 debug register                                  Address offset: 0x0D78 */
+  __IO uint32_t MTLRXQ1CR;                            /*!< R1 queue 1 control register                                Address offset: 0x0D7C */
+  __IO uint32_t MTLTXQ2OMR;                           /*!< T2 queue 2 operating mode register                         Address offset: 0x0D80 */
+  __IO uint32_t MTLTXQ2UR;                            /*!< T2 queue 2 underflow register                              Address offset: 0x0D84 */
+  __IO uint32_t MTLTXQ2DR;                            /*!< T2 queue 2 debug register                                  Address offset: 0x0D88 */
+       uint32_t RESERVED48;                           /*!< Reserved                                                   Address offset: 0x0D8C */
+  __IO uint32_t MTLTXQ2ECR;                           /*!< T2 queue 2 ETS control register                            Address offset: 0x0D90 */
+  __IO uint32_t MTLTXQ2ESR;                           /*!< T2 queue 2 ETS status register                             Address offset: 0x0D94 */
+  __IO uint32_t MTLTXQ2QWR;                           /*!< T2 queue 2 quantum weight register                         Address offset: 0x0D98 */
+  __IO uint32_t MTLTXQ2SSCR;                          /*!< T2 queue 2 send slope credit register                      Address offset: 0x0D9C */
+  __IO uint32_t MTLTXQ2HCR;                           /*!< T2 Queue 2 hiCredit register                               Address offset: 0x0DA0 */
+  __IO uint32_t MTLTXQ2LCR;                           /*!< T2 queue 2 loCredit register                               Address offset: 0x0DA4 */
+       uint32_t RESERVED49;                           /*!< Reserved                                                   Address offset: 0x0DA8 */
+  __IO uint32_t MTLQ2ICSR;                            /*!< Queue 2 interrupt control status register                  Address offset: 0x0DAC */
+       uint32_t RESERVED50[4];                        /*!< Reserved                                                   Address offset: 0x0DB0-0x0DBC */
+  __IO uint32_t MTLTXQ3OMR;                           /*!< T3 queue 3 operating mode register                         Address offset: 0x0DC0 */
+  __IO uint32_t MTLTXQ3UR;                            /*!< T3 queue 3 underflow register                              Address offset: 0x0DC4 */
+  __IO uint32_t MTLTXQ3DR;                            /*!< T3 queue 3 debug register                                  Address offset: 0x0DC8 */
+       uint32_t RESERVED51;                           /*!< Reserved                                                   Address offset: 0x0DCC */
+  __IO uint32_t MTLTXQ3ECR;                           /*!< T3 queue 3 ETS control register                            Address offset: 0x0DD0 */
+  __IO uint32_t MTLTXQ3ESR;                           /*!< T3 queue 3 ETS status register                             Address offset: 0x0DD4 */
+  __IO uint32_t MTLTXQ3QWR;                           /*!< T3 queue 3 quantum weight register                         Address offset: 0x0DD8 */
+  __IO uint32_t MTLTXQ3SSCR;                          /*!< T3 queue 3 send slope credit register                      Address offset: 0x0DDC */
+  __IO uint32_t MTLTXQ3HCR;                           /*!< T3 Queue 3 hiCredit register                               Address offset: 0x0DE0 */
+  __IO uint32_t MTLTXQ3LCR;                           /*!< T3 queue 3 loCredit register                               Address offset: 0x0DE4 */
+       uint32_t RESERVED52;                           /*!< Reserved                                                   Address offset: 0x0DE8 */
+  __IO uint32_t MTLQ3ICSR;                            /*!< Queue 3 interrupt control status register                  Address offset: 0x0DEC */
+       uint32_t RESERVED53[132];                      /*!< Reserved                                                   Address offset: 0x0DF0-0x0FFC */
+  __IO uint32_t DMAMR;                                /*!< DMA mode register                                          Address offset: 0x1000 */
+  __IO uint32_t DMASBMR;                              /*!< System bus mode register                                   Address offset: 0x1004 */
+  __IO uint32_t DMAISR;                               /*!< Interrupt status register                                  Address offset: 0x1008 */
+  __IO uint32_t DMADS1R;                              /*!< Debug status 1 register                                    Address offset: 0x100C */
+  __IO uint32_t DMADS2R;                              /*!< Debug status 2 register                                    Address offset: 0x1010 */
+       uint32_t RESERVED54[3];                        /*!< Reserved                                                   Address offset: 0x1014-0x101C */
+  __IO uint32_t DMAA4TXACR;                           /*!< AXI4 transmit channel ACE control register                 Address offset: 0x1020 */
+  __IO uint32_t DMAA4RXACR;                           /*!< AXI4 receive channel ACE control register                  Address offset: 0x1024 */
+  __IO uint32_t DMAA4DACR;                            /*!< AXI4 descriptor ACE control register                       Address offset: 0x1028 */
+       uint32_t RESERVED55[5];                        /*!< Reserved                                                   Address offset: 0x102C-0x103C */
+  __IO uint32_t DMALPIEI;                             /*!< AXI4 LPI Entry Interval register                           Address offset: 0x1040 */
+       uint32_t RESERVED56[3];                        /*!< Reserved                                                   Address offset: 0x1044-0x104C */
+  __IO uint32_t DMATBSCTRL0R;                         /*!< DMA TBS control register 0                                 Address offset: 0x1050 */
+  __IO uint32_t DMATBSCTRL1R;                         /*!< DMA TBS control register 1                                 Address offset: 0x1054 */
+  __IO uint32_t DMATBSCTRL2R;                         /*!< DMA TBS control register 2                                 Address offset: 0x1058 */
+  __IO uint32_t DMATBSCTRL3R;                         /*!< DMA TBS control register 3                                 Address offset: 0x105C */
+       uint32_t RESERVED57[40];                       /*!< Reserved                                                   Address offset: 0x1060-0x10FC */
+  __IO uint32_t DMAC0CR;                              /*!< Channel 0 control register                                 Address offset: 0x1100 */
+  __IO uint32_t DMAC0TXCR;                            /*!< Channel 0 transmit control register                        Address offset: 0x1104 */
+  __IO uint32_t DMAC0RXCR;                            /*!< Channel 0 receive control register                         Address offset: 0x1108 */
+       uint32_t RESERVED58[2];                        /*!< Reserved                                                   Address offset: 0x110C-0x1110 */
+  __IO uint32_t DMAC0TXDLAR;                          /*!< Channel 0 T0 descriptor list address register              Address offset: 0x1114 */
+       uint32_t RESERVED59;                           /*!< Reserved                                                   Address offset: 0x1118 */
+  __IO uint32_t DMAC0RXDLAR;                          /*!< Channel 0 R0 descriptor list address register              Address offset: 0x111C */
+  __IO uint32_t DMAC0TXDTPR;                          /*!< Channel 0 T0 descriptor tail pointer register              Address offset: 0x1120 */
+       uint32_t RESERVED60;                           /*!< Reserved                                                   Address offset: 0x1124 */
+  __IO uint32_t DMAC0RXDTPR;                          /*!< Channel 0 R0 descriptor tail pointer register              Address offset: 0x1128 */
+  __IO uint32_t DMAC0TXRLR;                           /*!< Channel 0 T0 descriptor ring length register               Address offset: 0x112C */
+  __IO uint32_t DMAC0RXRLR;                           /*!< Channel 0 R0 descriptor ring length register               Address offset: 0x1130 */
+  __IO uint32_t DMAC0IER;                             /*!< Channel 0 interrupt enable register                        Address offset: 0x1134 */
+  __IO uint32_t DMAC0RXIWTR;                          /*!< Channel 0 R0 interrupt watchdog timer register             Address offset: 0x1138 */
+  __IO uint32_t DMAC0SFCSR;                           /*!< Channel 0 slot function control status register            Address offset: 0x113C */
+       uint32_t RESERVED61;                           /*!< Reserved                                                   Address offset: 0x1140 */
+  __IO uint32_t DMAC0CATXDR;                          /*!< Channel 0 current application transmit descriptor register Address offset: 0x1144 */
+       uint32_t RESERVED62;                           /*!< Reserved                                                   Address offset: 0x1148 */
+  __IO uint32_t DMAC0CARXDR;                          /*!< Channel 0 current application receive descriptor register  Address offset: 0x114C */
+       uint32_t RESERVED63;                           /*!< Reserved                                                   Address offset: 0x1150 */
+  __IO uint32_t DMAC0CATXBR;                          /*!< Channel 0 current application transmit buffer register     Address offset: 0x1154 */
+       uint32_t RESERVED64;                           /*!< Reserved                                                   Address offset: 0x1158 */
+  __IO uint32_t DMAC0CARXBR;                          /*!< Channel 0 current application receive buffer register      Address offset: 0x115C */
+  __IO uint32_t DMAC0SR;                              /*!< Channel 0 status register                                  Address offset: 0x1160 */
+  __IO uint32_t DMAC0MFCR;                            /*!< Channel 0 missed frame count register                      Address offset: 0x1164 */
+       uint32_t RESERVED65[6];                        /*!< Reserved                                                   Address offset: 0x1168-0x117C */
+  __IO uint32_t DMAC1CR;                              /*!< Channel 1 control register                                 Address offset: 0x1180 */
+  __IO uint32_t DMAC1TXCR;                            /*!< Channel 1 transmit control register                        Address offset: 0x1184 */
+  __IO uint32_t DMAC1RXCR;                            /*!< Channel 1 receive control register                         Address offset: 0x1188 */
+       uint32_t RESERVED66[2];                        /*!< Reserved                                                   Address offset: 0x118C-0x1190 */
+  __IO uint32_t DMAC1TXDLAR;                          /*!< Channel 1 T1 descriptor list address register              Address offset: 0x1194 */
+       uint32_t RESERVED67;                           /*!< Reserved                                                   Address offset: 0x1198 */
+  __IO uint32_t DMAC1RXDLAR;                          /*!< Channel 1 R1 descriptor list address register              Address offset: 0x119C */
+  __IO uint32_t DMAC1TXDTPR;                          /*!< Channel 1 T1 descriptor tail pointer register              Address offset: 0x11A0 */
+       uint32_t RESERVED68;                           /*!< Reserved                                                   Address offset: 0x11A4 */
+  __IO uint32_t DMAC1RXDTPR;                          /*!< Channel 1 R1 descriptor tail pointer register              Address offset: 0x11A8 */
+  __IO uint32_t DMAC1TXRLR;                           /*!< Channel 1 T1 descriptor ring length register               Address offset: 0x11AC */
+  __IO uint32_t DMAC1RXRLR;                           /*!< Channel 1 R1 descriptor ring length register               Address offset: 0x11B0 */
+  __IO uint32_t DMAC1IER;                             /*!< Channel 1 interrupt enable register                        Address offset: 0x11B4 */
+  __IO uint32_t DMAC1RXIWTR;                          /*!< Channel 1 R1 interrupt watchdog timer register             Address offset: 0x11B8 */
+  __IO uint32_t DMAC1SFCSR;                           /*!< Channel 1 slot function control status register            Address offset: 0x11BC */
+       uint32_t RESERVED69;                           /*!< Reserved                                                   Address offset: 0x11C0 */
+  __IO uint32_t DMAC1CATXDR;                          /*!< Channel 1 current application transmit descriptor register Address offset: 0x11C4 */
+       uint32_t RESERVED70;                           /*!< Reserved                                                   Address offset: 0x11C8 */
+  __IO uint32_t DMAC1CARXDR;                          /*!< Channel 1 current application receive descriptor register  Address offset: 0x11CC */
+       uint32_t RESERVED71;                           /*!< Reserved                                                   Address offset: 0x11D0 */
+  __IO uint32_t DMAC1CATXBR;                          /*!< Channel 1 current application transmit buffer register     Address offset: 0x11D4 */
+       uint32_t RESERVED72;                           /*!< Reserved                                                   Address offset: 0x11D8 */
+  __IO uint32_t DMAC1CARXBR;                          /*!< Channel 1 current application receive buffer register      Address offset: 0x11DC */
+  __IO uint32_t DMAC1SR;                              /*!< Channel 1 status register                                  Address offset: 0x11E0 */
+  __IO uint32_t DMAC1MFCR;                            /*!< Channel 1 missed frame count register                      Address offset: 0x11E4 */
+       uint32_t RESERVED73[6];                        /*!< Reserved                                                   Address offset: 0x11E8-0x11FC */
+  __IO uint32_t DMAC2CR;                              /*!< Channel 2 control register                                 Address offset: 0x1200 */
+  __IO uint32_t DMAC2TXCR;                            /*!< Channel 2 transmit control register                        Address offset: 0x1204 */
+       uint32_t RESERVED74[3];                        /*!< Reserved                                                   Address offset: 0x1208-0x1210 */
+  __IO uint32_t DMAC2TXDLAR;                          /*!< Channel 2 T2 descriptor list address register              Address offset: 0x1214 */
+       uint32_t RESERVED75[2];                        /*!< Reserved                                                   Address offset: 0x1218-0x121C */
+  __IO uint32_t DMAC2TXDTPR;                          /*!< Channel 2 T2 descriptor tail pointer register              Address offset: 0x1220 */
+       uint32_t RESERVED76[2];                        /*!< Reserved                                                   Address offset: 0x1224-0x1228 */
+  __IO uint32_t DMAC2TXRLR;                           /*!< Channel 2 T2 descriptor ring length register               Address offset: 0x122C */
+       uint32_t RESERVED77;                           /*!< Reserved                                                   Address offset: 0x1230 */
+  __IO uint32_t DMAC2IER;                             /*!< Channel 2 interrupt enable register                        Address offset: 0x1234 */
+       uint32_t RESERVED78;                           /*!< Reserved                                                   Address offset: 0x1238 */
+  __IO uint32_t DMAC2SFCSR;                           /*!< Channel 2 slot function control status register            Address offset: 0x123C */
+       uint32_t RESERVED79;                           /*!< Reserved                                                   Address offset: 0x1240 */
+  __IO uint32_t DMAC2CATXDR;                          /*!< Channel 2 current application transmit descriptor register Address offset: 0x1244 */
+       uint32_t RESERVED80[3];                        /*!< Reserved                                                   Address offset: 0x1248-0x1250 */
+  __IO uint32_t DMAC2CATXBR;                          /*!< Channel 2 current application transmit buffer register     Address offset: 0x1254 */
+       uint32_t RESERVED81[2];                        /*!< Reserved                                                   Address offset: 0x1258-0x125C */
+  __IO uint32_t DMAC2SR;                              /*!< Channel 2 status register                                  Address offset: 0x1260 */
+       uint32_t RESERVED82[7];                        /*!< Reserved                                                   Address offset: 0x1264-0x127C */
+  __IO uint32_t DMAC3CR;                              /*!< Channel 3 control register                                 Address offset: 0x1280 */
+  __IO uint32_t DMAC3TXCR;                            /*!< Channel 3 transmit control register                        Address offset: 0x1284 */
+       uint32_t RESERVED83[3];                        /*!< Reserved                                                   Address offset: 0x1288-0x1290 */
+  __IO uint32_t DMAC3TXDLAR;                          /*!< Channel 3 T3 descriptor list address register              Address offset: 0x1294 */
+       uint32_t RESERVED84[2];                        /*!< Reserved                                                   Address offset: 0x1298-0x129C */
+  __IO uint32_t DMAC3TXDTPR;                          /*!< Channel 3 T3 descriptor tail pointer register              Address offset: 0x12A0 */
+       uint32_t RESERVED85[2];                        /*!< Reserved                                                   Address offset: 0x12A4-0x12A8 */
+  __IO uint32_t DMAC3TXRLR;                           /*!< Channel 3 T3 descriptor ring length register               Address offset: 0x12AC */
+       uint32_t RESERVED86;                           /*!< Reserved                                                   Address offset: 0x12B0 */
+  __IO uint32_t DMAC3IER;                             /*!< Channel 3 interrupt enable register                        Address offset: 0x12B4 */
+       uint32_t RESERVED87;                           /*!< Reserved                                                   Address offset: 0x12B8 */
+  __IO uint32_t DMAC3SFCSR;                           /*!< Channel 3 slot function control status register            Address offset: 0x12BC */
+       uint32_t RESERVED88;                           /*!< Reserved                                                   Address offset: 0x12C0 */
+  __IO uint32_t DMAC3CATXDR;                          /*!< Channel 3 current application transmit descriptor register Address offset: 0x12C4 */
+       uint32_t RESERVED89[3];                        /*!< Reserved                                                   Address offset: 0x12C8-0x12D0 */
+  __IO uint32_t DMAC3CATXBR;                          /*!< Channel 3 current application transmit buffer register     Address offset: 0x12D4 */
+       uint32_t RESERVED90[2];                        /*!< Reserved                                                   Address offset: 0x12D8-0x12DC */
+  __IO uint32_t DMAC3SR;                              /*!< Channel 3 status register                                  Address offset: 0x12E0 */
 } ETH_TypeDef;
 
 /*
@@ -4220,7 +4384,6 @@ typedef struct
 #define ETH1                                ((ETH_TypeDef *) ETH1_BASE)
 #define CA35SSC                             ((CA35SSC_TypeDef *) CA35SSC_BASE)
 #define CA35SYSCFG                          ((CA35SYSCFG_TypeDef *) CA35SYSCFG_BASE)
-#define DDRPHYC                             ((DDRPHYC_TypeDef *) DDRPHYC_BASE)
 #define USBH_OHCI                           ((USBH_OHCI_TypeDef *) USBH_OHCI_BASE)
 #define USBH_EHCI                           ((USBH_EHCI_TypeDef *) USBH_EHCI_BASE)
 #define USBDR                               ((USB_OTG_GlobalTypeDef *) USBDR_BASE)
@@ -6694,11 +6857,11 @@ typedef struct
 
 /*********  Bit definition for CA35SSC_LPI_TSGEN_NTS_CR_WC1 register  *********/
 #define CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSREQ_Pos              (8U)
-#define CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSREQ_Msk              (0x1UL << CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSREQ_Pos) *!< 0x00000100 */
-#define CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSREQ                  CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSREQ_Msk           *!<  */
+#define CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSREQ_Msk              (0x1UL << CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSREQ_Pos) /*!< 0x00000100 */
+#define CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSREQ                  CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSREQ_Msk           /*!<  */
 #define CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSACK_Pos              (9U)
-#define CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSACK_Msk              (0x1UL << CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSACK_Pos) *!< 0x00000200 */
-#define CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSACK                  CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSACK_Msk           *!<  */
+#define CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSACK_Msk              (0x1UL << CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSACK_Pos) /*!< 0x00000200 */
+#define CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSACK                  CA35SSC_LPI_TSGEN_NTS_CR_WC1_TS_CSYSACK_Msk           /*!<  */
 
 /*********  Bit definition for CA35SSC_LPI_TSGEN_NTS_CR_WT1 register  *********/
 #define CA35SSC_LPI_TSGEN_NTS_CR_WT1_TS_CSYSREQ_Pos              (8U)
@@ -11177,6 +11340,9 @@ typedef struct
 #define ETH_MACECR_EIPG_2                   (0x4UL << ETH_MACECR_EIPG_Pos)                       /*!< 0x08000000 */
 #define ETH_MACECR_EIPG_3                   (0x8UL << ETH_MACECR_EIPG_Pos)                       /*!< 0x10000000 */
 #define ETH_MACECR_EIPG_4                   (0x10UL << ETH_MACECR_EIPG_Pos)                      /*!< 0x20000000 */
+#define ETH_MACECR_APDIM_Pos                (30U)
+#define ETH_MACECR_APDIM_Msk                (0x1UL << ETH_MACECR_APDIM_Pos)                       /*!< 0x40000000 */
+#define ETH_MACECR_APDIM                    ETH_MACECR_APDIM_Msk                                /*!< ARP Packet Drop if IP Address Mismatch */
 
 /**************  Bit definition for ETH_MACPFR register  ***************/
 #define ETH_MACPFR_PR_Pos                   (0U)
@@ -11226,28 +11392,34 @@ typedef struct
 #define ETH_MACPFR_RA_Msk                   (0x1UL << ETH_MACPFR_RA_Pos)                         /*!< 0x80000000 */
 #define ETH_MACPFR_RA                       ETH_MACPFR_RA_Msk                                   /*!< Receive All */
 
-/**************  Bit definition for ETH_MACWTR register  ***************/
-#define ETH_MACWTR_WTO_Pos                  (0U)
-#define ETH_MACWTR_WTO_Msk                  (0xFUL << ETH_MACWTR_WTO_Pos)                        /*!< 0x0000000F */
-#define ETH_MACWTR_WTO                      ETH_MACWTR_WTO_Msk                                  /*!< Watchdog Timeout */
-#define ETH_MACWTR_WTO_2KB                  (0x0UL << ETH_MACWTR_WTO_Pos)                        /*!< 0x00000001 */
-#define ETH_MACWTR_WTO_3KB                  (0x1UL << ETH_MACWTR_WTO_Pos)                        /*!< 0x00000001 */
-#define ETH_MACWTR_WTO_4KB                  (0x2UL << ETH_MACWTR_WTO_Pos)                        /*!< 0x00000002 */
-#define ETH_MACWTR_WTO_5KB                  (0x3UL << ETH_MACWTR_WTO_Pos)                        /*!< 0x00000003 */
-#define ETH_MACWTR_WTO_6KB                  (0x4UL << ETH_MACWTR_WTO_Pos)                        /*!< 0x00000004 */
-#define ETH_MACWTR_WTO_7KB                  (0x5UL << ETH_MACWTR_WTO_Pos)                        /*!< 0x00000005 */
-#define ETH_MACWTR_WTO_8KB                  (0x6UL << ETH_MACWTR_WTO_Pos)                        /*!< 0x00000006 */
-#define ETH_MACWTR_WTO_9KB                  (0x7UL << ETH_MACWTR_WTO_Pos)                        /*!< 0x00000007 */
-#define ETH_MACWTR_WTO_10KB                 (0x8UL << ETH_MACWTR_WTO_Pos)                        /*!< 0x00000008 */
-#define ETH_MACWTR_WTO_11KB                 (0x9UL << ETH_MACWTR_WTO_Pos)                        /*!< 0x00000009 */
-#define ETH_MACWTR_WTO_12KB                 (0xAUL << ETH_MACWTR_WTO_Pos)                        /*!< 0x0000000A */
-#define ETH_MACWTR_WTO_13KB                 (0xBUL << ETH_MACWTR_WTO_Pos)                        /*!< 0x0000000B */
-#define ETH_MACWTR_WTO_14KB                 (0xCUL << ETH_MACWTR_WTO_Pos)                        /*!< 0x0000000C */
-#define ETH_MACWTR_WTO_15KB                 (0xDUL << ETH_MACWTR_WTO_Pos)                        /*!< 0x0000000D */
-#define ETH_MACWTR_WTO_16KB                 (0xEUL << ETH_MACWTR_WTO_Pos)                        /*!< 0x0000000E */
-#define ETH_MACWTR_PWE_Pos                  (8U)
-#define ETH_MACWTR_PWE_Msk                  (0x1UL << ETH_MACWTR_PWE_Pos)                        /*!< 0x00000100 */
-#define ETH_MACWTR_PWE                      ETH_MACWTR_PWE_Msk                                  /*!< Programmable Watchdog Enable */
+/*****************  Bit definition for ETH_MACWJBTR register  *****************/
+#define ETH_MACWJBTR_WTO_Pos                (0U)
+#define ETH_MACWJBTR_WTO_Msk                (0xFUL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x0000000F */
+#define ETH_MACWJBTR_WTO                    ETH_MACWJBTR_WTO_Msk                                /*!< Watchdog Timeout */
+#define ETH_MACWJBTR_WTO_2KB                (0x0UL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x00000001 */
+#define ETH_MACWJBTR_WTO_3KB                (0x1UL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x00000001 */
+#define ETH_MACWJBTR_WTO_4KB                (0x2UL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x00000002 */
+#define ETH_MACWJBTR_WTO_5KB                (0x3UL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x00000003 */
+#define ETH_MACWJBTR_WTO_6KB                (0x4UL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x00000004 */
+#define ETH_MACWJBTR_WTO_7KB                (0x5UL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x00000005 */
+#define ETH_MACWJBTR_WTO_8KB                (0x6UL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x00000006 */
+#define ETH_MACWJBTR_WTO_9KB                (0x7UL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x00000007 */
+#define ETH_MACWJBTR_WTO_10KB               (0x8UL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x00000008 */
+#define ETH_MACWJBTR_WTO_11KB               (0x9UL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x00000009 */
+#define ETH_MACWJBTR_WTO_12KB               (0xAUL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x0000000A */
+#define ETH_MACWJBTR_WTO_13KB               (0xBUL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x0000000B */
+#define ETH_MACWJBTR_WTO_14KB               (0xCUL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x0000000C */
+#define ETH_MACWJBTR_WTO_15KB               (0xDUL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x0000000D */
+#define ETH_MACWJBTR_WTO_16KB               (0xEUL << ETH_MACWJBTR_WTO_Pos)                       /*!< 0x0000000E */
+#define ETH_MACWJBTR_PWE_Pos                (8U)
+#define ETH_MACWJBTR_PWE_Msk                (0x1UL << ETH_MACWJBTR_PWE_Pos)                       /*!< 0x00000100 */
+#define ETH_MACWJBTR_PWE                    ETH_MACWJBTR_PWE_Msk                                /*!< Programmable Watchdog Enable */
+#define ETH_MACWJBTR_JTO_Pos                (16U)
+#define ETH_MACWJBTR_JTO_Msk                (0xFUL << ETH_MACWJBTR_JTO_Pos)                       /*!< 0x000F0000 */
+#define ETH_MACWJBTR_JTO                    ETH_MACWJBTR_JTO_Msk                                /*!< Jabber Timeout */
+#define ETH_MACWJBTR_PJE_Pos                (24U)
+#define ETH_MACWJBTR_PJE_Msk                (0x1UL << ETH_MACWJBTR_PJE_Pos)                       /*!< 0x01000000 */
+#define ETH_MACWJBTR_PJE                    ETH_MACWJBTR_PJE_Msk                                /*!< Programmable Jabber Enable */
 
 /**************  Bit definition for ETH_MACHT0R register  **************/
 #define ETH_MACHT0R_HT31T0_Pos              (0U)
@@ -11502,6 +11674,21 @@ typedef struct
 #define ETH_MACVIR_VLTI_Pos                 (20U)
 #define ETH_MACVIR_VLTI_Msk                 (0x1UL << ETH_MACVIR_VLTI_Pos)                       /*!< 0x00100000 */
 #define ETH_MACVIR_VLTI                     ETH_MACVIR_VLTI_Msk                                 /*!< VLAN Tag Input */
+#define ETH_MACVIR_CBTI_Pos                 (21U)
+#define ETH_MACVIR_CBTI_Msk                 (0x1UL << ETH_MACVIR_CBTI_Pos)                       /*!< 0x00200000 */
+#define ETH_MACVIR_CBTI                     ETH_MACVIR_CBTI_Msk                                 /*!< Channel based tag insertion */
+#define ETH_MACVIR_ADDR0_Pos                (24U)
+#define ETH_MACVIR_ADDR0_Msk                (0x1UL << ETH_MACVIR_ADDR0_Pos)                      /*!< 0x01000000 */
+#define ETH_MACVIR_ADDR0                    ETH_MACVIR_ADDR0_Msk                                /*!< Address */
+#define ETH_MACVIR_ADDR1_Pos                (25U)
+#define ETH_MACVIR_ADDR1_Msk                (0x1UL << ETH_MACVIR_ADDR1_Pos)                      /*!< 0x02000000 */
+#define ETH_MACVIR_ADDR1                    ETH_MACVIR_ADDR1_Msk                                /*!< Address */
+#define ETH_MACVIR_RDWR_Pos                 (30U)
+#define ETH_MACVIR_RDWR_Msk                 (0x1UL << ETH_MACVIR_RDWR_Pos)                       /*!< 0x40000000 */
+#define ETH_MACVIR_RDWR                     ETH_MACVIR_RDWR_Msk                                 /*!< Read write control */
+#define ETH_MACVIR_BUSY_Pos                 (31U)
+#define ETH_MACVIR_BUSY_Msk                 (0x1UL << ETH_MACVIR_BUSY_Pos)                       /*!< 0x80000000 */
+#define ETH_MACVIR_BUSY                     ETH_MACVIR_BUSY_Msk                                 /*!< Busy */
 
 /**************  Bit definition for ETH_MACIVIR register  **************/
 #define ETH_MACIVIR_VLT_Pos                 (0U)
@@ -11585,29 +11772,25 @@ typedef struct
 #define ETH_MACRXFCR_UP_Msk                 (0x1UL << ETH_MACRXFCR_UP_Pos)                       /*!< 0x00000002 */
 #define ETH_MACRXFCR_UP                     ETH_MACRXFCR_UP_Msk                                 /*!< Unicast Pause Packet Detect */
 
-/*************  Bit definition for ETH_MACTXQPMR register  *************/
-#define ETH_MACTXQPMR_PSTQ0_Pos             (0U)
-#define ETH_MACTXQPMR_PSTQ0_Msk             (0xFFUL << ETH_MACTXQPMR_PSTQ0_Pos)                  /*!< 0x000000FF */
-#define ETH_MACTXQPMR_PSTQ0                 ETH_MACTXQPMR_PSTQ0_Msk                             /*!< Priorities Selected in Transmit Queue 0 */
-#define ETH_MACTXQPMR_PSTQ0_0               (0x1UL << ETH_MACTXQPMR_PSTQ0_Pos)                   /*!< 0x00000001 */
-#define ETH_MACTXQPMR_PSTQ0_1               (0x2UL << ETH_MACTXQPMR_PSTQ0_Pos)                   /*!< 0x00000002 */
-#define ETH_MACTXQPMR_PSTQ0_2               (0x4UL << ETH_MACTXQPMR_PSTQ0_Pos)                   /*!< 0x00000004 */
-#define ETH_MACTXQPMR_PSTQ0_3               (0x8UL << ETH_MACTXQPMR_PSTQ0_Pos)                   /*!< 0x00000008 */
-#define ETH_MACTXQPMR_PSTQ0_4               (0x10UL << ETH_MACTXQPMR_PSTQ0_Pos)                  /*!< 0x00000010 */
-#define ETH_MACTXQPMR_PSTQ0_5               (0x20UL << ETH_MACTXQPMR_PSTQ0_Pos)                  /*!< 0x00000020 */
-#define ETH_MACTXQPMR_PSTQ0_6               (0x40UL << ETH_MACTXQPMR_PSTQ0_Pos)                  /*!< 0x00000040 */
-#define ETH_MACTXQPMR_PSTQ0_7               (0x80UL << ETH_MACTXQPMR_PSTQ0_Pos)                  /*!< 0x00000080 */
-#define ETH_MACTXQPMR_PSTQ1_Pos             (8U)
-#define ETH_MACTXQPMR_PSTQ1_Msk             (0xFFUL << ETH_MACTXQPMR_PSTQ1_Pos)                  /*!< 0x0000FF00 */
-#define ETH_MACTXQPMR_PSTQ1                 ETH_MACTXQPMR_PSTQ1_Msk                             /*!< Priorities Selected in Transmit Queue 1 */
-#define ETH_MACTXQPMR_PSTQ1_0               (0x1UL << ETH_MACTXQPMR_PSTQ1_Pos)                   /*!< 0x00000100 */
-#define ETH_MACTXQPMR_PSTQ1_1               (0x2UL << ETH_MACTXQPMR_PSTQ1_Pos)                   /*!< 0x00000200 */
-#define ETH_MACTXQPMR_PSTQ1_2               (0x4UL << ETH_MACTXQPMR_PSTQ1_Pos)                   /*!< 0x00000400 */
-#define ETH_MACTXQPMR_PSTQ1_3               (0x8UL << ETH_MACTXQPMR_PSTQ1_Pos)                   /*!< 0x00000800 */
-#define ETH_MACTXQPMR_PSTQ1_4               (0x10UL << ETH_MACTXQPMR_PSTQ1_Pos)                  /*!< 0x00001000 */
-#define ETH_MACTXQPMR_PSTQ1_5               (0x20UL << ETH_MACTXQPMR_PSTQ1_Pos)                  /*!< 0x00002000 */
-#define ETH_MACTXQPMR_PSTQ1_6               (0x40UL << ETH_MACTXQPMR_PSTQ1_Pos)                  /*!< 0x00004000 */
-#define ETH_MACTXQPMR_PSTQ1_7               (0x80UL << ETH_MACTXQPMR_PSTQ1_Pos)                  /*!< 0x00008000 */
+/*****************  Bit definition for ETH_MACRXQCR register  *****************/
+#define ETH_MACRXQCR_UFFQE_Pos              (0U)
+#define ETH_MACRXQCR_UFFQE_Msk              (0x1UL << ETH_MACRXQCR_UFFQE_Pos)                     /*!< 0x00000001 */
+#define ETH_MACRXQCR_UFFQE                  ETH_MACRXQCR_UFFQE_Msk                              /*!< Unicast Address Filter Fail Packets Queuing Enable */
+#define ETH_MACRXQCR_UFFQ_Pos               (1U)
+#define ETH_MACRXQCR_UFFQ_Msk               (0x1UL << ETH_MACRXQCR_UFFQ_Pos)                      /*!< 0x00000002 */
+#define ETH_MACRXQCR_UFFQ                   ETH_MACRXQCR_UFFQ_Msk                               /*!< Unicast Address Filter Fail Packets Queue */
+#define ETH_MACRXQCR_MFFQE_Pos              (8U)
+#define ETH_MACRXQCR_MFFQE_Msk              (0x1UL << ETH_MACRXQCR_MFFQE_Pos)                     /*!< 0x00000100 */
+#define ETH_MACRXQCR_MFFQE                  ETH_MACRXQCR_MFFQE_Msk                              /*!< Multicast Address Filter Fail Packets Queuing Enable */
+#define ETH_MACRXQCR_MFFQ_Pos               (9U)
+#define ETH_MACRXQCR_MFFQ_Msk               (0x1UL << ETH_MACRXQCR_MFFQ_Pos)                      /*!< 0x00000200 */
+#define ETH_MACRXQCR_MFFQ                   ETH_MACRXQCR_MFFQ_Msk                               /*!< Multicast Address Filter Fail Packets Queue */
+#define ETH_MACRXQCR_VFFQE_Pos              (16U)
+#define ETH_MACRXQCR_VFFQE_Msk              (0x1UL << ETH_MACRXQCR_VFFQE_Pos)                     /*!< 0x00010000 */
+#define ETH_MACRXQCR_VFFQE                  ETH_MACRXQCR_VFFQE_Msk                              /*!< VLAN Tag Filter Fail Packets Queuing Enable */
+#define ETH_MACRXQCR_VFFQ_Pos               (17U)
+#define ETH_MACRXQCR_VFFQ_Msk               (0x1UL << ETH_MACRXQCR_VFFQ_Pos)                      /*!< 0x00020000 */
+#define ETH_MACRXQCR_VFFQ                   ETH_MACRXQCR_VFFQ_Msk                               /*!< VLAN Tag Filter Fail Packets Queue */
 
 /*************  Bit definition for ETH_MACRXQC0R register  *************/
 #define ETH_MACRXQC0R_RXQ0EN_Pos            (0U)
@@ -11652,6 +11835,24 @@ typedef struct
 #define ETH_MACRXQC1R_TACPQE_Pos            (21U)
 #define ETH_MACRXQC1R_TACPQE_Msk            (0x1UL << ETH_MACRXQC1R_TACPQE_Pos)                  /*!< 0x00200000 */
 #define ETH_MACRXQC1R_TACPQE                ETH_MACRXQC1R_TACPQE_Msk                            /*!< Tagged AV Control Packets Queuing Enable. */
+#define ETH_MACRXQC1R_TPQC_Pos              (22U)
+#define ETH_MACRXQC1R_TPQC_Msk              (0x3UL << ETH_MACRXQC1R_TPQC_Pos)                    /*!< 0x00C00000 */
+#define ETH_MACRXQC1R_TPQC                  ETH_MACRXQC1R_TPQC_Msk                              /*!< Tagged PTP over Ethernet Packets Queuing Control */
+#define ETH_MACRXQC1R_FPRQ0_Pos             (24U)
+#define ETH_MACRXQC1R_FPRQ0_Msk             (0x1UL << ETH_MACRXQC1R_FPRQ0_Pos)                   /*!< 0x01000000 */
+#define ETH_MACRXQC1R_FPRQ0                 ETH_MACRXQC1R_FPRQ0_Msk                             /*!< Frame Preemption Residue Queue */
+#define ETH_MACRXQC1R_FPRQ1_Pos             (25U)
+#define ETH_MACRXQC1R_FPRQ1_Msk             (0x1UL << ETH_MACRXQC1R_FPRQ1_Pos)                   /*!< 0x02000000 */
+#define ETH_MACRXQC1R_FPRQ1                 ETH_MACRXQC1R_FPRQ1_Msk                             /*!< Frame Preemption Residue Queue */
+#define ETH_MACRXQC1R_FPRQ2_Pos             (26U)
+#define ETH_MACRXQC1R_FPRQ2_Msk             (0x1UL << ETH_MACRXQC1R_FPRQ2_Pos)                   /*!< 0x04000000 */
+#define ETH_MACRXQC1R_FPRQ2                 ETH_MACRXQC1R_FPRQ2_Msk                             /*!< Frame Preemption Residue Queue */
+#define ETH_MACRXQC1R_OMCBCQ_Pos            (28U)
+#define ETH_MACRXQC1R_OMCBCQ_Msk            (0x1UL << ETH_MACRXQC1R_OMCBCQ_Pos)                  /*!< 0x10000000 */
+#define ETH_MACRXQC1R_OMCBCQ                ETH_MACRXQC1R_OMCBCQ_Msk                            /*!< Overriding MC-BC queue priority select */
+#define ETH_MACRXQC1R_TBRQE_Pos             (29U)
+#define ETH_MACRXQC1R_TBRQE_Msk             (0x1UL << ETH_MACRXQC1R_TBRQE_Pos)                   /*!< 0x20000000 */
+#define ETH_MACRXQC1R_TBRQE                 ETH_MACRXQC1R_TBRQE_Msk                             /*!< Type Field Based Rx Queuing Enable */
 
 /*************  Bit definition for ETH_MACRXQC2R register  *************/
 #define ETH_MACRXQC2R_PSRQ0_Pos             (0U)
@@ -11708,6 +11909,18 @@ typedef struct
 #define ETH_MACISR_RXSTSIS_Pos              (14U)
 #define ETH_MACISR_RXSTSIS_Msk              (0x1UL << ETH_MACISR_RXSTSIS_Pos)                    /*!< 0x00004000 */
 #define ETH_MACISR_RXSTSIS                  ETH_MACISR_RXSTSIS_Msk                              /*!< Receive Status Interrupt */
+#define ETH_MACISR_FPEIS_Pos                (17U)
+#define ETH_MACISR_FPEIS_Msk                (0x1UL << ETH_MACISR_FPEIS_Pos)                       /*!< 0x00020000 */
+#define ETH_MACISR_FPEIS                    ETH_MACISR_FPEIS_Msk                                /*!< Frame Preemption Interrupt Status */
+#define ETH_MACISR_MDIOIS_Pos               (18U)
+#define ETH_MACISR_MDIOIS_Msk               (0x1UL << ETH_MACISR_MDIOIS_Pos)                      /*!< 0x00040000 */
+#define ETH_MACISR_MDIOIS                   ETH_MACISR_MDIOIS_Msk                               /*!< MDIO Interrupt Status */
+#define ETH_MACISR_MFTIS_Pos                (19U)
+#define ETH_MACISR_MFTIS_Msk                (0x1UL << ETH_MACISR_MFTIS_Pos)                       /*!< 0x00080000 */
+#define ETH_MACISR_MFTIS                    ETH_MACISR_MFTIS_Msk                                /*!< MMC FPE Transmit Interrupt Status */
+#define ETH_MACISR_MFRIS_Pos                (20U)
+#define ETH_MACISR_MFRIS_Msk                (0x1UL << ETH_MACISR_MFRIS_Pos)                       /*!< 0x00100000 */
+#define ETH_MACISR_MFRIS                    ETH_MACISR_MFRIS_Msk                                /*!< MMC FPE Receive Interrupt Status */
 
 /**************  Bit definition for ETH_MACIER register  ***************/
 #define ETH_MACIER_RGSMIIIE_Pos             (0U)
@@ -11731,6 +11944,12 @@ typedef struct
 #define ETH_MACIER_RXSTSIE_Pos              (14U)
 #define ETH_MACIER_RXSTSIE_Msk              (0x1UL << ETH_MACIER_RXSTSIE_Pos)                    /*!< 0x00004000 */
 #define ETH_MACIER_RXSTSIE                  ETH_MACIER_RXSTSIE_Msk                              /*!< Receive Status Interrupt Enable */
+#define ETH_MACIER_FPEIE_Pos                (17U)
+#define ETH_MACIER_FPEIE_Msk                (0x1UL << ETH_MACIER_FPEIE_Pos)                      /*!< 0x00020000 */
+#define ETH_MACIER_FPEIE                    ETH_MACIER_FPEIE_Msk                                /*!< Frame Preemption Interrupt Enable */
+#define ETH_MACIER_MDIOIE_Pos               (18U)
+#define ETH_MACIER_MDIOIE_Msk               (0x1UL << ETH_MACIER_MDIOIE_Pos)                     /*!< 0x00040000 */
+#define ETH_MACIER_MDIOIE                   ETH_MACIER_MDIOIE_Msk                               /*!< MDIO Interrupt Enable */
 
 /*************  Bit definition for ETH_MACRXTXSR register  *************/
 #define ETH_MACRXTXSR_TJT_Pos               (0U)
@@ -11998,6 +12217,68 @@ typedef struct
 #define ETH_MACDR_TFCSTS_0                  (0x1UL << ETH_MACDR_TFCSTS_Pos)                      /*!< 0x00020000 */
 #define ETH_MACDR_TFCSTS_1                  (0x2UL << ETH_MACDR_TFCSTS_Pos)                      /*!< 0x00040000 */
 
+/*****************  Bit definition for ETH_MACHWF0R register  *****************/
+#define ETH_MACHWF0R_MIISEL_Pos             (0U)
+#define ETH_MACHWF0R_MIISEL_Msk             (0x1UL << ETH_MACHWF0R_MIISEL_Pos)                    /*!< 0x00000001 */
+#define ETH_MACHWF0R_MIISEL                 ETH_MACHWF0R_MIISEL_Msk                              /*!< 10 or 100 Mbps Support */
+#define ETH_MACHWF0R_GMIISEL_Pos            (1U)
+#define ETH_MACHWF0R_GMIISEL_Msk            (0x1UL << ETH_MACHWF0R_GMIISEL_Pos)                   /*!< 0x00000002 */
+#define ETH_MACHWF0R_GMIISEL                ETH_MACHWF0R_GMIISEL_Msk                             /*!< 1000 Mbps Support */
+#define ETH_MACHWF0R_HDSEL_Pos              (2U)
+#define ETH_MACHWF0R_HDSEL_Msk              (0x1UL << ETH_MACHWF0R_HDSEL_Pos)                     /*!< 0x00000004 */
+#define ETH_MACHWF0R_HDSEL                  ETH_MACHWF0R_HDSEL_Msk                               /*!< Half-duplex Support */
+#define ETH_MACHWF0R_PCSSEL_Pos             (3U)
+#define ETH_MACHWF0R_PCSSEL_Msk             (0x1UL << ETH_MACHWF0R_PCSSEL_Pos)                    /*!< 0x00000008 */
+#define ETH_MACHWF0R_PCSSEL                 ETH_MACHWF0R_PCSSEL_Msk                              /*!< PCS Registers (TBI, SGMII, or RTBI PHY interface) */
+#define ETH_MACHWF0R_VLHASH_Pos             (4U)
+#define ETH_MACHWF0R_VLHASH_Msk             (0x1UL << ETH_MACHWF0R_VLHASH_Pos)                    /*!< 0x00000010 */
+#define ETH_MACHWF0R_VLHASH                 ETH_MACHWF0R_VLHASH_Msk                              /*!< VLAN Hash Filter Selected */
+#define ETH_MACHWF0R_SMASEL_Pos             (5U)
+#define ETH_MACHWF0R_SMASEL_Msk             (0x1UL << ETH_MACHWF0R_SMASEL_Pos)                    /*!< 0x00000020 */
+#define ETH_MACHWF0R_SMASEL                 ETH_MACHWF0R_SMASEL_Msk                              /*!< SMA (MDIO) Interface */
+#define ETH_MACHWF0R_RWKSEL_Pos             (6U)
+#define ETH_MACHWF0R_RWKSEL_Msk             (0x1UL << ETH_MACHWF0R_RWKSEL_Pos)                    /*!< 0x00000040 */
+#define ETH_MACHWF0R_RWKSEL                 ETH_MACHWF0R_RWKSEL_Msk                              /*!< PMT Remote Wake-up Packet Enable */
+#define ETH_MACHWF0R_MGKSEL_Pos             (7U)
+#define ETH_MACHWF0R_MGKSEL_Msk             (0x1UL << ETH_MACHWF0R_MGKSEL_Pos)                    /*!< 0x00000080 */
+#define ETH_MACHWF0R_MGKSEL                 ETH_MACHWF0R_MGKSEL_Msk                              /*!< PMT Magic Packet Enable */
+#define ETH_MACHWF0R_MMCSEL_Pos             (8U)
+#define ETH_MACHWF0R_MMCSEL_Msk             (0x1UL << ETH_MACHWF0R_MMCSEL_Pos)                    /*!< 0x00000100 */
+#define ETH_MACHWF0R_MMCSEL                 ETH_MACHWF0R_MMCSEL_Msk                              /*!< RMON Module Enable */
+#define ETH_MACHWF0R_ARPOFFSEL_Pos          (9U)
+#define ETH_MACHWF0R_ARPOFFSEL_Msk          (0x1UL << ETH_MACHWF0R_ARPOFFSEL_Pos)                 /*!< 0x00000200 */
+#define ETH_MACHWF0R_ARPOFFSEL              ETH_MACHWF0R_ARPOFFSEL_Msk                           /*!< ARP Offload Enabled */
+#define ETH_MACHWF0R_TSSEL_Pos              (12U)
+#define ETH_MACHWF0R_TSSEL_Msk              (0x1UL << ETH_MACHWF0R_TSSEL_Pos)                     /*!< 0x00001000 */
+#define ETH_MACHWF0R_TSSEL                  ETH_MACHWF0R_TSSEL_Msk                               /*!< IEEE 1588-2008 Timestamp Enabled */
+#define ETH_MACHWF0R_EEESEL_Pos             (13U)
+#define ETH_MACHWF0R_EEESEL_Msk             (0x1UL << ETH_MACHWF0R_EEESEL_Pos)                    /*!< 0x00002000 */
+#define ETH_MACHWF0R_EEESEL                 ETH_MACHWF0R_EEESEL_Msk                              /*!< Energy Efficient Ethernet Enabled */
+#define ETH_MACHWF0R_TXCOESEL_Pos           (14U)
+#define ETH_MACHWF0R_TXCOESEL_Msk           (0x1UL << ETH_MACHWF0R_TXCOESEL_Pos)                  /*!< 0x00004000 */
+#define ETH_MACHWF0R_TXCOESEL               ETH_MACHWF0R_TXCOESEL_Msk                            /*!< Transmit Checksum Offload Enabled */
+#define ETH_MACHWF0R_RXCOESEL_Pos           (16U)
+#define ETH_MACHWF0R_RXCOESEL_Msk           (0x1UL << ETH_MACHWF0R_RXCOESEL_Pos)                  /*!< 0x00010000 */
+#define ETH_MACHWF0R_RXCOESEL               ETH_MACHWF0R_RXCOESEL_Msk                            /*!< Receive Checksum Offload Enabled */
+#define ETH_MACHWF0R_ADDMACADRSEL_Pos       (18U)
+#define ETH_MACHWF0R_ADDMACADRSEL_Msk       (0x1FU << ETH_MACHWF0R_ADDMACADRSEL_Pos)             /*!< 0x007C0000 */
+#define ETH_MACHWF0R_ADDMACADRSEL           ETH_MACHWF0R_ADDMACADRSEL_Msk                        /*!< MAC Addresses 1-31 Selected */
+#define ETH_MACHWF0R_MACADR32SEL_Pos        (23U)
+#define ETH_MACHWF0R_MACADR32SEL_Msk        (0x1UL << ETH_MACHWF0R_MACADR32SEL_Pos)               /*!< 0x00800000 */
+#define ETH_MACHWF0R_MACADR32SEL            ETH_MACHWF0R_MACADR32SEL_Msk                         /*!< MAC Addresses 32-63 Selected */
+#define ETH_MACHWF0R_MACADR64SEL_Pos        (24U)
+#define ETH_MACHWF0R_MACADR64SEL_Msk        (0x1UL << ETH_MACHWF0R_MACADR64SEL_Pos)               /*!< 0x01000000 */
+#define ETH_MACHWF0R_MACADR64SEL            ETH_MACHWF0R_MACADR64SEL_Msk                         /*!< MAC Addresses 64-127 Selected */
+#define ETH_MACHWF0R_TSSTSSEL_Pos           (25U)
+#define ETH_MACHWF0R_TSSTSSEL_Msk           (0x3U << ETH_MACHWF0R_TSSTSSEL_Pos)                  /*!< 0x06000000 */
+#define ETH_MACHWF0R_TSSTSSEL               ETH_MACHWF0R_TSSTSSEL_Msk                            /*!< Timestamp System Time Source */
+#define ETH_MACHWF0R_SAVLANINS_Pos          (27U)
+#define ETH_MACHWF0R_SAVLANINS_Msk          (0x1UL << ETH_MACHWF0R_SAVLANINS_Pos)                 /*!< 0x08000000 */
+#define ETH_MACHWF0R_SAVLANINS              ETH_MACHWF0R_SAVLANINS_Msk                           /*!< Source Address or VLAN Insertion Enable */
+#define ETH_MACHWF0R_ACTPHYSEL_Pos          (28U)
+#define ETH_MACHWF0R_ACTPHYSEL_Msk          (0x7U << ETH_MACHWF0R_ACTPHYSEL_Pos)                 /*!< 0x70000000 */
+#define ETH_MACHWF0R_ACTPHYSEL              ETH_MACHWF0R_ACTPHYSEL_Msk                           /*!< Active PHY Selected */
+
 /*************  Bit definition for ETH_MACHWF1R register  **************/
 #define ETH_MACHWF1R_RXFIFOSIZE_Pos         (0U)
 #define ETH_MACHWF1R_RXFIFOSIZE_Msk         (0x1FUL << ETH_MACHWF1R_RXFIFOSIZE_Pos)              /*!< 0x0000001F */
@@ -12007,6 +12288,9 @@ typedef struct
 #define ETH_MACHWF1R_RXFIFOSIZE_2           (0x4UL << ETH_MACHWF1R_RXFIFOSIZE_Pos)               /*!< 0x00000004 */
 #define ETH_MACHWF1R_RXFIFOSIZE_3           (0x8UL << ETH_MACHWF1R_RXFIFOSIZE_Pos)               /*!< 0x00000008 */
 #define ETH_MACHWF1R_RXFIFOSIZE_4           (0x10UL << ETH_MACHWF1R_RXFIFOSIZE_Pos)              /*!< 0x00000010 */
+#define ETH_MACHWF1R_SPRAM_Pos              (5U)
+#define ETH_MACHWF1R_SPRAM_Msk              (0x1UL << ETH_MACHWF1R_SPRAM_Pos)                     /*!< 0x00000020 */
+#define ETH_MACHWF1R_SPRAM                  ETH_MACHWF1R_SPRAM_Msk                               /*!< Single Port RAM Enable */
 #define ETH_MACHWF1R_TXFIFOSIZE_Pos         (6U)
 #define ETH_MACHWF1R_TXFIFOSIZE_Msk         (0x1FUL << ETH_MACHWF1R_TXFIFOSIZE_Pos)              /*!< 0x000007C0 */
 #define ETH_MACHWF1R_TXFIFOSIZE             ETH_MACHWF1R_TXFIFOSIZE_Msk                         /*!< MTL Transmit FIFO Size */
@@ -12044,6 +12328,12 @@ typedef struct
 #define ETH_MACHWF1R_AVSEL_Pos              (20U)
 #define ETH_MACHWF1R_AVSEL_Msk              (0x1UL << ETH_MACHWF1R_AVSEL_Pos)                    /*!< 0x00100000 */
 #define ETH_MACHWF1R_AVSEL                  ETH_MACHWF1R_AVSEL_Msk                              /*!< AV Feature Enable */
+#define ETH_MACHWF1R_RAVSEL_Pos             (21U)
+#define ETH_MACHWF1R_RAVSEL_Msk             (0x1UL << ETH_MACHWF1R_RAVSEL_Pos)                    /*!< 0x00200000 */
+#define ETH_MACHWF1R_RAVSEL                 ETH_MACHWF1R_RAVSEL_Msk                             /*!< Rx Side Only AV Feature Enable */
+#define ETH_MACHWF1R_POUOST_Pos             (23U)
+#define ETH_MACHWF1R_POUOST_Msk             (0x1UL << ETH_MACHWF1R_POUOST_Pos)                    /*!< 0x00800000 */
+#define ETH_MACHWF1R_POUOST                 ETH_MACHWF1R_POUOST_Msk                             /*!< One Step for PTP over UDP/IP Feature Enable */
 #define ETH_MACHWF1R_HASHTBLSZ_Pos          (24U)
 #define ETH_MACHWF1R_HASHTBLSZ_Msk          (0x3UL << ETH_MACHWF1R_HASHTBLSZ_Pos)                /*!< 0x03000000 */
 #define ETH_MACHWF1R_HASHTBLSZ              ETH_MACHWF1R_HASHTBLSZ_Msk                          /*!< Hash Table Size */
@@ -12079,6 +12369,9 @@ typedef struct
 #define ETH_MACHWF2R_RXCHCNT_1              (0x2UL << ETH_MACHWF2R_RXCHCNT_Pos)                  /*!< 0x00002000 */
 #define ETH_MACHWF2R_RXCHCNT_2              (0x4UL << ETH_MACHWF2R_RXCHCNT_Pos)                  /*!< 0x00004000 */
 #define ETH_MACHWF2R_RXCHCNT_3              (0x8UL << ETH_MACHWF2R_RXCHCNT_Pos)                  /*!< 0x00008000 */
+#define ETH_MACHWF2R_RDCSZ_Pos              (16U)
+#define ETH_MACHWF2R_RDCSZ_Msk              (0x3UL << ETH_MACHWF2R_RDCSZ_Pos)                     /*!< 0x00030000 */
+#define ETH_MACHWF2R_RDCSZ                  ETH_MACHWF2R_RDCSZ_Msk                              /*!< Rx DMA Descriptor Cache Size in terms of 16-byte descriptors */
 #define ETH_MACHWF2R_TXCHCNT_Pos            (18U)
 #define ETH_MACHWF2R_TXCHCNT_Msk            (0xFUL << ETH_MACHWF2R_TXCHCNT_Pos)                  /*!< 0x003C0000 */
 #define ETH_MACHWF2R_TXCHCNT                ETH_MACHWF2R_TXCHCNT_Msk                            /*!< Number of DMA Transmit Channels */
@@ -12086,6 +12379,9 @@ typedef struct
 #define ETH_MACHWF2R_TXCHCNT_1              (0x2UL << ETH_MACHWF2R_TXCHCNT_Pos)                  /*!< 0x00080000 */
 #define ETH_MACHWF2R_TXCHCNT_2              (0x4UL << ETH_MACHWF2R_TXCHCNT_Pos)                  /*!< 0x00100000 */
 #define ETH_MACHWF2R_TXCHCNT_3              (0x8UL << ETH_MACHWF2R_TXCHCNT_Pos)                  /*!< 0x00200000 */
+#define ETH_MACHWF2R_TDCSZ_Pos              (22U)
+#define ETH_MACHWF2R_TDCSZ_Msk              (0x3UL << ETH_MACHWF2R_TDCSZ_Pos)                    /*!< 0x00C00000 */
+#define ETH_MACHWF2R_TDCSZ                  ETH_MACHWF2R_TDCSZ_Msk                              /*!< Tx DMA Descriptor Cache Size in terms of 16-byte descriptors */
 #define ETH_MACHWF2R_PPSOUTNUM_Pos          (24U)
 #define ETH_MACHWF2R_PPSOUTNUM_Msk          (0x7UL << ETH_MACHWF2R_PPSOUTNUM_Pos)                /*!< 0x07000000 */
 #define ETH_MACHWF2R_PPSOUTNUM              ETH_MACHWF2R_PPSOUTNUM_Msk                          /*!< Number of PPS Outputs */
@@ -12152,6 +12448,47 @@ typedef struct
 #define ETH_MACMDIOAR_PSE_Msk               (0x1UL << ETH_MACMDIOAR_PSE_Pos)                     /*!< 0x08000000 */
 #define ETH_MACMDIOAR_PSE                   ETH_MACMDIOAR_PSE_Msk                               /*!< Preamble Suppression Enable */
 
+/*****************  Bit definition for ETH_MACHWF3R register  *****************/
+#define ETH_MACHWF3R_NRVF_Pos               (0U)
+#define ETH_MACHWF3R_NRVF_Msk               (0x7UL << ETH_MACHWF3R_NRVF_Pos)                      /*!< 0x00000007 */
+#define ETH_MACHWF3R_NRVF                   ETH_MACHWF3R_NRVF_Msk                                /*!< Number of Extended VLAN Tag Filters Enabled */
+#define ETH_MACHWF3R_CBTISEL_Pos            (4U)
+#define ETH_MACHWF3R_CBTISEL_Msk            (0x1UL << ETH_MACHWF3R_CBTISEL_Pos)                   /*!< 0x00000010 */
+#define ETH_MACHWF3R_CBTISEL                ETH_MACHWF3R_CBTISEL_Msk                             /*!< Queue/Channel based VLAN tag insertion on Tx enable */
+#define ETH_MACHWF3R_DVLAN_Pos              (5U)
+#define ETH_MACHWF3R_DVLAN_Msk              (0x1UL << ETH_MACHWF3R_DVLAN_Pos)                     /*!< 0x00000020 */
+#define ETH_MACHWF3R_DVLAN                  ETH_MACHWF3R_DVLAN_Msk                               /*!< Double VLAN processing enable */
+#define ETH_MACHWF3R_PDUPSEL_Pos            (9U)
+#define ETH_MACHWF3R_PDUPSEL_Msk            (0x1UL << ETH_MACHWF3R_PDUPSEL_Pos)                   /*!< 0x00000200 */
+#define ETH_MACHWF3R_PDUPSEL                ETH_MACHWF3R_PDUPSEL_Msk                             /*!< Broadcast/Multicast Packet Duplication */
+#define ETH_MACHWF3R_FRPSEL_Pos             (10U)
+#define ETH_MACHWF3R_FRPSEL_Msk             (0x1UL << ETH_MACHWF3R_FRPSEL_Pos)                    /*!< 0x00000400 */
+#define ETH_MACHWF3R_FRPSEL                 ETH_MACHWF3R_FRPSEL_Msk                              /*!< Flexible Receive Parser Selected */
+#define ETH_MACHWF3R_FRPBS_Pos              (11U)
+#define ETH_MACHWF3R_FRPBS_Msk              (0x3UL << ETH_MACHWF3R_FRPBS_Pos)                     /*!< 0x00001800 */
+#define ETH_MACHWF3R_FRPBS                  ETH_MACHWF3R_FRPBS_Msk                               /*!< Flexible Receive Parser Buffer size */
+#define ETH_MACHWF3R_FRPES_Pos              (13U)
+#define ETH_MACHWF3R_FRPES_Msk              (0x3UL << ETH_MACHWF3R_FRPES_Pos)                     /*!< 0x00006000 */
+#define ETH_MACHWF3R_FRPES                  ETH_MACHWF3R_FRPES_Msk                               /*!< Flexible Receive Parser Table Entries size */
+#define ETH_MACHWF3R_ESTSEL_Pos             (16U)
+#define ETH_MACHWF3R_ESTSEL_Msk             (0x1UL << ETH_MACHWF3R_ESTSEL_Pos)                    /*!< 0x00010000 */
+#define ETH_MACHWF3R_ESTSEL                 ETH_MACHWF3R_ESTSEL_Msk                              /*!< Enhancements to Scheduled Traffic Enable */
+#define ETH_MACHWF3R_ESTDEP_Pos             (17U)
+#define ETH_MACHWF3R_ESTDEP_Msk             (0x7UL << ETH_MACHWF3R_ESTDEP_Pos)                    /*!< 0x000E0000 */
+#define ETH_MACHWF3R_ESTDEP                 ETH_MACHWF3R_ESTDEP_Msk                              /*!< Depth of the Gate Control List */
+#define ETH_MACHWF3R_ESTWID_Pos             (20U)
+#define ETH_MACHWF3R_ESTWID_Msk             (0x3UL << ETH_MACHWF3R_ESTWID_Pos)                    /*!< 0x00300000 */
+#define ETH_MACHWF3R_ESTWID                 ETH_MACHWF3R_ESTWID_Msk                              /*!< Width of the Time Interval field in the Gate Control List */
+#define ETH_MACHWF3R_FPESEL_Pos             (26U)
+#define ETH_MACHWF3R_FPESEL_Msk             (0x1UL << ETH_MACHWF3R_FPESEL_Pos)                    /*!< 0x04000000 */
+#define ETH_MACHWF3R_FPESEL                 ETH_MACHWF3R_FPESEL_Msk                              /*!< Frame Preemption Enable */
+#define ETH_MACHWF3R_TBSSEL_Pos             (27U)
+#define ETH_MACHWF3R_TBSSEL_Msk             (0x1UL << ETH_MACHWF3R_TBSSEL_Pos)                    /*!< 0x08000000 */
+#define ETH_MACHWF3R_TBSSEL                 ETH_MACHWF3R_TBSSEL_Msk                              /*!< Time-based scheduling Enable */
+#define ETH_MACHWF3R_ASP_Pos                (28U)
+#define ETH_MACHWF3R_ASP_Msk                (0x3UL << ETH_MACHWF3R_ASP_Pos)                       /*!< 0x30000000 */
+#define ETH_MACHWF3R_ASP                    ETH_MACHWF3R_ASP_Msk                                 /*!< Automotive Safety Package */
+
 /*************  Bit definition for ETH_MACMDIODR register  *************/
 #define ETH_MACMDIODR_GD_Pos                (0U)
 #define ETH_MACMDIODR_GD_Msk                (0xFFFFUL << ETH_MACMDIODR_GD_Pos)                   /*!< 0x0000FFFF */
@@ -12192,6 +12529,50 @@ typedef struct
 #define ETH_MACMDIODR_RA_14                 (0x4000UL << ETH_MACMDIODR_RA_Pos)                   /*!< 0x40000000 */
 #define ETH_MACMDIODR_RA_15                 (0x8000UL << ETH_MACMDIODR_RA_Pos)                   /*!< 0x80000000 */
 
+/****************  Bit definition for ETH_MACCSRSWCR register  ****************/
+#define ETH_MACCSRSWCR_RCWE_Pos             (0U)
+#define ETH_MACCSRSWCR_RCWE_Msk             (0x1UL << ETH_MACCSRSWCR_RCWE_Pos)                    /*!< 0x00000001 */
+#define ETH_MACCSRSWCR_RCWE                 ETH_MACCSRSWCR_RCWE_Msk                             /*!< Register Clear on Write 1 Enable */
+#define ETH_MACCSRSWCR_SEEN_Pos             (8U)
+#define ETH_MACCSRSWCR_SEEN_Msk             (0x1UL << ETH_MACCSRSWCR_SEEN_Pos)                    /*!< 0x00000100 */
+#define ETH_MACCSRSWCR_SEEN                 ETH_MACCSRSWCR_SEEN_Msk                             /*!< Slave Error Response Enable */
+
+/****************  Bit definition for ETH_MACFPECSR register  *****************/
+#define ETH_MACFPECSR_EFPE_Pos              (0U)
+#define ETH_MACFPECSR_EFPE_Msk              (0x1UL << ETH_MACFPECSR_EFPE_Pos)                     /*!< 0x00000001 */
+#define ETH_MACFPECSR_EFPE                  ETH_MACFPECSR_EFPE_Msk                              /*!< Enable Tx Frame Preemption */
+#define ETH_MACFPECSR_SVER_Pos              (1U)
+#define ETH_MACFPECSR_SVER_Msk              (0x1UL << ETH_MACFPECSR_SVER_Pos)                     /*!< 0x00000002 */
+#define ETH_MACFPECSR_SVER                  ETH_MACFPECSR_SVER_Msk                              /*!< Send Verify mPacket */
+#define ETH_MACFPECSR_SRSP_Pos              (2U)
+#define ETH_MACFPECSR_SRSP_Msk              (0x1UL << ETH_MACFPECSR_SRSP_Pos)                     /*!< 0x00000004 */
+#define ETH_MACFPECSR_SRSP                  ETH_MACFPECSR_SRSP_Msk                              /*!< Send Respond mPacket */
+#define ETH_MACFPECSR_ARV_Pos               (3U)
+#define ETH_MACFPECSR_ARV_Msk               (0x1UL << ETH_MACFPECSR_ARV_Pos)                      /*!< 0x00000008 */
+#define ETH_MACFPECSR_ARV                   ETH_MACFPECSR_ARV_Msk                               /*!< Autogenerate Respond mPacket on receiving Verify mPacket */
+#define ETH_MACFPECSR_RVER_Pos              (16U)
+#define ETH_MACFPECSR_RVER_Msk              (0x1UL << ETH_MACFPECSR_RVER_Pos)                     /*!< 0x00010000 */
+#define ETH_MACFPECSR_RVER                  ETH_MACFPECSR_RVER_Msk                              /*!< Received Verify Frame */
+#define ETH_MACFPECSR_RRSP_Pos              (17U)
+#define ETH_MACFPECSR_RRSP_Msk              (0x1UL << ETH_MACFPECSR_RRSP_Pos)                     /*!< 0x00020000 */
+#define ETH_MACFPECSR_RRSP                  ETH_MACFPECSR_RRSP_Msk                              /*!< Received Respond Frame */
+#define ETH_MACFPECSR_TVER_Pos              (18U)
+#define ETH_MACFPECSR_TVER_Msk              (0x1UL << ETH_MACFPECSR_TVER_Pos)                     /*!< 0x00040000 */
+#define ETH_MACFPECSR_TVER                  ETH_MACFPECSR_TVER_Msk                              /*!< Transmitted Verify Frame */
+#define ETH_MACFPECSR_TRSP_Pos              (19U)
+#define ETH_MACFPECSR_TRSP_Msk              (0x1UL << ETH_MACFPECSR_TRSP_Pos)                     /*!< 0x00080000 */
+#define ETH_MACFPECSR_TRSP                  ETH_MACFPECSR_TRSP_Msk                              /*!< Transmitted Respond Frame */
+
+/****************  Bit definition for ETH_MACPRSTIMR register  ****************/
+#define ETH_MACPRSTIMR_MPTN_Pos             (0U)
+#define ETH_MACPRSTIMR_MPTN_Msk             (0xFFFFFFFFUL << ETH_MACPRSTIMR_MPTN_Pos)             /*!< 0xFFFFFFFF */
+#define ETH_MACPRSTIMR_MPTN                 ETH_MACPRSTIMR_MPTN_Msk                              /*!< MAC 1722 Presentation Time in ns */
+
+/***************  Bit definition for ETH_MACPRSTIMUR register  ****************/
+#define ETH_MACPRSTIMUR_MPTU_Pos            (0U)
+#define ETH_MACPRSTIMUR_MPTU_Msk            (0xFFFFFFFFUL << ETH_MACPRSTIMUR_MPTU_Pos)            /*!< 0xFFFFFFFF */
+#define ETH_MACPRSTIMUR_MPTU                ETH_MACPRSTIMUR_MPTU_Msk                             /*!< MAC 1722 Presentation Time Update */
+
 /**************  Bit definition for ETH_MACA0HR register  **************/
 #define ETH_MACA0HR_ADDRHI_Pos              (0U)
 #define ETH_MACA0HR_ADDRHI_Msk              (0xFFFFUL << ETH_MACA0HR_ADDRHI_Pos)                 /*!< 0x0000FFFF */
@@ -12212,6 +12593,9 @@ typedef struct
 #define ETH_MACA0HR_ADDRHI_13               (0x2000UL << ETH_MACA0HR_ADDRHI_Pos)                 /*!< 0x00002000 */
 #define ETH_MACA0HR_ADDRHI_14               (0x4000UL << ETH_MACA0HR_ADDRHI_Pos)                 /*!< 0x00004000 */
 #define ETH_MACA0HR_ADDRHI_15               (0x8000UL << ETH_MACA0HR_ADDRHI_Pos)                 /*!< 0x00008000 */
+#define ETH_MACA0HR_DCS_Pos                 (16U)
+#define ETH_MACA0HR_DCS_Msk                 (0x1UL << ETH_MACA0HR_DCS_Pos)                       /*!< 0x00010000 */
+#define ETH_MACA0HR_DCS                     ETH_MACA0HR_DCS_Msk                                 /*!< DMA Channel Select */
 #define ETH_MACA0HR_AE_Pos                  (31U)
 #define ETH_MACA0HR_AE_Msk                  (0x1UL << ETH_MACA0HR_AE_Pos)                        /*!< 0x80000000 */
 #define ETH_MACA0HR_AE                      ETH_MACA0HR_AE_Msk                                  /*!< Address Enable */
@@ -12273,6 +12657,9 @@ typedef struct
 #define ETH_MACA1HR_ADDRHI_13               (0x2000UL << ETH_MACA1HR_ADDRHI_Pos)                 /*!< 0x00002000 */
 #define ETH_MACA1HR_ADDRHI_14               (0x4000UL << ETH_MACA1HR_ADDRHI_Pos)                 /*!< 0x00004000 */
 #define ETH_MACA1HR_ADDRHI_15               (0x8000UL << ETH_MACA1HR_ADDRHI_Pos)                 /*!< 0x00008000 */
+#define ETH_MACA1HR_DCS_Pos                 (16U)
+#define ETH_MACA1HR_DCS_Msk                 (0x1UL << ETH_MACA1HR_DCS_Pos)                        /*!< 0x00010000 */
+#define ETH_MACA1HR_DCS                     ETH_MACA1HR_DCS_Msk                                 /*!< DMA Channel Select */
 #define ETH_MACA1HR_MBC_Pos                 (24U)
 #define ETH_MACA1HR_MBC_Msk                 (0x3FUL << ETH_MACA1HR_MBC_Pos)                      /*!< 0x3F000000 */
 #define ETH_MACA1HR_MBC                     ETH_MACA1HR_MBC_Msk                                 /*!< Mask Byte Control */
@@ -12346,6 +12733,9 @@ typedef struct
 #define ETH_MACA2HR_ADDRHI_13               (0x2000UL << ETH_MACA2HR_ADDRHI_Pos)                 /*!< 0x00002000 */
 #define ETH_MACA2HR_ADDRHI_14               (0x4000UL << ETH_MACA2HR_ADDRHI_Pos)                 /*!< 0x00004000 */
 #define ETH_MACA2HR_ADDRHI_15               (0x8000UL << ETH_MACA2HR_ADDRHI_Pos)                 /*!< 0x00008000 */
+#define ETH_MACA2HR_DCS_Pos                 (16U)
+#define ETH_MACA2HR_DCS_Msk                 (0x1UL << ETH_MACA2HR_DCS_Pos)                        /*!< 0x00010000 */
+#define ETH_MACA2HR_DCS                     ETH_MACA2HR_DCS_Msk                                 /*!< DMA Channel Select */
 #define ETH_MACA2HR_MBC_Pos                 (24U)
 #define ETH_MACA2HR_MBC_Msk                 (0x3FUL << ETH_MACA2HR_MBC_Pos)                      /*!< 0x3F000000 */
 #define ETH_MACA2HR_MBC                     ETH_MACA2HR_MBC_Msk                                 /*!< Mask Byte Control */
@@ -12419,6 +12809,9 @@ typedef struct
 #define ETH_MACA3HR_ADDRHI_13               (0x2000UL << ETH_MACA3HR_ADDRHI_Pos)                 /*!< 0x00002000 */
 #define ETH_MACA3HR_ADDRHI_14               (0x4000UL << ETH_MACA3HR_ADDRHI_Pos)                 /*!< 0x00004000 */
 #define ETH_MACA3HR_ADDRHI_15               (0x8000UL << ETH_MACA3HR_ADDRHI_Pos)                 /*!< 0x00008000 */
+#define ETH_MACA3HR_DCS_Pos                 (16U)
+#define ETH_MACA3HR_DCS_Msk                 (0x1UL << ETH_MACA3HR_DCS_Pos)                        /*!< 0x00010000 */
+#define ETH_MACA3HR_DCS                     ETH_MACA3HR_DCS_Msk                                 /*!< DMA Channel Select */
 #define ETH_MACA3HR_MBC_Pos                 (24U)
 #define ETH_MACA3HR_MBC_Msk                 (0x3FUL << ETH_MACA3HR_MBC_Pos)                      /*!< 0x3F000000 */
 #define ETH_MACA3HR_MBC                     ETH_MACA3HR_MBC_Msk                                 /*!< Mask Byte Control */
@@ -12472,466 +12865,726 @@ typedef struct
 #define ETH_MACA3LR_ADDRLO_30               (0x40000000UL << ETH_MACA3LR_ADDRLO_Pos)             /*!< 0x40000000 */
 #define ETH_MACA3LR_ADDRLO_31               (0x80000000UL << ETH_MACA3LR_ADDRLO_Pos)             /*!< 0x80000000 */
 
-/************  Bit definition for ETH_MMC_CONTROL register  ************/
-#define ETH_MMCCR_CNTRST_Pos                (0U)
-#define ETH_MMCCR_CNTRST_Msk                (0x1UL << ETH_MMCCR_CNTRST_Pos)                /*!< 0x00000001 */
-#define ETH_MMCCR_CNTRST                    ETH_MMCCR_CNTRST_Msk                          /*!< Counters Reset */
-#define ETH_MMCCR_CNTSTOPRO_Pos             (1U)
-#define ETH_MMCCR_CNTSTOPRO_Msk             (0x1UL << ETH_MMCCR_CNTSTOPRO_Pos)             /*!< 0x00000002 */
-#define ETH_MMCCR_CNTSTOPRO                 ETH_MMCCR_CNTSTOPRO_Msk                       /*!< Counter Stop Rollover */
-#define ETH_MMCCR_RSTONRD_Pos               (2U)
-#define ETH_MMCCR_RSTONRD_Msk               (0x1UL << ETH_MMCCR_RSTONRD_Pos)               /*!< 0x00000004 */
-#define ETH_MMCCR_RSTONRD                   ETH_MMCCR_RSTONRD_Msk                         /*!< Reset on Read */
-#define ETH_MMCCR_CNTFREEZ_Pos              (3U)
-#define ETH_MMCCR_CNTFREEZ_Msk              (0x1UL << ETH_MMCCR_CNTFREEZ_Pos)              /*!< 0x00000008 */
-#define ETH_MMCCR_CNTFREEZ                  ETH_MMCCR_CNTFREEZ_Msk                        /*!< MMC Counter Freeze */
-#define ETH_MMCCR_CNTPRST_Pos               (4U)
-#define ETH_MMCCR_CNTPRST_Msk               (0x1UL << ETH_MMCCR_CNTPRST_Pos)               /*!< 0x00000010 */
-#define ETH_MMCCR_CNTPRST                   ETH_MMCCR_CNTPRST_Msk                         /*!< Counters Preset */
-#define ETH_MMCCR_CNTPRSTLVL_Pos            (5U)
-#define ETH_MMCCR_CNTPRSTLVL_Msk            (0x1UL << ETH_MMCCR_CNTPRSTLVL_Pos)            /*!< 0x00000020 */
-#define ETH_MMCCR_CNTPRSTLVL                ETH_MMCCR_CNTPRSTLVL_Msk                      /*!< Full-Half Preset */
-#define ETH_MMCCR_UCDBC_Pos                 (8U)
-#define ETH_MMCCR_UCDBC_Msk                 (0x1UL << ETH_MMCCR_UCDBC_Pos)                 /*!< 0x00000100 */
-#define ETH_MMCCR_UCDBC                     ETH_MMCCR_UCDBC_Msk                           /*!< Update MMC Counters for Dropped Broadcast Packets */
+/***************  Bit definition for ETH_MMC_CONTROL register  ****************/
+#define ETH_MMC_CONTROL_CNTRST_Pos          (0U)
+#define ETH_MMC_CONTROL_CNTRST_Msk          (0x1UL << ETH_MMC_CONTROL_CNTRST_Pos)                 /*!< 0x00000001 */
+#define ETH_MMC_CONTROL_CNTRST              ETH_MMC_CONTROL_CNTRST_Msk                           /*!< Counters Reset */
+#define ETH_MMC_CONTROL_CNTSTOPRO_Pos       (1U)
+#define ETH_MMC_CONTROL_CNTSTOPRO_Msk       (0x1UL << ETH_MMC_CONTROL_CNTSTOPRO_Pos)              /*!< 0x00000002 */
+#define ETH_MMC_CONTROL_CNTSTOPRO           ETH_MMC_CONTROL_CNTSTOPRO_Msk                        /*!< Counter Stop Rollover */
+#define ETH_MMC_CONTROL_RSTONRD_Pos         (2U)
+#define ETH_MMC_CONTROL_RSTONRD_Msk         (0x1UL << ETH_MMC_CONTROL_RSTONRD_Pos)                /*!< 0x00000004 */
+#define ETH_MMC_CONTROL_RSTONRD             ETH_MMC_CONTROL_RSTONRD_Msk                          /*!< Reset on Read */
+#define ETH_MMC_CONTROL_CNTFREEZ_Pos        (3U)
+#define ETH_MMC_CONTROL_CNTFREEZ_Msk        (0x1UL << ETH_MMC_CONTROL_CNTFREEZ_Pos)               /*!< 0x00000008 */
+#define ETH_MMC_CONTROL_CNTFREEZ            ETH_MMC_CONTROL_CNTFREEZ_Msk                         /*!< MMC Counter Freeze */
+#define ETH_MMC_CONTROL_CNTPRST_Pos         (4U)
+#define ETH_MMC_CONTROL_CNTPRST_Msk         (0x1UL << ETH_MMC_CONTROL_CNTPRST_Pos)                /*!< 0x00000010 */
+#define ETH_MMC_CONTROL_CNTPRST             ETH_MMC_CONTROL_CNTPRST_Msk                          /*!< Counters Preset */
+#define ETH_MMC_CONTROL_CNTPRSTLVL_Pos      (5U)
+#define ETH_MMC_CONTROL_CNTPRSTLVL_Msk      (0x1UL << ETH_MMC_CONTROL_CNTPRSTLVL_Pos)             /*!< 0x00000020 */
+#define ETH_MMC_CONTROL_CNTPRSTLVL          ETH_MMC_CONTROL_CNTPRSTLVL_Msk                       /*!< Full-Half Preset */
+#define ETH_MMC_CONTROL_UCDBC_Pos           (8U)
+#define ETH_MMC_CONTROL_UCDBC_Msk           (0x1UL << ETH_MMC_CONTROL_UCDBC_Pos)                  /*!< 0x00000100 */
+#define ETH_MMC_CONTROL_UCDBC               ETH_MMC_CONTROL_UCDBC_Msk                            /*!< Update MMC Counters for Dropped Broadcast Packets */
 
-/***********  Bit definition for ETH_MMC_RX_INTERRUPT register  ************/
-#define ETH_MMCRXIR_RXCRCERPIS_Pos          (5U)
-#define ETH_MMCRXIR_RXCRCERPIS_Msk          (0x1UL << ETH_MMCRXIR_RXCRCERPIS_Pos)         /*!< 0x00000020 */
-#define ETH_MMCRXIR_RXCRCERPIS              ETH_MMCRXIR_RXCRCERPIS_Msk                   /*!< MMC Receive CRC Error Packet Counter Interrupt Status */
-#define ETH_MMCRXIR_RXALGNERPIS_Pos         (6U)
-#define ETH_MMCRXIR_RXALGNERPIS_Msk         (0x1UL << ETH_MMCRXIR_RXALGNERPIS_Pos)        /*!< 0x00000040 */
-#define ETH_MMCRXIR_RXALGNERPIS             ETH_MMCRXIR_RXALGNERPIS_Msk                  /*!< MMC Receive Alignment Error Packet Counter Interrupt Status */
-#define ETH_MMCRXIR_RXUCGPIS_Pos            (17U)
-#define ETH_MMCRXIR_RXUCGPIS_Msk            (0x1UL << ETH_MMCRXIR_RXUCGPIS_Pos)           /*!< 0x00020000 */
-#define ETH_MMCRXIR_RXUCGPIS                ETH_MMCRXIR_RXUCGPIS_Msk                     /*!< MMC Receive Unicast Good Packet Counter Interrupt Status */
-#define ETH_MMCRXIR_RXLPIUSCIS_Pos          (26U)
-#define ETH_MMCRXIR_RXLPIUSCIS_Msk          (0x1UL << ETH_MMCRXIR_RXLPIUSCIS_Pos)         /*!< 0x04000000 */
-#define ETH_MMCRXIR_RXLPIUSCIS              ETH_MMCRXIR_RXLPIUSCIS_Msk                   /*!< MMC Receive LPI microsecond counter interrupt status */
-#define ETH_MMCRXIR_RXLPITRCIS_Pos          (27U)
-#define ETH_MMCRXIR_RXLPITRCIS_Msk          (0x1UL << ETH_MMCRXIR_RXLPITRCIS_Pos)         /*!< 0x08000000 */
-#define ETH_MMCRXIR_RXLPITRCIS              ETH_MMCRXIR_RXLPITRCIS_Msk                   /*!< MMC Receive LPI transition counter interrupt status */
+/*************  Bit definition for ETH_MMC_RX_INTERRUPT register  *************/
+#define ETH_MMC_RX_INTERRUPT_RXGBPKTIS_Pos            (0U)
+#define ETH_MMC_RX_INTERRUPT_RXGBPKTIS_Msk            (0x1UL << ETH_MMC_RX_INTERRUPT_RXGBPKTIS_Pos)             /*!< 0x00000001 */
+#define ETH_MMC_RX_INTERRUPT_RXGBPKTIS                ETH_MMC_RX_INTERRUPT_RXGBPKTIS_Msk                       /*!< MMC Receive Good Bad Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXGBOCTIS_Pos            (1U)
+#define ETH_MMC_RX_INTERRUPT_RXGBOCTIS_Msk            (0x1UL << ETH_MMC_RX_INTERRUPT_RXGBOCTIS_Pos)             /*!< 0x00000002 */
+#define ETH_MMC_RX_INTERRUPT_RXGBOCTIS                ETH_MMC_RX_INTERRUPT_RXGBOCTIS_Msk                       /*!< MMC Receive Good Bad Octet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXGOCTIS_Pos             (2U)
+#define ETH_MMC_RX_INTERRUPT_RXGOCTIS_Msk             (0x1UL << ETH_MMC_RX_INTERRUPT_RXGOCTIS_Pos)              /*!< 0x00000004 */
+#define ETH_MMC_RX_INTERRUPT_RXGOCTIS                 ETH_MMC_RX_INTERRUPT_RXGOCTIS_Msk                        /*!< MMC Receive Good Octet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXBCGPIS_Pos             (3U)
+#define ETH_MMC_RX_INTERRUPT_RXBCGPIS_Msk             (0x1UL << ETH_MMC_RX_INTERRUPT_RXBCGPIS_Pos)              /*!< 0x00000008 */
+#define ETH_MMC_RX_INTERRUPT_RXBCGPIS                 ETH_MMC_RX_INTERRUPT_RXBCGPIS_Msk                        /*!< MMC Receive Broadcast Good Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXMCGPIS_Pos             (4U)
+#define ETH_MMC_RX_INTERRUPT_RXMCGPIS_Msk             (0x1UL << ETH_MMC_RX_INTERRUPT_RXMCGPIS_Pos)              /*!< 0x00000010 */
+#define ETH_MMC_RX_INTERRUPT_RXMCGPIS                 ETH_MMC_RX_INTERRUPT_RXMCGPIS_Msk                        /*!< MMC Receive Multicast Good Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXCRCERPIS_Pos           (5U)
+#define ETH_MMC_RX_INTERRUPT_RXCRCERPIS_Msk           (0x1UL << ETH_MMC_RX_INTERRUPT_RXCRCERPIS_Pos)            /*!< 0x00000020 */
+#define ETH_MMC_RX_INTERRUPT_RXCRCERPIS               ETH_MMC_RX_INTERRUPT_RXCRCERPIS_Msk                      /*!< MMC Receive CRC Error Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXALGNERPIS_Pos          (6U)
+#define ETH_MMC_RX_INTERRUPT_RXALGNERPIS_Msk          (0x1UL << ETH_MMC_RX_INTERRUPT_RXALGNERPIS_Pos)           /*!< 0x00000040 */
+#define ETH_MMC_RX_INTERRUPT_RXALGNERPIS              ETH_MMC_RX_INTERRUPT_RXALGNERPIS_Msk                     /*!< MMC Receive Alignment Error Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXRUNTPIS_Pos            (7U)
+#define ETH_MMC_RX_INTERRUPT_RXRUNTPIS_Msk            (0x1UL << ETH_MMC_RX_INTERRUPT_RXRUNTPIS_Pos)             /*!< 0x00000080 */
+#define ETH_MMC_RX_INTERRUPT_RXRUNTPIS                ETH_MMC_RX_INTERRUPT_RXRUNTPIS_Msk                       /*!< MMC Receive Runt Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXJABERPIS_Pos           (8U)
+#define ETH_MMC_RX_INTERRUPT_RXJABERPIS_Msk           (0x1UL << ETH_MMC_RX_INTERRUPT_RXJABERPIS_Pos)            /*!< 0x00000100 */
+#define ETH_MMC_RX_INTERRUPT_RXJABERPIS               ETH_MMC_RX_INTERRUPT_RXJABERPIS_Msk                      /*!< MMC Receive Jabber Error Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXUSIZEGPIS_Pos          (9U)
+#define ETH_MMC_RX_INTERRUPT_RXUSIZEGPIS_Msk          (0x1UL << ETH_MMC_RX_INTERRUPT_RXUSIZEGPIS_Pos)           /*!< 0x00000200 */
+#define ETH_MMC_RX_INTERRUPT_RXUSIZEGPIS              ETH_MMC_RX_INTERRUPT_RXUSIZEGPIS_Msk                     /*!< MMC Receive Undersize Good Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXOSIZEGPIS_Pos          (10U)
+#define ETH_MMC_RX_INTERRUPT_RXOSIZEGPIS_Msk          (0x1UL << ETH_MMC_RX_INTERRUPT_RXOSIZEGPIS_Pos)           /*!< 0x00000400 */
+#define ETH_MMC_RX_INTERRUPT_RXOSIZEGPIS              ETH_MMC_RX_INTERRUPT_RXOSIZEGPIS_Msk                     /*!< MMC Receive Oversize Good Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RX64OCTGBPIS_Pos         (11U)
+#define ETH_MMC_RX_INTERRUPT_RX64OCTGBPIS_Msk         (0x1UL << ETH_MMC_RX_INTERRUPT_RX64OCTGBPIS_Pos)          /*!< 0x00000800 */
+#define ETH_MMC_RX_INTERRUPT_RX64OCTGBPIS             ETH_MMC_RX_INTERRUPT_RX64OCTGBPIS_Msk                    /*!< MMC Receive 64 Octet Good Bad Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RX65T127OCTGBPIS_Pos     (12U)
+#define ETH_MMC_RX_INTERRUPT_RX65T127OCTGBPIS_Msk     (0x1UL << ETH_MMC_RX_INTERRUPT_RX65T127OCTGBPIS_Pos)      /*!< 0x00001000 */
+#define ETH_MMC_RX_INTERRUPT_RX65T127OCTGBPIS         ETH_MMC_RX_INTERRUPT_RX65T127OCTGBPIS_Msk                /*!< MMC Receive 65 to 127 Octet Good Bad Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RX128T255OCTGBPIS_Pos    (13U)
+#define ETH_MMC_RX_INTERRUPT_RX128T255OCTGBPIS_Msk    (0x1UL << ETH_MMC_RX_INTERRUPT_RX128T255OCTGBPIS_Pos)     /*!< 0x00002000 */
+#define ETH_MMC_RX_INTERRUPT_RX128T255OCTGBPIS        ETH_MMC_RX_INTERRUPT_RX128T255OCTGBPIS_Msk               /*!< MMC Receive 128 to 255 Octet Good Bad Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RX256T511OCTGBPIS_Pos    (14U)
+#define ETH_MMC_RX_INTERRUPT_RX256T511OCTGBPIS_Msk    (0x1UL << ETH_MMC_RX_INTERRUPT_RX256T511OCTGBPIS_Pos)     /*!< 0x00004000 */
+#define ETH_MMC_RX_INTERRUPT_RX256T511OCTGBPIS        ETH_MMC_RX_INTERRUPT_RX256T511OCTGBPIS_Msk               /*!< MMC Receive 256 to 511 Octet Good Bad Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RX512T1023OCTGBPIS_Pos   (15U)
+#define ETH_MMC_RX_INTERRUPT_RX512T1023OCTGBPIS_Msk   (0x1UL << ETH_MMC_RX_INTERRUPT_RX512T1023OCTGBPIS_Pos)    /*!< 0x00008000 */
+#define ETH_MMC_RX_INTERRUPT_RX512T1023OCTGBPIS       ETH_MMC_RX_INTERRUPT_RX512T1023OCTGBPIS_Msk              /*!< MMC Receive 512 to 1023 Octet Good Bad Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RX1024TMAXOCTGBPIS_Pos   (16U)
+#define ETH_MMC_RX_INTERRUPT_RX1024TMAXOCTGBPIS_Msk   (0x1UL << ETH_MMC_RX_INTERRUPT_RX1024TMAXOCTGBPIS_Pos)    /*!< 0x00010000 */
+#define ETH_MMC_RX_INTERRUPT_RX1024TMAXOCTGBPIS       ETH_MMC_RX_INTERRUPT_RX1024TMAXOCTGBPIS_Msk              /*!< MMC Receive 1024 to Maximum Octet Good Bad Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXUCGPIS_Pos             (17U)
+#define ETH_MMC_RX_INTERRUPT_RXUCGPIS_Msk             (0x1UL << ETH_MMC_RX_INTERRUPT_RXUCGPIS_Pos)              /*!< 0x00020000 */
+#define ETH_MMC_RX_INTERRUPT_RXUCGPIS                 ETH_MMC_RX_INTERRUPT_RXUCGPIS_Msk                        /*!< MMC Receive Unicast Good Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXLENERPIS_Pos           (18U)
+#define ETH_MMC_RX_INTERRUPT_RXLENERPIS_Msk           (0x1UL << ETH_MMC_RX_INTERRUPT_RXLENERPIS_Pos)            /*!< 0x00040000 */
+#define ETH_MMC_RX_INTERRUPT_RXLENERPIS               ETH_MMC_RX_INTERRUPT_RXLENERPIS_Msk                      /*!< MMC Receive Length Error Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXORANGEPIS_Pos          (19U)
+#define ETH_MMC_RX_INTERRUPT_RXORANGEPIS_Msk          (0x1UL << ETH_MMC_RX_INTERRUPT_RXORANGEPIS_Pos)           /*!< 0x00080000 */
+#define ETH_MMC_RX_INTERRUPT_RXORANGEPIS              ETH_MMC_RX_INTERRUPT_RXORANGEPIS_Msk                     /*!< MMC Receive Out Of Range Error Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXPAUSPIS_Pos            (20U)
+#define ETH_MMC_RX_INTERRUPT_RXPAUSPIS_Msk            (0x1UL << ETH_MMC_RX_INTERRUPT_RXPAUSPIS_Pos)             /*!< 0x00100000 */
+#define ETH_MMC_RX_INTERRUPT_RXPAUSPIS                ETH_MMC_RX_INTERRUPT_RXPAUSPIS_Msk                       /*!< MMC Receive Pause Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXFOVPIS_Pos             (21U)
+#define ETH_MMC_RX_INTERRUPT_RXFOVPIS_Msk             (0x1UL << ETH_MMC_RX_INTERRUPT_RXFOVPIS_Pos)              /*!< 0x00200000 */
+#define ETH_MMC_RX_INTERRUPT_RXFOVPIS                 ETH_MMC_RX_INTERRUPT_RXFOVPIS_Msk                        /*!< MMC Receive FIFO Overflow Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXVLANGBPIS_Pos          (22U)
+#define ETH_MMC_RX_INTERRUPT_RXVLANGBPIS_Msk          (0x1UL << ETH_MMC_RX_INTERRUPT_RXVLANGBPIS_Pos)           /*!< 0x00400000 */
+#define ETH_MMC_RX_INTERRUPT_RXVLANGBPIS              ETH_MMC_RX_INTERRUPT_RXVLANGBPIS_Msk                     /*!< MMC Receive VLAN Good Bad Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXWDOGPIS_Pos            (23U)
+#define ETH_MMC_RX_INTERRUPT_RXWDOGPIS_Msk            (0x1UL << ETH_MMC_RX_INTERRUPT_RXWDOGPIS_Pos)             /*!< 0x00800000 */
+#define ETH_MMC_RX_INTERRUPT_RXWDOGPIS                ETH_MMC_RX_INTERRUPT_RXWDOGPIS_Msk                       /*!< MMC Receive Watchdog Error Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXRCVERRPIS_Pos          (24U)
+#define ETH_MMC_RX_INTERRUPT_RXRCVERRPIS_Msk          (0x1UL << ETH_MMC_RX_INTERRUPT_RXRCVERRPIS_Pos)           /*!< 0x01000000 */
+#define ETH_MMC_RX_INTERRUPT_RXRCVERRPIS              ETH_MMC_RX_INTERRUPT_RXRCVERRPIS_Msk                     /*!< MMC Receive Error Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXCTRLPIS_Pos            (25U)
+#define ETH_MMC_RX_INTERRUPT_RXCTRLPIS_Msk            (0x1UL << ETH_MMC_RX_INTERRUPT_RXCTRLPIS_Pos)             /*!< 0x02000000 */
+#define ETH_MMC_RX_INTERRUPT_RXCTRLPIS                ETH_MMC_RX_INTERRUPT_RXCTRLPIS_Msk                       /*!< MMC Receive Control Packet Counter Interrupt Status */
+#define ETH_MMC_RX_INTERRUPT_RXLPIUSCIS_Pos           (26U)
+#define ETH_MMC_RX_INTERRUPT_RXLPIUSCIS_Msk           (0x1UL << ETH_MMC_RX_INTERRUPT_RXLPIUSCIS_Pos)            /*!< 0x04000000 */
+#define ETH_MMC_RX_INTERRUPT_RXLPIUSCIS               ETH_MMC_RX_INTERRUPT_RXLPIUSCIS_Msk                      /*!< MMC Receive LPI microsecond counter interrupt status */
+#define ETH_MMC_RX_INTERRUPT_RXLPITRCIS_Pos           (27U)
+#define ETH_MMC_RX_INTERRUPT_RXLPITRCIS_Msk           (0x1UL << ETH_MMC_RX_INTERRUPT_RXLPITRCIS_Pos)            /*!< 0x08000000 */
+#define ETH_MMC_RX_INTERRUPT_RXLPITRCIS               ETH_MMC_RX_INTERRUPT_RXLPITRCIS_Msk                      /*!< MMC Receive LPI transition counter interrupt status */
 
-/***********  Bit definition for ETH_MMC_TX_INTERRUPT register  ************/
-#define ETH_MMCTXIR_TXSCOLGPIS_Pos          (14U)
-#define ETH_MMCTXIR_TXSCOLGPIS_Msk          (0x1UL << ETH_MMCTXIR_TXSCOLGPIS_Pos)         /*!< 0x00004000 */
-#define ETH_MMCTXIR_TXSCOLGPIS              ETH_MMCTXIR_TXSCOLGPIS_Msk                   /*!< MMC Transmit Single Collision Good Packet Counter Interrupt Status */
-#define ETH_MMCTXIR_TXMCOLGPIS_Pos          (15U)
-#define ETH_MMCTXIR_TXMCOLGPIS_Msk          (0x1UL << ETH_MMCTXIR_TXMCOLGPIS_Pos)         /*!< 0x00008000 */
-#define ETH_MMCTXIR_TXMCOLGPIS              ETH_MMCTXIR_TXMCOLGPIS_Msk                   /*!< MMC Transmit Multiple Collision Good Packet Counter Interrupt Status */
-#define ETH_MMCTXIR_TXGPKTIS_Pos            (21U)
-#define ETH_MMCTXIR_TXGPKTIS_Msk            (0x1UL << ETH_MMCTXIR_TXGPKTIS_Pos)           /*!< 0x00200000 */
-#define ETH_MMCTXIR_TXGPKTIS                ETH_MMCTXIR_TXGPKTIS_Msk                     /*!< MMC Transmit Good Packet Counter Interrupt Status */
-#define ETH_MMCTXIR_TXLPIUSCIS_Pos          (26U)
-#define ETH_MMCTXIR_TXLPIUSCIS_Msk          (0x1UL << ETH_MMCTXIR_TXLPIUSCIS_Pos)         /*!< 0x04000000 */
-#define ETH_MMCTXIR_TXLPIUSCIS              ETH_MMCTXIR_TXLPIUSCIS_Msk                   /*!< MMC Transmit LPI microsecond counter interrupt status */
-#define ETH_MMCTXIR_TXLPITRCIS_Pos          (27U)
-#define ETH_MMCTXIR_TXLPITRCIS_Msk          (0x1UL << ETH_MMCTXIR_TXLPITRCIS_Pos)         /*!< 0x08000000 */
-#define ETH_MMCTXIR_TXLPITRCIS              ETH_MMCTXIR_TXLPITRCIS_Msk                   /*!< MMC Transmit LPI transition counter interrupt status */
+/*************  Bit definition for ETH_MMC_TX_INTERRUPT register  *************/
+#define ETH_MMC_TX_INTERRUPT_TXGBOCTIS_Pos            (0U)
+#define ETH_MMC_TX_INTERRUPT_TXGBOCTIS_Msk            (0x1UL << ETH_MMC_TX_INTERRUPT_TXGBOCTIS_Pos)                /*!< 0x00000001 */
+#define ETH_MMC_TX_INTERRUPT_TXGBOCTIS                ETH_MMC_TX_INTERRUPT_TXGBOCTIS_Msk                         /*!< MMC Transmit Good Bad Octet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXGBPKTIS_Pos            (1U)
+#define ETH_MMC_TX_INTERRUPT_TXGBPKTIS_Msk            (0x1UL << ETH_MMC_TX_INTERRUPT_TXGBPKTIS_Pos)                /*!< 0x00000002 */
+#define ETH_MMC_TX_INTERRUPT_TXGBPKTIS                ETH_MMC_TX_INTERRUPT_TXGBPKTIS_Msk                         /*!< MMC Transmit Good Bad Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXBCGPIS_Pos             (2U)
+#define ETH_MMC_TX_INTERRUPT_TXBCGPIS_Msk             (0x1UL << ETH_MMC_TX_INTERRUPT_TXBCGPIS_Pos)                 /*!< 0x00000004 */
+#define ETH_MMC_TX_INTERRUPT_TXBCGPIS                 ETH_MMC_TX_INTERRUPT_TXBCGPIS_Msk                          /*!< MMC Transmit Broadcast Good Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXMCGPIS_Pos             (3U)
+#define ETH_MMC_TX_INTERRUPT_TXMCGPIS_Msk             (0x1UL << ETH_MMC_TX_INTERRUPT_TXMCGPIS_Pos)                 /*!< 0x00000008 */
+#define ETH_MMC_TX_INTERRUPT_TXMCGPIS                 ETH_MMC_TX_INTERRUPT_TXMCGPIS_Msk                          /*!< MMC Transmit Multicast Good Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TX64OCTGBPIS_Pos         (4U)
+#define ETH_MMC_TX_INTERRUPT_TX64OCTGBPIS_Msk         (0x1UL << ETH_MMC_TX_INTERRUPT_TX64OCTGBPIS_Pos)             /*!< 0x00000010 */
+#define ETH_MMC_TX_INTERRUPT_TX64OCTGBPIS             ETH_MMC_TX_INTERRUPT_TX64OCTGBPIS_Msk                      /*!< MMC Transmit 64 Octet Good Bad Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TX65T127OCTGBPIS_Pos     (5U)
+#define ETH_MMC_TX_INTERRUPT_TX65T127OCTGBPIS_Msk     (0x1UL << ETH_MMC_TX_INTERRUPT_TX65T127OCTGBPIS_Pos)         /*!< 0x00000020 */
+#define ETH_MMC_TX_INTERRUPT_TX65T127OCTGBPIS         ETH_MMC_TX_INTERRUPT_TX65T127OCTGBPIS_Msk                  /*!< MMC Transmit 65 to 127 Octet Good Bad Packet Counter */
+#define ETH_MMC_TX_INTERRUPT_TX128T255OCTGBPIS_Pos    (6U)
+#define ETH_MMC_TX_INTERRUPT_TX128T255OCTGBPIS_Msk    (0x1UL << ETH_MMC_TX_INTERRUPT_TX128T255OCTGBPIS_Pos)        /*!< 0x00000040 */
+#define ETH_MMC_TX_INTERRUPT_TX128T255OCTGBPIS        ETH_MMC_TX_INTERRUPT_TX128T255OCTGBPIS_Msk                 /*!< MMC Transmit 128 to 255 Octet Good Bad Packet Counter */
+#define ETH_MMC_TX_INTERRUPT_TX256T511OCTGBPIS_Pos    (7U)
+#define ETH_MMC_TX_INTERRUPT_TX256T511OCTGBPIS_Msk    (0x1UL << ETH_MMC_TX_INTERRUPT_TX256T511OCTGBPIS_Pos)        /*!< 0x00000080 */
+#define ETH_MMC_TX_INTERRUPT_TX256T511OCTGBPIS        ETH_MMC_TX_INTERRUPT_TX256T511OCTGBPIS_Msk                 /*!< MMC Transmit 256 to 511 Octet Good Bad Packet Counter */
+#define ETH_MMC_TX_INTERRUPT_TX512T1023OCTGBPIS_Pos   (8U)
+#define ETH_MMC_TX_INTERRUPT_TX512T1023OCTGBPIS_Msk   (0x1UL << ETH_MMC_TX_INTERRUPT_TX512T1023OCTGBPIS_Pos)       /*!< 0x00000100 */
+#define ETH_MMC_TX_INTERRUPT_TX512T1023OCTGBPIS       ETH_MMC_TX_INTERRUPT_TX512T1023OCTGBPIS_Msk                /*!< MMC Transmit 512 to 1023 Octet Good Bad Packet Counter */
+#define ETH_MMC_TX_INTERRUPT_TX1024TMAXOCTGBPIS_Pos   (9U)
+#define ETH_MMC_TX_INTERRUPT_TX1024TMAXOCTGBPIS_Msk   (0x1UL << ETH_MMC_TX_INTERRUPT_TX1024TMAXOCTGBPIS_Pos)       /*!< 0x00000200 */
+#define ETH_MMC_TX_INTERRUPT_TX1024TMAXOCTGBPIS       ETH_MMC_TX_INTERRUPT_TX1024TMAXOCTGBPIS_Msk                /*!< MMC Transmit 1024 to Maximum Octet Good Bad Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXUCGBPIS_Pos            (10U)
+#define ETH_MMC_TX_INTERRUPT_TXUCGBPIS_Msk            (0x1UL << ETH_MMC_TX_INTERRUPT_TXUCGBPIS_Pos)                /*!< 0x00000400 */
+#define ETH_MMC_TX_INTERRUPT_TXUCGBPIS                ETH_MMC_TX_INTERRUPT_TXUCGBPIS_Msk                         /*!< MMC Transmit Unicast Good Bad Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXMCGBPIS_Pos            (11U)
+#define ETH_MMC_TX_INTERRUPT_TXMCGBPIS_Msk            (0x1UL << ETH_MMC_TX_INTERRUPT_TXMCGBPIS_Pos)                /*!< 0x00000800 */
+#define ETH_MMC_TX_INTERRUPT_TXMCGBPIS                ETH_MMC_TX_INTERRUPT_TXMCGBPIS_Msk                         /*!< MMC Transmit Multicast Good Bad Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXBCGBPIS_Pos            (12U)
+#define ETH_MMC_TX_INTERRUPT_TXBCGBPIS_Msk            (0x1UL << ETH_MMC_TX_INTERRUPT_TXBCGBPIS_Pos)                /*!< 0x00001000 */
+#define ETH_MMC_TX_INTERRUPT_TXBCGBPIS                ETH_MMC_TX_INTERRUPT_TXBCGBPIS_Msk                         /*!< MMC Transmit Broadcast Good Bad Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXUFLOWERPIS_Pos         (13U)
+#define ETH_MMC_TX_INTERRUPT_TXUFLOWERPIS_Msk         (0x1UL << ETH_MMC_TX_INTERRUPT_TXUFLOWERPIS_Pos)             /*!< 0x00002000 */
+#define ETH_MMC_TX_INTERRUPT_TXUFLOWERPIS             ETH_MMC_TX_INTERRUPT_TXUFLOWERPIS_Msk                      /*!< MMC Transmit Underflow Error Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXSCOLGPIS_Pos           (14U)
+#define ETH_MMC_TX_INTERRUPT_TXSCOLGPIS_Msk           (0x1UL << ETH_MMC_TX_INTERRUPT_TXSCOLGPIS_Pos)               /*!< 0x00004000 */
+#define ETH_MMC_TX_INTERRUPT_TXSCOLGPIS               ETH_MMC_TX_INTERRUPT_TXSCOLGPIS_Msk                        /*!< MMC Transmit Single Collision Good Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXMCOLGPIS_Pos           (15U)
+#define ETH_MMC_TX_INTERRUPT_TXMCOLGPIS_Msk           (0x1UL << ETH_MMC_TX_INTERRUPT_TXMCOLGPIS_Pos)               /*!< 0x00008000 */
+#define ETH_MMC_TX_INTERRUPT_TXMCOLGPIS               ETH_MMC_TX_INTERRUPT_TXMCOLGPIS_Msk                        /*!< MMC Transmit Multiple Collision Good Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXDEFPIS_Pos             (16U)
+#define ETH_MMC_TX_INTERRUPT_TXDEFPIS_Msk             (0x1UL << ETH_MMC_TX_INTERRUPT_TXDEFPIS_Pos)                 /*!< 0x00010000 */
+#define ETH_MMC_TX_INTERRUPT_TXDEFPIS                 ETH_MMC_TX_INTERRUPT_TXDEFPIS_Msk                          /*!< MMC Transmit Deferred Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXLATCOLPIS_Pos          (17U)
+#define ETH_MMC_TX_INTERRUPT_TXLATCOLPIS_Msk          (0x1UL << ETH_MMC_TX_INTERRUPT_TXLATCOLPIS_Pos)              /*!< 0x00020000 */
+#define ETH_MMC_TX_INTERRUPT_TXLATCOLPIS              ETH_MMC_TX_INTERRUPT_TXLATCOLPIS_Msk                       /*!< MMC Transmit Late Collision Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXEXCOLPIS_Pos           (18U)
+#define ETH_MMC_TX_INTERRUPT_TXEXCOLPIS_Msk           (0x1UL << ETH_MMC_TX_INTERRUPT_TXEXCOLPIS_Pos)               /*!< 0x00040000 */
+#define ETH_MMC_TX_INTERRUPT_TXEXCOLPIS               ETH_MMC_TX_INTERRUPT_TXEXCOLPIS_Msk                        /*!< MMC Transmit Excessive Collision Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXCARERPIS_Pos           (19U)
+#define ETH_MMC_TX_INTERRUPT_TXCARERPIS_Msk           (0x1UL << ETH_MMC_TX_INTERRUPT_TXCARERPIS_Pos)               /*!< 0x00080000 */
+#define ETH_MMC_TX_INTERRUPT_TXCARERPIS               ETH_MMC_TX_INTERRUPT_TXCARERPIS_Msk                        /*!< MMC Transmit Carrier Error Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXGOCTIS_Pos             (20U)
+#define ETH_MMC_TX_INTERRUPT_TXGOCTIS_Msk             (0x1UL << ETH_MMC_TX_INTERRUPT_TXGOCTIS_Pos)                 /*!< 0x00100000 */
+#define ETH_MMC_TX_INTERRUPT_TXGOCTIS                 ETH_MMC_TX_INTERRUPT_TXGOCTIS_Msk                          /*!< MMC Transmit Good Octet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXGPKTIS_Pos             (21U)
+#define ETH_MMC_TX_INTERRUPT_TXGPKTIS_Msk             (0x1UL << ETH_MMC_TX_INTERRUPT_TXGPKTIS_Pos)                 /*!< 0x00200000 */
+#define ETH_MMC_TX_INTERRUPT_TXGPKTIS                 ETH_MMC_TX_INTERRUPT_TXGPKTIS_Msk                          /*!< MMC Transmit Good Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXEXDEFPIS_Pos           (22U)
+#define ETH_MMC_TX_INTERRUPT_TXEXDEFPIS_Msk           (0x1UL << ETH_MMC_TX_INTERRUPT_TXEXDEFPIS_Pos)               /*!< 0x00400000 */
+#define ETH_MMC_TX_INTERRUPT_TXEXDEFPIS               ETH_MMC_TX_INTERRUPT_TXEXDEFPIS_Msk                        /*!< MMC Transmit Excessive Deferral Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXPAUSPIS_Pos            (23U)
+#define ETH_MMC_TX_INTERRUPT_TXPAUSPIS_Msk            (0x1UL << ETH_MMC_TX_INTERRUPT_TXPAUSPIS_Pos)                /*!< 0x00800000 */
+#define ETH_MMC_TX_INTERRUPT_TXPAUSPIS                ETH_MMC_TX_INTERRUPT_TXPAUSPIS_Msk                         /*!< MMC Transmit Pause Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXVLANGPIS_Pos           (24U)
+#define ETH_MMC_TX_INTERRUPT_TXVLANGPIS_Msk           (0x1UL << ETH_MMC_TX_INTERRUPT_TXVLANGPIS_Pos)               /*!< 0x01000000 */
+#define ETH_MMC_TX_INTERRUPT_TXVLANGPIS               ETH_MMC_TX_INTERRUPT_TXVLANGPIS_Msk                        /*!< MMC Transmit VLAN Good Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXOSIZEGPIS_Pos          (25U)
+#define ETH_MMC_TX_INTERRUPT_TXOSIZEGPIS_Msk          (0x1UL << ETH_MMC_TX_INTERRUPT_TXOSIZEGPIS_Pos)              /*!< 0x02000000 */
+#define ETH_MMC_TX_INTERRUPT_TXOSIZEGPIS              ETH_MMC_TX_INTERRUPT_TXOSIZEGPIS_Msk                       /*!< MMC Transmit Oversize Good Packet Counter Interrupt Status */
+#define ETH_MMC_TX_INTERRUPT_TXLPIUSCIS_Pos           (26U)
+#define ETH_MMC_TX_INTERRUPT_TXLPIUSCIS_Msk           (0x1UL << ETH_MMC_TX_INTERRUPT_TXLPIUSCIS_Pos)               /*!< 0x04000000 */
+#define ETH_MMC_TX_INTERRUPT_TXLPIUSCIS               ETH_MMC_TX_INTERRUPT_TXLPIUSCIS_Msk                        /*!< MMC Transmit LPI microsecond counter interrupt status */
+#define ETH_MMC_TX_INTERRUPT_TXLPITRCIS_Pos           (27U)
+#define ETH_MMC_TX_INTERRUPT_TXLPITRCIS_Msk           (0x1UL << ETH_MMC_TX_INTERRUPT_TXLPITRCIS_Pos)               /*!< 0x08000000 */
+#define ETH_MMC_TX_INTERRUPT_TXLPITRCIS               ETH_MMC_TX_INTERRUPT_TXLPITRCIS_Msk                        /*!< MMC Transmit LPI transition counter interrupt status */
 
 /**********  Bit definition for ETH_MMC_RX_INTERRUPT_MASK register  ***********/
-#define ETH_MMCRXIMR_RXCRCERPIM_Pos         (5U)
-#define ETH_MMCRXIMR_RXCRCERPIM_Msk         (0x1UL << ETH_MMCRXIMR_RXCRCERPIM_Pos)         /*!< 0x00000020 */
-#define ETH_MMCRXIMR_RXCRCERPIM             ETH_MMCRXIMR_RXCRCERPIM_Msk                   /*!< MMC Receive CRC Error Packet Counter Interrupt Mask */
-#define ETH_MMCRXIMR_RXALGNERPIM_Pos        (6U)
-#define ETH_MMCRXIMR_RXALGNERPIM_Msk        (0x1UL << ETH_MMCRXIMR_RXALGNERPIM_Pos)        /*!< 0x00000040 */
-#define ETH_MMCRXIMR_RXALGNERPIM            ETH_MMCRXIMR_RXALGNERPIM_Msk                  /*!< MMC Receive Alignment Error Packet Counter Interrupt Mask */
-#define ETH_MMCRXIMR_RXUCGPIM_Pos           (17U)
-#define ETH_MMCRXIMR_RXUCGPIM_Msk           (0x1UL << ETH_MMCRXIMR_RXUCGPIM_Pos)           /*!< 0x00020000 */
-#define ETH_MMCRXIMR_RXUCGPIM               ETH_MMCRXIMR_RXUCGPIM_Msk                     /*!< MMC Receive Unicast Good Packet Counter Interrupt Mask */
-#define ETH_MMCRXIMR_RXLPIUSCIM_Pos         (26U)
-#define ETH_MMCRXIMR_RXLPIUSCIM_Msk         (0x1UL << ETH_MMCRXIMR_RXLPIUSCIM_Pos)         /*!< 0x04000000 */
-#define ETH_MMCRXIMR_RXLPIUSCIM             ETH_MMCRXIMR_RXLPIUSCIM_Msk                   /*!< MMC Receive LPI microsecond counter interrupt Mask */
-#define ETH_MMCRXIMR_RXLPITRCIM_Pos         (27U)
-#define ETH_MMCRXIMR_RXLPITRCIM_Msk         (0x1UL << ETH_MMCRXIMR_RXLPITRCIM_Pos)         /*!< 0x08000000 */
-#define ETH_MMCRXIMR_RXLPITRCIM             ETH_MMCRXIMR_RXLPITRCIM_Msk                   /*!< MMC Receive LPI transition counter interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXGBPKTIM_Pos                         (0U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXGBPKTIM_Msk                         (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXGBPKTIM_Pos)                        /*!< 0x00000001 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXGBPKTIM                             ETH_MMC_RX_INTERRUPT_MASK_RXGBPKTIM_Msk                                  /*!< MMC Receive Good Bad Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXGBOCTIM_Pos                         (1U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXGBOCTIM_Msk                         (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXGBOCTIM_Pos)                        /*!< 0x00000002 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXGBOCTIM                             ETH_MMC_RX_INTERRUPT_MASK_RXGBOCTIM_Msk                                  /*!< MMC Receive Good Bad Octet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXGOCTIM_Pos                          (2U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXGOCTIM_Msk                          (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXGOCTIM_Pos)                         /*!< 0x00000004 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXGOCTIM                              ETH_MMC_RX_INTERRUPT_MASK_RXGOCTIM_Msk                                   /*!< MMC Receive Good Octet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXBCGPIM_Pos                          (3U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXBCGPIM_Msk                          (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXBCGPIM_Pos)                         /*!< 0x00000008 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXBCGPIM                              ETH_MMC_RX_INTERRUPT_MASK_RXBCGPIM_Msk                                   /*!< MMC Receive Broadcast Good Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXMCGPIM_Pos                          (4U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXMCGPIM_Msk                          (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXMCGPIM_Pos)                         /*!< 0x00000010 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXMCGPIM                              ETH_MMC_RX_INTERRUPT_MASK_RXMCGPIM_Msk                                   /*!< MMC Receive Multicast Good Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXCRCERPIM_Pos                        (5U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXCRCERPIM_Msk                        (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXCRCERPIM_Pos)                       /*!< 0x00000020 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXCRCERPIM                            ETH_MMC_RX_INTERRUPT_MASK_RXCRCERPIM_Msk                                 /*!< MMC Receive CRC Error Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXALGNERPIM_Pos                       (6U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXALGNERPIM_Msk                       (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXALGNERPIM_Pos)                      /*!< 0x00000040 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXALGNERPIM                           ETH_MMC_RX_INTERRUPT_MASK_RXALGNERPIM_Msk                                /*!< MMC Receive Alignment Error Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXRUNTPIM_Pos                         (7U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXRUNTPIM_Msk                         (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXRUNTPIM_Pos)                        /*!< 0x00000080 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXRUNTPIM                             ETH_MMC_RX_INTERRUPT_MASK_RXRUNTPIM_Msk                                  /*!< MMC Receive Runt Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXJABERPIM_Pos                        (8U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXJABERPIM_Msk                        (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXJABERPIM_Pos)                       /*!< 0x00000100 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXJABERPIM                            ETH_MMC_RX_INTERRUPT_MASK_RXJABERPIM_Msk                                 /*!< MMC Receive Jabber Error Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXUSIZEGPIM_Pos                       (9U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXUSIZEGPIM_Msk                       (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXUSIZEGPIM_Pos)                      /*!< 0x00000200 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXUSIZEGPIM                           ETH_MMC_RX_INTERRUPT_MASK_RXUSIZEGPIM_Msk                                /*!< MMC Receive Undersize Good Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXOSIZEGPIM_Pos                       (10U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXOSIZEGPIM_Msk                       (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXOSIZEGPIM_Pos)                      /*!< 0x00000400 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXOSIZEGPIM                           ETH_MMC_RX_INTERRUPT_MASK_RXOSIZEGPIM_Msk                                /*!< MMC Receive Oversize Good Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RX64OCTGBPIM_Pos                      (11U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RX64OCTGBPIM_Msk                      (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RX64OCTGBPIM_Pos)                     /*!< 0x00000800 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RX64OCTGBPIM                          ETH_MMC_RX_INTERRUPT_MASK_RX64OCTGBPIM_Msk                               /*!< MMC Receive 64 Octet Good Bad Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RX65T127OCTGBPIM_Pos                  (12U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RX65T127OCTGBPIM_Msk                  (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RX65T127OCTGBPIM_Pos)                 /*!< 0x00001000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RX65T127OCTGBPIM                      ETH_MMC_RX_INTERRUPT_MASK_RX65T127OCTGBPIM_Msk                           /*!< MMC Receive 65 to 127 Octet Good Bad Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RX128T255OCTGBPIM_Pos                 (13U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RX128T255OCTGBPIM_Msk                 (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RX128T255OCTGBPIM_Pos)                /*!< 0x00002000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RX128T255OCTGBPIM                     ETH_MMC_RX_INTERRUPT_MASK_RX128T255OCTGBPIM_Msk                          /*!< MMC Receive 128 to 255 Octet Good Bad Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RX256T511OCTGBPIM_Pos                 (14U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RX256T511OCTGBPIM_Msk                 (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RX256T511OCTGBPIM_Pos)                /*!< 0x00004000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RX256T511OCTGBPIM                     ETH_MMC_RX_INTERRUPT_MASK_RX256T511OCTGBPIM_Msk                          /*!< MMC Receive 256 to 511 Octet Good Bad Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RX512T1023OCTGBPIM_Pos                (15U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RX512T1023OCTGBPIM_Msk                (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RX512T1023OCTGBPIM_Pos)               /*!< 0x00008000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RX512T1023OCTGBPIM                    ETH_MMC_RX_INTERRUPT_MASK_RX512T1023OCTGBPIM_Msk                         /*!< MMC Receive 512 to 1023 Octet Good Bad Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RX1024TMAXOCTGBPIM_Pos                (16U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RX1024TMAXOCTGBPIM_Msk                (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RX1024TMAXOCTGBPIM_Pos)               /*!< 0x00010000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RX1024TMAXOCTGBPIM                    ETH_MMC_RX_INTERRUPT_MASK_RX1024TMAXOCTGBPIM_Msk                         /*!< MMC Receive 1024 to Maximum Octet Good Bad Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXUCGPIM_Pos                          (17U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXUCGPIM_Msk                          (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXUCGPIM_Pos)                         /*!< 0x00020000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXUCGPIM                              ETH_MMC_RX_INTERRUPT_MASK_RXUCGPIM_Msk                                   /*!< MMC Receive Unicast Good Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXLENERPIM_Pos                        (18U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXLENERPIM_Msk                        (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXLENERPIM_Pos)                       /*!< 0x00040000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXLENERPIM                            ETH_MMC_RX_INTERRUPT_MASK_RXLENERPIM_Msk                                 /*!< MMC Receive Length Error Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXORANGEPIM_Pos                       (19U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXORANGEPIM_Msk                       (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXORANGEPIM_Pos)                      /*!< 0x00080000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXORANGEPIM                           ETH_MMC_RX_INTERRUPT_MASK_RXORANGEPIM_Msk                                /*!< MMC Receive Out Of Range Error Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXPAUSPIM_Pos                         (20U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXPAUSPIM_Msk                         (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXPAUSPIM_Pos)                        /*!< 0x00100000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXPAUSPIM                             ETH_MMC_RX_INTERRUPT_MASK_RXPAUSPIM_Msk                                  /*!< MMC Receive Pause Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXFOVPIM_Pos                          (21U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXFOVPIM_Msk                          (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXFOVPIM_Pos)                         /*!< 0x00200000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXFOVPIM                              ETH_MMC_RX_INTERRUPT_MASK_RXFOVPIM_Msk                                   /*!< MMC Receive FIFO Overflow Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXVLANGBPIM_Pos                       (22U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXVLANGBPIM_Msk                       (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXVLANGBPIM_Pos)                      /*!< 0x00400000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXVLANGBPIM                           ETH_MMC_RX_INTERRUPT_MASK_RXVLANGBPIM_Msk                                /*!< MMC Receive VLAN Good Bad Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXWDOGPIM_Pos                         (23U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXWDOGPIM_Msk                         (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXWDOGPIM_Pos)                        /*!< 0x00800000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXWDOGPIM                             ETH_MMC_RX_INTERRUPT_MASK_RXWDOGPIM_Msk                                  /*!< MMC Receive Watchdog Error Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXRCVERRPIM_Pos                       (24U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXRCVERRPIM_Msk                       (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXRCVERRPIM_Pos)                      /*!< 0x01000000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXRCVERRPIM                           ETH_MMC_RX_INTERRUPT_MASK_RXRCVERRPIM_Msk                                /*!< MMC Receive Error Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXCTRLPIM_Pos                         (25U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXCTRLPIM_Msk                         (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXCTRLPIM_Pos)                        /*!< 0x02000000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXCTRLPIM                             ETH_MMC_RX_INTERRUPT_MASK_RXCTRLPIM_Msk                                  /*!< MMC Receive Control Packet Counter Interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXLPIUSCIM_Pos                        (26U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXLPIUSCIM_Msk                        (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXLPIUSCIM_Pos)                       /*!< 0x04000000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXLPIUSCIM                            ETH_MMC_RX_INTERRUPT_MASK_RXLPIUSCIM_Msk                                 /*!< MMC Receive LPI microsecond counter interrupt Mask */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXLPITRCIM_Pos                        (27U)
+#define ETH_MMC_RX_INTERRUPT_MASK_RXLPITRCIM_Msk                        (0x1UL << ETH_MMC_RX_INTERRUPT_MASK_RXLPITRCIM_Pos)                       /*!< 0x08000000 */
+#define ETH_MMC_RX_INTERRUPT_MASK_RXLPITRCIM                            ETH_MMC_RX_INTERRUPT_MASK_RXLPITRCIM_Msk                                 /*!< MMC Receive LPI transition counter interrupt Mask */
 
 /**********  Bit definition for ETH_MMC_TX_INTERRUPT_MASK register  ***********/
-#define ETH_MMCTXIMR_TXSCOLGPIM_Pos         (14U)
-#define ETH_MMCTXIMR_TXSCOLGPIM_Msk         (0x1UL << ETH_MMCTXIMR_TXSCOLGPIM_Pos)        /*!< 0x00004000 */
-#define ETH_MMCTXIMR_TXSCOLGPIM             ETH_MMCTXIMR_TXSCOLGPIM_Msk                  /*!< MMC Transmit Single Collision Good Packet Counter Interrupt Mask */
-#define ETH_MMCTXIMR_TXMCOLGPIM_Pos         (15U)
-#define ETH_MMCTXIMR_TXMCOLGPIM_Msk         (0x1UL << ETH_MMCTXIMR_TXMCOLGPIM_Pos)        /*!< 0x00008000 */
-#define ETH_MMCTXIMR_TXMCOLGPIM             ETH_MMCTXIMR_TXMCOLGPIM_Msk                  /*!< MMC Transmit Multiple Collision Good Packet Counter Interrupt Mask */
-#define ETH_MMCTXIMR_TXGPKTIM_Pos           (21U)
-#define ETH_MMCTXIMR_TXGPKTIM_Msk           (0x1UL << ETH_MMCTXIMR_TXGPKTIM_Pos)          /*!< 0x00200000 */
-#define ETH_MMCTXIMR_TXGPKTIM               ETH_MMCTXIMR_TXGPKTIM_Msk                    /*!< MMC Transmit Good Packet Counter Interrupt Mask */
-#define ETH_MMCTXIMR_TXLPIUSCIM_Pos         (26U)
-#define ETH_MMCTXIMR_TXLPIUSCIM_Msk         (0x1UL << ETH_MMCTXIMR_TXLPIUSCIM_Pos)        /*!< 0x04000000 */
-#define ETH_MMCTXIMR_TXLPIUSCIM             ETH_MMCTXIMR_TXLPIUSCIM_Msk                  /*!< MMC Transmit LPI microsecond counter interrupt Mask */
-#define ETH_MMCTXIMR_TXLPITRCIM_Pos         (27U)
-#define ETH_MMCTXIMR_TXLPITRCIM_Msk         (0x1UL << ETH_MMCTXIMR_TXLPITRCIM_Pos)        /*!< 0x08000000 */
-#define ETH_MMCTXIMR_TXLPITRCIM             ETH_MMCTXIMR_TXLPITRCIM_Msk                  /*!< MMC Transmit LPI transition counter interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXGBOCTIM_Pos                         (0U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXGBOCTIM_Msk                         (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXGBOCTIM_Pos)                        /*!< 0x00000001 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXGBOCTIM                             ETH_MMC_TX_INTERRUPT_MASK_TXGBOCTIM_Msk                                  /*!< MMC Transmit Good Bad Octet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXGBPKTIM_Pos                         (1U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXGBPKTIM_Msk                         (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXGBPKTIM_Pos)                        /*!< 0x00000002 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXGBPKTIM                             ETH_MMC_TX_INTERRUPT_MASK_TXGBPKTIM_Msk                                  /*!< MMC Transmit Good Bad Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXBCGPIM_Pos                          (2U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXBCGPIM_Msk                          (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXBCGPIM_Pos)                         /*!< 0x00000004 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXBCGPIM                              ETH_MMC_TX_INTERRUPT_MASK_TXBCGPIM_Msk                                   /*!< MMC Transmit Broadcast Good Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXMCGPIM_Pos                          (3U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXMCGPIM_Msk                          (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXMCGPIM_Pos)                         /*!< 0x00000008 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXMCGPIM                              ETH_MMC_TX_INTERRUPT_MASK_TXMCGPIM_Msk                                   /*!< MMC Transmit Multicast Good Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TX64OCTGBPIM_Pos                      (4U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TX64OCTGBPIM_Msk                      (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TX64OCTGBPIM_Pos)                     /*!< 0x00000010 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TX64OCTGBPIM                          ETH_MMC_TX_INTERRUPT_MASK_TX64OCTGBPIM_Msk                               /*!< MMC Transmit 64 Octet Good Bad Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TX65T127OCTGBPIM_Pos                  (5U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TX65T127OCTGBPIM_Msk                  (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TX65T127OCTGBPIM_Pos)                 /*!< 0x00000020 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TX65T127OCTGBPIM                      ETH_MMC_TX_INTERRUPT_MASK_TX65T127OCTGBPIM_Msk                           /*!< MMC Transmit 65 to 127 Octet Good Bad Packet Counter */
+#define ETH_MMC_TX_INTERRUPT_MASK_TX128T255OCTGBPIM_Pos                 (6U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TX128T255OCTGBPIM_Msk                 (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TX128T255OCTGBPIM_Pos)                /*!< 0x00000040 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TX128T255OCTGBPIM                     ETH_MMC_TX_INTERRUPT_MASK_TX128T255OCTGBPIM_Msk                          /*!< MMC Transmit 128 to 255 Octet Good Bad Packet Counter */
+#define ETH_MMC_TX_INTERRUPT_MASK_TX256T511OCTGBPIM_Pos                 (7U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TX256T511OCTGBPIM_Msk                 (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TX256T511OCTGBPIM_Pos)                /*!< 0x00000080 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TX256T511OCTGBPIM                     ETH_MMC_TX_INTERRUPT_MASK_TX256T511OCTGBPIM_Msk                          /*!< MMC Transmit 256 to 511 Octet Good Bad Packet Counter */
+#define ETH_MMC_TX_INTERRUPT_MASK_TX512T1023OCTGBPIM_Pos                (8U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TX512T1023OCTGBPIM_Msk                (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TX512T1023OCTGBPIM_Pos)               /*!< 0x00000100 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TX512T1023OCTGBPIM                    ETH_MMC_TX_INTERRUPT_MASK_TX512T1023OCTGBPIM_Msk                         /*!< MMC Transmit 512 to 1023 Octet Good Bad Packet Counter */
+#define ETH_MMC_TX_INTERRUPT_MASK_TX1024TMAXOCTGBPIM_Pos                (9U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TX1024TMAXOCTGBPIM_Msk                (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TX1024TMAXOCTGBPIM_Pos)               /*!< 0x00000200 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TX1024TMAXOCTGBPIM                    ETH_MMC_TX_INTERRUPT_MASK_TX1024TMAXOCTGBPIM_Msk                         /*!< MMC Transmit 1024 to Maximum Octet Good Bad Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXUCGBPIM_Pos                         (10U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXUCGBPIM_Msk                         (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXUCGBPIM_Pos)                        /*!< 0x00000400 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXUCGBPIM                             ETH_MMC_TX_INTERRUPT_MASK_TXUCGBPIM_Msk                                  /*!< MMC Transmit Unicast Good Bad Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXMCGBPIM_Pos                         (11U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXMCGBPIM_Msk                         (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXMCGBPIM_Pos)                        /*!< 0x00000800 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXMCGBPIM                             ETH_MMC_TX_INTERRUPT_MASK_TXMCGBPIM_Msk                                  /*!< MMC Transmit Multicast Good Bad Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXBCGBPIM_Pos                         (12U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXBCGBPIM_Msk                         (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXBCGBPIM_Pos)                        /*!< 0x00001000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXBCGBPIM                             ETH_MMC_TX_INTERRUPT_MASK_TXBCGBPIM_Msk                                  /*!< MMC Transmit Broadcast Good Bad Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXUFLOWERPIM_Pos                      (13U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXUFLOWERPIM_Msk                      (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXUFLOWERPIM_Pos)                     /*!< 0x00002000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXUFLOWERPIM                          ETH_MMC_TX_INTERRUPT_MASK_TXUFLOWERPIM_Msk                               /*!< MMC Transmit Underflow Error Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXSCOLGPIM_Pos                        (14U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXSCOLGPIM_Msk                        (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXSCOLGPIM_Pos)                       /*!< 0x00004000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXSCOLGPIM                            ETH_MMC_TX_INTERRUPT_MASK_TXSCOLGPIM_Msk                                 /*!< MMC Transmit Single Collision Good Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXMCOLGPIM_Pos                        (15U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXMCOLGPIM_Msk                        (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXMCOLGPIM_Pos)                       /*!< 0x00008000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXMCOLGPIM                            ETH_MMC_TX_INTERRUPT_MASK_TXMCOLGPIM_Msk                                 /*!< MMC Transmit Multiple Collision Good Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXDEFPIM_Pos                          (16U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXDEFPIM_Msk                          (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXDEFPIM_Pos)                         /*!< 0x00010000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXDEFPIM                              ETH_MMC_TX_INTERRUPT_MASK_TXDEFPIM_Msk                                   /*!< MMC Transmit Deferred Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXLATCOLPIM_Pos                       (17U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXLATCOLPIM_Msk                       (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXLATCOLPIM_Pos)                      /*!< 0x00020000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXLATCOLPIM                           ETH_MMC_TX_INTERRUPT_MASK_TXLATCOLPIM_Msk                                /*!< MMC Transmit Late Collision Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXEXCOLPIM_Pos                        (18U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXEXCOLPIM_Msk                        (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXEXCOLPIM_Pos)                       /*!< 0x00040000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXEXCOLPIM                            ETH_MMC_TX_INTERRUPT_MASK_TXEXCOLPIM_Msk                                 /*!< MMC Transmit Excessive Collision Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXCARERPIM_Pos                        (19U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXCARERPIM_Msk                        (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXCARERPIM_Pos)                       /*!< 0x00080000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXCARERPIM                            ETH_MMC_TX_INTERRUPT_MASK_TXCARERPIM_Msk                                 /*!< MMC Transmit Carrier Error Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXGOCTIM_Pos                          (20U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXGOCTIM_Msk                          (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXGOCTIM_Pos)                         /*!< 0x00100000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXGOCTIM                              ETH_MMC_TX_INTERRUPT_MASK_TXGOCTIM_Msk                                   /*!< MMC Transmit Good Octet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXGPKTIM_Pos                          (21U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXGPKTIM_Msk                          (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXGPKTIM_Pos)                         /*!< 0x00200000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXGPKTIM                              ETH_MMC_TX_INTERRUPT_MASK_TXGPKTIM_Msk                                   /*!< MMC Transmit Good Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXEXDEFPIM_Pos                        (22U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXEXDEFPIM_Msk                        (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXEXDEFPIM_Pos)                       /*!< 0x00400000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXEXDEFPIM                            ETH_MMC_TX_INTERRUPT_MASK_TXEXDEFPIM_Msk                                 /*!< MMC Transmit Excessive Deferral Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXPAUSPIM_Pos                         (23U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXPAUSPIM_Msk                         (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXPAUSPIM_Pos)                        /*!< 0x00800000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXPAUSPIM                             ETH_MMC_TX_INTERRUPT_MASK_TXPAUSPIM_Msk                                  /*!< MMC Transmit Pause Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXVLANGPIM_Pos                        (24U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXVLANGPIM_Msk                        (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXVLANGPIM_Pos)                       /*!< 0x01000000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXVLANGPIM                            ETH_MMC_TX_INTERRUPT_MASK_TXVLANGPIM_Msk                                 /*!< MMC Transmit VLAN Good Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXOSIZEGPIM_Pos                       (25U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXOSIZEGPIM_Msk                       (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXOSIZEGPIM_Pos)                      /*!< 0x02000000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXOSIZEGPIM                           ETH_MMC_TX_INTERRUPT_MASK_TXOSIZEGPIM_Msk                                /*!< MMC Transmit Oversize Good Packet Counter Interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXLPIUSCIM_Pos                        (26U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXLPIUSCIM_Msk                        (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXLPIUSCIM_Pos)                       /*!< 0x04000000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXLPIUSCIM                            ETH_MMC_TX_INTERRUPT_MASK_TXLPIUSCIM_Msk                                 /*!< MMC Transmit LPI microsecond counter interrupt Mask */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXLPITRCIM_Pos                        (27U)
+#define ETH_MMC_TX_INTERRUPT_MASK_TXLPITRCIM_Msk                        (0x1UL << ETH_MMC_TX_INTERRUPT_MASK_TXLPITRCIM_Pos)                       /*!< 0x08000000 */
+#define ETH_MMC_TX_INTERRUPT_MASK_TXLPITRCIM                            ETH_MMC_TX_INTERRUPT_MASK_TXLPITRCIM_Msk                                 /*!< MMC Transmit LPI transition counter interrupt Mask */
 
-/***********  Bit definition for ETH_MMC_TX_SINGLE_COLLISION_GOOD_PACKETS register  ************/
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_Pos       (0U)
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_Msk       (0xFFFFFFFFUL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos) /*!< 0xFFFFFFFF */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG           ETH_MMCTXSCGPR_TXSNGLCOLG_Msk                  /*!< Tx Single Collision Good Packets */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_0         (0x1UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)        /*!< 0x00000001 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_1         (0x2UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)        /*!< 0x00000002 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_2         (0x4UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)        /*!< 0x00000004 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_3         (0x8UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)        /*!< 0x00000008 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_4         (0x10UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)       /*!< 0x00000010 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_5         (0x20UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)       /*!< 0x00000020 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_6         (0x40UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)       /*!< 0x00000040 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_7         (0x80UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)       /*!< 0x00000080 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_8         (0x100UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)      /*!< 0x00000100 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_9         (0x200UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)      /*!< 0x00000200 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_10        (0x400UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)      /*!< 0x00000400 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_11        (0x800UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)      /*!< 0x00000800 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_12        (0x1000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)     /*!< 0x00001000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_13        (0x2000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)     /*!< 0x00002000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_14        (0x4000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)     /*!< 0x00004000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_15        (0x8000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)     /*!< 0x00008000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_16        (0x10000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)    /*!< 0x00010000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_17        (0x20000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)    /*!< 0x00020000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_18        (0x40000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)    /*!< 0x00040000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_19        (0x80000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)    /*!< 0x00080000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_20        (0x100000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)   /*!< 0x00100000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_21        (0x200000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)   /*!< 0x00200000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_22        (0x400000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)   /*!< 0x00400000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_23        (0x800000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)   /*!< 0x00800000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_24        (0x1000000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)  /*!< 0x01000000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_25        (0x2000000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)  /*!< 0x02000000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_26        (0x4000000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)  /*!< 0x04000000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_27        (0x8000000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos)  /*!< 0x08000000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_28        (0x10000000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos) /*!< 0x10000000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_29        (0x20000000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos) /*!< 0x20000000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_30        (0x40000000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos) /*!< 0x40000000 */
-#define ETH_MMCTXSCGPR_TXSNGLCOLG_31        (0x80000000UL << ETH_MMCTXSCGPR_TXSNGLCOLG_Pos) /*!< 0x80000000 */
+/*********  Bit definition for ETH_TX_OCTET_COUNT_GOOD_BAD register  **********/
+#define ETH_TX_OCTET_COUNT_GOOD_BAD_TXOCTGB_Pos                         (0U)
+#define ETH_TX_OCTET_COUNT_GOOD_BAD_TXOCTGB_Msk                         (0xFFFFFFFFUL << ETH_TX_OCTET_COUNT_GOOD_BAD_TXOCTGB_Pos)                 /*!< 0xFFFFFFFF */
+#define ETH_TX_OCTET_COUNT_GOOD_BAD_TXOCTGB                             ETH_TX_OCTET_COUNT_GOOD_BAD_TXOCTGB_Msk                                  /*!< Tx Octet Count Good Bad */
 
-/***********  Bit definition for ETH_MMC_TX_MULTIPLE_COLLISION_GOOD_PACKETS register  ************/
-#define ETH_MMCTXMCGPR_TXMULTCOLG_Pos       (0U)
-#define ETH_MMCTXMCGPR_TXMULTCOLG_Msk       (0xFFFFFFFFUL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos) /*!< 0xFFFFFFFF */
-#define ETH_MMCTXMCGPR_TXMULTCOLG           ETH_MMCTXMCGPR_TXMULTCOLG_Msk                  /*!< Tx Multiple Collision Good Packets */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_0         (0x1UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)        /*!< 0x00000001 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_1         (0x2UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)        /*!< 0x00000002 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_2         (0x4UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)        /*!< 0x00000004 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_3         (0x8UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)        /*!< 0x00000008 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_4         (0x10UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)       /*!< 0x00000010 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_5         (0x20UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)       /*!< 0x00000020 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_6         (0x40UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)       /*!< 0x00000040 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_7         (0x80UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)       /*!< 0x00000080 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_8         (0x100UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)      /*!< 0x00000100 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_9         (0x200UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)      /*!< 0x00000200 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_10        (0x400UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)      /*!< 0x00000400 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_11        (0x800UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)      /*!< 0x00000800 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_12        (0x1000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)     /*!< 0x00001000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_13        (0x2000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)     /*!< 0x00002000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_14        (0x4000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)     /*!< 0x00004000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_15        (0x8000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)     /*!< 0x00008000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_16        (0x10000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)    /*!< 0x00010000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_17        (0x20000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)    /*!< 0x00020000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_18        (0x40000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)    /*!< 0x00040000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_19        (0x80000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)    /*!< 0x00080000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_20        (0x100000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)   /*!< 0x00100000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_21        (0x200000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)   /*!< 0x00200000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_22        (0x400000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)   /*!< 0x00400000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_23        (0x800000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)   /*!< 0x00800000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_24        (0x1000000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)  /*!< 0x01000000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_25        (0x2000000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)  /*!< 0x02000000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_26        (0x4000000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)  /*!< 0x04000000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_27        (0x8000000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos)  /*!< 0x08000000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_28        (0x10000000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos) /*!< 0x10000000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_29        (0x20000000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos) /*!< 0x20000000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_30        (0x40000000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos) /*!< 0x40000000 */
-#define ETH_MMCTXMCGPR_TXMULTCOLG_31        (0x80000000UL << ETH_MMCTXMCGPR_TXMULTCOLG_Pos) /*!< 0x80000000 */
+/*********  Bit definition for ETH_TX_PACKET_COUNT_GOOD_BAD register  *********/
+#define ETH_TX_PACKET_COUNT_GOOD_BAD_TXPKTGB_Pos                        (0U)
+#define ETH_TX_PACKET_COUNT_GOOD_BAD_TXPKTGB_Msk                        (0xFFFFFFFFUL << ETH_TX_PACKET_COUNT_GOOD_BAD_TXPKTGB_Pos)                /*!< 0xFFFFFFFF */
+#define ETH_TX_PACKET_COUNT_GOOD_BAD_TXPKTGB                            ETH_TX_PACKET_COUNT_GOOD_BAD_TXPKTGB_Msk                                 /*!< Tx Packet Count Good Bad */
 
-/************  Bit definition for ETH_MMC_TX_PACKET_COUNT_GOOD register  *************/
-#define ETH_MMCTXPCGR_TXPKTG_Pos            (0U)
-#define ETH_MMCTXPCGR_TXPKTG_Msk            (0xFFFFFFFFUL << ETH_MMCTXPCGR_TXPKTG_Pos) /*!< 0xFFFFFFFF */
-#define ETH_MMCTXPCGR_TXPKTG                ETH_MMCTXPCGR_TXPKTG_Msk                  /*!< Tx Packet Count Good */
-#define ETH_MMCTXPCGR_TXPKTG_0              (0x1UL << ETH_MMCTXPCGR_TXPKTG_Pos)        /*!< 0x00000001 */
-#define ETH_MMCTXPCGR_TXPKTG_1              (0x2UL << ETH_MMCTXPCGR_TXPKTG_Pos)        /*!< 0x00000002 */
-#define ETH_MMCTXPCGR_TXPKTG_2              (0x4UL << ETH_MMCTXPCGR_TXPKTG_Pos)        /*!< 0x00000004 */
-#define ETH_MMCTXPCGR_TXPKTG_3              (0x8UL << ETH_MMCTXPCGR_TXPKTG_Pos)        /*!< 0x00000008 */
-#define ETH_MMCTXPCGR_TXPKTG_4              (0x10UL << ETH_MMCTXPCGR_TXPKTG_Pos)       /*!< 0x00000010 */
-#define ETH_MMCTXPCGR_TXPKTG_5              (0x20UL << ETH_MMCTXPCGR_TXPKTG_Pos)       /*!< 0x00000020 */
-#define ETH_MMCTXPCGR_TXPKTG_6              (0x40UL << ETH_MMCTXPCGR_TXPKTG_Pos)       /*!< 0x00000040 */
-#define ETH_MMCTXPCGR_TXPKTG_7              (0x80UL << ETH_MMCTXPCGR_TXPKTG_Pos)       /*!< 0x00000080 */
-#define ETH_MMCTXPCGR_TXPKTG_8              (0x100UL << ETH_MMCTXPCGR_TXPKTG_Pos)      /*!< 0x00000100 */
-#define ETH_MMCTXPCGR_TXPKTG_9              (0x200UL << ETH_MMCTXPCGR_TXPKTG_Pos)      /*!< 0x00000200 */
-#define ETH_MMCTXPCGR_TXPKTG_10             (0x400UL << ETH_MMCTXPCGR_TXPKTG_Pos)      /*!< 0x00000400 */
-#define ETH_MMCTXPCGR_TXPKTG_11             (0x800UL << ETH_MMCTXPCGR_TXPKTG_Pos)      /*!< 0x00000800 */
-#define ETH_MMCTXPCGR_TXPKTG_12             (0x1000UL << ETH_MMCTXPCGR_TXPKTG_Pos)     /*!< 0x00001000 */
-#define ETH_MMCTXPCGR_TXPKTG_13             (0x2000UL << ETH_MMCTXPCGR_TXPKTG_Pos)     /*!< 0x00002000 */
-#define ETH_MMCTXPCGR_TXPKTG_14             (0x4000UL << ETH_MMCTXPCGR_TXPKTG_Pos)     /*!< 0x00004000 */
-#define ETH_MMCTXPCGR_TXPKTG_15             (0x8000UL << ETH_MMCTXPCGR_TXPKTG_Pos)     /*!< 0x00008000 */
-#define ETH_MMCTXPCGR_TXPKTG_16             (0x10000UL << ETH_MMCTXPCGR_TXPKTG_Pos)    /*!< 0x00010000 */
-#define ETH_MMCTXPCGR_TXPKTG_17             (0x20000UL << ETH_MMCTXPCGR_TXPKTG_Pos)    /*!< 0x00020000 */
-#define ETH_MMCTXPCGR_TXPKTG_18             (0x40000UL << ETH_MMCTXPCGR_TXPKTG_Pos)    /*!< 0x00040000 */
-#define ETH_MMCTXPCGR_TXPKTG_19             (0x80000UL << ETH_MMCTXPCGR_TXPKTG_Pos)    /*!< 0x00080000 */
-#define ETH_MMCTXPCGR_TXPKTG_20             (0x100000UL << ETH_MMCTXPCGR_TXPKTG_Pos)   /*!< 0x00100000 */
-#define ETH_MMCTXPCGR_TXPKTG_21             (0x200000UL << ETH_MMCTXPCGR_TXPKTG_Pos)   /*!< 0x00200000 */
-#define ETH_MMCTXPCGR_TXPKTG_22             (0x400000UL << ETH_MMCTXPCGR_TXPKTG_Pos)   /*!< 0x00400000 */
-#define ETH_MMCTXPCGR_TXPKTG_23             (0x800000UL << ETH_MMCTXPCGR_TXPKTG_Pos)   /*!< 0x00800000 */
-#define ETH_MMCTXPCGR_TXPKTG_24             (0x1000000UL << ETH_MMCTXPCGR_TXPKTG_Pos)  /*!< 0x01000000 */
-#define ETH_MMCTXPCGR_TXPKTG_25             (0x2000000UL << ETH_MMCTXPCGR_TXPKTG_Pos)  /*!< 0x02000000 */
-#define ETH_MMCTXPCGR_TXPKTG_26             (0x4000000UL << ETH_MMCTXPCGR_TXPKTG_Pos)  /*!< 0x04000000 */
-#define ETH_MMCTXPCGR_TXPKTG_27             (0x8000000UL << ETH_MMCTXPCGR_TXPKTG_Pos)  /*!< 0x08000000 */
-#define ETH_MMCTXPCGR_TXPKTG_28             (0x10000000UL << ETH_MMCTXPCGR_TXPKTG_Pos) /*!< 0x10000000 */
-#define ETH_MMCTXPCGR_TXPKTG_29             (0x20000000UL << ETH_MMCTXPCGR_TXPKTG_Pos) /*!< 0x20000000 */
-#define ETH_MMCTXPCGR_TXPKTG_30             (0x40000000UL << ETH_MMCTXPCGR_TXPKTG_Pos) /*!< 0x40000000 */
-#define ETH_MMCTXPCGR_TXPKTG_31             (0x80000000UL << ETH_MMCTXPCGR_TXPKTG_Pos) /*!< 0x80000000 */
+/********  Bit definition for ETH_TX_BROADCAST_PACKETS_GOOD register  *********/
+#define ETH_TX_BROADCAST_PACKETS_GOOD_TXBCASTG_Pos                      (0U)
+#define ETH_TX_BROADCAST_PACKETS_GOOD_TXBCASTG_Msk                      (0xFFFFFFFFUL << ETH_TX_BROADCAST_PACKETS_GOOD_TXBCASTG_Pos)              /*!< 0xFFFFFFFF */
+#define ETH_TX_BROADCAST_PACKETS_GOOD_TXBCASTG                          ETH_TX_BROADCAST_PACKETS_GOOD_TXBCASTG_Msk                               /*!< Tx Broadcast Packets Good */
 
-/***********  Bit definition for ETH_MMC_RX_CRC_ERROR_PACKETS register  ***********/
-#define ETH_MMCRXCRCEPR_RXCRCERR_Pos        (0U)
-#define ETH_MMCRXCRCEPR_RXCRCERR_Msk        (0xFFFFFFFFUL << ETH_MMCRXCRCEPR_RXCRCERR_Pos) /*!< 0xFFFFFFFF */
-#define ETH_MMCRXCRCEPR_RXCRCERR            ETH_MMCRXCRCEPR_RXCRCERR_Msk                  /*!< Rx CRC Error Packets */
-#define ETH_MMCRXCRCEPR_RXCRCERR_0          (0x1UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)        /*!< 0x00000001 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_1          (0x2UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)        /*!< 0x00000002 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_2          (0x4UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)        /*!< 0x00000004 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_3          (0x8UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)        /*!< 0x00000008 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_4          (0x10UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)       /*!< 0x00000010 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_5          (0x20UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)       /*!< 0x00000020 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_6          (0x40UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)       /*!< 0x00000040 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_7          (0x80UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)       /*!< 0x00000080 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_8          (0x100UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)      /*!< 0x00000100 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_9          (0x200UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)      /*!< 0x00000200 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_10         (0x400UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)      /*!< 0x00000400 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_11         (0x800UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)      /*!< 0x00000800 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_12         (0x1000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)     /*!< 0x00001000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_13         (0x2000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)     /*!< 0x00002000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_14         (0x4000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)     /*!< 0x00004000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_15         (0x8000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)     /*!< 0x00008000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_16         (0x10000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)    /*!< 0x00010000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_17         (0x20000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)    /*!< 0x00020000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_18         (0x40000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)    /*!< 0x00040000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_19         (0x80000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)    /*!< 0x00080000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_20         (0x100000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)   /*!< 0x00100000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_21         (0x200000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)   /*!< 0x00200000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_22         (0x400000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)   /*!< 0x00400000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_23         (0x800000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)   /*!< 0x00800000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_24         (0x1000000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)  /*!< 0x01000000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_25         (0x2000000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)  /*!< 0x02000000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_26         (0x4000000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)  /*!< 0x04000000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_27         (0x8000000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos)  /*!< 0x08000000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_28         (0x10000000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos) /*!< 0x10000000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_29         (0x20000000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos) /*!< 0x20000000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_30         (0x40000000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos) /*!< 0x40000000 */
-#define ETH_MMCRXCRCEPR_RXCRCERR_31         (0x80000000UL << ETH_MMCRXCRCEPR_RXCRCERR_Pos) /*!< 0x80000000 */
+/********  Bit definition for ETH_TX_MULTICAST_PACKETS_GOOD register  *********/
+#define ETH_TX_MULTICAST_PACKETS_GOOD_TXMCASTG_Pos                      (0U)
+#define ETH_TX_MULTICAST_PACKETS_GOOD_TXMCASTG_Msk                      (0xFFFFFFFFUL << ETH_TX_MULTICAST_PACKETS_GOOD_TXMCASTG_Pos)              /*!< 0xFFFFFFFF */
+#define ETH_TX_MULTICAST_PACKETS_GOOD_TXMCASTG                          ETH_TX_MULTICAST_PACKETS_GOOD_TXMCASTG_Msk                               /*!< Tx multicast Packets Good */
 
-/***********  Bit definition for ETH_MMC_RX_ALIGNMENT_ERROR_PACKETS register  ***********/
-#define ETH_MMCRXAEPR_RXALGNERR_Pos         (0U)
-#define ETH_MMCRXAEPR_RXALGNERR_Msk         (0xFFFFFFFFUL << ETH_MMCRXAEPR_RXALGNERR_Pos) /*!< 0xFFFFFFFF */
-#define ETH_MMCRXAEPR_RXALGNERR             ETH_MMCRXAEPR_RXALGNERR_Msk                  /*!< Rx Alignment Error Packets */
-#define ETH_MMCRXAEPR_RXALGNERR_0           (0x1UL << ETH_MMCRXAEPR_RXALGNERR_Pos)        /*!< 0x00000001 */
-#define ETH_MMCRXAEPR_RXALGNERR_1           (0x2UL << ETH_MMCRXAEPR_RXALGNERR_Pos)        /*!< 0x00000002 */
-#define ETH_MMCRXAEPR_RXALGNERR_2           (0x4UL << ETH_MMCRXAEPR_RXALGNERR_Pos)        /*!< 0x00000004 */
-#define ETH_MMCRXAEPR_RXALGNERR_3           (0x8UL << ETH_MMCRXAEPR_RXALGNERR_Pos)        /*!< 0x00000008 */
-#define ETH_MMCRXAEPR_RXALGNERR_4           (0x10UL << ETH_MMCRXAEPR_RXALGNERR_Pos)       /*!< 0x00000010 */
-#define ETH_MMCRXAEPR_RXALGNERR_5           (0x20UL << ETH_MMCRXAEPR_RXALGNERR_Pos)       /*!< 0x00000020 */
-#define ETH_MMCRXAEPR_RXALGNERR_6           (0x40UL << ETH_MMCRXAEPR_RXALGNERR_Pos)       /*!< 0x00000040 */
-#define ETH_MMCRXAEPR_RXALGNERR_7           (0x80UL << ETH_MMCRXAEPR_RXALGNERR_Pos)       /*!< 0x00000080 */
-#define ETH_MMCRXAEPR_RXALGNERR_8           (0x100UL << ETH_MMCRXAEPR_RXALGNERR_Pos)      /*!< 0x00000100 */
-#define ETH_MMCRXAEPR_RXALGNERR_9           (0x200UL << ETH_MMCRXAEPR_RXALGNERR_Pos)      /*!< 0x00000200 */
-#define ETH_MMCRXAEPR_RXALGNERR_10          (0x400UL << ETH_MMCRXAEPR_RXALGNERR_Pos)      /*!< 0x00000400 */
-#define ETH_MMCRXAEPR_RXALGNERR_11          (0x800UL << ETH_MMCRXAEPR_RXALGNERR_Pos)      /*!< 0x00000800 */
-#define ETH_MMCRXAEPR_RXALGNERR_12          (0x1000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)     /*!< 0x00001000 */
-#define ETH_MMCRXAEPR_RXALGNERR_13          (0x2000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)     /*!< 0x00002000 */
-#define ETH_MMCRXAEPR_RXALGNERR_14          (0x4000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)     /*!< 0x00004000 */
-#define ETH_MMCRXAEPR_RXALGNERR_15          (0x8000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)     /*!< 0x00008000 */
-#define ETH_MMCRXAEPR_RXALGNERR_16          (0x10000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)    /*!< 0x00010000 */
-#define ETH_MMCRXAEPR_RXALGNERR_17          (0x20000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)    /*!< 0x00020000 */
-#define ETH_MMCRXAEPR_RXALGNERR_18          (0x40000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)    /*!< 0x00040000 */
-#define ETH_MMCRXAEPR_RXALGNERR_19          (0x80000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)    /*!< 0x00080000 */
-#define ETH_MMCRXAEPR_RXALGNERR_20          (0x100000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)   /*!< 0x00100000 */
-#define ETH_MMCRXAEPR_RXALGNERR_21          (0x200000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)   /*!< 0x00200000 */
-#define ETH_MMCRXAEPR_RXALGNERR_22          (0x400000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)   /*!< 0x00400000 */
-#define ETH_MMCRXAEPR_RXALGNERR_23          (0x800000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)   /*!< 0x00800000 */
-#define ETH_MMCRXAEPR_RXALGNERR_24          (0x1000000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)  /*!< 0x01000000 */
-#define ETH_MMCRXAEPR_RXALGNERR_25          (0x2000000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)  /*!< 0x02000000 */
-#define ETH_MMCRXAEPR_RXALGNERR_26          (0x4000000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)  /*!< 0x04000000 */
-#define ETH_MMCRXAEPR_RXALGNERR_27          (0x8000000UL << ETH_MMCRXAEPR_RXALGNERR_Pos)  /*!< 0x08000000 */
-#define ETH_MMCRXAEPR_RXALGNERR_28          (0x10000000UL << ETH_MMCRXAEPR_RXALGNERR_Pos) /*!< 0x10000000 */
-#define ETH_MMCRXAEPR_RXALGNERR_29          (0x20000000UL << ETH_MMCRXAEPR_RXALGNERR_Pos) /*!< 0x20000000 */
-#define ETH_MMCRXAEPR_RXALGNERR_30          (0x40000000UL << ETH_MMCRXAEPR_RXALGNERR_Pos) /*!< 0x40000000 */
-#define ETH_MMCRXAEPR_RXALGNERR_31          (0x80000000UL << ETH_MMCRXAEPR_RXALGNERR_Pos) /*!< 0x80000000 */
+/*******  Bit definition for ETH_TX_64OCTETS_PACKETS_GOOD_BAD register  *******/
+#define ETH_TX_64OCTETS_PACKETS_GOOD_BAD_TX64OCTGB_Pos                  (0U)
+#define ETH_TX_64OCTETS_PACKETS_GOOD_BAD_TX64OCTGB_Msk                  (0xFFFFFFFFUL << ETH_TX_64OCTETS_PACKETS_GOOD_BAD_TX64OCTGB_Pos)          /*!< 0xFFFFFFFF */
+#define ETH_TX_64OCTETS_PACKETS_GOOD_BAD_TX64OCTGB                      ETH_TX_64OCTETS_PACKETS_GOOD_BAD_TX64OCTGB_Msk                           /*!< Tx 64 octets Packets Good Bad */
 
-/***********  Bit definition for ETH_MMC_RX_UNICAST_PACKETS_GOOD register  ************/
-#define ETH_MMCRXUPGR_RXUCASTG_Pos          (0U)
-#define ETH_MMCRXUPGR_RXUCASTG_Msk          (0xFFFFFFFFUL << ETH_MMCRXUPGR_RXUCASTG_Pos) /*!< 0xFFFFFFFF */
-#define ETH_MMCRXUPGR_RXUCASTG              ETH_MMCRXUPGR_RXUCASTG_Msk                  /*!< Rx Unicast Packets Good */
-#define ETH_MMCRXUPGR_RXUCASTG_0            (0x1UL << ETH_MMCRXUPGR_RXUCASTG_Pos)        /*!< 0x00000001 */
-#define ETH_MMCRXUPGR_RXUCASTG_1            (0x2UL << ETH_MMCRXUPGR_RXUCASTG_Pos)        /*!< 0x00000002 */
-#define ETH_MMCRXUPGR_RXUCASTG_2            (0x4UL << ETH_MMCRXUPGR_RXUCASTG_Pos)        /*!< 0x00000004 */
-#define ETH_MMCRXUPGR_RXUCASTG_3            (0x8UL << ETH_MMCRXUPGR_RXUCASTG_Pos)        /*!< 0x00000008 */
-#define ETH_MMCRXUPGR_RXUCASTG_4            (0x10UL << ETH_MMCRXUPGR_RXUCASTG_Pos)       /*!< 0x00000010 */
-#define ETH_MMCRXUPGR_RXUCASTG_5            (0x20UL << ETH_MMCRXUPGR_RXUCASTG_Pos)       /*!< 0x00000020 */
-#define ETH_MMCRXUPGR_RXUCASTG_6            (0x40UL << ETH_MMCRXUPGR_RXUCASTG_Pos)       /*!< 0x00000040 */
-#define ETH_MMCRXUPGR_RXUCASTG_7            (0x80UL << ETH_MMCRXUPGR_RXUCASTG_Pos)       /*!< 0x00000080 */
-#define ETH_MMCRXUPGR_RXUCASTG_8            (0x100UL << ETH_MMCRXUPGR_RXUCASTG_Pos)      /*!< 0x00000100 */
-#define ETH_MMCRXUPGR_RXUCASTG_9            (0x200UL << ETH_MMCRXUPGR_RXUCASTG_Pos)      /*!< 0x00000200 */
-#define ETH_MMCRXUPGR_RXUCASTG_10           (0x400UL << ETH_MMCRXUPGR_RXUCASTG_Pos)      /*!< 0x00000400 */
-#define ETH_MMCRXUPGR_RXUCASTG_11           (0x800UL << ETH_MMCRXUPGR_RXUCASTG_Pos)      /*!< 0x00000800 */
-#define ETH_MMCRXUPGR_RXUCASTG_12           (0x1000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)     /*!< 0x00001000 */
-#define ETH_MMCRXUPGR_RXUCASTG_13           (0x2000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)     /*!< 0x00002000 */
-#define ETH_MMCRXUPGR_RXUCASTG_14           (0x4000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)     /*!< 0x00004000 */
-#define ETH_MMCRXUPGR_RXUCASTG_15           (0x8000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)     /*!< 0x00008000 */
-#define ETH_MMCRXUPGR_RXUCASTG_16           (0x10000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)    /*!< 0x00010000 */
-#define ETH_MMCRXUPGR_RXUCASTG_17           (0x20000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)    /*!< 0x00020000 */
-#define ETH_MMCRXUPGR_RXUCASTG_18           (0x40000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)    /*!< 0x00040000 */
-#define ETH_MMCRXUPGR_RXUCASTG_19           (0x80000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)    /*!< 0x00080000 */
-#define ETH_MMCRXUPGR_RXUCASTG_20           (0x100000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)   /*!< 0x00100000 */
-#define ETH_MMCRXUPGR_RXUCASTG_21           (0x200000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)   /*!< 0x00200000 */
-#define ETH_MMCRXUPGR_RXUCASTG_22           (0x400000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)   /*!< 0x00400000 */
-#define ETH_MMCRXUPGR_RXUCASTG_23           (0x800000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)   /*!< 0x00800000 */
-#define ETH_MMCRXUPGR_RXUCASTG_24           (0x1000000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)  /*!< 0x01000000 */
-#define ETH_MMCRXUPGR_RXUCASTG_25           (0x2000000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)  /*!< 0x02000000 */
-#define ETH_MMCRXUPGR_RXUCASTG_26           (0x4000000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)  /*!< 0x04000000 */
-#define ETH_MMCRXUPGR_RXUCASTG_27           (0x8000000UL << ETH_MMCRXUPGR_RXUCASTG_Pos)  /*!< 0x08000000 */
-#define ETH_MMCRXUPGR_RXUCASTG_28           (0x10000000UL << ETH_MMCRXUPGR_RXUCASTG_Pos) /*!< 0x10000000 */
-#define ETH_MMCRXUPGR_RXUCASTG_29           (0x20000000UL << ETH_MMCRXUPGR_RXUCASTG_Pos) /*!< 0x20000000 */
-#define ETH_MMCRXUPGR_RXUCASTG_30           (0x40000000UL << ETH_MMCRXUPGR_RXUCASTG_Pos) /*!< 0x40000000 */
-#define ETH_MMCRXUPGR_RXUCASTG_31           (0x80000000UL << ETH_MMCRXUPGR_RXUCASTG_Pos) /*!< 0x80000000 */
+/****  Bit definition for ETH_TX_64TO127OCTETS_PACKETS_GOOD_BAD register  *****/
+#define ETH_TX_64TO127OCTETS_PACKETS_GOOD_BAD_TX65_127OCTGB_Pos         (0U)
+#define ETH_TX_64TO127OCTETS_PACKETS_GOOD_BAD_TX65_127OCTGB_Msk         (0xFFFFFFFFUL << ETH_TX_64TO127OCTETS_PACKETS_GOOD_BAD_TX65_127OCTGB_Pos) /*!< 0xFFFFFFFF */
+#define ETH_TX_64TO127OCTETS_PACKETS_GOOD_BAD_TX65_127OCTGB             ETH_TX_64TO127OCTETS_PACKETS_GOOD_BAD_TX65_127OCTGB_Msk                  /*!< Tx 65 to 127 octets Packets Good Bad */
 
-/*************  Bit definition for ETH_MMC_TX_LPI_USEC_CNTR register  *************/
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_Pos       (0U)
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_Msk       (0xFFFFFFFFUL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos) /*!< 0xFFFFFFFF */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC           ETH_MMCTXLPIMSTR_TXLPIUSC_Msk                  /*!< Tx LPI Microseconds Counter */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_0         (0x1UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)        /*!< 0x00000001 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_1         (0x2UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)        /*!< 0x00000002 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_2         (0x4UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)        /*!< 0x00000004 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_3         (0x8UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)        /*!< 0x00000008 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_4         (0x10UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)       /*!< 0x00000010 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_5         (0x20UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)       /*!< 0x00000020 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_6         (0x40UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)       /*!< 0x00000040 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_7         (0x80UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)       /*!< 0x00000080 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_8         (0x100UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)      /*!< 0x00000100 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_9         (0x200UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)      /*!< 0x00000200 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_10        (0x400UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)      /*!< 0x00000400 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_11        (0x800UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)      /*!< 0x00000800 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_12        (0x1000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)     /*!< 0x00001000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_13        (0x2000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)     /*!< 0x00002000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_14        (0x4000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)     /*!< 0x00004000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_15        (0x8000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)     /*!< 0x00008000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_16        (0x10000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)    /*!< 0x00010000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_17        (0x20000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)    /*!< 0x00020000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_18        (0x40000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)    /*!< 0x00040000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_19        (0x80000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)    /*!< 0x00080000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_20        (0x100000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)   /*!< 0x00100000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_21        (0x200000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)   /*!< 0x00200000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_22        (0x400000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)   /*!< 0x00400000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_23        (0x800000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)   /*!< 0x00800000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_24        (0x1000000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)  /*!< 0x01000000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_25        (0x2000000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)  /*!< 0x02000000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_26        (0x4000000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)  /*!< 0x04000000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_27        (0x8000000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos)  /*!< 0x08000000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_28        (0x10000000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos) /*!< 0x10000000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_29        (0x20000000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos) /*!< 0x20000000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_30        (0x40000000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos) /*!< 0x40000000 */
-#define ETH_MMCTXLPIMSTR_TXLPIUSC_31        (0x80000000UL << ETH_MMCTXLPIMSTR_TXLPIUSC_Pos) /*!< 0x80000000 */
+/****  Bit definition for ETH_TX_128TO255OCTETS_PACKETS_GOOD_BAD register  ****/
+#define ETH_TX_128TO255OCTETS_PACKETS_GOOD_BAD_TX128_255OCTGB_Pos       (0U)
+#define ETH_TX_128TO255OCTETS_PACKETS_GOOD_BAD_TX128_255OCTGB_Msk       (0xFFFFFFFFUL << ETH_TX_128TO255OCTETS_PACKETS_GOOD_BAD_TX128_255OCTGB_Pos) /*!< 0xFFFFFFFF */
+#define ETH_TX_128TO255OCTETS_PACKETS_GOOD_BAD_TX128_255OCTGB           ETH_TX_128TO255OCTETS_PACKETS_GOOD_BAD_TX128_255OCTGB_Msk                /*!< Tx 128 to 255 octets Packets Good Bad */
 
-/*************  Bit definition for ETH_MMC_TX_LPI_TRAN_CNTR register  *************/
-#define ETH_MMCTXLPITCR_TXLPITRC_Pos        (0U)
-#define ETH_MMCTXLPITCR_TXLPITRC_Msk        (0xFFFFFFFFUL << ETH_MMCTXLPITCR_TXLPITRC_Pos) /*!< 0xFFFFFFFF */
-#define ETH_MMCTXLPITCR_TXLPITRC            ETH_MMCTXLPITCR_TXLPITRC_Msk                  /*!< Tx LPI Transition counter */
-#define ETH_MMCTXLPITCR_TXLPITRC_0          (0x1UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)        /*!< 0x00000001 */
-#define ETH_MMCTXLPITCR_TXLPITRC_1          (0x2UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)        /*!< 0x00000002 */
-#define ETH_MMCTXLPITCR_TXLPITRC_2          (0x4UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)        /*!< 0x00000004 */
-#define ETH_MMCTXLPITCR_TXLPITRC_3          (0x8UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)        /*!< 0x00000008 */
-#define ETH_MMCTXLPITCR_TXLPITRC_4          (0x10UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)       /*!< 0x00000010 */
-#define ETH_MMCTXLPITCR_TXLPITRC_5          (0x20UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)       /*!< 0x00000020 */
-#define ETH_MMCTXLPITCR_TXLPITRC_6          (0x40UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)       /*!< 0x00000040 */
-#define ETH_MMCTXLPITCR_TXLPITRC_7          (0x80UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)       /*!< 0x00000080 */
-#define ETH_MMCTXLPITCR_TXLPITRC_8          (0x100UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)      /*!< 0x00000100 */
-#define ETH_MMCTXLPITCR_TXLPITRC_9          (0x200UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)      /*!< 0x00000200 */
-#define ETH_MMCTXLPITCR_TXLPITRC_10         (0x400UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)      /*!< 0x00000400 */
-#define ETH_MMCTXLPITCR_TXLPITRC_11         (0x800UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)      /*!< 0x00000800 */
-#define ETH_MMCTXLPITCR_TXLPITRC_12         (0x1000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)     /*!< 0x00001000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_13         (0x2000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)     /*!< 0x00002000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_14         (0x4000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)     /*!< 0x00004000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_15         (0x8000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)     /*!< 0x00008000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_16         (0x10000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)    /*!< 0x00010000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_17         (0x20000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)    /*!< 0x00020000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_18         (0x40000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)    /*!< 0x00040000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_19         (0x80000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)    /*!< 0x00080000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_20         (0x100000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)   /*!< 0x00100000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_21         (0x200000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)   /*!< 0x00200000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_22         (0x400000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)   /*!< 0x00400000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_23         (0x800000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)   /*!< 0x00800000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_24         (0x1000000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)  /*!< 0x01000000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_25         (0x2000000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)  /*!< 0x02000000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_26         (0x4000000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)  /*!< 0x04000000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_27         (0x8000000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos)  /*!< 0x08000000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_28         (0x10000000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos) /*!< 0x10000000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_29         (0x20000000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos) /*!< 0x20000000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_30         (0x40000000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos) /*!< 0x40000000 */
-#define ETH_MMCTXLPITCR_TXLPITRC_31         (0x80000000UL << ETH_MMCTXLPITCR_TXLPITRC_Pos) /*!< 0x80000000 */
+/****  Bit definition for ETH_TX_256TO511OCTETS_PACKETS_GOOD_BAD register  ****/
+#define ETH_TX_256TO511OCTETS_PACKETS_GOOD_BAD_TX256_511OCTGB_Pos       (0U)
+#define ETH_TX_256TO511OCTETS_PACKETS_GOOD_BAD_TX256_511OCTGB_Msk       (0xFFFFFFFFUL << ETH_TX_256TO511OCTETS_PACKETS_GOOD_BAD_TX256_511OCTGB_Pos) /*!< 0xFFFFFFFF */
+#define ETH_TX_256TO511OCTETS_PACKETS_GOOD_BAD_TX256_511OCTGB           ETH_TX_256TO511OCTETS_PACKETS_GOOD_BAD_TX256_511OCTGB_Msk                /*!< Tx 256 to 511 octets Packets Good Bad */
 
-/*************  Bit definition for ETH_MMC_RX_LPI_USEC_CNTR register  *************/
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_Pos       (0U)
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_Msk       (0xFFFFFFFFUL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos) /*!< 0xFFFFFFFF */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC           ETH_MMCRXLPIMSTR_RXLPIUSC_Msk                  /*!< Rx LPI Microseconds Counter */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_0         (0x1UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)        /*!< 0x00000001 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_1         (0x2UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)        /*!< 0x00000002 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_2         (0x4UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)        /*!< 0x00000004 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_3         (0x8UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)        /*!< 0x00000008 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_4         (0x10UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)       /*!< 0x00000010 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_5         (0x20UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)       /*!< 0x00000020 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_6         (0x40UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)       /*!< 0x00000040 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_7         (0x80UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)       /*!< 0x00000080 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_8         (0x100UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)      /*!< 0x00000100 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_9         (0x200UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)      /*!< 0x00000200 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_10        (0x400UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)      /*!< 0x00000400 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_11        (0x800UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)      /*!< 0x00000800 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_12        (0x1000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)     /*!< 0x00001000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_13        (0x2000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)     /*!< 0x00002000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_14        (0x4000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)     /*!< 0x00004000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_15        (0x8000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)     /*!< 0x00008000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_16        (0x10000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)    /*!< 0x00010000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_17        (0x20000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)    /*!< 0x00020000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_18        (0x40000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)    /*!< 0x00040000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_19        (0x80000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)    /*!< 0x00080000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_20        (0x100000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)   /*!< 0x00100000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_21        (0x200000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)   /*!< 0x00200000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_22        (0x400000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)   /*!< 0x00400000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_23        (0x800000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)   /*!< 0x00800000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_24        (0x1000000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)  /*!< 0x01000000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_25        (0x2000000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)  /*!< 0x02000000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_26        (0x4000000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)  /*!< 0x04000000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_27        (0x8000000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos)  /*!< 0x08000000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_28        (0x10000000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos) /*!< 0x10000000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_29        (0x20000000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos) /*!< 0x20000000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_30        (0x40000000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos) /*!< 0x40000000 */
-#define ETH_MMCRXLPIMSTR_RXLPIUSC_31        (0x80000000UL << ETH_MMCRXLPIMSTR_RXLPIUSC_Pos) /*!< 0x80000000 */
+/***  Bit definition for ETH_TX_512TO1023OCTETS_PACKETS_GOOD_BAD register  ****/
+#define ETH_TX_512TO1023OCTETS_PACKETS_GOOD_BAD_TX512_1023OCTGB_Pos     (0U)
+#define ETH_TX_512TO1023OCTETS_PACKETS_GOOD_BAD_TX512_1023OCTGB_Msk     (0xFFFFFFFFUL << ETH_TX_512TO1023OCTETS_PACKETS_GOOD_BAD_TX512_1023OCTGB_Pos)   /*!< 0xFFFFFFFF */
+#define ETH_TX_512TO1023OCTETS_PACKETS_GOOD_BAD_TX512_1023OCTGB         ETH_TX_512TO1023OCTETS_PACKETS_GOOD_BAD_TX512_1023OCTGB_Msk              /*!< Tx 512 to 1023 octets Packets Good Bad */
 
-/*************  Bit definition for ETH_MMC_RX_LPI_TRAN_CNTR register  *************/
-#define ETH_MMCRXLPITCR_RXLPITRC_Pos        (0U)
-#define ETH_MMCRXLPITCR_RXLPITRC_Msk        (0xFFFFFFFFUL << ETH_MMCRXLPITCR_RXLPITRC_Pos) /*!< 0xFFFFFFFF */
-#define ETH_MMCRXLPITCR_RXLPITRC            ETH_MMCRXLPITCR_RXLPITRC_Msk                  /*!< Rx LPI Transition counter */
-#define ETH_MMCRXLPITCR_RXLPITRC_0          (0x1UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)        /*!< 0x00000001 */
-#define ETH_MMCRXLPITCR_RXLPITRC_1          (0x2UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)        /*!< 0x00000002 */
-#define ETH_MMCRXLPITCR_RXLPITRC_2          (0x4UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)        /*!< 0x00000004 */
-#define ETH_MMCRXLPITCR_RXLPITRC_3          (0x8UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)        /*!< 0x00000008 */
-#define ETH_MMCRXLPITCR_RXLPITRC_4          (0x10UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)       /*!< 0x00000010 */
-#define ETH_MMCRXLPITCR_RXLPITRC_5          (0x20UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)       /*!< 0x00000020 */
-#define ETH_MMCRXLPITCR_RXLPITRC_6          (0x40UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)       /*!< 0x00000040 */
-#define ETH_MMCRXLPITCR_RXLPITRC_7          (0x80UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)       /*!< 0x00000080 */
-#define ETH_MMCRXLPITCR_RXLPITRC_8          (0x100UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)      /*!< 0x00000100 */
-#define ETH_MMCRXLPITCR_RXLPITRC_9          (0x200UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)      /*!< 0x00000200 */
-#define ETH_MMCRXLPITCR_RXLPITRC_10         (0x400UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)      /*!< 0x00000400 */
-#define ETH_MMCRXLPITCR_RXLPITRC_11         (0x800UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)      /*!< 0x00000800 */
-#define ETH_MMCRXLPITCR_RXLPITRC_12         (0x1000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)     /*!< 0x00001000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_13         (0x2000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)     /*!< 0x00002000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_14         (0x4000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)     /*!< 0x00004000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_15         (0x8000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)     /*!< 0x00008000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_16         (0x10000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)    /*!< 0x00010000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_17         (0x20000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)    /*!< 0x00020000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_18         (0x40000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)    /*!< 0x00040000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_19         (0x80000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)    /*!< 0x00080000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_20         (0x100000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)   /*!< 0x00100000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_21         (0x200000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)   /*!< 0x00200000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_22         (0x400000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)   /*!< 0x00400000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_23         (0x800000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)   /*!< 0x00800000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_24         (0x1000000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)  /*!< 0x01000000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_25         (0x2000000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)  /*!< 0x02000000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_26         (0x4000000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)  /*!< 0x04000000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_27         (0x8000000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos)  /*!< 0x08000000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_28         (0x10000000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos) /*!< 0x10000000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_29         (0x20000000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos) /*!< 0x20000000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_30         (0x40000000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos) /*!< 0x40000000 */
-#define ETH_MMCRXLPITCR_RXLPITRC_31         (0x80000000UL << ETH_MMCRXLPITCR_RXLPITRC_Pos) /*!< 0x80000000 */
+/***  Bit definition for ETH_TX_1024TOMAXOCTETS_PACKETS_GOOD_BAD register  ****/
+#define ETH_TX_1024TOMAXOCTETS_PACKETS_GOOD_BAD_TX1024_MAXOCTGB_Pos     (0U)
+#define ETH_TX_1024TOMAXOCTETS_PACKETS_GOOD_BAD_TX1024_MAXOCTGB_Msk     (0xFFFFFFFFUL << ETH_TX_1024TOMAXOCTETS_PACKETS_GOOD_BAD_TX1024_MAXOCTGB_Pos)   /*!< 0xFFFFFFFF */
+#define ETH_TX_1024TOMAXOCTETS_PACKETS_GOOD_BAD_TX1024_MAXOCTGB         ETH_TX_1024TOMAXOCTETS_PACKETS_GOOD_BAD_TX1024_MAXOCTGB_Msk              /*!< Tx 1024 to Max octets Packets Good Bad */
+
+/*******  Bit definition for ETH_TX_UNICAST_PACKETS_GOOD_BAD register  ********/
+#define ETH_TX_UNICAST_PACKETS_GOOD_BAD_TXUCASTGB_Pos                   (0U)
+#define ETH_TX_UNICAST_PACKETS_GOOD_BAD_TXUCASTGB_Msk                   (0xFFFFFFFFUL << ETH_TX_UNICAST_PACKETS_GOOD_BAD_TXUCASTGB_Pos)           /*!< 0xFFFFFFFF */
+#define ETH_TX_UNICAST_PACKETS_GOOD_BAD_TXUCASTGB                       ETH_TX_UNICAST_PACKETS_GOOD_BAD_TXUCASTGB_Msk                            /*!< Tx Unicast Packets Good Bad */
+
+/******  Bit definition for ETH_TX_MULTICAST_PACKETS_GOOD_BAD register  *******/
+#define ETH_TX_MULTICAST_PACKETS_GOOD_BAD_TXMCASTGB_Pos                 (0U)
+#define ETH_TX_MULTICAST_PACKETS_GOOD_BAD_TXMCASTGB_Msk                 (0xFFFFFFFFUL << ETH_TX_MULTICAST_PACKETS_GOOD_BAD_TXMCASTGB_Pos)         /*!< 0xFFFFFFFF */
+#define ETH_TX_MULTICAST_PACKETS_GOOD_BAD_TXMCASTGB                     ETH_TX_MULTICAST_PACKETS_GOOD_BAD_TXMCASTGB_Msk                          /*!< Tx Multicast Packets Good Bad */
+
+/******  Bit definition for ETH_TX_BROADCAST_PACKETS_GOOD_BAD register  *******/
+#define ETH_TX_BROADCAST_PACKETS_GOOD_BAD_TXBCASTGB_Pos                 (0U)
+#define ETH_TX_BROADCAST_PACKETS_GOOD_BAD_TXBCASTGB_Msk                 (0xFFFFFFFFUL << ETH_TX_BROADCAST_PACKETS_GOOD_BAD_TXBCASTGB_Pos)         /*!< 0xFFFFFFFF */
+#define ETH_TX_BROADCAST_PACKETS_GOOD_BAD_TXBCASTGB                     ETH_TX_BROADCAST_PACKETS_GOOD_BAD_TXBCASTGB_Msk                          /*!< Tx Broadcast Packets Good Bad */
+
+/********  Bit definition for ETH_TX_UNDERFLOW_ERROR_PACKETS register  ********/
+#define ETH_TX_UNDERFLOW_ERROR_PACKETS_TXUNDRFLW_Pos                    (0U)
+#define ETH_TX_UNDERFLOW_ERROR_PACKETS_TXUNDRFLW_Msk                    (0xFFFFFFFFUL << ETH_TX_UNDERFLOW_ERROR_PACKETS_TXUNDRFLW_Pos)            /*!< 0xFFFFFFFF */
+#define ETH_TX_UNDERFLOW_ERROR_PACKETS_TXUNDRFLW                        ETH_TX_UNDERFLOW_ERROR_PACKETS_TXUNDRFLW_Msk                             /*!< Tx Underflow Error Packets */
+
+/*****  Bit definition for ETH_TX_SINGLE_COLLISION_GOOD_PACKETS register  *****/
+#define ETH_TX_SINGLE_COLLISION_GOOD_PACKETS_TXSNGLCOLG_Pos             (0U)
+#define ETH_TX_SINGLE_COLLISION_GOOD_PACKETS_TXSNGLCOLG_Msk             (0xFFFFFFFFUL << ETH_TX_SINGLE_COLLISION_GOOD_PACKETS_TXSNGLCOLG_Pos)     /*!< 0xFFFFFFFF */
+#define ETH_TX_SINGLE_COLLISION_GOOD_PACKETS_TXSNGLCOLG                 ETH_TX_SINGLE_COLLISION_GOOD_PACKETS_TXSNGLCOLG_Msk                      /*!< Tx Single Collision Good Packets */
+
+/****  Bit definition for ETH_TX_MULTIPLE_COLLISION_GOOD_PACKETS register  ****/
+#define ETH_TX_MULTIPLE_COLLISION_GOOD_PACKETS_TXMULTCOLG_Pos           (0U)
+#define ETH_TX_MULTIPLE_COLLISION_GOOD_PACKETS_TXMULTCOLG_Msk           (0xFFFFFFFFUL << ETH_TX_MULTIPLE_COLLISION_GOOD_PACKETS_TXMULTCOLG_Pos)   /*!< 0xFFFFFFFF */
+#define ETH_TX_MULTIPLE_COLLISION_GOOD_PACKETS_TXMULTCOLG               ETH_TX_MULTIPLE_COLLISION_GOOD_PACKETS_TXMULTCOLG_Msk                    /*!< Tx Multiple Collision Good Packets */
+
+/***********  Bit definition for ETH_TX_DEFERRED_PACKETS register  ************/
+#define ETH_TX_DEFERRED_PACKETS_TXDEFRD_Pos                             (0U)
+#define ETH_TX_DEFERRED_PACKETS_TXDEFRD_Msk                             (0xFFFFFFFFUL << ETH_TX_DEFERRED_PACKETS_TXDEFRD_Pos)                     /*!< 0xFFFFFFFF */
+#define ETH_TX_DEFERRED_PACKETS_TXDEFRD                                 ETH_TX_DEFERRED_PACKETS_TXDEFRD_Msk                                      /*!< Tx Deferred Packets */
+
+/********  Bit definition for ETH_TX_LATE_COLLISION_PACKETS register  *********/
+#define ETH_TX_LATE_COLLISION_PACKETS_TXLATECOL_Pos                     (0U)
+#define ETH_TX_LATE_COLLISION_PACKETS_TXLATECOL_Msk                     (0xFFFFFFFFUL << ETH_TX_LATE_COLLISION_PACKETS_TXLATECOL_Pos)             /*!< 0xFFFFFFFF */
+#define ETH_TX_LATE_COLLISION_PACKETS_TXLATECOL                         ETH_TX_LATE_COLLISION_PACKETS_TXLATECOL_Msk                              /*!< Tx Late Collision Packets */
+
+/******  Bit definition for ETH_TX_EXCESSIVE_COLLISION_PACKETS register  ******/
+#define ETH_TX_EXCESSIVE_COLLISION_PACKETS_TXEXSCOL_Pos                 (0U)
+#define ETH_TX_EXCESSIVE_COLLISION_PACKETS_TXEXSCOL_Msk                 (0xFFFFFFFFUL << ETH_TX_EXCESSIVE_COLLISION_PACKETS_TXEXSCOL_Pos)         /*!< 0xFFFFFFFF */
+#define ETH_TX_EXCESSIVE_COLLISION_PACKETS_TXEXSCOL                     ETH_TX_EXCESSIVE_COLLISION_PACKETS_TXEXSCOL_Msk                          /*!< Tx Excessive Collision Packets */
+
+/*********  Bit definition for ETH_TX_CARRIER_ERROR_PACKETS register  *********/
+#define ETH_TX_CARRIER_ERROR_PACKETS_TXCARR_Pos                         (0U)
+#define ETH_TX_CARRIER_ERROR_PACKETS_TXCARR_Msk                         (0xFFFFFFFFUL << ETH_TX_CARRIER_ERROR_PACKETS_TXCARR_Pos)                 /*!< 0xFFFFFFFF */
+#define ETH_TX_CARRIER_ERROR_PACKETS_TXCARR                             ETH_TX_CARRIER_ERROR_PACKETS_TXCARR_Msk                                  /*!< Tx Carrier Error Packets */
+
+/***********  Bit definition for ETH_TX_OCTET_COUNT_GOOD register  ************/
+#define ETH_TX_OCTET_COUNT_GOOD_TXOCTG_Pos                              (0U)
+#define ETH_TX_OCTET_COUNT_GOOD_TXOCTG_Msk                              (0xFFFFFFFFUL << ETH_TX_OCTET_COUNT_GOOD_TXOCTG_Pos)                      /*!< 0xFFFFFFFF */
+#define ETH_TX_OCTET_COUNT_GOOD_TXOCTG                                  ETH_TX_OCTET_COUNT_GOOD_TXOCTG_Msk                                       /*!< Tx Octet Count Good */
+
+/***********  Bit definition for ETH_TX_PACKET_COUNT_GOOD register  ***********/
+#define ETH_TX_PACKET_COUNT_GOOD_TXPKTG_Pos                             (0U)
+#define ETH_TX_PACKET_COUNT_GOOD_TXPKTG_Msk                             (0xFFFFFFFFUL << ETH_TX_PACKET_COUNT_GOOD_TXPKTG_Pos)                     /*!< 0xFFFFFFFF */
+#define ETH_TX_PACKET_COUNT_GOOD_TXPKTG                                 ETH_TX_PACKET_COUNT_GOOD_TXPKTG_Msk                                      /*!< Tx Packet Count Good */
+
+/*******  Bit definition for ETH_TX_EXCESSIVE_DEFERRAL_ERROR register  ********/
+#define ETH_TX_EXCESSIVE_DEFERRAL_ERROR_TXEXSDEF_Pos                    (0U)
+#define ETH_TX_EXCESSIVE_DEFERRAL_ERROR_TXEXSDEF_Msk                    (0xFFFFFFFFUL << ETH_TX_EXCESSIVE_DEFERRAL_ERROR_TXEXSDEF_Pos)            /*!< 0xFFFFFFFF */
+#define ETH_TX_EXCESSIVE_DEFERRAL_ERROR_TXEXSDEF                        ETH_TX_EXCESSIVE_DEFERRAL_ERROR_TXEXSDEF_Msk                             /*!< Tx Excessive Deferral Error */
+
+/*************  Bit definition for ETH_TX_PAUSE_PACKETS register  *************/
+#define ETH_TX_PAUSE_PACKETS_TXPAUSE_Pos                                (0U)
+#define ETH_TX_PAUSE_PACKETS_TXPAUSE_Msk                                (0xFFFFFFFFUL << ETH_TX_PAUSE_PACKETS_TXPAUSE_Pos)                        /*!< 0xFFFFFFFF */
+#define ETH_TX_PAUSE_PACKETS_TXPAUSE                                    ETH_TX_PAUSE_PACKETS_TXPAUSE_Msk                                         /*!< Tx Pause Packets */
+
+/***********  Bit definition for ETH_TX_VLAN_PACKETS_GOOD register  ***********/
+#define ETH_TX_VLAN_PACKETS_GOOD_TXVLANG_Pos                            (0U)
+#define ETH_TX_VLAN_PACKETS_GOOD_TXVLANG_Msk                            (0xFFFFFFFFUL << ETH_TX_VLAN_PACKETS_GOOD_TXVLANG_Pos)                    /*!< 0xFFFFFFFF */
+#define ETH_TX_VLAN_PACKETS_GOOD_TXVLANG                                ETH_TX_VLAN_PACKETS_GOOD_TXVLANG_Msk                                     /*!< Tx VLAN Packets Good */
+
+/**********  Bit definition for ETH_TX_OSIZE_PACKETS_GOOD register  ***********/
+#define ETH_TX_OSIZE_PACKETS_GOOD_TXOSIZG_Pos                           (0U)
+#define ETH_TX_OSIZE_PACKETS_GOOD_TXOSIZG_Msk                           (0xFFFFFFFFUL << ETH_TX_OSIZE_PACKETS_GOOD_TXOSIZG_Pos)                   /*!< 0xFFFFFFFF */
+#define ETH_TX_OSIZE_PACKETS_GOOD_TXOSIZG                               ETH_TX_OSIZE_PACKETS_GOOD_TXOSIZG_Msk                                    /*!< Tx OSize Packets Good */
+
+/********  Bit definition for ETH_RX_PACKETS_COUNT_GOOD_BAD register  *********/
+#define ETH_RX_PACKETS_COUNT_GOOD_BAD_RXPKTGB_Pos                       (0U)
+#define ETH_RX_PACKETS_COUNT_GOOD_BAD_RXPKTGB_Msk                       (0xFFFFFFFFUL << ETH_RX_PACKETS_COUNT_GOOD_BAD_RXPKTGB_Pos)               /*!< 0xFFFFFFFF */
+#define ETH_RX_PACKETS_COUNT_GOOD_BAD_RXPKTGB                           ETH_RX_PACKETS_COUNT_GOOD_BAD_RXPKTGB_Msk                                /*!< Rx Packets Count Good Bad */
+
+/*********  Bit definition for ETH_RX_OCTET_COUNT_GOOD_BAD register  **********/
+#define ETH_RX_OCTET_COUNT_GOOD_BAD_RXOCTGB_Pos                         (0U)
+#define ETH_RX_OCTET_COUNT_GOOD_BAD_RXOCTGB_Msk                         (0xFFFFFFFFUL << ETH_RX_OCTET_COUNT_GOOD_BAD_RXOCTGB_Pos)                 /*!< 0xFFFFFFFF */
+#define ETH_RX_OCTET_COUNT_GOOD_BAD_RXOCTGB                             ETH_RX_OCTET_COUNT_GOOD_BAD_RXOCTGB_Msk                                  /*!< Rx Octet Count Good Bad */
+
+/***********  Bit definition for ETH_RX_OCTET_COUNT_GOOD register  ************/
+#define ETH_RX_OCTET_COUNT_GOOD_RXOCTG_Pos                              (0U)
+#define ETH_RX_OCTET_COUNT_GOOD_RXOCTG_Msk                              (0xFFFFFFFFUL << ETH_RX_OCTET_COUNT_GOOD_RXOCTG_Pos)                      /*!< 0xFFFFFFFF */
+#define ETH_RX_OCTET_COUNT_GOOD_RXOCTG                                  ETH_RX_OCTET_COUNT_GOOD_RXOCTG_Msk                                       /*!< Rx Octet Count Good */
+
+/********  Bit definition for ETH_RX_BROADCAST_PACKETS_GOOD register  *********/
+#define ETH_RX_BROADCAST_PACKETS_GOOD_RXBCASTG_Pos                      (0U)
+#define ETH_RX_BROADCAST_PACKETS_GOOD_RXBCASTG_Msk                      (0xFFFFFFFFUL << ETH_RX_BROADCAST_PACKETS_GOOD_RXBCASTG_Pos)              /*!< 0xFFFFFFFF */
+#define ETH_RX_BROADCAST_PACKETS_GOOD_RXBCASTG                          ETH_RX_BROADCAST_PACKETS_GOOD_RXBCASTG_Msk                               /*!< Rx Broadcast Packets Good */
+
+/********  Bit definition for ETH_RX_MULTICAST_PACKETS_GOOD register  *********/
+#define ETH_RX_MULTICAST_PACKETS_GOOD_RXMCASTG_Pos                      (0U)
+#define ETH_RX_MULTICAST_PACKETS_GOOD_RXMCASTG_Msk                      (0xFFFFFFFFUL << ETH_RX_MULTICAST_PACKETS_GOOD_RXMCASTG_Pos)              /*!< 0xFFFFFFFF */
+#define ETH_RX_MULTICAST_PACKETS_GOOD_RXMCASTG                          ETH_RX_MULTICAST_PACKETS_GOOD_RXMCASTG_Msk                               /*!< Rx Multicast Packets Good */
+
+/***********  Bit definition for ETH_RX_CRC_ERROR_PACKETS register  ***********/
+#define ETH_RX_CRC_ERROR_PACKETS_RXCRCERR_Pos                           (0U)
+#define ETH_RX_CRC_ERROR_PACKETS_RXCRCERR_Msk                           (0xFFFFFFFFUL << ETH_RX_CRC_ERROR_PACKETS_RXCRCERR_Pos)                   /*!< 0xFFFFFFFF */
+#define ETH_RX_CRC_ERROR_PACKETS_RXCRCERR                               ETH_RX_CRC_ERROR_PACKETS_RXCRCERR_Msk                                    /*!< Rx CRC Error Packets */
+
+/********  Bit definition for ETH_RX_ALIGNMENT_ERROR_PACKETS register  ********/
+#define ETH_RX_ALIGNMENT_ERROR_PACKETS_RXALGNERR_Pos                    (0U)
+#define ETH_RX_ALIGNMENT_ERROR_PACKETS_RXALGNERR_Msk                    (0xFFFFFFFFUL << ETH_RX_ALIGNMENT_ERROR_PACKETS_RXALGNERR_Pos)            /*!< 0xFFFFFFFF */
+#define ETH_RX_ALIGNMENT_ERROR_PACKETS_RXALGNERR                        ETH_RX_ALIGNMENT_ERROR_PACKETS_RXALGNERR_Msk                             /*!< Rx Alignment Error Packets */
+
+/**********  Bit definition for ETH_RX_RUNT_ERROR_PACKETS register  ***********/
+#define ETH_RX_RUNT_ERROR_PACKETS_RXRUNTERR_Pos                         (0U)
+#define ETH_RX_RUNT_ERROR_PACKETS_RXRUNTERR_Msk                         (0xFFFFFFFFUL << ETH_RX_RUNT_ERROR_PACKETS_RXRUNTERR_Pos)                 /*!< 0xFFFFFFFF */
+#define ETH_RX_RUNT_ERROR_PACKETS_RXRUNTERR                             ETH_RX_RUNT_ERROR_PACKETS_RXRUNTERR_Msk                                  /*!< Rx Runt Error Packets */
+
+/*********  Bit definition for ETH_RX_JABBER_ERROR_PACKETS register  **********/
+#define ETH_RX_JABBER_ERROR_PACKETS_RXJABERR_Pos                        (0U)
+#define ETH_RX_JABBER_ERROR_PACKETS_RXJABERR_Msk                        (0xFFFFFFFFUL << ETH_RX_JABBER_ERROR_PACKETS_RXJABERR_Pos)                /*!< 0xFFFFFFFF */
+#define ETH_RX_JABBER_ERROR_PACKETS_RXJABERR                            ETH_RX_JABBER_ERROR_PACKETS_RXJABERR_Msk                                 /*!< Rx Jabber Error Packets */
+
+/********  Bit definition for ETH_RX_UNDERSIZE_PACKETS_GOOD register  *********/
+#define ETH_RX_UNDERSIZE_PACKETS_GOOD_RXUNDERSZG_Pos                    (0U)
+#define ETH_RX_UNDERSIZE_PACKETS_GOOD_RXUNDERSZG_Msk                    (0xFFFFFFFFUL << ETH_RX_UNDERSIZE_PACKETS_GOOD_RXUNDERSZG_Pos)            /*!< 0xFFFFFFFF */
+#define ETH_RX_UNDERSIZE_PACKETS_GOOD_RXUNDERSZG                        ETH_RX_UNDERSIZE_PACKETS_GOOD_RXUNDERSZG_Msk                             /*!< Rx Undersize Packets Good */
+
+/*********  Bit definition for ETH_RX_OVERSIZE_PACKETS_GOOD register  *********/
+#define ETH_RX_OVERSIZE_PACKETS_GOOD_RXOVERSZG_Pos                      (0U)
+#define ETH_RX_OVERSIZE_PACKETS_GOOD_RXOVERSZG_Msk                      (0xFFFFFFFFUL << ETH_RX_OVERSIZE_PACKETS_GOOD_RXOVERSZG_Pos)              /*!< 0xFFFFFFFF */
+#define ETH_RX_OVERSIZE_PACKETS_GOOD_RXOVERSZG                          ETH_RX_OVERSIZE_PACKETS_GOOD_RXOVERSZG_Msk                               /*!< Rx Oversize Packets Good */
+
+/*******  Bit definition for ETH_RX_64OCTETS_PACKETS_GOOD_BAD register  *******/
+#define ETH_RX_64OCTETS_PACKETS_GOOD_BAD_RX64OCTGB_Pos                  (0U)
+#define ETH_RX_64OCTETS_PACKETS_GOOD_BAD_RX64OCTGB_Msk                  (0xFFFFFFFFUL << ETH_RX_64OCTETS_PACKETS_GOOD_BAD_RX64OCTGB_Pos)          /*!< 0xFFFFFFFF */
+#define ETH_RX_64OCTETS_PACKETS_GOOD_BAD_RX64OCTGB                      ETH_RX_64OCTETS_PACKETS_GOOD_BAD_RX64OCTGB_Msk                           /*!< Rx 64 Octets Packets Good Bad */
+
+/****  Bit definition for ETH_RX_65TO127OCTETS_PACKETS_GOOD_BAD register  *****/
+#define ETH_RX_65TO127OCTETS_PACKETS_GOOD_BAD_TX65_127OCTGB_Pos         (0U)
+#define ETH_RX_65TO127OCTETS_PACKETS_GOOD_BAD_TX65_127OCTGB_Msk         (0xFFFFFFFFUL << ETH_RX_65TO127OCTETS_PACKETS_GOOD_BAD_TX65_127OCTGB_Pos) /*!< 0xFFFFFFFF */
+#define ETH_RX_65TO127OCTETS_PACKETS_GOOD_BAD_TX65_127OCTGB             ETH_RX_65TO127OCTETS_PACKETS_GOOD_BAD_TX65_127OCTGB_Msk                  /*!< Rx 65-127 Octets Packets Good Bad */
+
+/****  Bit definition for ETH_RX_128TO255OCTETS_PACKETS_GOOD_BAD register  ****/
+#define ETH_RX_128TO255OCTETS_PACKETS_GOOD_BAD_RX128_255OCTGB_Pos       (0U)
+#define ETH_RX_128TO255OCTETS_PACKETS_GOOD_BAD_RX128_255OCTGB_Msk       (0xFFFFFFFFUL << ETH_RX_128TO255OCTETS_PACKETS_GOOD_BAD_RX128_255OCTGB_Pos) /*!< 0xFFFFFFFF */
+#define ETH_RX_128TO255OCTETS_PACKETS_GOOD_BAD_RX128_255OCTGB           ETH_RX_128TO255OCTETS_PACKETS_GOOD_BAD_RX128_255OCTGB_Msk                /*!< Rx 128-255 Octets Packets Good Bad */
+
+/****  Bit definition for ETH_RX_256TO511OCTETS_PACKETS_GOOD_BAD register  ****/
+#define ETH_RX_256TO511OCTETS_PACKETS_GOOD_BAD_RX256_511OCTGB_Pos       (0U)
+#define ETH_RX_256TO511OCTETS_PACKETS_GOOD_BAD_RX256_511OCTGB_Msk       (0xFFFFFFFFUL << ETH_RX_256TO511OCTETS_PACKETS_GOOD_BAD_RX256_511OCTGB_Pos) /*!< 0xFFFFFFFF */
+#define ETH_RX_256TO511OCTETS_PACKETS_GOOD_BAD_RX256_511OCTGB           ETH_RX_256TO511OCTETS_PACKETS_GOOD_BAD_RX256_511OCTGB_Msk                /*!< Rx 256-511 Octets Packets Good Bad */
+
+/***  Bit definition for ETH_RX_512TO1023OCTETS_PACKETS_GOOD_BAD register  ****/
+#define ETH_RX_512TO1023OCTETS_PACKETS_GOOD_BAD_RX512_1023OCTGB_Pos     (0U)
+#define ETH_RX_512TO1023OCTETS_PACKETS_GOOD_BAD_RX512_1023OCTGB_Msk     (0xFFFFFFFFUL << ETH_RX_512TO1023OCTETS_PACKETS_GOOD_BAD_RX512_1023OCTGB_Pos)   /*!< 0xFFFFFFFF */
+#define ETH_RX_512TO1023OCTETS_PACKETS_GOOD_BAD_RX512_1023OCTGB         ETH_RX_512TO1023OCTETS_PACKETS_GOOD_BAD_RX512_1023OCTGB_Msk              /*!< Rx 512-1023 Octets Packets Good Bad */
+
+/***  Bit definition for ETH_RX_1024TOMAXOCTETS_PACKETS_GOOD_BAD register  ****/
+#define ETH_RX_1024TOMAXOCTETS_PACKETS_GOOD_BAD_RX1024_MAXOCTGB_Pos     (0U)
+#define ETH_RX_1024TOMAXOCTETS_PACKETS_GOOD_BAD_RX1024_MAXOCTGB_Msk     (0xFFFFFFFFUL << ETH_RX_1024TOMAXOCTETS_PACKETS_GOOD_BAD_RX1024_MAXOCTGB_Pos)   /*!< 0xFFFFFFFF */
+#define ETH_RX_1024TOMAXOCTETS_PACKETS_GOOD_BAD_RX1024_MAXOCTGB         ETH_RX_1024TOMAXOCTETS_PACKETS_GOOD_BAD_RX1024_MAXOCTGB_Msk              /*!< Rx 1024-Max Octets Good Bad */
+
+/*********  Bit definition for ETH_RX_UNICAST_PACKETS_GOOD register  **********/
+#define ETH_RX_UNICAST_PACKETS_GOOD_RXUCASTG_Pos                        (0U)
+#define ETH_RX_UNICAST_PACKETS_GOOD_RXUCASTG_Msk                        (0xFFFFFFFFUL << ETH_RX_UNICAST_PACKETS_GOOD_RXUCASTG_Pos)                /*!< 0xFFFFFFFF */
+#define ETH_RX_UNICAST_PACKETS_GOOD_RXUCASTG                            ETH_RX_UNICAST_PACKETS_GOOD_RXUCASTG_Msk                                 /*!< Rx Unicast Packets Good */
+
+/*********  Bit definition for ETH_RX_LENGTH_ERROR_PACKETS register  **********/
+#define ETH_RX_LENGTH_ERROR_PACKETS_RXLENERR_Pos                        (0U)
+#define ETH_RX_LENGTH_ERROR_PACKETS_RXLENERR_Msk                        (0xFFFFFFFFUL << ETH_RX_LENGTH_ERROR_PACKETS_RXLENERR_Pos)                /*!< 0xFFFFFFFF */
+#define ETH_RX_LENGTH_ERROR_PACKETS_RXLENERR                            ETH_RX_LENGTH_ERROR_PACKETS_RXLENERR_Msk                                 /*!< Rx Length Error Packets */
+
+/*********  Bit definition for ETH_RX_OUT_OF_RANGE_PACKETS register  **********/
+#define ETH_RX_OUT_OF_RANGE_PACKETS_RXOUTOFRNG_Pos                      (0U)
+#define ETH_RX_OUT_OF_RANGE_PACKETS_RXOUTOFRNG_Msk                      (0xFFFFFFFFUL << ETH_RX_OUT_OF_RANGE_PACKETS_RXOUTOFRNG_Pos)              /*!< 0xFFFFFFFF */
+#define ETH_RX_OUT_OF_RANGE_PACKETS_RXOUTOFRNG                          ETH_RX_OUT_OF_RANGE_PACKETS_RXOUTOFRNG_Msk                               /*!< Rx Out of Range Type Packet */
+
+/*************  Bit definition for ETH_RX_PAUSE_PACKETS register  *************/
+#define ETH_RX_PAUSE_PACKETS_RXPAUSEPKT_Pos                             (0U)
+#define ETH_RX_PAUSE_PACKETS_RXPAUSEPKT_Msk                             (0xFFFFFFFFUL << ETH_RX_PAUSE_PACKETS_RXPAUSEPKT_Pos)                     /*!< 0xFFFFFFFF */
+#define ETH_RX_PAUSE_PACKETS_RXPAUSEPKT                                 ETH_RX_PAUSE_PACKETS_RXPAUSEPKT_Msk                                      /*!< Rx Pause Packets */
+
+/*********  Bit definition for ETH_RX_FIFO_OVERFLOW_PACKETS register  *********/
+#define ETH_RX_FIFO_OVERFLOW_PACKETS_RXFIFOOVFL_Pos                     (0U)
+#define ETH_RX_FIFO_OVERFLOW_PACKETS_RXFIFOOVFL_Msk                     (0xFFFFFFFFUL << ETH_RX_FIFO_OVERFLOW_PACKETS_RXFIFOOVFL_Pos)             /*!< 0xFFFFFFFF */
+#define ETH_RX_FIFO_OVERFLOW_PACKETS_RXFIFOOVFL                         ETH_RX_FIFO_OVERFLOW_PACKETS_RXFIFOOVFL_Msk                              /*!< Rx FIFO Overflow Packets */
+
+/*********  Bit definition for ETH_RX_VLAN_PACKETS_GOOD_BAD register  *********/
+#define ETH_RX_VLAN_PACKETS_GOOD_BAD_RXVLANPKTGB_Pos                    (0U)
+#define ETH_RX_VLAN_PACKETS_GOOD_BAD_RXVLANPKTGB_Msk                    (0xFFFFFFFFUL << ETH_RX_VLAN_PACKETS_GOOD_BAD_RXVLANPKTGB_Pos)            /*!< 0xFFFFFFFF */
+#define ETH_RX_VLAN_PACKETS_GOOD_BAD_RXVLANPKTGB                        ETH_RX_VLAN_PACKETS_GOOD_BAD_RXVLANPKTGB_Msk                             /*!< Rx VLAN Packets Good Bad */
+
+/********  Bit definition for ETH_RX_WATCHDOG_ERROR_PACKETS register  *********/
+#define ETH_RX_WATCHDOG_ERROR_PACKETS_RXWDGERR_Pos                      (0U)
+#define ETH_RX_WATCHDOG_ERROR_PACKETS_RXWDGERR_Msk                      (0xFFFFFFFFUL << ETH_RX_WATCHDOG_ERROR_PACKETS_RXWDGERR_Pos)              /*!< 0xFFFFFFFF */
+#define ETH_RX_WATCHDOG_ERROR_PACKETS_RXWDGERR                          ETH_RX_WATCHDOG_ERROR_PACKETS_RXWDGERR_Msk                               /*!< Rx Watchdog Error Packets */
+
+/*************  Bit definition for ETH_RX_RECEIVE_ERROR register  *************/
+#define ETH_RX_RECEIVE_ERROR_RXRCVERR_Pos                               (0U)
+#define ETH_RX_RECEIVE_ERROR_RXRCVERR_Msk                               (0xFFFFFFFFUL << ETH_RX_RECEIVE_ERROR_RXRCVERR_Pos)                       /*!< 0xFFFFFFFF */
+#define ETH_RX_RECEIVE_ERROR_RXRCVERR                                   ETH_RX_RECEIVE_ERROR_RXRCVERR_Msk                                        /*!< Rx Receive Error Packets */
+
+/*********  Bit definition for ETH_RX_CONTROL_PACKETS_GOOD register  **********/
+#define ETH_RX_CONTROL_PACKETS_GOOD_RXCTRLG_Pos                         (0U)
+#define ETH_RX_CONTROL_PACKETS_GOOD_RXCTRLG_Msk                         (0xFFFFFFFFUL << ETH_RX_CONTROL_PACKETS_GOOD_RXCTRLG_Pos)                 /*!< 0xFFFFFFFF */
+#define ETH_RX_CONTROL_PACKETS_GOOD_RXCTRLG                             ETH_RX_CONTROL_PACKETS_GOOD_RXCTRLG_Msk                                  /*!< Rx Control Packets Good */
+
+/*************  Bit definition for ETH_TX_LPI_USEC_CNTR register  *************/
+#define ETH_TX_LPI_USEC_CNTR_TXLPIUSC_Pos                               (0U)
+#define ETH_TX_LPI_USEC_CNTR_TXLPIUSC_Msk                               (0xFFFFFFFFUL << ETH_TX_LPI_USEC_CNTR_TXLPIUSC_Pos)                       /*!< 0xFFFFFFFF */
+#define ETH_TX_LPI_USEC_CNTR_TXLPIUSC                                   ETH_TX_LPI_USEC_CNTR_TXLPIUSC_Msk                                        /*!< Tx LPI Microseconds Counter */
+
+/*************  Bit definition for ETH_TX_LPI_TRAN_CNTR register  *************/
+#define ETH_TX_LPI_TRAN_CNTR_TXLPITRC_Pos                               (0U)
+#define ETH_TX_LPI_TRAN_CNTR_TXLPITRC_Msk                               (0xFFFFFFFFUL << ETH_TX_LPI_TRAN_CNTR_TXLPITRC_Pos)                       /*!< 0xFFFFFFFF */
+#define ETH_TX_LPI_TRAN_CNTR_TXLPITRC                                   ETH_TX_LPI_TRAN_CNTR_TXLPITRC_Msk                                        /*!< Tx LPI Transition counter */
+
+/*************  Bit definition for ETH_RX_LPI_USEC_CNTR register  *************/
+#define ETH_RX_LPI_USEC_CNTR_RXLPIUSC_Pos                               (0U)
+#define ETH_RX_LPI_USEC_CNTR_RXLPIUSC_Msk                               (0xFFFFFFFFUL << ETH_RX_LPI_USEC_CNTR_RXLPIUSC_Pos)                       /*!< 0xFFFFFFFF */
+#define ETH_RX_LPI_USEC_CNTR_RXLPIUSC                                   ETH_RX_LPI_USEC_CNTR_RXLPIUSC_Msk                                        /*!< Rx LPI Microseconds Counter */
+
+/*************  Bit definition for ETH_RX_LPI_TRAN_CNTR register  *************/
+#define ETH_RX_LPI_TRAN_CNTR_RXLPITRC_Pos                               (0U)
+#define ETH_RX_LPI_TRAN_CNTR_RXLPITRC_Msk                               (0xFFFFFFFFUL << ETH_RX_LPI_TRAN_CNTR_RXLPITRC_Pos)                       /*!< 0xFFFFFFFF */
+#define ETH_RX_LPI_TRAN_CNTR_RXLPITRC                                   ETH_RX_LPI_TRAN_CNTR_RXLPITRC_Msk                                        /*!< Rx LPI Transition counter */
+
+/**************  Bit definition for ETH_MMC_FPE_TX_ISR register  **************/
+#define ETH_MMC_FPE_TX_ISR_FCIS_Pos                                     (0U)
+#define ETH_MMC_FPE_TX_ISR_FCIS_Msk                                     (0x1UL << ETH_MMC_FPE_TX_ISR_FCIS_Pos)                                    /*!< 0x00000001 */
+#define ETH_MMC_FPE_TX_ISR_FCIS                                         ETH_MMC_FPE_TX_ISR_FCIS_Msk                                              /*!< MMC Tx FPE Fragment Counter Interrupt status */
+#define ETH_MMC_FPE_TX_ISR_HRCIS_Pos                                    (1U)
+#define ETH_MMC_FPE_TX_ISR_HRCIS_Msk                                    (0x1UL << ETH_MMC_FPE_TX_ISR_HRCIS_Pos)                                   /*!< 0x00000002 */
+#define ETH_MMC_FPE_TX_ISR_HRCIS                                        ETH_MMC_FPE_TX_ISR_HRCIS_Msk                                             /*!< MMC Tx Hold Request Counter Interrupt Status */
+
+/**************  Bit definition for ETH_MMC_FPE_TX_IMR register  **************/
+#define ETH_MMC_FPE_TX_IMR_FCIM_Pos                                     (0U)
+#define ETH_MMC_FPE_TX_IMR_FCIM_Msk                                     (0x1UL << ETH_MMC_FPE_TX_IMR_FCIM_Pos)                                    /*!< 0x00000001 */
+#define ETH_MMC_FPE_TX_IMR_FCIM                                         ETH_MMC_FPE_TX_IMR_FCIM_Msk                                              /*!< MMC Transmit Fragment Counter Interrupt Mask */
+#define ETH_MMC_FPE_TX_IMR_HRCIM_Pos                                    (1U)
+#define ETH_MMC_FPE_TX_IMR_HRCIM_Msk                                    (0x1UL << ETH_MMC_FPE_TX_IMR_HRCIM_Pos)                                   /*!< 0x00000002 */
+#define ETH_MMC_FPE_TX_IMR_HRCIM                                        ETH_MMC_FPE_TX_IMR_HRCIM_Msk                                             /*!< MMC Transmit Hold Request Counter Interrupt Mask */
+
+/**************  Bit definition for ETH_MMC_FPE_TX_FCR register  **************/
+#define ETH_MMC_FPE_TX_FCR_TXFFC_Pos                                    (0U)
+#define ETH_MMC_FPE_TX_FCR_TXFFC_Msk                                    (0xFFFFFFFFUL << ETH_MMC_FPE_TX_FCR_TXFFC_Pos)                            /*!< 0xFFFFFFFF */
+#define ETH_MMC_FPE_TX_FCR_TXFFC                                        ETH_MMC_FPE_TX_FCR_TXFFC_Msk                                             /*!< Tx FPE Fragment counter */
+
+/***************  Bit definition for ETH_MMC_TX_HRCR register  ****************/
+#define ETH_MMC_TX_HRCR_TXHRC_Pos                                       (0U)
+#define ETH_MMC_TX_HRCR_TXHRC_Msk                                       (0xFFFFFFFFUL << ETH_MMC_TX_HRCR_TXHRC_Pos)                               /*!< 0xFFFFFFFF */
+#define ETH_MMC_TX_HRCR_TXHRC                                           ETH_MMC_TX_HRCR_TXHRC_Msk                                                /*!< Tx Hold Request Counter */
+
+/**************  Bit definition for ETH_MMC_FPE_RX_ISR register  **************/
+#define ETH_MMC_FPE_RX_ISR_PAECIS_Pos                                   (0U)
+#define ETH_MMC_FPE_RX_ISR_PAECIS_Msk                                   (0x1UL << ETH_MMC_FPE_RX_ISR_PAECIS_Pos)                                  /*!< 0x00000001 */
+#define ETH_MMC_FPE_RX_ISR_PAECIS                                       ETH_MMC_FPE_RX_ISR_PAECIS_Msk                                            /*!< MMC Rx Packet Assembly Error Counter Interrupt Status */
+#define ETH_MMC_FPE_RX_ISR_PSECIS_Pos                                   (1U)
+#define ETH_MMC_FPE_RX_ISR_PSECIS_Msk                                   (0x1UL << ETH_MMC_FPE_RX_ISR_PSECIS_Pos)                                  /*!< 0x00000002 */
+#define ETH_MMC_FPE_RX_ISR_PSECIS                                       ETH_MMC_FPE_RX_ISR_PSECIS_Msk                                            /*!< MMC Rx Packet SMD Error Counter Interrupt Status */
+#define ETH_MMC_FPE_RX_ISR_PAOCIS_Pos                                   (2U)
+#define ETH_MMC_FPE_RX_ISR_PAOCIS_Msk                                   (0x1UL << ETH_MMC_FPE_RX_ISR_PAOCIS_Pos)                                  /*!< 0x00000004 */
+#define ETH_MMC_FPE_RX_ISR_PAOCIS                                       ETH_MMC_FPE_RX_ISR_PAOCIS_Msk                                            /*!< MMC Rx Packet Assembly OK Counter Interrupt Status */
+#define ETH_MMC_FPE_RX_ISR_FCIS_Pos                                     (3U)
+#define ETH_MMC_FPE_RX_ISR_FCIS_Msk                                     (0x1UL << ETH_MMC_FPE_RX_ISR_FCIS_Pos)                                    /*!< 0x00000008 */
+#define ETH_MMC_FPE_RX_ISR_FCIS                                         ETH_MMC_FPE_RX_ISR_FCIS_Msk                                              /*!< MMC Rx FPE Fragment Counter Interrupt Status */
+
+/**************  Bit definition for ETH_MMC_FPE_RX_IMR register  **************/
+#define ETH_MMC_FPE_RX_IMR_PAECIM_Pos                                   (0U)
+#define ETH_MMC_FPE_RX_IMR_PAECIM_Msk                                   (0x1UL << ETH_MMC_FPE_RX_IMR_PAECIM_Pos)                                  /*!< 0x00000001 */
+#define ETH_MMC_FPE_RX_IMR_PAECIM                                       ETH_MMC_FPE_RX_IMR_PAECIM_Msk                                            /*!< MMC Rx Packet Assembly Error Counter Interrupt Mask */
+#define ETH_MMC_FPE_RX_IMR_PSECIM_Pos                                   (1U)
+#define ETH_MMC_FPE_RX_IMR_PSECIM_Msk                                   (0x1UL << ETH_MMC_FPE_RX_IMR_PSECIM_Pos)                                  /*!< 0x00000002 */
+#define ETH_MMC_FPE_RX_IMR_PSECIM                                       ETH_MMC_FPE_RX_IMR_PSECIM_Msk                                            /*!< MMC Rx Packet SMD Error Counter Interrupt Mask */
+#define ETH_MMC_FPE_RX_IMR_PAOCIM_Pos                                   (2U)
+#define ETH_MMC_FPE_RX_IMR_PAOCIM_Msk                                   (0x1UL << ETH_MMC_FPE_RX_IMR_PAOCIM_Pos)                                  /*!< 0x00000004 */
+#define ETH_MMC_FPE_RX_IMR_PAOCIM                                       ETH_MMC_FPE_RX_IMR_PAOCIM_Msk                                            /*!< MMC Rx Packet Assembly OK Counter Interrupt Mask */
+#define ETH_MMC_FPE_RX_IMR_FCIM_Pos                                     (3U)
+#define ETH_MMC_FPE_RX_IMR_FCIM_Msk                                     (0x1UL << ETH_MMC_FPE_RX_IMR_FCIM_Pos)                                    /*!< 0x00000008 */
+#define ETH_MMC_FPE_RX_IMR_FCIM                                         ETH_MMC_FPE_RX_IMR_FCIM_Msk                                              /*!< MMC Rx FPE Fragment Counter Interrupt Mask */
+
+/************  Bit definition for ETH_RX_PACKET_ASM_ERR register  *************/
+#define ETH_RX_PACKET_ASM_ERR_PAEC_Pos                                  (0U)
+#define ETH_RX_PACKET_ASM_ERR_PAEC_Msk                                  (0xFFFFFFFFUL << ETH_RX_PACKET_ASM_ERR_PAEC_Pos)                          /*!< 0xFFFFFFFF */
+#define ETH_RX_PACKET_ASM_ERR_PAEC                                      ETH_RX_PACKET_ASM_ERR_PAEC_Msk                                           /*!< Rx Packet Assembly Error Counter */
+
+/************  Bit definition for ETH_RX_PACKET_SMD_ERR register  *************/
+#define ETH_RX_PACKET_SMD_ERR_PSEC_Pos                                  (0U)
+#define ETH_RX_PACKET_SMD_ERR_PSEC_Msk                                  (0xFFFFFFFFUL << ETH_RX_PACKET_SMD_ERR_PSEC_Pos)                          /*!< 0xFFFFFFFF */
+#define ETH_RX_PACKET_SMD_ERR_PSEC                                      ETH_RX_PACKET_SMD_ERR_PSEC_Msk                                           /*!< Rx Packet SMD Error Counter */
+
+/************  Bit definition for ETH_RX_PACKET_ASM_OKR register  *************/
+#define ETH_RX_PACKET_ASM_OKR_PAOC_Pos                                  (0U)
+#define ETH_RX_PACKET_ASM_OKR_PAOC_Msk                                  (0xFFFFFFFFUL << ETH_RX_PACKET_ASM_OKR_PAOC_Pos)                          /*!< 0xFFFFFFFF */
+#define ETH_RX_PACKET_ASM_OKR_PAOC                                      ETH_RX_PACKET_ASM_OKR_PAOC_Msk                                           /*!< Rx Packet Assembly OK Counter */
+
+/**************  Bit definition for ETH_RX_FPE_FRAG_CR register  **************/
+#define ETH_RX_FPE_FRAG_CR_FFC_Pos                                      (0U)
+#define ETH_RX_FPE_FRAG_CR_FFC_Msk                                      (0xFFFFFFFFUL << ETH_RX_FPE_FRAG_CR_FFC_Pos)                              /*!< 0xFFFFFFFF */
+#define ETH_RX_FPE_FRAG_CR_FFC                                          ETH_RX_FPE_FRAG_CR_FFC_Msk                                               /*!< Rx FPE Fragment Counter */
 
 /************  Bit definition for ETH_MACL3L4C0R register  *************/
 #define ETH_MACL3L4C0R_L3PEN0_Pos           (0U)
@@ -12980,6 +13633,12 @@ typedef struct
 #define ETH_MACL3L4C0R_L4DPIM0_Pos          (21U)
 #define ETH_MACL3L4C0R_L4DPIM0_Msk          (0x1UL << ETH_MACL3L4C0R_L4DPIM0_Pos)                /*!< 0x00200000 */
 #define ETH_MACL3L4C0R_L4DPIM0              ETH_MACL3L4C0R_L4DPIM0_Msk                          /*!< Layer 4 Destination Port Inverse Match Enable */
+#define ETH_MACL3L4C0R_DMCHN0_Pos           (24U)
+#define ETH_MACL3L4C0R_DMCHN0_Msk           (0x1UL << ETH_MACL3L4C0R_DMCHN0_Pos)                  /*!< 0x01000000 */
+#define ETH_MACL3L4C0R_DMCHN0               ETH_MACL3L4C0R_DMCHN0_Msk                           /*!< DMA Channel Number */
+#define ETH_MACL3L4C0R_DMCHEN0_Pos          (28U)
+#define ETH_MACL3L4C0R_DMCHEN0_Msk          (0x1UL << ETH_MACL3L4C0R_DMCHEN0_Pos)                 /*!< 0x10000000 */
+#define ETH_MACL3L4C0R_DMCHEN0              ETH_MACL3L4C0R_DMCHEN0_Msk                          /*!< DMA Channel Select Enable */
 
 /*************  Bit definition for ETH_MACL4A0R register  **************/
 #define ETH_MACL4A0R_L4SP0_Pos              (0U)
@@ -13216,6 +13875,12 @@ typedef struct
 #define ETH_MACL3L4C1R_L4DPIM1_Pos          (21U)
 #define ETH_MACL3L4C1R_L4DPIM1_Msk          (0x1UL << ETH_MACL3L4C1R_L4DPIM1_Pos)                /*!< 0x00200000 */
 #define ETH_MACL3L4C1R_L4DPIM1              ETH_MACL3L4C1R_L4DPIM1_Msk                          /*!< Layer 4 Destination Port Inverse Match Enable */
+#define ETH_MACL3L4C1R_DMCHN1_Pos           (24U)
+#define ETH_MACL3L4C1R_DMCHN1_Msk           (0x1UL << ETH_MACL3L4C1R_DMCHN1_Pos)                  /*!< 0x01000000 */
+#define ETH_MACL3L4C1R_DMCHN1               ETH_MACL3L4C1R_DMCHN1_Msk                           /*!< DMA Channel Number */
+#define ETH_MACL3L4C1R_DMCHEN1_Pos          (28U)
+#define ETH_MACL3L4C1R_DMCHEN1_Msk          (0x1UL << ETH_MACL3L4C1R_DMCHEN1_Pos)                 /*!< 0x10000000 */
+#define ETH_MACL3L4C1R_DMCHEN1              ETH_MACL3L4C1R_DMCHEN1_Msk                          /*!< DMA Channel Select Enable */
 
 /*************  Bit definition for ETH_MACL4A1R register  **************/
 #define ETH_MACL4A1R_L4SP1_Pos              (0U)
@@ -13441,6 +14106,34 @@ typedef struct
 #define ETH_MACARPAR_ARPPA_29               (0x20000000UL << ETH_MACARPAR_ARPPA_Pos)             /*!< 0x20000000 */
 #define ETH_MACARPAR_ARPPA_30               (0x40000000UL << ETH_MACARPAR_ARPPA_Pos)             /*!< 0x40000000 */
 #define ETH_MACARPAR_ARPPA_31               (0x80000000UL << ETH_MACARPAR_ARPPA_Pos)             /*!< 0x80000000 */
+
+/*****************  Bit definition for ETH_MAC_IACR register  *****************/
+#define ETH_MAC_IACR_OB_Pos                 (0U)
+#define ETH_MAC_IACR_OB_Msk                 (0x1UL << ETH_MAC_IACR_OB_Pos)                         /*!< 0x00000001 */
+#define ETH_MAC_IACR_OB                     ETH_MAC_IACR_OB_Msk                                  /*!< Operation Busy */
+#define ETH_MAC_IACR_COM_Pos                (1U)
+#define ETH_MAC_IACR_COM_Msk                (0x1UL << ETH_MAC_IACR_COM_Pos)                        /*!< 0x00000002 */
+#define ETH_MAC_IACR_COM                    ETH_MAC_IACR_COM_Msk                                 /*!< Command type */
+#define ETH_MAC_IACR_AUTO_Pos               (5U)
+#define ETH_MAC_IACR_AUTO_Msk               (0x1UL << ETH_MAC_IACR_AUTO_Pos)                       /*!< 0x00000020 */
+#define ETH_MAC_IACR_AUTO                   ETH_MAC_IACR_AUTO_Msk                                /*!< Auto-increment */
+#define ETH_MAC_IACR_AOFF_Pos               (8U)
+#define ETH_MAC_IACR_AOFF_Msk               (0xFFUL << ETH_MAC_IACR_AOFF_Pos)                      /*!< 0x0000FF00 */
+#define ETH_MAC_IACR_AOFF                   ETH_MAC_IACR_AOFF_Msk                                /*!< Address Offset */
+#define ETH_MAC_IACR_MSEL_Pos               (16U)
+#define ETH_MAC_IACR_MSEL_Msk               (0xFUL << ETH_MAC_IACR_MSEL_Pos)                       /*!< 0x000F0000 */
+#define ETH_MAC_IACR_MSEL                   ETH_MAC_IACR_MSEL_Msk                                /*!< Mode Select */
+
+/****************  Bit definition for ETH_MAC_TMRQR register  *****************/
+#define ETH_MAC_TMRQR_TYP_Pos               (0U)
+#define ETH_MAC_TMRQR_TYP_Msk               (0xFFFFUL << ETH_MAC_TMRQR_TYP_Pos)                    /*!< 0x0000FFFF */
+#define ETH_MAC_TMRQR_TYP                   ETH_MAC_TMRQR_TYP_Msk                                /*!< Type field Value */
+#define ETH_MAC_TMRQR_TMRQ_Pos              (16U)
+#define ETH_MAC_TMRQR_TMRQ_Msk              (0x7UL << ETH_MAC_TMRQR_TMRQ_Pos)                      /*!< 0x00070000 */
+#define ETH_MAC_TMRQR_TMRQ                  ETH_MAC_TMRQR_TMRQ_Msk                               /*!< Type Match Rx Queue Number */
+#define ETH_MAC_TMRQR_PFEX_Pos              (20U)
+#define ETH_MAC_TMRQR_PFEX_Msk              (0x1UL << ETH_MAC_TMRQR_PFEX_Pos)                      /*!< 0x00100000 */
+#define ETH_MAC_TMRQR_PFEX                  ETH_MAC_TMRQR_PFEX_Msk                               /*!< Preemption or Express Packet */
 
 /**************  Bit definition for ETH_MACTSCR register  **************/
 #define ETH_MACTSCR_TSENA_Pos               (0U)
@@ -13715,6 +14408,12 @@ typedef struct
 #define ETH_MACTSSR_TSTRGTERR0_Pos          (3U)
 #define ETH_MACTSSR_TSTRGTERR0_Msk          (0x1UL << ETH_MACTSSR_TSTRGTERR0_Pos)                /*!< 0x00000008 */
 #define ETH_MACTSSR_TSTRGTERR0              ETH_MACTSSR_TSTRGTERR0_Msk                          /*!< Timestamp Target Time Error */
+#define ETH_MACTSSR_TSTARGT1_Pos            (4U)
+#define ETH_MACTSSR_TSTARGT1_Msk            (0x1UL << ETH_MACTSSR_TSTARGT1_Pos)                  /*!< 0x00000010 */
+#define ETH_MACTSSR_TSTARGT1                ETH_MACTSSR_TSTARGT1_Msk                            /*!< Timestamp Target Time Reached */
+#define ETH_MACTSSR_TSTRGTERR1_Pos          (5U)
+#define ETH_MACTSSR_TSTRGTERR1_Msk          (0x1UL << ETH_MACTSSR_TSTRGTERR1_Pos)                /*!< 0x00000020 */
+#define ETH_MACTSSR_TSTRGTERR1              ETH_MACTSSR_TSTRGTERR1_Msk                          /*!< Timestamp Target Time Error */
 #define ETH_MACTSSR_TXTSSIS_Pos             (15U)
 #define ETH_MACTSSR_TXTSSIS_Msk             (0x1UL << ETH_MACTSSR_TXTSSIS_Pos)                   /*!< 0x00008000 */
 #define ETH_MACTSSR_TXTSSIS                 ETH_MACTSSR_TXTSSIS_Msk                             /*!< Tx Timestamp Status Interrupt Status */
@@ -13736,6 +14435,16 @@ typedef struct
 #define ETH_MACTSSR_ATSNS_2                 (0x4UL << ETH_MACTSSR_ATSNS_Pos)                     /*!< 0x08000000 */
 #define ETH_MACTSSR_ATSNS_3                 (0x8UL << ETH_MACTSSR_ATSNS_Pos)                     /*!< 0x10000000 */
 #define ETH_MACTSSR_ATSNS_4                 (0x10UL << ETH_MACTSSR_ATSNS_Pos)                    /*!< 0x20000000 */
+
+/*****************  Bit definition for ETH_MACRXDTI register  *****************/
+#define ETH_MACRXDTI_RXNS_Pos               (16U)
+#define ETH_MACRXDTI_RXNS_Msk               (0xFFFFUL << ETH_MACRXDTI_RXNS_Pos)                   /*!< 0xFFFF0000 */
+#define ETH_MACRXDTI_RXNS                   ETH_MACRXDTI_RXNS_Msk                                /*!< Receive domain time increment value in nanoseconds */
+
+/*****************  Bit definition for ETH_MACTXDTI register  *****************/
+#define ETH_MACTXDTI_TXNS_Pos               (16U)
+#define ETH_MACTXDTI_TXNS_Msk               (0xFFFFUL << ETH_MACTXDTI_TXNS_Pos)                   /*!< 0xFFFF0000 */
+#define ETH_MACTXDTI_TXNS                   ETH_MACTXDTI_TXNS_Msk                                /*!< Transmit domain time increment value in nanoseconds */
 
 /************  Bit definition for ETH_MACTXTSSNR register  *************/
 #define ETH_MACTXTSSNR_TXTSSLO_Pos          (0U)
@@ -14051,6 +14760,22 @@ typedef struct
 #define ETH_MACTSECNR_TSEC_30               (0x40000000UL << ETH_MACTSECNR_TSEC_Pos)             /*!< 0x40000000 */
 #define ETH_MACTSECNR_TSEC_31               (0x80000000UL << ETH_MACTSECNR_TSEC_Pos)             /*!< 0x80000000 */
 
+/*****************  Bit definition for ETH_MACTSILR register  *****************/
+#define ETH_MACTSILR_ITLSNS_Pos             (8U)
+#define ETH_MACTSILR_ITLSNS_Msk             (0xFFUL << ETH_MACTSILR_ITLSNS_Pos)                   /*!< 0x0000FF00 */
+#define ETH_MACTSILR_ITLSNS                 ETH_MACTSILR_ITLSNS_Msk                              /*!< Ingress Timestamp Latency, in subnanoseconds */
+#define ETH_MACTSILR_ITLNS_Pos              (16U)
+#define ETH_MACTSILR_ITLNS_Msk              (0xFFFUL << ETH_MACTSILR_ITLNS_Pos)                   /*!< 0x0FFF0000 */
+#define ETH_MACTSILR_ITLNS                  ETH_MACTSILR_ITLNS_Msk                               /*!< Ingress Timestamp Latency, in nanoseconds */
+
+/*****************  Bit definition for ETH_MACTSELR register  *****************/
+#define ETH_MACTSELR_ETLSNS_Pos             (8U)
+#define ETH_MACTSELR_ETLSNS_Msk             (0xFFUL << ETH_MACTSELR_ETLSNS_Pos)                   /*!< 0x0000FF00 */
+#define ETH_MACTSELR_ETLSNS                 ETH_MACTSELR_ETLSNS_Msk                              /*!< Egress Timestamp Latency, in subnanoseconds */
+#define ETH_MACTSELR_ETLNS_Pos              (16U)
+#define ETH_MACTSELR_ETLNS_Msk              (0xFFFUL << ETH_MACTSELR_ETLNS_Pos)                   /*!< 0x0FFF0000 */
+#define ETH_MACTSELR_ETLNS                  ETH_MACTSELR_ETLNS_Msk                               /*!< Egress Timestamp Latency, in nanoseconds */
+
 /*************  Bit definition for ETH_MACPPSCR register  **************/
 #define ETH_MACPPSCR_PPSCTRL_Pos            (0U)
 #define ETH_MACPPSCR_PPSCTRL_Msk            (0xFUL << ETH_MACPPSCR_PPSCTRL_Pos)                  /*!< 0x0000000F */
@@ -14067,6 +14792,9 @@ typedef struct
 #define ETH_MACPPSCR_TRGTMODSEL0            ETH_MACPPSCR_TRGTMODSEL0_Msk                        /*!< Target Time Register Mode for PPS Output */
 #define ETH_MACPPSCR_TRGTMODSEL0_0          (0x1UL << ETH_MACPPSCR_TRGTMODSEL0_Pos)              /*!< 0x00000020 */
 #define ETH_MACPPSCR_TRGTMODSEL0_1          (0x2UL << ETH_MACPPSCR_TRGTMODSEL0_Pos)              /*!< 0x00000040 */
+#define ETH_MACPPSCR_MCGREN0_Pos            (7U)
+#define ETH_MACPPSCR_MCGREN0_Msk            (0x1UL << ETH_MACPPSCR_MCGREN0_Pos)                                       /*!< 0x00000080 */
+#define ETH_MACPPSCR_MCGREN0                ETH_MACPPSCR_MCGREN0_Msk                                                 /*!< MCGR Mode Enable for PPS0 Output */
 #define ETH_MACPPSCR_PPSCMD_Pos             (0U)
 #define ETH_MACPPSCR_PPSCMD_Msk             (0xFUL << ETH_MACPPSCR_PPSCMD_Pos)                   /*!< 0x0000000F */
 #define ETH_MACPPSCR_PPSCMD                 ETH_MACPPSCR_PPSCMD_Msk                             /*!< Flexible PPS Output (ptp_pps_o[0]) Control */
@@ -14074,156 +14802,55 @@ typedef struct
 #define ETH_MACPPSCR_PPSCMD_1               (0x2UL << ETH_MACPPSCR_PPSCMD_Pos)                   /*!< 0x00000002 */
 #define ETH_MACPPSCR_PPSCMD_2               (0x4UL << ETH_MACPPSCR_PPSCMD_Pos)                   /*!< 0x00000004 */
 #define ETH_MACPPSCR_PPSCMD_3               (0x8UL << ETH_MACPPSCR_PPSCMD_Pos)                   /*!< 0x00000008 */
+#define ETH_MACPPSCR_TIMESEL_Pos            (28U)
+#define ETH_MACPPSCR_TIMESEL_Msk            (0x1UL << ETH_MACPPSCR_TIMESEL_Pos)                                       /*!< 0x10000000 */
+#define ETH_MACPPSCR_TIMESEL                ETH_MACPPSCR_TIMESEL_Msk                                                 /*!< Time Select */
 
-/************  Bit definition for ETH_MACPPSTTSR register  *************/
-#define ETH_MACPPSTTSR_TSTRH0_Pos           (0U)
-#define ETH_MACPPSTTSR_TSTRH0_Msk           (0xFFFFFFFFUL << ETH_MACPPSTTSR_TSTRH0_Pos)          /*!< 0xFFFFFFFF */
-#define ETH_MACPPSTTSR_TSTRH0               ETH_MACPPSTTSR_TSTRH0_Msk                           /*!< PPS Target Time Seconds Register */
-#define ETH_MACPPSTTSR_TSTRH0_0             (0x1UL << ETH_MACPPSTTSR_TSTRH0_Pos)                 /*!< 0x00000001 */
-#define ETH_MACPPSTTSR_TSTRH0_1             (0x2UL << ETH_MACPPSTTSR_TSTRH0_Pos)                 /*!< 0x00000002 */
-#define ETH_MACPPSTTSR_TSTRH0_2             (0x4UL << ETH_MACPPSTTSR_TSTRH0_Pos)                 /*!< 0x00000004 */
-#define ETH_MACPPSTTSR_TSTRH0_3             (0x8UL << ETH_MACPPSTTSR_TSTRH0_Pos)                 /*!< 0x00000008 */
-#define ETH_MACPPSTTSR_TSTRH0_4             (0x10UL << ETH_MACPPSTTSR_TSTRH0_Pos)                /*!< 0x00000010 */
-#define ETH_MACPPSTTSR_TSTRH0_5             (0x20UL << ETH_MACPPSTTSR_TSTRH0_Pos)                /*!< 0x00000020 */
-#define ETH_MACPPSTTSR_TSTRH0_6             (0x40UL << ETH_MACPPSTTSR_TSTRH0_Pos)                /*!< 0x00000040 */
-#define ETH_MACPPSTTSR_TSTRH0_7             (0x80UL << ETH_MACPPSTTSR_TSTRH0_Pos)                /*!< 0x00000080 */
-#define ETH_MACPPSTTSR_TSTRH0_8             (0x100UL << ETH_MACPPSTTSR_TSTRH0_Pos)               /*!< 0x00000100 */
-#define ETH_MACPPSTTSR_TSTRH0_9             (0x200UL << ETH_MACPPSTTSR_TSTRH0_Pos)               /*!< 0x00000200 */
-#define ETH_MACPPSTTSR_TSTRH0_10            (0x400UL << ETH_MACPPSTTSR_TSTRH0_Pos)               /*!< 0x00000400 */
-#define ETH_MACPPSTTSR_TSTRH0_11            (0x800UL << ETH_MACPPSTTSR_TSTRH0_Pos)               /*!< 0x00000800 */
-#define ETH_MACPPSTTSR_TSTRH0_12            (0x1000UL << ETH_MACPPSTTSR_TSTRH0_Pos)              /*!< 0x00001000 */
-#define ETH_MACPPSTTSR_TSTRH0_13            (0x2000UL << ETH_MACPPSTTSR_TSTRH0_Pos)              /*!< 0x00002000 */
-#define ETH_MACPPSTTSR_TSTRH0_14            (0x4000UL << ETH_MACPPSTTSR_TSTRH0_Pos)              /*!< 0x00004000 */
-#define ETH_MACPPSTTSR_TSTRH0_15            (0x8000UL << ETH_MACPPSTTSR_TSTRH0_Pos)              /*!< 0x00008000 */
-#define ETH_MACPPSTTSR_TSTRH0_16            (0x10000UL << ETH_MACPPSTTSR_TSTRH0_Pos)             /*!< 0x00010000 */
-#define ETH_MACPPSTTSR_TSTRH0_17            (0x20000UL << ETH_MACPPSTTSR_TSTRH0_Pos)             /*!< 0x00020000 */
-#define ETH_MACPPSTTSR_TSTRH0_18            (0x40000UL << ETH_MACPPSTTSR_TSTRH0_Pos)             /*!< 0x00040000 */
-#define ETH_MACPPSTTSR_TSTRH0_19            (0x80000UL << ETH_MACPPSTTSR_TSTRH0_Pos)             /*!< 0x00080000 */
-#define ETH_MACPPSTTSR_TSTRH0_20            (0x100000UL << ETH_MACPPSTTSR_TSTRH0_Pos)            /*!< 0x00100000 */
-#define ETH_MACPPSTTSR_TSTRH0_21            (0x200000UL << ETH_MACPPSTTSR_TSTRH0_Pos)            /*!< 0x00200000 */
-#define ETH_MACPPSTTSR_TSTRH0_22            (0x400000UL << ETH_MACPPSTTSR_TSTRH0_Pos)            /*!< 0x00400000 */
-#define ETH_MACPPSTTSR_TSTRH0_23            (0x800000UL << ETH_MACPPSTTSR_TSTRH0_Pos)            /*!< 0x00800000 */
-#define ETH_MACPPSTTSR_TSTRH0_24            (0x1000000UL << ETH_MACPPSTTSR_TSTRH0_Pos)           /*!< 0x01000000 */
-#define ETH_MACPPSTTSR_TSTRH0_25            (0x2000000UL << ETH_MACPPSTTSR_TSTRH0_Pos)           /*!< 0x02000000 */
-#define ETH_MACPPSTTSR_TSTRH0_26            (0x4000000UL << ETH_MACPPSTTSR_TSTRH0_Pos)           /*!< 0x04000000 */
-#define ETH_MACPPSTTSR_TSTRH0_27            (0x8000000UL << ETH_MACPPSTTSR_TSTRH0_Pos)           /*!< 0x08000000 */
-#define ETH_MACPPSTTSR_TSTRH0_28            (0x10000000UL << ETH_MACPPSTTSR_TSTRH0_Pos)          /*!< 0x10000000 */
-#define ETH_MACPPSTTSR_TSTRH0_29            (0x20000000UL << ETH_MACPPSTTSR_TSTRH0_Pos)          /*!< 0x20000000 */
-#define ETH_MACPPSTTSR_TSTRH0_30            (0x40000000UL << ETH_MACPPSTTSR_TSTRH0_Pos)          /*!< 0x40000000 */
-#define ETH_MACPPSTTSR_TSTRH0_31            (0x80000000UL << ETH_MACPPSTTSR_TSTRH0_Pos)          /*!< 0x80000000 */
+/***************  Bit definition for ETH_MACPPSTTS0R register  ****************/
+#define ETH_MACPPSTTS0R_TSTRH0_Pos          (0U)
+#define ETH_MACPPSTTS0R_TSTRH0_Msk          (0xFFFFFFFFUL << ETH_MACPPSTTS0R_TSTRH0_Pos)         /*!< 0xFFFFFFFF */
+#define ETH_MACPPSTTS0R_TSTRH0              ETH_MACPPSTTS0R_TSTRH0_Msk                           /*!< PPS Target Time Seconds Register */
 
-/************  Bit definition for ETH_MACPPSTTNR register  *************/
-#define ETH_MACPPSTTNR_TTSL0_Pos            (0U)
-#define ETH_MACPPSTTNR_TTSL0_Msk            (0x7FFFFFFFUL << ETH_MACPPSTTNR_TTSL0_Pos)           /*!< 0x7FFFFFFF */
-#define ETH_MACPPSTTNR_TTSL0                ETH_MACPPSTTNR_TTSL0_Msk                            /*!< Target Time Low for PPS Register */
-#define ETH_MACPPSTTNR_TTSL0_0              (0x1UL << ETH_MACPPSTTNR_TTSL0_Pos)                  /*!< 0x00000001 */
-#define ETH_MACPPSTTNR_TTSL0_1              (0x2UL << ETH_MACPPSTTNR_TTSL0_Pos)                  /*!< 0x00000002 */
-#define ETH_MACPPSTTNR_TTSL0_2              (0x4UL << ETH_MACPPSTTNR_TTSL0_Pos)                  /*!< 0x00000004 */
-#define ETH_MACPPSTTNR_TTSL0_3              (0x8UL << ETH_MACPPSTTNR_TTSL0_Pos)                  /*!< 0x00000008 */
-#define ETH_MACPPSTTNR_TTSL0_4              (0x10UL << ETH_MACPPSTTNR_TTSL0_Pos)                 /*!< 0x00000010 */
-#define ETH_MACPPSTTNR_TTSL0_5              (0x20UL << ETH_MACPPSTTNR_TTSL0_Pos)                 /*!< 0x00000020 */
-#define ETH_MACPPSTTNR_TTSL0_6              (0x40UL << ETH_MACPPSTTNR_TTSL0_Pos)                 /*!< 0x00000040 */
-#define ETH_MACPPSTTNR_TTSL0_7              (0x80UL << ETH_MACPPSTTNR_TTSL0_Pos)                 /*!< 0x00000080 */
-#define ETH_MACPPSTTNR_TTSL0_8              (0x100UL << ETH_MACPPSTTNR_TTSL0_Pos)                /*!< 0x00000100 */
-#define ETH_MACPPSTTNR_TTSL0_9              (0x200UL << ETH_MACPPSTTNR_TTSL0_Pos)                /*!< 0x00000200 */
-#define ETH_MACPPSTTNR_TTSL0_10             (0x400UL << ETH_MACPPSTTNR_TTSL0_Pos)                /*!< 0x00000400 */
-#define ETH_MACPPSTTNR_TTSL0_11             (0x800UL << ETH_MACPPSTTNR_TTSL0_Pos)                /*!< 0x00000800 */
-#define ETH_MACPPSTTNR_TTSL0_12             (0x1000UL << ETH_MACPPSTTNR_TTSL0_Pos)               /*!< 0x00001000 */
-#define ETH_MACPPSTTNR_TTSL0_13             (0x2000UL << ETH_MACPPSTTNR_TTSL0_Pos)               /*!< 0x00002000 */
-#define ETH_MACPPSTTNR_TTSL0_14             (0x4000UL << ETH_MACPPSTTNR_TTSL0_Pos)               /*!< 0x00004000 */
-#define ETH_MACPPSTTNR_TTSL0_15             (0x8000UL << ETH_MACPPSTTNR_TTSL0_Pos)               /*!< 0x00008000 */
-#define ETH_MACPPSTTNR_TTSL0_16             (0x10000UL << ETH_MACPPSTTNR_TTSL0_Pos)              /*!< 0x00010000 */
-#define ETH_MACPPSTTNR_TTSL0_17             (0x20000UL << ETH_MACPPSTTNR_TTSL0_Pos)              /*!< 0x00020000 */
-#define ETH_MACPPSTTNR_TTSL0_18             (0x40000UL << ETH_MACPPSTTNR_TTSL0_Pos)              /*!< 0x00040000 */
-#define ETH_MACPPSTTNR_TTSL0_19             (0x80000UL << ETH_MACPPSTTNR_TTSL0_Pos)              /*!< 0x00080000 */
-#define ETH_MACPPSTTNR_TTSL0_20             (0x100000UL << ETH_MACPPSTTNR_TTSL0_Pos)             /*!< 0x00100000 */
-#define ETH_MACPPSTTNR_TTSL0_21             (0x200000UL << ETH_MACPPSTTNR_TTSL0_Pos)             /*!< 0x00200000 */
-#define ETH_MACPPSTTNR_TTSL0_22             (0x400000UL << ETH_MACPPSTTNR_TTSL0_Pos)             /*!< 0x00400000 */
-#define ETH_MACPPSTTNR_TTSL0_23             (0x800000UL << ETH_MACPPSTTNR_TTSL0_Pos)             /*!< 0x00800000 */
-#define ETH_MACPPSTTNR_TTSL0_24             (0x1000000UL << ETH_MACPPSTTNR_TTSL0_Pos)            /*!< 0x01000000 */
-#define ETH_MACPPSTTNR_TTSL0_25             (0x2000000UL << ETH_MACPPSTTNR_TTSL0_Pos)            /*!< 0x02000000 */
-#define ETH_MACPPSTTNR_TTSL0_26             (0x4000000UL << ETH_MACPPSTTNR_TTSL0_Pos)            /*!< 0x04000000 */
-#define ETH_MACPPSTTNR_TTSL0_27             (0x8000000UL << ETH_MACPPSTTNR_TTSL0_Pos)            /*!< 0x08000000 */
-#define ETH_MACPPSTTNR_TTSL0_28             (0x10000000UL << ETH_MACPPSTTNR_TTSL0_Pos)           /*!< 0x10000000 */
-#define ETH_MACPPSTTNR_TTSL0_29             (0x20000000UL << ETH_MACPPSTTNR_TTSL0_Pos)           /*!< 0x20000000 */
-#define ETH_MACPPSTTNR_TTSL0_30             (0x40000000UL << ETH_MACPPSTTNR_TTSL0_Pos)           /*!< 0x40000000 */
-#define ETH_MACPPSTTNR_TRGTBUSY0_Pos        (31U)
-#define ETH_MACPPSTTNR_TRGTBUSY0_Msk        (0x1UL << ETH_MACPPSTTNR_TRGTBUSY0_Pos)              /*!< 0x80000000 */
-#define ETH_MACPPSTTNR_TRGTBUSY0            ETH_MACPPSTTNR_TRGTBUSY0_Msk                        /*!< PPS Target Time Register Busy */
+/***************  Bit definition for ETH_MACPPSTTN0R register  ****************/
+#define ETH_MACPPSTTN0R_TTSL0_Pos           (0U)
+#define ETH_MACPPSTTN0R_TTSL0_Msk           (0x7FFFFFFFUL << ETH_MACPPSTTN0R_TTSL0_Pos)           /*!< 0x7FFFFFFF */
+#define ETH_MACPPSTTN0R_TTSL0               ETH_MACPPSTTN0R_TTSL0_Msk                            /*!< Target Time Low for PPS Register */
+#define ETH_MACPPSTTN0R_TRGTBUSY0_Pos       (31U)
+#define ETH_MACPPSTTN0R_TRGTBUSY0_Msk       (0x1UL << ETH_MACPPSTTN0R_TRGTBUSY0_Pos)              /*!< 0x80000000 */
+#define ETH_MACPPSTTN0R_TRGTBUSY0           ETH_MACPPSTTN0R_TRGTBUSY0_Msk                        /*!< PPS Target Time Register Busy */
 
-/*************  Bit definition for ETH_MACPPSIR register  **************/
-#define ETH_MACPPSIR_PPSINT0_Pos            (0U)
-#define ETH_MACPPSIR_PPSINT0_Msk            (0xFFFFFFFFUL << ETH_MACPPSIR_PPSINT0_Pos)           /*!< 0xFFFFFFFF */
-#define ETH_MACPPSIR_PPSINT0                ETH_MACPPSIR_PPSINT0_Msk                            /*!< PPS Output Signal Interval */
-#define ETH_MACPPSIR_PPSINT0_0              (0x1UL << ETH_MACPPSIR_PPSINT0_Pos)                  /*!< 0x00000001 */
-#define ETH_MACPPSIR_PPSINT0_1              (0x2UL << ETH_MACPPSIR_PPSINT0_Pos)                  /*!< 0x00000002 */
-#define ETH_MACPPSIR_PPSINT0_2              (0x4UL << ETH_MACPPSIR_PPSINT0_Pos)                  /*!< 0x00000004 */
-#define ETH_MACPPSIR_PPSINT0_3              (0x8UL << ETH_MACPPSIR_PPSINT0_Pos)                  /*!< 0x00000008 */
-#define ETH_MACPPSIR_PPSINT0_4              (0x10UL << ETH_MACPPSIR_PPSINT0_Pos)                 /*!< 0x00000010 */
-#define ETH_MACPPSIR_PPSINT0_5              (0x20UL << ETH_MACPPSIR_PPSINT0_Pos)                 /*!< 0x00000020 */
-#define ETH_MACPPSIR_PPSINT0_6              (0x40UL << ETH_MACPPSIR_PPSINT0_Pos)                 /*!< 0x00000040 */
-#define ETH_MACPPSIR_PPSINT0_7              (0x80UL << ETH_MACPPSIR_PPSINT0_Pos)                 /*!< 0x00000080 */
-#define ETH_MACPPSIR_PPSINT0_8              (0x100UL << ETH_MACPPSIR_PPSINT0_Pos)                /*!< 0x00000100 */
-#define ETH_MACPPSIR_PPSINT0_9              (0x200UL << ETH_MACPPSIR_PPSINT0_Pos)                /*!< 0x00000200 */
-#define ETH_MACPPSIR_PPSINT0_10             (0x400UL << ETH_MACPPSIR_PPSINT0_Pos)                /*!< 0x00000400 */
-#define ETH_MACPPSIR_PPSINT0_11             (0x800UL << ETH_MACPPSIR_PPSINT0_Pos)                /*!< 0x00000800 */
-#define ETH_MACPPSIR_PPSINT0_12             (0x1000UL << ETH_MACPPSIR_PPSINT0_Pos)               /*!< 0x00001000 */
-#define ETH_MACPPSIR_PPSINT0_13             (0x2000UL << ETH_MACPPSIR_PPSINT0_Pos)               /*!< 0x00002000 */
-#define ETH_MACPPSIR_PPSINT0_14             (0x4000UL << ETH_MACPPSIR_PPSINT0_Pos)               /*!< 0x00004000 */
-#define ETH_MACPPSIR_PPSINT0_15             (0x8000UL << ETH_MACPPSIR_PPSINT0_Pos)               /*!< 0x00008000 */
-#define ETH_MACPPSIR_PPSINT0_16             (0x10000UL << ETH_MACPPSIR_PPSINT0_Pos)              /*!< 0x00010000 */
-#define ETH_MACPPSIR_PPSINT0_17             (0x20000UL << ETH_MACPPSIR_PPSINT0_Pos)              /*!< 0x00020000 */
-#define ETH_MACPPSIR_PPSINT0_18             (0x40000UL << ETH_MACPPSIR_PPSINT0_Pos)              /*!< 0x00040000 */
-#define ETH_MACPPSIR_PPSINT0_19             (0x80000UL << ETH_MACPPSIR_PPSINT0_Pos)              /*!< 0x00080000 */
-#define ETH_MACPPSIR_PPSINT0_20             (0x100000UL << ETH_MACPPSIR_PPSINT0_Pos)             /*!< 0x00100000 */
-#define ETH_MACPPSIR_PPSINT0_21             (0x200000UL << ETH_MACPPSIR_PPSINT0_Pos)             /*!< 0x00200000 */
-#define ETH_MACPPSIR_PPSINT0_22             (0x400000UL << ETH_MACPPSIR_PPSINT0_Pos)             /*!< 0x00400000 */
-#define ETH_MACPPSIR_PPSINT0_23             (0x800000UL << ETH_MACPPSIR_PPSINT0_Pos)             /*!< 0x00800000 */
-#define ETH_MACPPSIR_PPSINT0_24             (0x1000000UL << ETH_MACPPSIR_PPSINT0_Pos)            /*!< 0x01000000 */
-#define ETH_MACPPSIR_PPSINT0_25             (0x2000000UL << ETH_MACPPSIR_PPSINT0_Pos)            /*!< 0x02000000 */
-#define ETH_MACPPSIR_PPSINT0_26             (0x4000000UL << ETH_MACPPSIR_PPSINT0_Pos)            /*!< 0x04000000 */
-#define ETH_MACPPSIR_PPSINT0_27             (0x8000000UL << ETH_MACPPSIR_PPSINT0_Pos)            /*!< 0x08000000 */
-#define ETH_MACPPSIR_PPSINT0_28             (0x10000000UL << ETH_MACPPSIR_PPSINT0_Pos)           /*!< 0x10000000 */
-#define ETH_MACPPSIR_PPSINT0_29             (0x20000000UL << ETH_MACPPSIR_PPSINT0_Pos)           /*!< 0x20000000 */
-#define ETH_MACPPSIR_PPSINT0_30             (0x40000000UL << ETH_MACPPSIR_PPSINT0_Pos)           /*!< 0x40000000 */
-#define ETH_MACPPSIR_PPSINT0_31             (0x80000000UL << ETH_MACPPSIR_PPSINT0_Pos)           /*!< 0x80000000 */
+/****************  Bit definition for ETH_MACPPSI0R register  *****************/
+#define ETH_MACPPSI0R_PPSINT0_Pos           (0U)
+#define ETH_MACPPSI0R_PPSINT0_Msk           (0xFFFFFFFFUL << ETH_MACPPSI0R_PPSINT0_Pos)          /*!< 0xFFFFFFFF */
+#define ETH_MACPPSI0R_PPSINT0               ETH_MACPPSI0R_PPSINT0_Msk                            /*!< PPS Output Signal Interval */
 
-/*************  Bit definition for ETH_MACPPSWR register  **************/
-#define ETH_MACPPSWR_PPSWIDTH0_Pos          (0U)
-#define ETH_MACPPSWR_PPSWIDTH0_Msk          (0xFFFFFFFFUL << ETH_MACPPSWR_PPSWIDTH0_Pos)         /*!< 0xFFFFFFFF */
-#define ETH_MACPPSWR_PPSWIDTH0              ETH_MACPPSWR_PPSWIDTH0_Msk                          /*!< PPS Output Signal Width */
-#define ETH_MACPPSWR_PPSWIDTH0_0            (0x1UL << ETH_MACPPSWR_PPSWIDTH0_Pos)                /*!< 0x00000001 */
-#define ETH_MACPPSWR_PPSWIDTH0_1            (0x2UL << ETH_MACPPSWR_PPSWIDTH0_Pos)                /*!< 0x00000002 */
-#define ETH_MACPPSWR_PPSWIDTH0_2            (0x4UL << ETH_MACPPSWR_PPSWIDTH0_Pos)                /*!< 0x00000004 */
-#define ETH_MACPPSWR_PPSWIDTH0_3            (0x8UL << ETH_MACPPSWR_PPSWIDTH0_Pos)                /*!< 0x00000008 */
-#define ETH_MACPPSWR_PPSWIDTH0_4            (0x10UL << ETH_MACPPSWR_PPSWIDTH0_Pos)               /*!< 0x00000010 */
-#define ETH_MACPPSWR_PPSWIDTH0_5            (0x20UL << ETH_MACPPSWR_PPSWIDTH0_Pos)               /*!< 0x00000020 */
-#define ETH_MACPPSWR_PPSWIDTH0_6            (0x40UL << ETH_MACPPSWR_PPSWIDTH0_Pos)               /*!< 0x00000040 */
-#define ETH_MACPPSWR_PPSWIDTH0_7            (0x80UL << ETH_MACPPSWR_PPSWIDTH0_Pos)               /*!< 0x00000080 */
-#define ETH_MACPPSWR_PPSWIDTH0_8            (0x100UL << ETH_MACPPSWR_PPSWIDTH0_Pos)              /*!< 0x00000100 */
-#define ETH_MACPPSWR_PPSWIDTH0_9            (0x200UL << ETH_MACPPSWR_PPSWIDTH0_Pos)              /*!< 0x00000200 */
-#define ETH_MACPPSWR_PPSWIDTH0_10           (0x400UL << ETH_MACPPSWR_PPSWIDTH0_Pos)              /*!< 0x00000400 */
-#define ETH_MACPPSWR_PPSWIDTH0_11           (0x800UL << ETH_MACPPSWR_PPSWIDTH0_Pos)              /*!< 0x00000800 */
-#define ETH_MACPPSWR_PPSWIDTH0_12           (0x1000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)             /*!< 0x00001000 */
-#define ETH_MACPPSWR_PPSWIDTH0_13           (0x2000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)             /*!< 0x00002000 */
-#define ETH_MACPPSWR_PPSWIDTH0_14           (0x4000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)             /*!< 0x00004000 */
-#define ETH_MACPPSWR_PPSWIDTH0_15           (0x8000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)             /*!< 0x00008000 */
-#define ETH_MACPPSWR_PPSWIDTH0_16           (0x10000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)            /*!< 0x00010000 */
-#define ETH_MACPPSWR_PPSWIDTH0_17           (0x20000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)            /*!< 0x00020000 */
-#define ETH_MACPPSWR_PPSWIDTH0_18           (0x40000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)            /*!< 0x00040000 */
-#define ETH_MACPPSWR_PPSWIDTH0_19           (0x80000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)            /*!< 0x00080000 */
-#define ETH_MACPPSWR_PPSWIDTH0_20           (0x100000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)           /*!< 0x00100000 */
-#define ETH_MACPPSWR_PPSWIDTH0_21           (0x200000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)           /*!< 0x00200000 */
-#define ETH_MACPPSWR_PPSWIDTH0_22           (0x400000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)           /*!< 0x00400000 */
-#define ETH_MACPPSWR_PPSWIDTH0_23           (0x800000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)           /*!< 0x00800000 */
-#define ETH_MACPPSWR_PPSWIDTH0_24           (0x1000000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)          /*!< 0x01000000 */
-#define ETH_MACPPSWR_PPSWIDTH0_25           (0x2000000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)          /*!< 0x02000000 */
-#define ETH_MACPPSWR_PPSWIDTH0_26           (0x4000000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)          /*!< 0x04000000 */
-#define ETH_MACPPSWR_PPSWIDTH0_27           (0x8000000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)          /*!< 0x08000000 */
-#define ETH_MACPPSWR_PPSWIDTH0_28           (0x10000000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)         /*!< 0x10000000 */
-#define ETH_MACPPSWR_PPSWIDTH0_29           (0x20000000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)         /*!< 0x20000000 */
-#define ETH_MACPPSWR_PPSWIDTH0_30           (0x40000000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)         /*!< 0x40000000 */
-#define ETH_MACPPSWR_PPSWIDTH0_31           (0x80000000UL << ETH_MACPPSWR_PPSWIDTH0_Pos)         /*!< 0x80000000 */
+/****************  Bit definition for ETH_MACPPSW0R register  *****************/
+#define ETH_MACPPSW0R_PPSWIDTH0_Pos         (0U)
+#define ETH_MACPPSW0R_PPSWIDTH0_Msk         (0xFFFFFFFFUL << ETH_MACPPSW0R_PPSWIDTH0_Pos)        /*!< 0xFFFFFFFF */
+#define ETH_MACPPSW0R_PPSWIDTH0             ETH_MACPPSW0R_PPSWIDTH0_Msk                          /*!< PPS Output Signal Width */
+
+/***************  Bit definition for ETH_MACPPSTTS1R register  ****************/
+#define ETH_MACPPSTTS1R_TSTRH0_Pos          (0U)
+#define ETH_MACPPSTTS1R_TSTRH0_Msk          (0xFFFFFFFFUL << ETH_MACPPSTTS1R_TSTRH0_Pos)         /*!< 0xFFFFFFFF */
+#define ETH_MACPPSTTS1R_TSTRH0              ETH_MACPPSTTS1R_TSTRH0_Msk                           /*!< PPS Target Time Seconds Register */
+
+/***************  Bit definition for ETH_MACPPSTTN1R register  ****************/
+#define ETH_MACPPSTTN1R_TTSL0_Pos           (0U)
+#define ETH_MACPPSTTN1R_TTSL0_Msk           (0x7FFFFFFFUL << ETH_MACPPSTTN1R_TTSL0_Pos)           /*!< 0x7FFFFFFF */
+#define ETH_MACPPSTTN1R_TTSL0               ETH_MACPPSTTN1R_TTSL0_Msk                            /*!< Target Time Low for PPS Register */
+#define ETH_MACPPSTTN1R_TRGTBUSY0_Pos       (31U)
+#define ETH_MACPPSTTN1R_TRGTBUSY0_Msk       (0x1UL << ETH_MACPPSTTN1R_TRGTBUSY0_Pos)              /*!< 0x80000000 */
+#define ETH_MACPPSTTN1R_TRGTBUSY0           ETH_MACPPSTTN1R_TRGTBUSY0_Msk                        /*!< PPS Target Time Register Busy */
+
+/*************  Bit definition for ETH_MACPPSI1R register  **************/
+#define ETH_MACPPSI1R_PPSINT0_Pos           (0U)
+#define ETH_MACPPSI1R_PPSINT0_Msk           (0xFFFFFFFFUL << ETH_MACPPSI1R_PPSINT0_Pos)           /*!< 0xFFFFFFFF */
+#define ETH_MACPPSI1R_PPSINT0               ETH_MACPPSI1R_PPSINT0_Msk                            /*!< PPS Output Signal Interval */
+
+/*************  Bit definition for ETH_MACPPSW1R register  **************/
+#define ETH_MACPPSW1R_PPSWIDTH0_Pos         (0U)
+#define ETH_MACPPSW1R_PPSWIDTH0_Msk         (0xFFFFFFFFUL << ETH_MACPPSW1R_PPSWIDTH0_Pos)         /*!< 0xFFFFFFFF */
+#define ETH_MACPPSW1R_PPSWIDTH0             ETH_MACPPSW1R_PPSWIDTH0_Msk                          /*!< PPS Output Signal Width */
 
 /**************  Bit definition for ETH_MACPOCR register  **************/
 #define ETH_MACPOCR_PTOEN_Pos               (0U)
@@ -14244,6 +14871,9 @@ typedef struct
 #define ETH_MACPOCR_DRRDIS_Pos              (6U)
 #define ETH_MACPOCR_DRRDIS_Msk              (0x1UL << ETH_MACPOCR_DRRDIS_Pos)                    /*!< 0x00000040 */
 #define ETH_MACPOCR_DRRDIS                  ETH_MACPOCR_DRRDIS_Msk                              /*!< Disable PTO Delay Request/Response response generation */
+#define ETH_MACPOCR_PDRDIS_Pos              (7U)
+#define ETH_MACPOCR_PDRDIS_Msk              (0x1UL << ETH_MACPOCR_PDRDIS_Pos)                    /*!< 0x00000080 */
+#define ETH_MACPOCR_PDRDIS                  ETH_MACPOCR_PDRDIS_Msk                              /*!< Disable Peer Delay Response response generation */
 #define ETH_MACPOCR_DN_Pos                  (8U)
 #define ETH_MACPOCR_DN_Msk                  (0xFFUL << ETH_MACPOCR_DN_Pos)                       /*!< 0x0000FF00 */
 #define ETH_MACPOCR_DN                      ETH_MACPOCR_DN_Msk                                  /*!< Domain Number */
@@ -14407,6 +15037,182 @@ typedef struct
 #define ETH_MTLISR_Q1IS_Pos                 (1U)
 #define ETH_MTLISR_Q1IS_Msk                 (0x1UL << ETH_MTLISR_Q1IS_Pos)                       /*!< 0x00000002 */
 #define ETH_MTLISR_Q1IS                     ETH_MTLISR_Q1IS_Msk                                 /*!< Queue 1 interrupt status */
+#define ETH_MTLISR_Q2IS_Pos                 (2U)
+#define ETH_MTLISR_Q2IS_Msk                 (0x1UL << ETH_MTLISR_Q2IS_Pos)                        /*!< 0x00000004 */
+#define ETH_MTLISR_Q2IS                     ETH_MTLISR_Q2IS_Msk                                 /*!< Queue 2 interrupt status */
+#define ETH_MTLISR_Q3IS_Pos                 (3U)
+#define ETH_MTLISR_Q3IS_Msk                 (0x1UL << ETH_MTLISR_Q3IS_Pos)                        /*!< 0x00000008 */
+#define ETH_MTLISR_Q3IS                     ETH_MTLISR_Q3IS_Msk                                 /*!< Queue 3 interrupt status */
+#define ETH_MTLISR_ESTIS_Pos                (18U)
+#define ETH_MTLISR_ESTIS_Msk                (0x1UL << ETH_MTLISR_ESTIS_Pos)                       /*!< 0x00040000 */
+#define ETH_MTLISR_ESTIS                    ETH_MTLISR_ESTIS_Msk                                /*!< EST (TAS- 802 */
+
+/***************  Bit definition for ETH_MTLRXQDMAMR register  ****************/
+#define ETH_MTLRXQDMAMR_Q0MDMACH_Pos        (0U)
+#define ETH_MTLRXQDMAMR_Q0MDMACH_Msk        (0x1UL << ETH_MTLRXQDMAMR_Q0MDMACH_Pos)               /*!< 0x00000001 */
+#define ETH_MTLRXQDMAMR_Q0MDMACH            ETH_MTLRXQDMAMR_Q0MDMACH_Msk                        /*!< Queue 0 Mapped to DMA Channel */
+#define ETH_MTLRXQDMAMR_Q0DDMACH_Pos        (4U)
+#define ETH_MTLRXQDMAMR_Q0DDMACH_Msk        (0x1UL << ETH_MTLRXQDMAMR_Q0DDMACH_Pos)               /*!< 0x00000010 */
+#define ETH_MTLRXQDMAMR_Q0DDMACH            ETH_MTLRXQDMAMR_Q0DDMACH_Msk                        /*!< Queue 0 Enabled for DA-based DMA Channel Selection */
+#define ETH_MTLRXQDMAMR_Q1MDMACH_Pos        (8U)
+#define ETH_MTLRXQDMAMR_Q1MDMACH_Msk        (0x1UL << ETH_MTLRXQDMAMR_Q1MDMACH_Pos)               /*!< 0x00000100 */
+#define ETH_MTLRXQDMAMR_Q1MDMACH            ETH_MTLRXQDMAMR_Q1MDMACH_Msk                        /*!< Queue 1 Mapped to DMA Channel */
+#define ETH_MTLRXQDMAMR_Q1DDMACH_Pos        (12U)
+#define ETH_MTLRXQDMAMR_Q1DDMACH_Msk        (0x1UL << ETH_MTLRXQDMAMR_Q1DDMACH_Pos)               /*!< 0x00001000 */
+#define ETH_MTLRXQDMAMR_Q1DDMACH            ETH_MTLRXQDMAMR_Q1DDMACH_Msk                        /*!< Queue 1 Enabled for DA-based DMA Channel Selection */
+
+/*****************  Bit definition for ETH_MTLTBSCR register  *****************/
+#define ETH_MTLTBSCR_ESTM_Pos               (0U)
+#define ETH_MTLTBSCR_ESTM_Msk               (0x1UL << ETH_MTLTBSCR_ESTM_Pos)                      /*!< 0x00000001 */
+#define ETH_MTLTBSCR_ESTM                   ETH_MTLTBSCR_ESTM_Msk                               /*!< EST offset mode */
+#define ETH_MTLTBSCR_LEOV_Pos               (1U)
+#define ETH_MTLTBSCR_LEOV_Msk               (0x1UL << ETH_MTLTBSCR_LEOV_Pos)                      /*!< 0x00000002 */
+#define ETH_MTLTBSCR_LEOV                   ETH_MTLTBSCR_LEOV_Msk                               /*!< Launch expiry offset valid */
+#define ETH_MTLTBSCR_LEGOS_Pos              (4U)
+#define ETH_MTLTBSCR_LEGOS_Msk              (0x7UL << ETH_MTLTBSCR_LEGOS_Pos)                     /*!< 0x00000070 */
+#define ETH_MTLTBSCR_LEGOS                  ETH_MTLTBSCR_LEGOS_Msk                              /*!< Launch Expiry GSN Offset */
+#define ETH_MTLTBSCR_LEOS_Pos               (8U)
+#define ETH_MTLTBSCR_LEOS_Msk               (0xFFFFFFUL << ETH_MTLTBSCR_LEOS_Pos)                 /*!< 0xFFFFFF00 */
+#define ETH_MTLTBSCR_LEOS                   ETH_MTLTBSCR_LEOS_Msk                               /*!< Launch Expiry Offset */
+
+/*****************  Bit definition for ETH_MTLESTCR register  *****************/
+#define ETH_MTLESTCR_EEST_Pos               (0U)
+#define ETH_MTLESTCR_EEST_Msk               (0x1UL << ETH_MTLESTCR_EEST_Pos)                      /*!< 0x00000001 */
+#define ETH_MTLESTCR_EEST                   ETH_MTLESTCR_EEST_Msk                               /*!< Enable EST */
+#define ETH_MTLESTCR_SSWL_Pos               (1U)
+#define ETH_MTLESTCR_SSWL_Msk               (0x1UL << ETH_MTLESTCR_SSWL_Pos)                      /*!< 0x00000002 */
+#define ETH_MTLESTCR_SSWL                   ETH_MTLESTCR_SSWL_Msk                               /*!< Switch to S/W owned list */
+#define ETH_MTLESTCR_DDBF_Pos               (4U)
+#define ETH_MTLESTCR_DDBF_Msk               (0x1UL << ETH_MTLESTCR_DDBF_Pos)                      /*!< 0x00000010 */
+#define ETH_MTLESTCR_DDBF                   ETH_MTLESTCR_DDBF_Msk                               /*!< Do not Drop frames during Frame Size Error */
+#define ETH_MTLESTCR_DFBS_Pos               (5U)
+#define ETH_MTLESTCR_DFBS_Msk               (0x1UL << ETH_MTLESTCR_DFBS_Pos)                      /*!< 0x00000020 */
+#define ETH_MTLESTCR_DFBS                   ETH_MTLESTCR_DFBS_Msk                               /*!< Drop Frames causing Scheduling Error */
+#define ETH_MTLESTCR_LCSE_Pos               (6U)
+#define ETH_MTLESTCR_LCSE_Msk               (0x3UL << ETH_MTLESTCR_LCSE_Pos)                      /*!< 0x000000C0 */
+#define ETH_MTLESTCR_LCSE                   ETH_MTLESTCR_LCSE_Msk                               /*!< Loop Count to report Scheduling Error */
+#define ETH_MTLESTCR_TILS_Pos               (8U)
+#define ETH_MTLESTCR_TILS_Msk               (0x7UL << ETH_MTLESTCR_TILS_Pos)                      /*!< 0x00000700 */
+#define ETH_MTLESTCR_TILS                   ETH_MTLESTCR_TILS_Msk                               /*!< Time Interval Left Shift Amount */
+#define ETH_MTLESTCR_CTOV_Pos               (12U)
+#define ETH_MTLESTCR_CTOV_Msk               (0xFFFUL << ETH_MTLESTCR_CTOV_Pos)                    /*!< 0x00FFF000 */
+#define ETH_MTLESTCR_CTOV                   ETH_MTLESTCR_CTOV_Msk                               /*!< Current Time Offset Value */
+#define ETH_MTLESTCR_PTOV_Pos               (24U)
+#define ETH_MTLESTCR_PTOV_Msk               (0xFFUL << ETH_MTLESTCR_PTOV_Pos)                     /*!< 0xFF000000 */
+#define ETH_MTLESTCR_PTOV                   ETH_MTLESTCR_PTOV_Msk                               /*!< PTP Time Offset Value */
+
+/****************  Bit definition for ETH_MTLESTECR register  *****************/
+#define ETH_MTLESTECR_OVHD_Pos              (0U)
+#define ETH_MTLESTECR_OVHD_Msk              (0x3FUL << ETH_MTLESTECR_OVHD_Pos)                    /*!< 0x0000003F */
+#define ETH_MTLESTECR_OVHD                  ETH_MTLESTECR_OVHD_Msk                              /*!< Overhead Bytes Value */
+
+/*****************  Bit definition for ETH_MTLESTSR register  *****************/
+#define ETH_MTLESTSR_SWLC_Pos               (0U)
+#define ETH_MTLESTSR_SWLC_Msk               (0x1UL << ETH_MTLESTSR_SWLC_Pos)                      /*!< 0x00000001 */
+#define ETH_MTLESTSR_SWLC                   ETH_MTLESTSR_SWLC_Msk                               /*!< Switch to S/W owned list Complete */
+#define ETH_MTLESTSR_BTRE_Pos               (1U)
+#define ETH_MTLESTSR_BTRE_Msk               (0x1UL << ETH_MTLESTSR_BTRE_Pos)                      /*!< 0x00000002 */
+#define ETH_MTLESTSR_BTRE                   ETH_MTLESTSR_BTRE_Msk                               /*!< BTR Error */
+#define ETH_MTLESTSR_HLBF_Pos               (2U)
+#define ETH_MTLESTSR_HLBF_Msk               (0x1UL << ETH_MTLESTSR_HLBF_Pos)                      /*!< 0x00000004 */
+#define ETH_MTLESTSR_HLBF                   ETH_MTLESTSR_HLBF_Msk                               /*!< Head-Of-Line Blocking due to Frame Size */
+#define ETH_MTLESTSR_HLBS_Pos               (3U)
+#define ETH_MTLESTSR_HLBS_Msk               (0x1UL << ETH_MTLESTSR_HLBS_Pos)                      /*!< 0x00000008 */
+#define ETH_MTLESTSR_HLBS                   ETH_MTLESTSR_HLBS_Msk                               /*!< Head-Of-Line Blocking due to Scheduling */
+#define ETH_MTLESTSR_CGCE_Pos               (4U)
+#define ETH_MTLESTSR_CGCE_Msk               (0x1UL << ETH_MTLESTSR_CGCE_Pos)                      /*!< 0x00000010 */
+#define ETH_MTLESTSR_CGCE                   ETH_MTLESTSR_CGCE_Msk                               /*!< Constant Gate Control Error */
+#define ETH_MTLESTSR_SWOL_Pos               (7U)
+#define ETH_MTLESTSR_SWOL_Msk               (0x1UL << ETH_MTLESTSR_SWOL_Pos)                      /*!< 0x00000080 */
+#define ETH_MTLESTSR_SWOL                   ETH_MTLESTSR_SWOL_Msk                               /*!< S/W owned list */
+#define ETH_MTLESTSR_BTRL_Pos               (8U)
+#define ETH_MTLESTSR_BTRL_Msk               (0xFFUL << ETH_MTLESTSR_BTRL_Pos)                     /*!< 0x0000FF00 */
+#define ETH_MTLESTSR_BTRL                   ETH_MTLESTSR_BTRL_Msk                               /*!< BTR Error Loop Count */
+#define ETH_MTLESTSR_CGSN_Pos               (16U)
+#define ETH_MTLESTSR_CGSN_Msk               (0xFUL << ETH_MTLESTSR_CGSN_Pos)                      /*!< 0x000F0000 */
+#define ETH_MTLESTSR_CGSN                   ETH_MTLESTSR_CGSN_Msk                               /*!< Current GCL slot number */
+
+/***************  Bit definition for ETH_MTLESTSCHER register  ****************/
+#define ETH_MTLESTSCHER_SEQN_Pos            (0U)
+#define ETH_MTLESTSCHER_SEQN_Msk            (0xFUL << ETH_MTLESTSCHER_SEQN_Pos)                   /*!< 0x0000000F */
+#define ETH_MTLESTSCHER_SEQN                ETH_MTLESTSCHER_SEQN_Msk                            /*!< Schedule Error Queue Number */
+
+/****************  Bit definition for ETH_MTLESTFSER register  ****************/
+#define ETH_MTLESTFSER_FEQN_Pos             (0U)
+#define ETH_MTLESTFSER_FEQN_Msk             (0xFUL << ETH_MTLESTFSER_FEQN_Pos)                    /*!< 0x0000000F */
+#define ETH_MTLESTFSER_FEQN                 ETH_MTLESTFSER_FEQN_Msk                             /*!< Frame Size Error Queue Number */
+
+/****************  Bit definition for ETH_MTLESTFSCR register  ****************/
+#define ETH_MTLESTFSCR_HBFS_Pos             (0U)
+#define ETH_MTLESTFSCR_HBFS_Msk             (0x7FFFUL << ETH_MTLESTFSCR_HBFS_Pos)                 /*!< 0x00007FFF */
+#define ETH_MTLESTFSCR_HBFS                 ETH_MTLESTFSCR_HBFS_Msk                             /*!< Frame Size of HLBF */
+#define ETH_MTLESTFSCR_HBFQ_Pos             (16U)
+#define ETH_MTLESTFSCR_HBFQ_Msk             (0x3UL << ETH_MTLESTFSCR_HBFQ_Pos)                    /*!< 0x00030000 */
+#define ETH_MTLESTFSCR_HBFQ                 ETH_MTLESTFSCR_HBFQ_Msk                             /*!< Queue Number of HLBF */
+
+/****************  Bit definition for ETH_MTLESTIER register  *****************/
+#define ETH_MTLESTIER_IECC_Pos              (0U)
+#define ETH_MTLESTIER_IECC_Msk              (0x1UL << ETH_MTLESTIER_IECC_Pos)                     /*!< 0x00000001 */
+#define ETH_MTLESTIER_IECC                  ETH_MTLESTIER_IECC_Msk                              /*!< Interrupt Enable for Switch List */
+#define ETH_MTLESTIER_IEBE_Pos              (1U)
+#define ETH_MTLESTIER_IEBE_Msk              (0x1UL << ETH_MTLESTIER_IEBE_Pos)                     /*!< 0x00000002 */
+#define ETH_MTLESTIER_IEBE                  ETH_MTLESTIER_IEBE_Msk                              /*!< Interrupt Enable for BTR Error */
+#define ETH_MTLESTIER_IEHF_Pos              (2U)
+#define ETH_MTLESTIER_IEHF_Msk              (0x1UL << ETH_MTLESTIER_IEHF_Pos)                     /*!< 0x00000004 */
+#define ETH_MTLESTIER_IEHF                  ETH_MTLESTIER_IEHF_Msk                              /*!< Interrupt Enable for HLBF */
+#define ETH_MTLESTIER_IEHS_Pos              (3U)
+#define ETH_MTLESTIER_IEHS_Msk              (0x1UL << ETH_MTLESTIER_IEHS_Pos)                     /*!< 0x00000008 */
+#define ETH_MTLESTIER_IEHS                  ETH_MTLESTIER_IEHS_Msk                              /*!< Interrupt Enable for HLBS */
+#define ETH_MTLESTIER_CGCE_Pos              (4U)
+#define ETH_MTLESTIER_CGCE_Msk              (0x1UL << ETH_MTLESTIER_CGCE_Pos)                     /*!< 0x00000010 */
+#define ETH_MTLESTIER_CGCE                  ETH_MTLESTIER_CGCE_Msk                              /*!< Interrupt Enable for CGCE */
+
+/***************  Bit definition for ETH_MTLESTGCLCR register  ****************/
+#define ETH_MTLESTGCLCR_SRWO_Pos            (0U)
+#define ETH_MTLESTGCLCR_SRWO_Msk            (0x1UL << ETH_MTLESTGCLCR_SRWO_Pos)                   /*!< 0x00000001 */
+#define ETH_MTLESTGCLCR_SRWO                ETH_MTLESTGCLCR_SRWO_Msk                            /*!< Start Read/Write Operation */
+#define ETH_MTLESTGCLCR_R1W0_Pos            (1U)
+#define ETH_MTLESTGCLCR_R1W0_Msk            (0x1UL << ETH_MTLESTGCLCR_R1W0_Pos)                   /*!< 0x00000002 */
+#define ETH_MTLESTGCLCR_R1W0                ETH_MTLESTGCLCR_R1W0_Msk                            /*!< Read 1, Write 0 */
+#define ETH_MTLESTGCLCR_GCRR_Pos            (2U)
+#define ETH_MTLESTGCLCR_GCRR_Msk            (0x1UL << ETH_MTLESTGCLCR_GCRR_Pos)                   /*!< 0x00000004 */
+#define ETH_MTLESTGCLCR_GCRR                ETH_MTLESTGCLCR_GCRR_Msk                            /*!< Gate Control Related registers */
+#define ETH_MTLESTGCLCR_DBGM_Pos            (4U)
+#define ETH_MTLESTGCLCR_DBGM_Msk            (0x1UL << ETH_MTLESTGCLCR_DBGM_Pos)                   /*!< 0x00000010 */
+#define ETH_MTLESTGCLCR_DBGM                ETH_MTLESTGCLCR_DBGM_Msk                            /*!< Debug Mode */
+#define ETH_MTLESTGCLCR_DBGB_Pos            (5U)
+#define ETH_MTLESTGCLCR_DBGB_Msk            (0x1UL << ETH_MTLESTGCLCR_DBGB_Pos)                   /*!< 0x00000020 */
+#define ETH_MTLESTGCLCR_DBGB                ETH_MTLESTGCLCR_DBGB_Msk                            /*!< Debug Mode Bank Select */
+#define ETH_MTLESTGCLCR_ADDR_Pos            (8U)
+#define ETH_MTLESTGCLCR_ADDR_Msk            (0x3FUL << ETH_MTLESTGCLCR_ADDR_Pos)                  /*!< 0x00003F00 */
+#define ETH_MTLESTGCLCR_ADDR                ETH_MTLESTGCLCR_ADDR_Msk                            /*!< Gate Control List Address: */
+
+/***************  Bit definition for ETH_MTLESTGCLDR register  ****************/
+#define ETH_MTLESTGCLDR_GCD_Pos             (0U)
+#define ETH_MTLESTGCLDR_GCD_Msk             (0xFFFFFFFFUL << ETH_MTLESTGCLDR_GCD_Pos)            /*!< 0xFFFFFFFF */
+#define ETH_MTLESTGCLDR_GCD                 ETH_MTLESTGCLDR_GCD_Msk                             /*!< Gate Control Data */
+
+/****************  Bit definition for ETH_MTLFPECSR register  *****************/
+#define ETH_MTLFPECSR_AFSZ_Pos              (0U)
+#define ETH_MTLFPECSR_AFSZ_Msk              (0x3UL << ETH_MTLFPECSR_AFSZ_Pos)                     /*!< 0x00000003 */
+#define ETH_MTLFPECSR_AFSZ                  ETH_MTLFPECSR_AFSZ_Msk                              /*!< Additional Fragment Size */
+#define ETH_MTLFPECSR_LBHT_Pos              (7U)
+#define ETH_MTLFPECSR_LBHT_Msk              (0x1UL << ETH_MTLFPECSR_LBHT_Pos)                     /*!< 0x00000080 */
+#define ETH_MTLFPECSR_LBHT                  ETH_MTLFPECSR_LBHT_Msk                              /*!< Level-based Hold Transition */
+#define ETH_MTLFPECSR_PEC_Pos               (8U)
+#define ETH_MTLFPECSR_PEC_Msk               (0xFUL << ETH_MTLFPECSR_PEC_Pos)                      /*!< 0x00000F00 */
+#define ETH_MTLFPECSR_PEC                   ETH_MTLFPECSR_PEC_Msk                               /*!< Preemption Classification */
+#define ETH_MTLFPECSR_HRS_Pos               (28U)
+#define ETH_MTLFPECSR_HRS_Msk               (0x1UL << ETH_MTLFPECSR_HRS_Pos)                      /*!< 0x10000000 */
+#define ETH_MTLFPECSR_HRS                   ETH_MTLFPECSR_HRS_Msk                               /*!< Hold/Release Status */
+
+/*****************  Bit definition for ETH_MTLFPEAR register  *****************/
+#define ETH_MTLFPEAR_HADV_Pos               (0U)
+#define ETH_MTLFPEAR_HADV_Msk               (0xFFFFUL << ETH_MTLFPEAR_HADV_Pos)                   /*!< 0x0000FFFF */
+#define ETH_MTLFPEAR_HADV                   ETH_MTLFPEAR_HADV_Msk                               /*!< Hold Advance */
+#define ETH_MTLFPEAR_RADV_Pos               (16U)
+#define ETH_MTLFPEAR_RADV_Msk               (0xFFFFUL << ETH_MTLFPEAR_RADV_Pos)                   /*!< 0xFFFF0000 */
+#define ETH_MTLFPEAR_RADV                   ETH_MTLFPEAR_RADV_Msk                               /*!< Release Advance */
 
 /************  Bit definition for ETH_MTLTXQ0OMR register  *************/
 #define ETH_MTLTXQ0OMR_FTQ_Pos              (0U)
@@ -14522,6 +15328,11 @@ typedef struct
 #define ETH_MTLTXQ0ESR_ABS_21               (0x200000UL << ETH_MTLTXQ0ESR_ABS_Pos)               /*!< 0x00200000 */
 #define ETH_MTLTXQ0ESR_ABS_22               (0x400000UL << ETH_MTLTXQ0ESR_ABS_Pos)               /*!< 0x00400000 */
 #define ETH_MTLTXQ0ESR_ABS_23               (0x800000UL << ETH_MTLTXQ0ESR_ABS_Pos)               /*!< 0x00800000 */
+
+/*************  Bit definition for ETH_MTLTXQ0QWR register  *************/
+#define ETH_MTLTXQ0QWR_ISCQW_Pos            (0U)
+#define ETH_MTLTXQ0QWR_ISCQW_Msk            (0x3FFFUL << ETH_MTLTXQ0QWR_ISCQW_Pos)               /*!< 0x00003FFF */
+#define ETH_MTLTXQ0QWR_ISCQW                ETH_MTLTXQ0QWR_ISCQW_Msk                            /*!< IdleSlopeCredit or Weights */
 
 /*************  Bit definition for ETH_MTLQ0ICSR register  *************/
 #define ETH_MTLQ0ICSR_TXUNFIS_Pos           (0U)
@@ -15042,6 +15853,214 @@ typedef struct
 #define ETH_MTLRXQ1CR_RXQ_FRM_ARBIT_Msk     (0x1UL << ETH_MTLRXQ1CR_RXQ_FRM_ARBIT_Pos)           /*!< 0x00000008 */
 #define ETH_MTLRXQ1CR_RXQ_FRM_ARBIT         ETH_MTLRXQ1CR_RXQ_FRM_ARBIT_Msk                     /*!< Receive Queue Packet Arbitration */
 
+/****************  Bit definition for ETH_MTLTXQ2OMR register  ****************/
+#define ETH_MTLTXQ2OMR_FTQ_Pos               (0U)
+#define ETH_MTLTXQ2OMR_FTQ_Msk               (0x1UL << ETH_MTLTXQ2OMR_FTQ_Pos)                    /*!< 0x00000001 */
+#define ETH_MTLTXQ2OMR_FTQ                   ETH_MTLTXQ2OMR_FTQ_Msk                             /*!< Flush Transmit Queue */
+#define ETH_MTLTXQ2OMR_TSF_Pos               (1U)
+#define ETH_MTLTXQ2OMR_TSF_Msk               (0x1UL << ETH_MTLTXQ2OMR_TSF_Pos)                    /*!< 0x00000002 */
+#define ETH_MTLTXQ2OMR_TSF                   ETH_MTLTXQ2OMR_TSF_Msk                             /*!< Transmit Store and Forward */
+#define ETH_MTLTXQ2OMR_TXQEN_Pos             (2U)
+#define ETH_MTLTXQ2OMR_TXQEN_Msk             (0x3UL << ETH_MTLTXQ2OMR_TXQEN_Pos)                  /*!< 0x0000000C */
+#define ETH_MTLTXQ2OMR_TXQEN                 ETH_MTLTXQ2OMR_TXQEN_Msk                           /*!< Transmit Queue Enable */
+#define ETH_MTLTXQ2OMR_TTC_Pos               (4U)
+#define ETH_MTLTXQ2OMR_TTC_Msk               (0x7UL << ETH_MTLTXQ2OMR_TTC_Pos)                    /*!< 0x00000070 */
+#define ETH_MTLTXQ2OMR_TTC                   ETH_MTLTXQ2OMR_TTC_Msk                             /*!< Transmit Threshold Control */
+#define ETH_MTLTXQ2OMR_TQS_Pos               (16U)
+#define ETH_MTLTXQ2OMR_TQS_Msk               (0x1FUL << ETH_MTLTXQ2OMR_TQS_Pos)                   /*!< 0x001F0000 */
+#define ETH_MTLTXQ2OMR_TQS                   ETH_MTLTXQ2OMR_TQS_Msk                             /*!< Transmit queue size */
+
+/****************  Bit definition for ETH_MTLTXQ2UR register  *****************/
+#define ETH_MTLTXQ2UR_UFFRMCNT_Pos            (0U)
+#define ETH_MTLTXQ2UR_UFFRMCNT_Msk            (0x7FFUL << ETH_MTLTXQ2UR_UFFRMCNT_Pos)             /*!< 0x000007FF */
+#define ETH_MTLTXQ2UR_UFFRMCNT                ETH_MTLTXQ2UR_UFFRMCNT_Msk                        /*!< Underflow Packet Counter */
+#define ETH_MTLTXQ2UR_UFCNTOVF_Pos            (11U)
+#define ETH_MTLTXQ2UR_UFCNTOVF_Msk            (0x1UL << ETH_MTLTXQ2UR_UFCNTOVF_Pos)               /*!< 0x00000800 */
+#define ETH_MTLTXQ2UR_UFCNTOVF                ETH_MTLTXQ2UR_UFCNTOVF_Msk                        /*!< Overflow Bit for Underflow Packet Counter */
+
+/****************  Bit definition for ETH_MTLTXQ2DR register  *****************/
+#define ETH_MTLTXQ2DR_TXQPAUSED_Pos          (0U)
+#define ETH_MTLTXQ2DR_TXQPAUSED_Msk          (0x1UL << ETH_MTLTXQ2DR_TXQPAUSED_Pos)               /*!< 0x00000001 */
+#define ETH_MTLTXQ2DR_TXQPAUSED              ETH_MTLTXQ2DR_TXQPAUSED_Msk                        /*!< Transmit Queue in Pause */
+#define ETH_MTLTXQ2DR_TRCSTS_Pos             (1U)
+#define ETH_MTLTXQ2DR_TRCSTS_Msk             (0x3UL << ETH_MTLTXQ2DR_TRCSTS_Pos)                  /*!< 0x00000006 */
+#define ETH_MTLTXQ2DR_TRCSTS                 ETH_MTLTXQ2DR_TRCSTS_Msk                           /*!< MTL Tx Queue Read Controller Status */
+#define ETH_MTLTXQ2DR_TWCSTS_Pos             (3U)
+#define ETH_MTLTXQ2DR_TWCSTS_Msk             (0x1UL << ETH_MTLTXQ2DR_TWCSTS_Pos)                  /*!< 0x00000008 */
+#define ETH_MTLTXQ2DR_TWCSTS                 ETH_MTLTXQ2DR_TWCSTS_Msk                           /*!< MTL Tx Queue Write Controller Status */
+#define ETH_MTLTXQ2DR_TXQSTS_Pos             (4U)
+#define ETH_MTLTXQ2DR_TXQSTS_Msk             (0x1UL << ETH_MTLTXQ2DR_TXQSTS_Pos)                  /*!< 0x00000010 */
+#define ETH_MTLTXQ2DR_TXQSTS                 ETH_MTLTXQ2DR_TXQSTS_Msk                           /*!< MTL Tx Queue Not Empty Status */
+#define ETH_MTLTXQ2DR_TXSTSFSTS_Pos          (5U)
+#define ETH_MTLTXQ2DR_TXSTSFSTS_Msk          (0x1UL << ETH_MTLTXQ2DR_TXSTSFSTS_Pos)               /*!< 0x00000020 */
+#define ETH_MTLTXQ2DR_TXSTSFSTS              ETH_MTLTXQ2DR_TXSTSFSTS_Msk                        /*!< MTL Tx Status FIFO Full Status */
+#define ETH_MTLTXQ2DR_PTXQ_Pos               (16U)
+#define ETH_MTLTXQ2DR_PTXQ_Msk               (0x7UL << ETH_MTLTXQ2DR_PTXQ_Pos)                    /*!< 0x00070000 */
+#define ETH_MTLTXQ2DR_PTXQ                   ETH_MTLTXQ2DR_PTXQ_Msk                             /*!< Number of Packets in the Transmit Queue */
+#define ETH_MTLTXQ2DR_STXSTSF_Pos            (20U)
+#define ETH_MTLTXQ2DR_STXSTSF_Msk            (0x7UL << ETH_MTLTXQ2DR_STXSTSF_Pos)                 /*!< 0x00700000 */
+#define ETH_MTLTXQ2DR_STXSTSF                ETH_MTLTXQ2DR_STXSTSF_Msk                          /*!< Number of Status Words in Tx Status FIFO of Queue */
+
+/****************  Bit definition for ETH_MTLTXQ2ECR register  ****************/
+#define ETH_MTLTXQ2ECR_AVALG_Pos             (2U)
+#define ETH_MTLTXQ2ECR_AVALG_Msk             (0x1UL << ETH_MTLTXQ2ECR_AVALG_Pos)                  /*!< 0x00000004 */
+#define ETH_MTLTXQ2ECR_AVALG                 ETH_MTLTXQ2ECR_AVALG_Msk                           /*!< AV Algorithm */
+#define ETH_MTLTXQ2ECR_CC_Pos                (3U)
+#define ETH_MTLTXQ2ECR_CC_Msk                (0x1UL << ETH_MTLTXQ2ECR_CC_Pos)                     /*!< 0x00000008 */
+#define ETH_MTLTXQ2ECR_CC                    ETH_MTLTXQ2ECR_CC_Msk                              /*!< Credit Control */
+#define ETH_MTLTXQ2ECR_SLC_Pos               (4U)
+#define ETH_MTLTXQ2ECR_SLC_Msk               (0x7UL << ETH_MTLTXQ2ECR_SLC_Pos)                    /*!< 0x00000070 */
+#define ETH_MTLTXQ2ECR_SLC                   ETH_MTLTXQ2ECR_SLC_Msk                             /*!< Slot Count */
+
+/****************  Bit definition for ETH_MTLTXQ2ESR register  ****************/
+#define ETH_MTLTXQ2ESR_ABS_Pos               (0U)
+#define ETH_MTLTXQ2ESR_ABS_Msk               (0xFFFFFFUL << ETH_MTLTXQ2ESR_ABS_Pos)               /*!< 0x00FFFFFF */
+#define ETH_MTLTXQ2ESR_ABS                   ETH_MTLTXQ2ESR_ABS_Msk                             /*!< Average Bits per Slot */
+
+/****************  Bit definition for ETH_MTLTXQ2QWR register  ****************/
+#define ETH_MTLTXQ2QWR_ISCQW_Pos             (0U)
+#define ETH_MTLTXQ2QWR_ISCQW_Msk             (0x3FFFUL << ETH_MTLTXQ2QWR_ISCQW_Pos)               /*!< 0x00003FFF */
+#define ETH_MTLTXQ2QWR_ISCQW                 ETH_MTLTXQ2QWR_ISCQW_Msk                           /*!< IdleSlopeCredit or Weights */
+
+/***************  Bit definition for ETH_MTLTXQ2SSCR register  ****************/
+#define ETH_MTLTXQ2SSCR_SSC_Pos              (0U)
+#define ETH_MTLTXQ2SSCR_SSC_Msk              (0x3FFFUL << ETH_MTLTXQ2SSCR_SSC_Pos)                /*!< 0x00003FFF */
+#define ETH_MTLTXQ2SSCR_SSC                  ETH_MTLTXQ2SSCR_SSC_Msk                            /*!< sendSlopeCredit Value */
+
+/****************  Bit definition for ETH_MTL register  ****************/
+#define ETH_MTLTXQ2HCR_HC_Pos                (0U)
+#define ETH_MTLTXQ2HCR_HC_Msk                (0x1FFFFFFFUL << ETH_MTLTXQ2HCR_HC_Pos)              /*!< 0x1FFFFFFF */
+#define ETH_MTLTXQ2HCR_HC                    ETH_MTLTXQ2HCR_HC_Msk                              /*!< hiCredit Value */
+
+/****************  Bit definition for ETH_MTL register  ****************/
+#define ETH_MTLTXQ2LCR_LC_Pos                (0U)
+#define ETH_MTLTXQ2LCR_LC_Msk                (0x1FFFFFFFUL << ETH_MTLTXQ2LCR_LC_Pos)              /*!< 0x1FFFFFFF */
+#define ETH_MTLTXQ2LCR_LC                    ETH_MTLTXQ2LCR_LC_Msk                              /*!< loCredit Value */
+
+/****************  Bit definition for ETH_MTLQ2ICSR register  *****************/
+#define ETH_MTLQ2ICSR_TXUNFIS_Pos            (0U)
+#define ETH_MTLQ2ICSR_TXUNFIS_Msk            (0x1UL << ETH_MTLQ2ICSR_TXUNFIS_Pos)                 /*!< 0x00000001 */
+#define ETH_MTLQ2ICSR_TXUNFIS                ETH_MTLQ2ICSR_TXUNFIS_Msk                          /*!< Transmit Queue Underflow Interrupt Status */
+#define ETH_MTLQ2ICSR_ABPSIS_Pos             (1U)
+#define ETH_MTLQ2ICSR_ABPSIS_Msk             (0x1UL << ETH_MTLQ2ICSR_ABPSIS_Pos)                  /*!< 0x00000002 */
+#define ETH_MTLQ2ICSR_ABPSIS                 ETH_MTLQ2ICSR_ABPSIS_Msk                           /*!< Average Bits Per Slot Interrupt Status */
+#define ETH_MTLQ2ICSR_TXUIE_Pos              (8U)
+#define ETH_MTLQ2ICSR_TXUIE_Msk              (0x1UL << ETH_MTLQ2ICSR_TXUIE_Pos)                   /*!< 0x00000100 */
+#define ETH_MTLQ2ICSR_TXUIE                  ETH_MTLQ2ICSR_TXUIE_Msk                            /*!< Transmit Queue Underflow Interrupt Enable */
+#define ETH_MTLQ2ICSR_ABPSIE_Pos             (9U)
+#define ETH_MTLQ2ICSR_ABPSIE_Msk             (0x1UL << ETH_MTLQ2ICSR_ABPSIE_Pos)                  /*!< 0x00000200 */
+#define ETH_MTLQ2ICSR_ABPSIE                 ETH_MTLQ2ICSR_ABPSIE_Msk                           /*!< Average Bits Per Slot Interrupt Enable */
+#define ETH_MTLQ2ICSR_RXOVFIS_Pos            (16U)
+#define ETH_MTLQ2ICSR_RXOVFIS_Msk            (0x1UL << ETH_MTLQ2ICSR_RXOVFIS_Pos)                 /*!< 0x00010000 */
+#define ETH_MTLQ2ICSR_RXOVFIS                ETH_MTLQ2ICSR_RXOVFIS_Msk                          /*!< Receive Queue Overflow Interrupt Status */
+#define ETH_MTLQ2ICSR_RXOIE_Pos              (24U)
+#define ETH_MTLQ2ICSR_RXOIE_Msk              (0x1UL << ETH_MTLQ2ICSR_RXOIE_Pos)                   /*!< 0x01000000 */
+#define ETH_MTLQ2ICSR_RXOIE                  ETH_MTLQ2ICSR_RXOIE_Msk                            /*!< Receive Queue Overflow Interrupt Enable */
+
+/****************  Bit definition for ETH_MTLTXQ3OMR register  ****************/
+#define ETH_MTLTXQ3OMR_FTQ_Pos               (0U)
+#define ETH_MTLTXQ3OMR_FTQ_Msk               (0x1UL << ETH_MTLTXQ3OMR_FTQ_Pos)                    /*!< 0x00000001 */
+#define ETH_MTLTXQ3OMR_FTQ                   ETH_MTLTXQ3OMR_FTQ_Msk                             /*!< Flush Transmit Queue */
+#define ETH_MTLTXQ3OMR_TSF_Pos               (1U)
+#define ETH_MTLTXQ3OMR_TSF_Msk               (0x1UL << ETH_MTLTXQ3OMR_TSF_Pos)                    /*!< 0x00000002 */
+#define ETH_MTLTXQ3OMR_TSF                   ETH_MTLTXQ3OMR_TSF_Msk                             /*!< Transmit Store and Forward */
+#define ETH_MTLTXQ3OMR_TXQEN_Pos             (2U)
+#define ETH_MTLTXQ3OMR_TXQEN_Msk             (0x3UL << ETH_MTLTXQ3OMR_TXQEN_Pos)                  /*!< 0x0000000C */
+#define ETH_MTLTXQ3OMR_TXQEN                 ETH_MTLTXQ3OMR_TXQEN_Msk                           /*!< Transmit Queue Enable */
+#define ETH_MTLTXQ3OMR_TTC_Pos               (4U)
+#define ETH_MTLTXQ3OMR_TTC_Msk               (0x7UL << ETH_MTLTXQ3OMR_TTC_Pos)                    /*!< 0x00000070 */
+#define ETH_MTLTXQ3OMR_TTC                   ETH_MTLTXQ3OMR_TTC_Msk                             /*!< Transmit Threshold Control */
+#define ETH_MTLTXQ3OMR_TQS_Pos               (16U)
+#define ETH_MTLTXQ3OMR_TQS_Msk               (0x1FUL << ETH_MTLTXQ3OMR_TQS_Pos)                   /*!< 0x001F0000 */
+#define ETH_MTLTXQ3OMR_TQS                   ETH_MTLTXQ3OMR_TQS_Msk                             /*!< Transmit queue size */
+
+/****************  Bit definition for ETH_MTLTXQ3UR register  *****************/
+#define ETH_MTLTXQ3UR_UFFRMCNT_Pos           (0U)
+#define ETH_MTLTXQ3UR_UFFRMCNT_Msk           (0x7FFUL << ETH_MTLTXQ3UR_UFFRMCNT_Pos)              /*!< 0x000007FF */
+#define ETH_MTLTXQ3UR_UFFRMCNT               ETH_MTLTXQ3UR_UFFRMCNT_Msk                         /*!< Underflow Packet Counter */
+#define ETH_MTLTXQ3UR_UFCNTOVF_Pos           (11U)
+#define ETH_MTLTXQ3UR_UFCNTOVF_Msk           (0x1UL << ETH_MTLTXQ3UR_UFCNTOVF_Pos)                /*!< 0x00000800 */
+#define ETH_MTLTXQ3UR_UFCNTOVF               ETH_MTLTXQ3UR_UFCNTOVF_Msk                         /*!< Overflow Bit for Underflow Packet Counter */
+
+/****************  Bit definition for ETH_MTLTXQ3DR register  *****************/
+#define ETH_MTLTXQ3DR_TXQPAUSED_Pos          (0U)
+#define ETH_MTLTXQ3DR_TXQPAUSED_Msk          (0x1UL << ETH_MTLTXQ3DR_TXQPAUSED_Pos)               /*!< 0x00000001 */
+#define ETH_MTLTXQ3DR_TXQPAUSED              ETH_MTLTXQ3DR_TXQPAUSED_Msk                        /*!< Transmit Queue in Pause */
+#define ETH_MTLTXQ3DR_TRCSTS_Pos             (1U)
+#define ETH_MTLTXQ3DR_TRCSTS_Msk             (0x3UL << ETH_MTLTXQ3DR_TRCSTS_Pos)                  /*!< 0x00000006 */
+#define ETH_MTLTXQ3DR_TRCSTS                 ETH_MTLTXQ3DR_TRCSTS_Msk                           /*!< MTL Tx Queue Read Controller Status */
+#define ETH_MTLTXQ3DR_TWCSTS_Pos             (3U)
+#define ETH_MTLTXQ3DR_TWCSTS_Msk             (0x1UL << ETH_MTLTXQ3DR_TWCSTS_Pos)                  /*!< 0x00000008 */
+#define ETH_MTLTXQ3DR_TWCSTS                 ETH_MTLTXQ3DR_TWCSTS_Msk                           /*!< MTL Tx Queue Write Controller Status */
+#define ETH_MTLTXQ3DR_TXQSTS_Pos             (4U)
+#define ETH_MTLTXQ3DR_TXQSTS_Msk             (0x1UL << ETH_MTLTXQ3DR_TXQSTS_Pos)                  /*!< 0x00000010 */
+#define ETH_MTLTXQ3DR_TXQSTS                 ETH_MTLTXQ3DR_TXQSTS_Msk                           /*!< MTL Tx Queue Not Empty Status */
+#define ETH_MTLTXQ3DR_TXSTSFSTS_Pos          (5U)
+#define ETH_MTLTXQ3DR_TXSTSFSTS_Msk          (0x1UL << ETH_MTLTXQ3DR_TXSTSFSTS_Pos)               /*!< 0x00000020 */
+#define ETH_MTLTXQ3DR_TXSTSFSTS              ETH_MTLTXQ3DR_TXSTSFSTS_Msk                        /*!< MTL Tx Status FIFO Full Status */
+#define ETH_MTLTXQ3DR_PTXQ_Pos               (16U)
+#define ETH_MTLTXQ3DR_PTXQ_Msk               (0x7UL << ETH_MTLTXQ3DR_PTXQ_Pos)                    /*!< 0x00070000 */
+#define ETH_MTLTXQ3DR_PTXQ                   ETH_MTLTXQ3DR_PTXQ_Msk                             /*!< Number of Packets in the Transmit Queue */
+#define ETH_MTLTXQ3DR_STXSTSF_Pos            (20U)
+#define ETH_MTLTXQ3DR_STXSTSF_Msk            (0x7UL << ETH_MTLTXQ3DR_STXSTSF_Pos)                 /*!< 0x00700000 */
+#define ETH_MTLTXQ3DR_STXSTSF                ETH_MTLTXQ3DR_STXSTSF_Msk                          /*!< Number of Status Words in Tx Status FIFO of Queue */
+
+/****************  Bit definition for ETH_MTLTXQ3ECR register  ****************/
+#define ETH_MTLTXQ3ECR_AVALG_Pos             (2U)
+#define ETH_MTLTXQ3ECR_AVALG_Msk             (0x1UL << ETH_MTLTXQ3ECR_AVALG_Pos)                   /*!< 0x00000004 */
+#define ETH_MTLTXQ3ECR_AVALG                 ETH_MTLTXQ3ECR_AVALG_Msk                            /*!< AV Algorithm */
+#define ETH_MTLTXQ3ECR_CC_Pos                (3U)
+#define ETH_MTLTXQ3ECR_CC_Msk                (0x1UL << ETH_MTLTXQ3ECR_CC_Pos)                      /*!< 0x00000008 */
+#define ETH_MTLTXQ3ECR_CC                    ETH_MTLTXQ3ECR_CC_Msk                               /*!< Credit Control */
+#define ETH_MTLTXQ3ECR_SLC_Pos               (4U)
+#define ETH_MTLTXQ3ECR_SLC_Msk               (0x7UL << ETH_MTLTXQ3ECR_SLC_Pos)                     /*!< 0x00000070 */
+#define ETH_MTLTXQ3ECR_SLC                   ETH_MTLTXQ3ECR_SLC_Msk                              /*!< Slot Count */
+
+/****************  Bit definition for ETH_MTLTXQ3ESR register  ****************/
+#define ETH_MTLTXQ3ESR_ABS_Pos               (0U)
+#define ETH_MTLTXQ3ESR_ABS_Msk               (0xFFFFFFUL << ETH_MTLTXQ3ESR_ABS_Pos)                /*!< 0x00FFFFFF */
+#define ETH_MTLTXQ3ESR_ABS                   ETH_MTLTXQ3ESR_ABS_Msk                              /*!< Average Bits per Slot */
+
+/****************  Bit definition for ETH_MTLTXQ3QWR register  ****************/
+#define ETH_MTLTXQ3QWR_ISCQW_Pos             (0U)
+#define ETH_MTLTXQ3QWR_ISCQW_Msk             (0x3FFFUL << ETH_MTLTXQ3QWR_ISCQW_Pos)                /*!< 0x00003FFF */
+#define ETH_MTLTXQ3QWR_ISCQW                 ETH_MTLTXQ3QWR_ISCQW_Msk                            /*!< IdleSlopeCredit or Weights */
+
+/***************  Bit definition for ETH_MTLTXQ3SSCR register  ****************/
+#define ETH_MTLTXQ3SSCR_SSC_Pos              (0U)
+#define ETH_MTLTXQ3SSCR_SSC_Msk              (0x3FFFUL << ETH_MTLTXQ3SSCR_SSC_Pos)                 /*!< 0x00003FFF */
+#define ETH_MTLTXQ3SSCR_SSC                  ETH_MTLTXQ3SSCR_SSC_Msk                             /*!< sendSlopeCredit Value */
+
+/****************  Bit definition for ETH_MTLTXQ3HCR register  ****************/
+#define ETH_MTLTXQ3HCR_HC_Pos                (0U)
+#define ETH_MTLTXQ3HCR_HC_Msk                (0x1FFFFFFFUL << ETH_MTLTXQ3HCR_HC_Pos)               /*!< 0x1FFFFFFF */
+#define ETH_MTLTXQ3HCR_HC                    ETH_MTLTXQ3HCR_HC_Msk                               /*!< hiCredit Value */
+
+/****************  Bit definition for ETH_MTLTXQ3LCR register  ****************/
+#define ETH_MTLTXQ3LCR_LC_Pos                (0U)
+#define ETH_MTLTXQ3LCR_LC_Msk                (0x1FFFFFFFUL << ETH_MTLTXQ3LCR_LC_Pos)               /*!< 0x1FFFFFFF */
+#define ETH_MTLTXQ3LCR_LC                    ETH_MTLTXQ3LCR_LC_Msk                               /*!< loCredit Value */
+
+/****************  Bit definition for ETH_MTLQ3ICSR register  *****************/
+#define ETH_MTLQ3ICSR_TXUNFIS_Pos            (0U)
+#define ETH_MTLQ3ICSR_TXUNFIS_Msk            (0x1UL << ETH_MTLQ3ICSR_TXUNFIS_Pos)                  /*!< 0x00000001 */
+#define ETH_MTLQ3ICSR_TXUNFIS                ETH_MTLQ3ICSR_TXUNFIS_Msk                           /*!< Transmit Queue Underflow Interrupt Status */
+#define ETH_MTLQ3ICSR_ABPSIS_Pos             (1U)
+#define ETH_MTLQ3ICSR_ABPSIS_Msk             (0x1UL << ETH_MTLQ3ICSR_ABPSIS_Pos)                   /*!< 0x00000002 */
+#define ETH_MTLQ3ICSR_ABPSIS                 ETH_MTLQ3ICSR_ABPSIS_Msk                            /*!< Average Bits Per Slot Interrupt Status */
+#define ETH_MTLQ3ICSR_TXUIE_Pos              (8U)
+#define ETH_MTLQ3ICSR_TXUIE_Msk              (0x1UL << ETH_MTLQ3ICSR_TXUIE_Pos)                    /*!< 0x00000100 */
+#define ETH_MTLQ3ICSR_TXUIE                  ETH_MTLQ3ICSR_TXUIE_Msk                             /*!< Transmit Queue Underflow Interrupt Enable */
+#define ETH_MTLQ3ICSR_ABPSIE_Pos             (9U)
+#define ETH_MTLQ3ICSR_ABPSIE_Msk             (0x1UL << ETH_MTLQ3ICSR_ABPSIE_Pos)                   /*!< 0x00000200 */
+#define ETH_MTLQ3ICSR_ABPSIE                 ETH_MTLQ3ICSR_ABPSIE_Msk                            /*!< Average Bits Per Slot Interrupt Enable */
+#define ETH_MTLQ3ICSR_RXOVFIS_Pos            (16U)
+#define ETH_MTLQ3ICSR_RXOVFIS_Msk            (0x1UL << ETH_MTLQ3ICSR_RXOVFIS_Pos)                  /*!< 0x00010000 */
+#define ETH_MTLQ3ICSR_RXOVFIS                ETH_MTLQ3ICSR_RXOVFIS_Msk                           /*!< Receive Queue Overflow Interrupt Status */
+#define ETH_MTLQ3ICSR_RXOIE_Pos              (24U)
+#define ETH_MTLQ3ICSR_RXOIE_Msk              (0x1UL << ETH_MTLQ3ICSR_RXOIE_Pos)                    /*!< 0x01000000 */
+#define ETH_MTLQ3ICSR_RXOIE                  ETH_MTLQ3ICSR_RXOIE_Msk                             /*!< Receive Queue Overflow Interrupt Enable */
+
 /***************  Bit definition for ETH_DMAMR register  ***************/
 #define ETH_DMAMR_SWR_Pos                   (0U)
 #define ETH_DMAMR_SWR_Msk                   (0x1UL << ETH_DMAMR_SWR_Pos)                         /*!< 0x00000001 */
@@ -15049,9 +16068,15 @@ typedef struct
 #define ETH_DMAMR_TAA_Pos                   (2U)
 #define ETH_DMAMR_TAA_Msk                   (0x7UL << ETH_DMAMR_TAA_Pos)                         /*!< 0x0000001C */
 #define ETH_DMAMR_TAA                       ETH_DMAMR_TAA_Msk                                   /*!< Transmit Arbitration Algorithm */
-#define ETH_DMAMR_TAA_0                     (0x1UL << ETH_DMAMR_TAA_Pos)                         /*!< 0x00000004 */
-#define ETH_DMAMR_TAA_1                     (0x2UL << ETH_DMAMR_TAA_Pos)                         /*!< 0x00000008 */
-#define ETH_DMAMR_TAA_2                     (0x4UL << ETH_DMAMR_TAA_Pos)                         /*!< 0x00000010 */
+#define ETH_DMAMR_TAA0_Pos                  (2U)
+#define ETH_DMAMR_TAA0_Msk                  (0x1UL << ETH_DMAMR_TAA0_Pos)                         /*!< 0x00000004 */
+#define ETH_DMAMR_TAA0                      ETH_DMAMR_TAA0_Msk                                  /*!< Transmit Arbitration Algorithm */
+#define ETH_DMAMR_TAA1_Pos                  (3U)
+#define ETH_DMAMR_TAA1_Msk                  (0x1UL << ETH_DMAMR_TAA1_Pos)                         /*!< 0x00000008 */
+#define ETH_DMAMR_TAA1                      ETH_DMAMR_TAA1_Msk                                  /*!< Transmit Arbitration Algorithm */
+#define ETH_DMAMR_TAA2_Pos                  (4U)
+#define ETH_DMAMR_TAA2_Msk                  (0x1UL << ETH_DMAMR_TAA2_Pos)                         /*!< 0x00000010 */
+#define ETH_DMAMR_TAA2                      ETH_DMAMR_TAA2_Msk                                  /*!< Transmit Arbitration Algorithm */
 #define ETH_DMAMR_DSPW_Pos                  (8)
 #define ETH_DMAMR_DSPW_Msk                  (0x1UL << ETH_DMAMR_DSPW_Pos)                        /*!< 0x00000100 */
 #define ETH_DMAMR_DSPW                      ETH_DMAMR_DSPW_Msk                                  /*!< Descriptor Posted Write */
@@ -15089,6 +16114,9 @@ typedef struct
 #define ETH_DMASBMR_BLEN256_Pos             (7U)
 #define ETH_DMASBMR_BLEN256_Msk             (0x1UL << ETH_DMASBMR_BLEN256_Pos)                   /*!< 0x00000080 */
 #define ETH_DMASBMR_BLEN256                 ETH_DMASBMR_BLEN256_Msk                             /*!< AXI Burst Length 256 */
+#define ETH_DMASBMR_AALE_Pos                (10U)
+#define ETH_DMASBMR_AALE_Msk                (0x1UL << ETH_DMASBMR_AALE_Pos)                      /*!< 0x00000400 */
+#define ETH_DMASBMR_AALE                    ETH_DMASBMR_AALE_Msk                                /*!< Automatic AXI LPI enable */
 #define ETH_DMASBMR_AAL_Pos                 (12U)
 #define ETH_DMASBMR_AAL_Msk                 (0x1UL << ETH_DMASBMR_AAL_Pos)                       /*!< 0x00001000 */
 #define ETH_DMASBMR_AAL                     ETH_DMASBMR_AAL_Msk                                 /*!< Address-Aligned Beats */
@@ -15119,6 +16147,12 @@ typedef struct
 #define ETH_DMAISR_DC1IS_Pos                (1U)
 #define ETH_DMAISR_DC1IS_Msk                (0x1UL << ETH_DMAISR_DC1IS_Pos)                      /*!< 0x00000002 */
 #define ETH_DMAISR_DC1IS                    ETH_DMAISR_DC1IS_Msk                                /*!< DMA Channel 1 Interrupt Status */
+#define ETH_DMAISR_DC2IS_Pos                (2U)
+#define ETH_DMAISR_DC2IS_Msk                (0x1UL << ETH_DMAISR_DC2IS_Pos)                      /*!< 0x00000004 */
+#define ETH_DMAISR_DC2IS                    ETH_DMAISR_DC2IS_Msk                                /*!< DMA Channel 2 Interrupt Status */
+#define ETH_DMAISR_DC3IS_Pos                (3U)
+#define ETH_DMAISR_DC3IS_Msk                (0x1UL << ETH_DMAISR_DC3IS_Pos)                      /*!< 0x00000008 */
+#define ETH_DMAISR_DC3IS                    ETH_DMAISR_DC3IS_Msk                                /*!< DMA Channel 3 Interrupt Status */
 #define ETH_DMAISR_MTLIS_Pos                (16U)
 #define ETH_DMAISR_MTLIS_Msk                (0x1UL << ETH_DMAISR_MTLIS_Pos)                      /*!< 0x00010000 */
 #define ETH_DMAISR_MTLIS                    ETH_DMAISR_MTLIS_Msk                                /*!< MTL Interrupt Status */
@@ -15126,41 +16160,33 @@ typedef struct
 #define ETH_DMAISR_MACIS_Msk                (0x1UL << ETH_DMAISR_MACIS_Pos)                      /*!< 0x00020000 */
 #define ETH_DMAISR_MACIS                    ETH_DMAISR_MACIS_Msk                                /*!< MAC Interrupt Status */
 
-/**************  Bit definition for ETH_DMADSR register  ***************/
-#define ETH_DMADSR_AXWHSTS_Pos              (0U)
-#define ETH_DMADSR_AXWHSTS_Msk              (0x1UL << ETH_DMADSR_AXWHSTS_Pos)                    /*!< 0x00000001 */
-#define ETH_DMADSR_AXWHSTS                  ETH_DMADSR_AXWHSTS_Msk                              /*!< AXI Master Write Channel */
-#define ETH_DMADSR_AXRHSTS_Pos              (1U)
-#define ETH_DMADSR_AXRHSTS_Msk              (0x1UL << ETH_DMADSR_AXRHSTS_Pos)                    /*!< 0x00000002 */
-#define ETH_DMADSR_AXRHSTS                  ETH_DMADSR_AXRHSTS_Msk                              /*!< AXI Master Read Channel Status */
-#define ETH_DMADSR_RPS0_Pos                 (8U)
-#define ETH_DMADSR_RPS0_Msk                 (0xFUL << ETH_DMADSR_RPS0_Pos)                       /*!< 0x00000F00 */
-#define ETH_DMADSR_RPS0                     ETH_DMADSR_RPS0_Msk                                 /*!< DMA Channel 0 Receive Process State */
-#define ETH_DMADSR_RPS0_0                   (0x1UL << ETH_DMADSR_RPS0_Pos)                       /*!< 0x00000100 */
-#define ETH_DMADSR_RPS0_1                   (0x2UL << ETH_DMADSR_RPS0_Pos)                       /*!< 0x00000200 */
-#define ETH_DMADSR_RPS0_2                   (0x4UL << ETH_DMADSR_RPS0_Pos)                       /*!< 0x00000400 */
-#define ETH_DMADSR_RPS0_3                   (0x8UL << ETH_DMADSR_RPS0_Pos)                       /*!< 0x00000800 */
-#define ETH_DMADSR_TPS0_Pos                 (12U)
-#define ETH_DMADSR_TPS0_Msk                 (0xFUL << ETH_DMADSR_TPS0_Pos)                       /*!< 0x0000F000 */
-#define ETH_DMADSR_TPS0                     ETH_DMADSR_TPS0_Msk                                 /*!< DMA Channel 0 Transmit Process State */
-#define ETH_DMADSR_TPS0_0                   (0x1UL << ETH_DMADSR_TPS0_Pos)                       /*!< 0x00001000 */
-#define ETH_DMADSR_TPS0_1                   (0x2UL << ETH_DMADSR_TPS0_Pos)                       /*!< 0x00002000 */
-#define ETH_DMADSR_TPS0_2                   (0x4UL << ETH_DMADSR_TPS0_Pos)                       /*!< 0x00004000 */
-#define ETH_DMADSR_TPS0_3                   (0x8UL << ETH_DMADSR_TPS0_Pos)                       /*!< 0x00008000 */
-#define ETH_DMADSR_RPS1_Pos                 (16U)
-#define ETH_DMADSR_RPS1_Msk                 (0xFUL << ETH_DMADSR_RPS1_Pos)                       /*!< 0x000F0000 */
-#define ETH_DMADSR_RPS1                     ETH_DMADSR_RPS1_Msk                                 /*!< DMA Channel 1 Receive Process State */
-#define ETH_DMADSR_RPS1_0                   (0x1UL << ETH_DMADSR_RPS1_Pos)                       /*!< 0x00010000 */
-#define ETH_DMADSR_RPS1_1                   (0x2UL << ETH_DMADSR_RPS1_Pos)                       /*!< 0x00020000 */
-#define ETH_DMADSR_RPS1_2                   (0x4UL << ETH_DMADSR_RPS1_Pos)                       /*!< 0x00040000 */
-#define ETH_DMADSR_RPS1_3                   (0x8UL << ETH_DMADSR_RPS1_Pos)                       /*!< 0x00080000 */
-#define ETH_DMADSR_TPS1_Pos                 (20U)
-#define ETH_DMADSR_TPS1_Msk                 (0xFUL << ETH_DMADSR_TPS1_Pos)                       /*!< 0x00F00000 */
-#define ETH_DMADSR_TPS1                     ETH_DMADSR_TPS1_Msk                                 /*!< DMA Channel 1 Transmit Process State */
-#define ETH_DMADSR_TPS1_0                   (0x1UL << ETH_DMADSR_TPS1_Pos)                       /*!< 0x00100000 */
-#define ETH_DMADSR_TPS1_1                   (0x2UL << ETH_DMADSR_TPS1_Pos)                       /*!< 0x00200000 */
-#define ETH_DMADSR_TPS1_2                   (0x4UL << ETH_DMADSR_TPS1_Pos)                       /*!< 0x00400000 */
-#define ETH_DMADSR_TPS1_3                   (0x8UL << ETH_DMADSR_TPS1_Pos)                       /*!< 0x00800000 */
+/**************  Bit definition for ETH_DMADS1R register  ***************/
+#define ETH_DMADS1R_AXWHSTS_Pos              (0U)
+#define ETH_DMADS1R_AXWHSTS_Msk              (0x1UL << ETH_DMADS1R_AXWHSTS_Pos)                   /*!< 0x00000001 */
+#define ETH_DMADS1R_AXWHSTS                  ETH_DMADS1R_AXWHSTS_Msk                             /*!< AXI Master Write Channel */
+#define ETH_DMADS1R_AXRHSTS_Pos              (1U)
+#define ETH_DMADS1R_AXRHSTS_Msk              (0x1UL << ETH_DMADS1R_AXRHSTS_Pos)                   /*!< 0x00000002 */
+#define ETH_DMADS1R_AXRHSTS                  ETH_DMADS1R_AXRHSTS_Msk                             /*!< AXI Master Read Channel Status */
+#define ETH_DMADS1R_RPS0_Pos                 (8U)
+#define ETH_DMADS1R_RPS0_Msk                 (0xFUL << ETH_DMADS1R_RPS0_Pos)                      /*!< 0x00000F00 */
+#define ETH_DMADS1R_RPS0                     ETH_DMADS1R_RPS0_Msk                                /*!< DMA Channel Receive Process State */
+#define ETH_DMADS1R_TPS0_Pos                 (12U)
+#define ETH_DMADS1R_TPS0_Msk                 (0xFUL << ETH_DMADS1R_TPS0_Pos)                      /*!< 0x0000F000 */
+#define ETH_DMADS1R_TPS0                     ETH_DMADS1R_TPS0_Msk                                /*!< DMA Channel Transmit Process State */
+#define ETH_DMADS1R_RPS1_Pos                 (16U)
+#define ETH_DMADS1R_RPS1_Msk                 (0xFUL << ETH_DMADS1R_RPS1_Pos)                      /*!< 0x000F0000 */
+#define ETH_DMADS1R_RPS1                     ETH_DMADS1R_RPS1_Msk                                /*!< DMA Channel 1 Receive Process State */
+#define ETH_DMADS1R_TPS1_Pos                 (20U)
+#define ETH_DMADS1R_TPS1_Msk                 (0xFUL << ETH_DMADS1R_TPS1_Pos)                      /*!< 0x00F00000 */
+#define ETH_DMADS1R_TPS1                     ETH_DMADS1R_TPS1_Msk                                /*!< DMA Channel 1 Transmit Process State */
+#define ETH_DMADS1R_TPS2_Pos                 (28U)
+#define ETH_DMADS1R_TPS2_Msk                 (0xFUL << ETH_DMADS1R_TPS2_Pos)                      /*!< 0xF0000000 */
+#define ETH_DMADS1R_TPS2                     ETH_DMADS1R_TPS2_Msk                                /*!< DMA Channel 2 Transmit Process State */
+
+/*****************  Bit definition for ETH_DMADS2R register  ******************/
+#define ETH_DMADS2R_TPS3_Pos                 (4U)
+#define ETH_DMADS2R_TPS3_Msk                 (0xFUL << ETH_DMADS2R_TPS3_Pos)                      /*!< 0x000000F0 */
+#define ETH_DMADS2R_TPS3                     ETH_DMADS2R_TPS3_Msk                                /*!< DMA Channel 3 Transmit Process State */
 
 /************  Bit definition for ETH_DMAA4TXACR register  *************/
 #define ETH_DMAA4TXACR_TDRC_Pos             (0U)
@@ -15236,6 +16262,55 @@ typedef struct
 #define ETH_DMAA4DACR_RDRC_2                (0x4UL << ETH_DMAA4DACR_RDRC_Pos)                    /*!< 0x00000400 */
 #define ETH_DMAA4DACR_RDRC_3                (0x8UL << ETH_DMAA4DACR_RDRC_Pos)                    /*!< 0x00000800 */
 
+/*****************  Bit definition for ETH_DMALPIEI register  *****************/
+#define ETH_DMALPIEI_LPIEI_Pos              (0U)
+#define ETH_DMALPIEI_LPIEI_Msk              (0xFUL << ETH_DMALPIEI_LPIEI_Pos)                    /*!< 0x0000000F */
+#define ETH_DMALPIEI_LPIEI                  ETH_DMALPIEI_LPIEI_Msk                              /*!< LPI Entry Interval */
+
+/***************  Bit definition for ETH_DMATBSCTRL0R register  ***************/
+#define ETH_DMATBSCTRL0R_FTOV_Pos           (0U)
+#define ETH_DMATBSCTRL0R_FTOV_Msk           (0x1UL << ETH_DMATBSCTRL0R_FTOV_Pos)                 /*!< 0x00000001 */
+#define ETH_DMATBSCTRL0R_FTOV               ETH_DMATBSCTRL0R_FTOV_Msk                           /*!< Fetch time offset valid */
+#define ETH_DMATBSCTRL0R_FGOS_Pos           (4U)
+#define ETH_DMATBSCTRL0R_FGOS_Msk           (0x7UL << ETH_DMATBSCTRL0R_FGOS_Pos)                 /*!< 0x00000070 */
+#define ETH_DMATBSCTRL0R_FGOS               ETH_DMATBSCTRL0R_FGOS_Msk                           /*!< Fetch GSN offset */
+#define ETH_DMATBSCTRL0R_FTOS_Pos           (8U)
+#define ETH_DMATBSCTRL0R_FTOS_Msk           (0xFFFFFFUL << ETH_DMATBSCTRL0R_FTOS_Pos)            /*!< 0xFFFFFF00 */
+#define ETH_DMATBSCTRL0R_FTOS               ETH_DMATBSCTRL0R_FTOS_Msk                           /*!< Fetch time offset */
+
+/***************  Bit definition for ETH_DMATBSCTRL1R register  ***************/
+#define ETH_DMATBSCTRL1R_FTOV_Pos           (0U)
+#define ETH_DMATBSCTRL1R_FTOV_Msk           (0x1UL << ETH_DMATBSCTRL1R_FTOV_Pos)                 /*!< 0x00000001 */
+#define ETH_DMATBSCTRL1R_FTOV               ETH_DMATBSCTRL1R_FTOV_Msk                           /*!< Fetch time offset valid */
+#define ETH_DMATBSCTRL1R_FGOS_Pos           (4U)
+#define ETH_DMATBSCTRL1R_FGOS_Msk           (0x7UL << ETH_DMATBSCTRL1R_FGOS_Pos)                 /*!< 0x00000070 */
+#define ETH_DMATBSCTRL1R_FGOS               ETH_DMATBSCTRL1R_FGOS_Msk                           /*!< Fetch GSN offset */
+#define ETH_DMATBSCTRL1R_FTOS_Pos           (8U)
+#define ETH_DMATBSCTRL1R_FTOS_Msk           (0xFFFFFFUL << ETH_DMATBSCTRL1R_FTOS_Pos)            /*!< 0xFFFFFF00 */
+#define ETH_DMATBSCTRL1R_FTOS               ETH_DMATBSCTRL1R_FTOS_Msk                           /*!< Fetch time offset */
+
+/***************  Bit definition for ETH_DMATBSCTRL2R register  ***************/
+#define ETH_DMATBSCTRL2R_FTOV_Pos           (0U)
+#define ETH_DMATBSCTRL2R_FTOV_Msk           (0x1UL << ETH_DMATBSCTRL2R_FTOV_Pos)                  /*!< 0x00000001 */
+#define ETH_DMATBSCTRL2R_FTOV               ETH_DMATBSCTRL2R_FTOV_Msk                           /*!< Fetch time offset valid */
+#define ETH_DMATBSCTRL2R_FGOS_Pos           (4U)
+#define ETH_DMATBSCTRL2R_FGOS_Msk           (0x7UL << ETH_DMATBSCTRL2R_FGOS_Pos)                  /*!< 0x00000070 */
+#define ETH_DMATBSCTRL2R_FGOS               ETH_DMATBSCTRL2R_FGOS_Msk                           /*!< Fetch GSN offset */
+#define ETH_DMATBSCTRL2R_FTOS_Pos           (8U)
+#define ETH_DMATBSCTRL2R_FTOS_Msk           (0xFFFFFFUL << ETH_DMATBSCTRL2R_FTOS_Pos)             /*!< 0xFFFFFF00 */
+#define ETH_DMATBSCTRL2R_FTOS               ETH_DMATBSCTRL2R_FTOS_Msk                           /*!< Fetch time offset */
+
+/***************  Bit definition for ETH_DMATBSCTRL3R register  ***************/
+#define ETH_DMATBSCTRL3R_FTOV_Pos           (0U)
+#define ETH_DMATBSCTRL3R_FTOV_Msk           (0x1UL << ETH_DMATBSCTRL3R_FTOV_Pos)                  /*!< 0x00000001 */
+#define ETH_DMATBSCTRL3R_FTOV               ETH_DMATBSCTRL3R_FTOV_Msk                           /*!< Fetch time offset valid */
+#define ETH_DMATBSCTRL3R_FGOS_Pos           (4U)
+#define ETH_DMATBSCTRL3R_FGOS_Msk           (0x7UL << ETH_DMATBSCTRL3R_FGOS_Pos)                  /*!< 0x00000070 */
+#define ETH_DMATBSCTRL3R_FGOS               ETH_DMATBSCTRL3R_FGOS_Msk                           /*!< Fetch GSN offset */
+#define ETH_DMATBSCTRL3R_FTOS_Pos           (8U)
+#define ETH_DMATBSCTRL3R_FTOS_Msk           (0xFFFFFFUL << ETH_DMATBSCTRL3R_FTOS_Pos)             /*!< 0xFFFFFF00 */
+#define ETH_DMATBSCTRL3R_FTOS               ETH_DMATBSCTRL3R_FTOS_Msk                           /*!< Fetch time offset */
+
 /**************  Bit definition for ETH_DMAC0CR register  **************/
 #define ETH_DMAC0CR_MSS_Pos                 (0U)
 #define ETH_DMAC0CR_MSS_Msk                 (0x3FFFUL << ETH_DMAC0CR_MSS_Pos)                    /*!< 0x00003FFF */
@@ -15300,6 +16375,15 @@ typedef struct
 #define ETH_DMAC0TXCR_TQOS_1                (0x2UL << ETH_DMAC0TXCR_TQOS_Pos)                    /*!< 0x02000000 */
 #define ETH_DMAC0TXCR_TQOS_2                (0x4UL << ETH_DMAC0TXCR_TQOS_Pos)                    /*!< 0x04000000 */
 #define ETH_DMAC0TXCR_TQOS_3                (0x8UL << ETH_DMAC0TXCR_TQOS_Pos)                    /*!< 0x08000000 */
+#define ETH_DMAC0TXCR_EDSE_Pos              (28U)
+#define ETH_DMAC0TXCR_EDSE_Msk              (0x1UL << ETH_DMAC0TXCR_EDSE_Pos)                    /*!< 0x10000000 */
+#define ETH_DMAC0TXCR_EDSE                  ETH_DMAC0TXCR_EDSE_Msk                              /*!< Enhanced Descriptor Enable */
+#define ETH_DMAC0TXCR_TFSEL0_Pos            (29U)
+#define ETH_DMAC0TXCR_TFSEL0_Msk            (0x1UL << ETH_DMAC0TXCR_TFSEL0_Pos)                  /*!< 0x20000000 */
+#define ETH_DMAC0TXCR_TFSEL0                ETH_DMAC0TXCR_TFSEL0_Msk                            /*!< TBS Fetch Select */
+#define ETH_DMAC0TXCR_TFSEL1_Pos            (30U)
+#define ETH_DMAC0TXCR_TFSEL1_Msk            (0x1UL << ETH_DMAC0TXCR_TFSEL1_Pos)                  /*!< 0x40000000 */
+#define ETH_DMAC0TXCR_TFSEL1                ETH_DMAC0TXCR_TFSEL1_Msk                            /*!< TBS Fetch Select */
 
 /*************  Bit definition for ETH_DMAC0RXCR register  *************/
 #define ETH_DMAC0RXCR_SR_Pos                (0U)
@@ -15507,6 +16591,9 @@ typedef struct
 #define ETH_DMAC0RXRLR_RDRL_7               (0x80UL << ETH_DMAC0RXRLR_RDRL_Pos)                  /*!< 0x00000080 */
 #define ETH_DMAC0RXRLR_RDRL_8               (0x100UL << ETH_DMAC0RXRLR_RDRL_Pos)                 /*!< 0x00000100 */
 #define ETH_DMAC0RXRLR_RDRL_9               (0x200UL << ETH_DMAC0RXRLR_RDRL_Pos)                 /*!< 0x00000200 */
+#define ETH_DMAC0RXRLR_ARBS_Pos             (17U)
+#define ETH_DMAC0RXRLR_ARBS_Msk             (0x7FUL << ETH_DMAC0RXRLR_ARBS_Pos)                   /*!< 0x00FE0000 */
+#define ETH_DMAC0RXRLR_ARBS                 ETH_DMAC0RXRLR_ARBS_Msk                             /*!< Alternate Receive Buffer Size */
 
 /*************  Bit definition for ETH_DMAC0IER register  **************/
 #define ETH_DMAC0IER_TIE_Pos                (0U)
@@ -15561,6 +16648,9 @@ typedef struct
 #define ETH_DMAC0RXIWTR_RWT_5               (0x20UL << ETH_DMAC0RXIWTR_RWT_Pos)                  /*!< 0x00000020 */
 #define ETH_DMAC0RXIWTR_RWT_6               (0x40UL << ETH_DMAC0RXIWTR_RWT_Pos)                  /*!< 0x00000040 */
 #define ETH_DMAC0RXIWTR_RWT_7               (0x80UL << ETH_DMAC0RXIWTR_RWT_Pos)                  /*!< 0x00000080 */
+#define ETH_DMAC0RXIWTR_RWTU_Pos            (16U)
+#define ETH_DMAC0RXIWTR_RWTU_Msk            (0x3UL << ETH_DMAC0RXIWTR_RWTU_Pos)                   /*!< 0x00030000 */
+#define ETH_DMAC0RXIWTR_RWTU                ETH_DMAC0RXIWTR_RWTU_Msk                            /*!< Receive Interrupt Watchdog Timer Count Units */
 
 /************  Bit definition for ETH_DMAC0SFCSR register  *************/
 #define ETH_DMAC0SFCSR_ESC_Pos              (0U)
@@ -15569,6 +16659,9 @@ typedef struct
 #define ETH_DMAC0SFCSR_ASC_Pos              (1U)
 #define ETH_DMAC0SFCSR_ASC_Msk              (0x1UL << ETH_DMAC0SFCSR_ASC_Pos)                    /*!< 0x00000002 */
 #define ETH_DMAC0SFCSR_ASC                  ETH_DMAC0SFCSR_ASC_Msk                              /*!< Advance Slot Check */
+#define ETH_DMAC0SFCSR_SIV_Pos              (4U)
+#define ETH_DMAC0SFCSR_SIV_Msk              (0xFFFUL << ETH_DMAC0SFCSR_SIV_Pos)                   /*!< 0x0000FFF0 */
+#define ETH_DMAC0SFCSR_SIV                  ETH_DMAC0SFCSR_SIV_Msk                              /*!< Slot Interval Value */
 #define ETH_DMAC0SFCSR_RSN_Pos              (16U)
 #define ETH_DMAC0SFCSR_RSN_Msk              (0xFUL << ETH_DMAC0SFCSR_RSN_Pos)                    /*!< 0x000F0000 */
 #define ETH_DMAC0SFCSR_RSN                  ETH_DMAC0SFCSR_RSN_Msk                              /*!< Reference Slot Number */
@@ -15841,6 +16934,9 @@ typedef struct
 #define ETH_DMAC1TXCR_TSE_Pos               (12U)
 #define ETH_DMAC1TXCR_TSE_Msk               (0x1UL << ETH_DMAC1TXCR_TSE_Pos)                     /*!< 0x00001000 */
 #define ETH_DMAC1TXCR_TSE                   ETH_DMAC1TXCR_TSE_Msk                               /*!< TCP Segmentation Enabled */
+#define ETH_DMAC1TXCR_IPBL_Pos              (15U)
+#define ETH_DMAC1TXCR_IPBL_Msk              (0x1UL << ETH_DMAC1TXCR_IPBL_Pos)                    /*!< 0x00008000 */
+#define ETH_DMAC1TXCR_IPBL                  ETH_DMAC1TXCR_IPBL_Msk                              /*!< Ignore PBL Requirement */
 #define ETH_DMAC1TXCR_TXPBL_Pos             (16U)
 #define ETH_DMAC1TXCR_TXPBL_Msk             (0x3FUL << ETH_DMAC1TXCR_TXPBL_Pos)                  /*!< 0x003F0000 */
 #define ETH_DMAC1TXCR_TXPBL                 ETH_DMAC1TXCR_TXPBL_Msk                             /*!< Transmit Programmable Burst Length */
@@ -15853,10 +16949,36 @@ typedef struct
 #define ETH_DMAC1TXCR_TQOS_Pos              (24U)
 #define ETH_DMAC1TXCR_TQOS_Msk              (0xFUL << ETH_DMAC1TXCR_TQOS_Pos)                    /*!< 0x0F000000 */
 #define ETH_DMAC1TXCR_TQOS                  ETH_DMAC1TXCR_TQOS_Msk                              /*!< Transmit QOS. */
+#define ETH_DMAC1TXCR_EDSE_Pos              (28U)
+#define ETH_DMAC1TXCR_EDSE_Msk              (0x1UL << ETH_DMAC1TXCR_EDSE_Pos)                     /*!< 0x10000000 */
+#define ETH_DMAC1TXCR_EDSE                  ETH_DMAC1TXCR_EDSE_Msk                              /*!< Enhanced Descriptor Enable */
+#define ETH_DMAC1TXCR_TFSEL0_Pos            (29U)
+#define ETH_DMAC1TXCR_TFSEL0_Msk            (0x1UL << ETH_DMAC1TXCR_TFSEL0_Pos)                   /*!< 0x20000000 */
+#define ETH_DMAC1TXCR_TFSEL0                ETH_DMAC1TXCR_TFSEL0_Msk                            /*!< TBS Fetch Select */
+#define ETH_DMAC1TXCR_TFSEL1_Pos            (30U)
+#define ETH_DMAC1TXCR_TFSEL1_Msk            (0x1UL << ETH_DMAC1TXCR_TFSEL1_Pos)                   /*!< 0x40000000 */
+#define ETH_DMAC1TXCR_TFSEL1                ETH_DMAC1TXCR_TFSEL1_Msk                            /*!< TBS Fetch Select */
 #define ETH_DMAC1TXCR_TQOS_0                (0x1UL << ETH_DMAC1TXCR_TQOS_Pos)                    /*!< 0x01000000 */
 #define ETH_DMAC1TXCR_TQOS_1                (0x2UL << ETH_DMAC1TXCR_TQOS_Pos)                    /*!< 0x02000000 */
 #define ETH_DMAC1TXCR_TQOS_2                (0x4UL << ETH_DMAC1TXCR_TQOS_Pos)                    /*!< 0x04000000 */
 #define ETH_DMAC1TXCR_TQOS_3                (0x8UL << ETH_DMAC1TXCR_TQOS_Pos)                    /*!< 0x08000000 */
+
+/****************  Bit definition for ETH_DMAC1RXCR register  *****************/
+#define ETH_DMAC1RXCR_SR_Pos                (0U)
+#define ETH_DMAC1RXCR_SR_Msk                (0x1UL << ETH_DMAC1RXCR_SR_Pos)                      /*!< 0x00000001 */
+#define ETH_DMAC1RXCR_SR                    ETH_DMAC1RXCR_SR_Msk                                /*!< Start or Stop Receive */
+#define ETH_DMAC1RXCR_RBSZ_Pos              (1U)
+#define ETH_DMAC1RXCR_RBSZ_Msk              (0x3FFFUL << ETH_DMAC1RXCR_RBSZ_Pos)                  /*!< 0x00007FFE */
+#define ETH_DMAC1RXCR_RBSZ                  ETH_DMAC1RXCR_RBSZ_Msk                              /*!< Receive Buffer size */
+#define ETH_DMAC1RXCR_RXPBL_Pos             (16U)
+#define ETH_DMAC1RXCR_RXPBL_Msk             (0x3FUL << ETH_DMAC1RXCR_RXPBL_Pos)                   /*!< 0x003F0000 */
+#define ETH_DMAC1RXCR_RXPBL                 ETH_DMAC1RXCR_RXPBL_Msk                             /*!< Receive Programmable Burst Length */
+#define ETH_DMAC1RXCR_RQOS_Pos              (24U)
+#define ETH_DMAC1RXCR_RQOS_Msk              (0xFUL << ETH_DMAC1RXCR_RQOS_Pos)                     /*!< 0x0F000000 */
+#define ETH_DMAC1RXCR_RQOS                  ETH_DMAC1RXCR_RQOS_Msk                              /*!< Rx AXI4 QOS */
+#define ETH_DMAC1RXCR_RPF_Pos               (31U)
+#define ETH_DMAC1RXCR_RPF_Msk               (0x1UL << ETH_DMAC1RXCR_RPF_Pos)                     /*!< 0x80000000 */
+#define ETH_DMAC1RXCR_RPF                   ETH_DMAC1RXCR_RPF_Msk                               /*!< DMA Rx Channel x Packet Flush */
 
 /************  Bit definition for ETH_DMAC1TXDLAR register  ************/
 #define ETH_DMAC1TXDLAR_TDESLA_Pos          (3U)
@@ -15892,6 +17014,11 @@ typedef struct
 #define ETH_DMAC1TXDLAR_TDESLA_27           (0x8000000UL << ETH_DMAC1TXDLAR_TDESLA_Pos)          /*!< 0x40000000 */
 #define ETH_DMAC1TXDLAR_TDESLA_28           (0x10000000UL << ETH_DMAC1TXDLAR_TDESLA_Pos)         /*!< 0x80000000 */
 
+/***************  Bit definition for ETH_DMAC1RXDLAR register  ****************/
+#define ETH_DMAC1RXDLAR_RDESLA_Pos          (0U)
+#define ETH_DMAC1RXDLAR_RDESLA_Msk          (0xFFFFFFFFUL << ETH_DMAC1RXDLAR_RDESLA_Pos)         /*!< 0xFFFFFFFF */
+#define ETH_DMAC1RXDLAR_RDESLA              ETH_DMAC1RXDLAR_RDESLA_Msk                          /*!< Start of Receive List */
+
 /************  Bit definition for ETH_DMAC1TXDTPR register  ************/
 #define ETH_DMAC1TXDTPR_TDT_Pos             (3U)
 #define ETH_DMAC1TXDTPR_TDT_Msk             (0x1FFFFFFFUL << ETH_DMAC1TXDTPR_TDT_Pos)            /*!< 0xFFFFFFF8 */
@@ -15926,6 +17053,11 @@ typedef struct
 #define ETH_DMAC1TXDTPR_TDT_27              (0x8000000UL << ETH_DMAC1TXDTPR_TDT_Pos)             /*!< 0x40000000 */
 #define ETH_DMAC1TXDTPR_TDT_28              (0x10000000UL << ETH_DMAC1TXDTPR_TDT_Pos)            /*!< 0x80000000 */
 
+/***************  Bit definition for ETH_DMAC1RXDTPR register  ****************/
+#define ETH_DMAC1RXDTPR_RDT_Pos             (0U)
+#define ETH_DMAC1RXDTPR_RDT_Msk             (0xFFFFFFFFUL << ETH_DMAC1RXDTPR_RDT_Pos)            /*!< 0xFFFFFFFF */
+#define ETH_DMAC1RXDTPR_RDT                 ETH_DMAC1RXDTPR_RDT_Msk                             /*!< Receive Descriptor Tail Pointer */
+
 /************  Bit definition for ETH_DMAC1TXRLR register  *************/
 #define ETH_DMAC1TXRLR_TDRL_Pos             (0U)
 #define ETH_DMAC1TXRLR_TDRL_Msk             (0x3FFUL << ETH_DMAC1TXRLR_TDRL_Pos)                 /*!< 0x000003FF */
@@ -15940,6 +17072,14 @@ typedef struct
 #define ETH_DMAC1TXRLR_TDRL_7               (0x80UL << ETH_DMAC1TXRLR_TDRL_Pos)                  /*!< 0x00000080 */
 #define ETH_DMAC1TXRLR_TDRL_8               (0x100UL << ETH_DMAC1TXRLR_TDRL_Pos)                 /*!< 0x00000100 */
 #define ETH_DMAC1TXRLR_TDRL_9               (0x200UL << ETH_DMAC1TXRLR_TDRL_Pos)                 /*!< 0x00000200 */
+
+/****************  Bit definition for ETH_DMAC1RXRLR register  ****************/
+#define ETH_DMAC1RXRLR_RDRL_Pos              (0U)
+#define ETH_DMAC1RXRLR_RDRL_Msk              (0x3FFUL << ETH_DMAC1RXRLR_RDRL_Pos)                 /*!< 0x000003FF */
+#define ETH_DMAC1RXRLR_RDRL                  ETH_DMAC1RXRLR_RDRL_Msk                            /*!< Receive Descriptor Ring Length */
+#define ETH_DMAC1RXRLR_ARBS_Pos              (17U)
+#define ETH_DMAC1RXRLR_ARBS_Msk              (0x7FUL << ETH_DMAC1RXRLR_ARBS_Pos)                  /*!< 0x00FE0000 */
+#define ETH_DMAC1RXRLR_ARBS                  ETH_DMAC1RXRLR_ARBS_Msk                            /*!< Alternate Receive Buffer Size */
 
 /*************  Bit definition for ETH_DMAC1IER register  **************/
 #define ETH_DMAC1IER_TIE_Pos                (0U)
@@ -15982,6 +17122,14 @@ typedef struct
 #define ETH_DMAC1IER_NIE_Msk                (0x1UL << ETH_DMAC1IER_NIE_Pos)                      /*!< 0x00008000 */
 #define ETH_DMAC1IER_NIE                    ETH_DMAC1IER_NIE_Msk                                /*!< Normal Interrupt Summary Enable */
 
+/***************  Bit definition for ETH_DMAC1RXIWTR register  ****************/
+#define ETH_DMAC1RXIWTR_RWT_Pos             (0U)
+#define ETH_DMAC1RXIWTR_RWT_Msk             (0xFFUL << ETH_DMAC1RXIWTR_RWT_Pos)                   /*!< 0x000000FF */
+#define ETH_DMAC1RXIWTR_RWT                 ETH_DMAC1RXIWTR_RWT_Msk                             /*!< Receive Interrupt Watchdog Timer Count */
+#define ETH_DMAC1RXIWTR_RWTU_Pos            (16U)
+#define ETH_DMAC1RXIWTR_RWTU_Msk            (0x3UL << ETH_DMAC1RXIWTR_RWTU_Pos)                   /*!< 0x00030000 */
+#define ETH_DMAC1RXIWTR_RWTU                ETH_DMAC1RXIWTR_RWTU_Msk                            /*!< Receive Interrupt Watchdog Timer Count Units */
+
 /************  Bit definition for ETH_DMAC1SFCSR register  *************/
 #define ETH_DMAC1SFCSR_ESC_Pos              (0U)
 #define ETH_DMAC1SFCSR_ESC_Msk              (0x1UL << ETH_DMAC1SFCSR_ESC_Pos)                    /*!< 0x00000001 */
@@ -15989,6 +17137,9 @@ typedef struct
 #define ETH_DMAC1SFCSR_ASC_Pos              (1U)
 #define ETH_DMAC1SFCSR_ASC_Msk              (0x1UL << ETH_DMAC1SFCSR_ASC_Pos)                    /*!< 0x00000002 */
 #define ETH_DMAC1SFCSR_ASC                  ETH_DMAC1SFCSR_ASC_Msk                              /*!< Advance Slot Check */
+#define ETH_DMAC1SFCSR_SIV_Pos              (4U)
+#define ETH_DMAC1SFCSR_SIV_Msk              (0xFFFUL << ETH_DMAC1SFCSR_SIV_Pos)                   /*!< 0x0000FFF0 */
+#define ETH_DMAC1SFCSR_SIV                  ETH_DMAC1SFCSR_SIV_Msk                              /*!< Slot Interval Value */
 #define ETH_DMAC1SFCSR_RSN_Pos              (16U)
 #define ETH_DMAC1SFCSR_RSN_Msk              (0xFUL << ETH_DMAC1SFCSR_RSN_Pos)                    /*!< 0x000F0000 */
 #define ETH_DMAC1SFCSR_RSN                  ETH_DMAC1SFCSR_RSN_Msk                              /*!< Reference Slot Number */
@@ -16034,6 +17185,11 @@ typedef struct
 #define ETH_DMAC1CATXDR_CURTDESAPTR_30      (0x40000000UL << ETH_DMAC1CATXDR_CURTDESAPTR_Pos)    /*!< 0x40000000 */
 #define ETH_DMAC1CATXDR_CURTDESAPTR_31      (0x80000000UL << ETH_DMAC1CATXDR_CURTDESAPTR_Pos)    /*!< 0x80000000 */
 
+/***************  Bit definition for ETH_DMAC1CARXDR register  ****************/
+#define ETH_DMAC1CARXDR_CURRDESAPTR_Pos     (0U)
+#define ETH_DMAC1CARXDR_CURRDESAPTR_Msk     (0xFFFFFFFFUL << ETH_DMAC1CARXDR_CURRDESAPTR_Pos)    /*!< 0xFFFFFFFF */
+#define ETH_DMAC1CARXDR_CURRDESAPTR         ETH_DMAC1CARXDR_CURRDESAPTR_Msk                     /*!< Application Receive Descriptor Address Pointer */
+
 /************  Bit definition for ETH_DMAC1CATXBR register  ************/
 #define ETH_DMAC1CATXBR_CURTBUFAPTR_Pos     (0U)
 #define ETH_DMAC1CATXBR_CURTBUFAPTR_Msk     (0xFFFFFFFFUL << ETH_DMAC1CATXBR_CURTBUFAPTR_Pos)    /*!< 0xFFFFFFFF */
@@ -16070,6 +17226,11 @@ typedef struct
 #define ETH_DMAC1CATXBR_CURTBUFAPTR_29      (0x20000000UL << ETH_DMAC1CATXBR_CURTBUFAPTR_Pos)    /*!< 0x20000000 */
 #define ETH_DMAC1CATXBR_CURTBUFAPTR_30      (0x40000000UL << ETH_DMAC1CATXBR_CURTBUFAPTR_Pos)    /*!< 0x40000000 */
 #define ETH_DMAC1CATXBR_CURTBUFAPTR_31      (0x80000000UL << ETH_DMAC1CATXBR_CURTBUFAPTR_Pos)    /*!< 0x80000000 */
+
+/************  Bit definition for ETH_DMAC1CARXBR register  *************/
+#define ETH_DMAC1CARXBR_CURRBUFAPTR_Pos     (0U)
+#define ETH_DMAC1CARXBR_CURRBUFAPTR_Msk     (0xFFFFFFFFUL << ETH_DMAC1CARXBR_CURRBUFAPTR_Pos)    /*!< 0xFFFFFFFF */
+#define ETH_DMAC1CARXBR_CURRBUFAPTR         ETH_DMAC1CARXBR_CURRBUFAPTR_Msk                     /*!< Application Receive Buffer Address Pointer */
 
 /**************  Bit definition for ETH_DMAC1SR register  **************/
 #define ETH_DMAC1SR_TI_Pos                  (0U)
@@ -16143,344 +17304,345 @@ typedef struct
 #define ETH_DMAC1MFCR_MFCO_Msk              (0x1UL << ETH_DMAC1MFCR_MFCO_Pos)                    /*!< 0x00008000 */
 #define ETH_DMAC1MFCR_MFCO                  ETH_DMAC1MFCR_MFCO_Msk                              /*!< Overflow status of the MFC Counter */
 
-/******************************************************************************/
-/*                                                                            */
-/*                Ethernet ACM MSG Registers bits definitions                 */
-/*                                                                            */
-/******************************************************************************/
+/*****************  Bit definition for ETH_DMAC2CR register  ******************/
+#define ETH_DMAC2CR_MSS_Pos                 (0U)
+#define ETH_DMAC2CR_MSS_Msk                 (0x3FFFUL << ETH_DMAC2CR_MSS_Pos)                     /*!< 0x00003FFF */
+#define ETH_DMAC2CR_MSS                     ETH_DMAC2CR_MSS_Msk                                 /*!< Maximum Segment Size */
+#define ETH_DMAC2CR_PBLX8_Pos               (16U)
+#define ETH_DMAC2CR_PBLX8_Msk               (0x1UL << ETH_DMAC2CR_PBLX8_Pos)                     /*!< 0x00010000 */
+#define ETH_DMAC2CR_PBLX8                   ETH_DMAC2CR_PBLX8_Msk                               /*!< 8xPBL mode */
+#define ETH_DMAC2CR_DSL_Pos                 (18U)
+#define ETH_DMAC2CR_DSL_Msk                 (0x7UL << ETH_DMAC2CR_DSL_Pos)                        /*!< 0x001C0000 */
+#define ETH_DMAC2CR_DSL                     ETH_DMAC2CR_DSL_Msk                                 /*!< Descriptor Skip Length */
 
-/******************  Bit definition for ETH_ACMMSG_MSGBUFDESC register  *******************/
-#define ETH_ACMMSG_MSGBUFDESC_OFFSET_Pos    (0U)
-#define ETH_ACMMSG_MSGBUFDESC_OFFSET_Msk    (0xFFFFUL << ETH_ACMMSG_MSGBUFDESC_OFFSET_Pos)         /*!< 0x0000FFFF */
-#define ETH_ACMMSG_MSGBUFDESC_OFFSET        ETH_ACMMSG_MSGBUFDESC_OFFSET_Msk                      /*!< Buffer offset */
-#define ETH_ACMMSG_MSGBUFDESC_RST_Pos       (19U)
-#define ETH_ACMMSG_MSGBUFDESC_RST_Msk       (0x1UL << ETH_ACMMSG_MSGBUFDESC_RST_Pos)               /*!< 0x00080000 */
-#define ETH_ACMMSG_MSGBUFDESC_RST           ETH_ACMMSG_MSGBUFDESC_RST_Msk                         /*!< Buffer reset */
-#define ETH_ACMMSG_MSGBUFDESC_TYPE_Pos      (20U)
-#define ETH_ACMMSG_MSGBUFDESC_TYPE_Msk      (0x1UL << ETH_ACMMSG_MSGBUFDESC_TYPE_Pos)              /*!< 0x00100000 */
-#define ETH_ACMMSG_MSGBUFDESC_TYPE          ETH_ACMMSG_MSGBUFDESC_TYPE_Msk                        /*!< Buffer type */
-#define ETH_ACMMSG_MSGBUFDESC_SUBSIZE_Pos   (21U)
-#define ETH_ACMMSG_MSGBUFDESC_SUBSIZE_Msk   (0x1FFUL << ETH_ACMMSG_MSGBUFDESC_SUBSIZE_Pos)         /*!< 0x3FE00000 */
-#define ETH_ACMMSG_MSGBUFDESC_SUBSIZE       ETH_ACMMSG_MSGBUFDESC_SUBSIZE_Msk                     /*!< Sub Buffer size */
-#define ETH_ACMMSG_MSGBUFDESC_VALID_Pos     (31U)
-#define ETH_ACMMSG_MSGBUFDESC_VALID_Msk     (0x1UL << ETH_ACMMSG_MSGBUFDESC_VALID_Pos)             /*!< 0x80000000 */
-#define ETH_ACMMSG_MSGBUFDESC_VALID         ETH_ACMMSG_MSGBUFDESC_VALID_Msk                       /*!< Valid */
+/****************  Bit definition for ETH_DMAC2TXCR register  *****************/
+#define ETH_DMAC2TXCR_ST_Pos                (0U)
+#define ETH_DMAC2TXCR_ST_Msk                (0x1UL << ETH_DMAC2TXCR_ST_Pos)                      /*!< 0x00000001 */
+#define ETH_DMAC2TXCR_ST                    ETH_DMAC2TXCR_ST_Msk                                /*!< Start or Stop Transmission Command */
+#define ETH_DMAC2TXCR_TCW_Pos               (1U)
+#define ETH_DMAC2TXCR_TCW_Msk               (0x7UL << ETH_DMAC2TXCR_TCW_Pos)                      /*!< 0x0000000E */
+#define ETH_DMAC2TXCR_TCW                   ETH_DMAC2TXCR_TCW_Msk                               /*!< Transmit Channel Weight */
+#define ETH_DMAC2TXCR_OSF_Pos               (4U)
+#define ETH_DMAC2TXCR_OSF_Msk               (0x1UL << ETH_DMAC2TXCR_OSF_Pos)                     /*!< 0x00000010 */
+#define ETH_DMAC2TXCR_OSF                   ETH_DMAC2TXCR_OSF_Msk                               /*!< Operate on Second Packet */
+#define ETH_DMAC2TXCR_TSE_Pos               (12U)
+#define ETH_DMAC2TXCR_TSE_Msk               (0x1UL << ETH_DMAC2TXCR_TSE_Pos)                     /*!< 0x00001000 */
+#define ETH_DMAC2TXCR_TSE                   ETH_DMAC2TXCR_TSE_Msk                               /*!< TCP Segmentation Enabled */
+#define ETH_DMAC2TXCR_IPBL_Pos              (15U)
+#define ETH_DMAC2TXCR_IPBL_Msk              (0x1UL << ETH_DMAC2TXCR_IPBL_Pos)                    /*!< 0x00008000 */
+#define ETH_DMAC2TXCR_IPBL                  ETH_DMAC2TXCR_IPBL_Msk                              /*!< Ignore PBL Requirement */
+#define ETH_DMAC2TXCR_TXPBL_Pos             (16U)
+#define ETH_DMAC2TXCR_TXPBL_Msk             (0x3FUL << ETH_DMAC2TXCR_TXPBL_Pos)                   /*!< 0x003F0000 */
+#define ETH_DMAC2TXCR_TXPBL                 ETH_DMAC2TXCR_TXPBL_Msk                             /*!< Transmit Programmable Burst Length */
+#define ETH_DMAC2TXCR_TQOS_Pos              (24U)
+#define ETH_DMAC2TXCR_TQOS_Msk              (0xFUL << ETH_DMAC2TXCR_TQOS_Pos)                     /*!< 0x0F000000 */
+#define ETH_DMAC2TXCR_TQOS                  ETH_DMAC2TXCR_TQOS_Msk                              /*!< Transmit QOS */
+#define ETH_DMAC2TXCR_EDSE_Pos              (28U)
+#define ETH_DMAC2TXCR_EDSE_Msk              (0x1UL << ETH_DMAC2TXCR_EDSE_Pos)                    /*!< 0x10000000 */
+#define ETH_DMAC2TXCR_EDSE                  ETH_DMAC2TXCR_EDSE_Msk                              /*!< Enhanced Descriptor Enable */
+#define ETH_DMAC2TXCR_TFSEL0_Pos            (29U)
+#define ETH_DMAC2TXCR_TFSEL0_Msk            (0x1UL << ETH_DMAC2TXCR_TFSEL0_Pos)                  /*!< 0x20000000 */
+#define ETH_DMAC2TXCR_TFSEL0                ETH_DMAC2TXCR_TFSEL0_Msk                            /*!< TBS Fetch Select */
+#define ETH_DMAC2TXCR_TFSEL1_Pos            (30U)
+#define ETH_DMAC2TXCR_TFSEL1_Msk            (0x1UL << ETH_DMAC2TXCR_TFSEL1_Pos)                  /*!< 0x40000000 */
+#define ETH_DMAC2TXCR_TFSEL1                ETH_DMAC2TXCR_TFSEL1_Msk                            /*!< TBS Fetch Select */
 
-/******************  Bit definition for ETH_ACMMSG_LOCKCTRLLOW register  *******************/
-#define ETH_ACMMSG_LOCKCTRLLOW_Pos          (0U)
-#define ETH_ACMMSG_LOCKCTRLLOW_Msk          (0xFFFFFFFFUL << ETHH_ACMMSG_LOCKCTRLLOW_Pos)   /*!< 0xFFFFFFFF */
-#define ETH_ACMMSG_LOCKCTRLLOW              ETHH_ACMMSG_LOCKCTRLLOW_Msk                    /*!< Locking control low */
-#define ETH_ACMMSG_LOCKCTRLLOW_0            (0x1UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)           /*!< 0x00000001 */
-#define ETH_ACMMSG_LOCKCTRLLOW_1            (0x2UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)           /*!< 0x00000002 */
-#define ETH_ACMMSG_LOCKCTRLLOW_2            (0x4UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)           /*!< 0x00000004 */
-#define ETH_ACMMSG_LOCKCTRLLOW_3            (0x8UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)           /*!< 0x00000008 */
-#define ETH_ACMMSG_LOCKCTRLLOW_4            (0x10UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)          /*!< 0x00000010 */
-#define ETH_ACMMSG_LOCKCTRLLOW_5            (0x20UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)          /*!< 0x00000020 */
-#define ETH_ACMMSG_LOCKCTRLLOW_6            (0x40UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)          /*!< 0x00000040 */
-#define ETH_ACMMSG_LOCKCTRLLOW_7            (0x80UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)          /*!< 0x00000080 */
-#define ETH_ACMMSG_LOCKCTRLLOW_8            (0x100UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)         /*!< 0x00000100 */
-#define ETH_ACMMSG_LOCKCTRLLOW_9            (0x200UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)         /*!< 0x00000200 */
-#define ETH_ACMMSG_LOCKCTRLLOW_10           (0x400UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)         /*!< 0x00000400 */
-#define ETH_ACMMSG_LOCKCTRLLOW_11           (0x800UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)         /*!< 0x00000800 */
-#define ETH_ACMMSG_LOCKCTRLLOW_12           (0x1000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)        /*!< 0x00001000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_13           (0x2000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)        /*!< 0x00002000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_14           (0x4000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)        /*!< 0x00004000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_15           (0x8000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)        /*!< 0x00008000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_16           (0x10000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)       /*!< 0x00010000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_17           (0x20000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)       /*!< 0x00020000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_18           (0x40000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)       /*!< 0x00040000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_19           (0x80000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)       /*!< 0x00080000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_20           (0x100000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)      /*!< 0x00100000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_21           (0x200000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)      /*!< 0x00200000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_22           (0x400000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)      /*!< 0x00400000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_23           (0x800000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)      /*!< 0x00800000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_24           (0x1000000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)     /*!< 0x01000000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_25           (0x2000000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)     /*!< 0x02000000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_26           (0x4000000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)     /*!< 0x04000000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_27           (0x8000000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)     /*!< 0x08000000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_28           (0x10000000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)    /*!< 0x10000000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_29           (0x20000000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)    /*!< 0x20000000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_30           (0x40000000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)    /*!< 0x40000000 */
-#define ETH_ACMMSG_LOCKCTRLLOW_31           (0x80000000UL << ETH_ACMMSG_LOCKCTRLLOW_Pos)    /*!< 0x80000000 */
+/***************  Bit definition for ETH_DMAC2TXDLAR register  ****************/
+#define ETH_DMAC2TXDLAR_TDESLA_Pos          (0U)
+#define ETH_DMAC2TXDLAR_TDESLA_Msk          (0xFFFFFFFFUL << ETH_DMAC2TXDLAR_TDESLA_Pos)         /*!< 0xFFFFFFFF */
+#define ETH_DMAC2TXDLAR_TDESLA              ETH_DMAC2TXDLAR_TDESLA_Msk                          /*!< Start of Transmit List */
 
-/******************  Bit definition for ETH_ACMMSG_LOCKCTRLHIGH register  *******************/
-#define ETH_ACMMSG_LOCKCTRLHIGH_Pos         (0U)
-#define ETH_ACMMSG_LOCKCTRLHIGH_Msk         (0xFFFFFFFFUL << ETHH_ACMMSG_LOCKCTRLHIGH_Pos)   /*!< 0xFFFFFFFF */
-#define ETH_ACMMSG_LOCKCTRLHIGH             ETHH_ACMMSG_LOCKCTRLHIGH_Msk                    /*!< Locking control high */
-#define ETH_ACMMSG_LOCKCTRLHIGH_0           (0x1UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)           /*!< 0x00000001 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_1           (0x2UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)           /*!< 0x00000002 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_2           (0x4UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)           /*!< 0x00000004 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_3           (0x8UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)           /*!< 0x00000008 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_4           (0x10UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)          /*!< 0x00000010 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_5           (0x20UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)          /*!< 0x00000020 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_6           (0x40UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)          /*!< 0x00000040 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_7           (0x80UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)          /*!< 0x00000080 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_8           (0x100UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)         /*!< 0x00000100 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_9           (0x200UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)         /*!< 0x00000200 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_10          (0x400UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)         /*!< 0x00000400 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_11          (0x800UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)         /*!< 0x00000800 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_12          (0x1000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)        /*!< 0x00001000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_13          (0x2000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)        /*!< 0x00002000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_14          (0x4000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)        /*!< 0x00004000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_15          (0x8000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)        /*!< 0x00008000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_16          (0x10000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)       /*!< 0x00010000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_17          (0x20000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)       /*!< 0x00020000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_18          (0x40000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)       /*!< 0x00040000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_19          (0x80000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)       /*!< 0x00080000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_20          (0x100000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)      /*!< 0x00100000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_21          (0x200000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)      /*!< 0x00200000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_22          (0x400000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)      /*!< 0x00400000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_23          (0x800000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)      /*!< 0x00800000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_24          (0x1000000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)     /*!< 0x01000000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_25          (0x2000000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)     /*!< 0x02000000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_26          (0x4000000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)     /*!< 0x04000000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_27          (0x8000000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)     /*!< 0x08000000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_28          (0x10000000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)    /*!< 0x10000000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_29          (0x20000000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)    /*!< 0x20000000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_30          (0x40000000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)    /*!< 0x40000000 */
-#define ETH_ACMMSG_LOCKCTRLHIGH_31          (0x80000000UL << ETH_ACMMSG_LOCKCTRLHIGH_Pos)    /*!< 0x80000000 */
+/***************  Bit definition for ETH_DMAC2TXDTPR register  ****************/
+#define ETH_DMAC2TXDTPR_TDT_Pos             (0U)
+#define ETH_DMAC2TXDTPR_TDT_Msk             (0xFFFFFFFFUL << ETH_DMAC2TXDTPR_TDT_Pos)            /*!< 0xFFFFFFFF */
+#define ETH_DMAC2TXDTPR_TDT                 ETH_DMAC2TXDTPR_TDT_Msk                             /*!< Transmit Descriptor Tail Pointer */
 
-/******************  Bit definition for ETH_ACMMSG_RESETCTRLLOW register  *******************/
-#define ETH_ACMMSG_RESETCTRLLOW_Pos         (0U)
-#define ETH_ACMMSG_RESETCTRLLOW_Msk         (0xFFFFFFFFUL << ETH_ACMMSG_RESETCTRLLOW_Pos)    /*!< 0xFFFFFFFF */
-#define ETH_ACMMSG_RESETCTRLLOW             ETH_ACMMSG_RESETCTRLLOW_Msk                     /*!< Reset control low */
-#define ETH_ACMMSG_RESETCTRLLOW_0           (0x1UL << ETH_ACMMSG_RESETCTRLLOW_Pos)           /*!< 0x00000001 */
-#define ETH_ACMMSG_RESETCTRLLOW_1           (0x2UL << ETH_ACMMSG_RESETCTRLLOW_Pos)           /*!< 0x00000002 */
-#define ETH_ACMMSG_RESETCTRLLOW_2           (0x4UL << ETH_ACMMSG_RESETCTRLLOW_Pos)           /*!< 0x00000004 */
-#define ETH_ACMMSG_RESETCTRLLOW_3           (0x8UL << ETH_ACMMSG_RESETCTRLLOW_Pos)           /*!< 0x00000008 */
-#define ETH_ACMMSG_RESETCTRLLOW_4           (0x10UL << ETH_ACMMSG_RESETCTRLLOW_Pos)          /*!< 0x00000010 */
-#define ETH_ACMMSG_RESETCTRLLOW_5           (0x20UL << ETH_ACMMSG_RESETCTRLLOW_Pos)          /*!< 0x00000020 */
-#define ETH_ACMMSG_RESETCTRLLOW_6           (0x40UL << ETH_ACMMSG_RESETCTRLLOW_Pos)          /*!< 0x00000040 */
-#define ETH_ACMMSG_RESETCTRLLOW_7           (0x80UL << ETH_ACMMSG_RESETCTRLLOW_Pos)          /*!< 0x00000080 */
-#define ETH_ACMMSG_RESETCTRLLOW_8           (0x100UL << ETH_ACMMSG_RESETCTRLLOW_Pos)         /*!< 0x00000100 */
-#define ETH_ACMMSG_RESETCTRLLOW_9           (0x200UL << ETH_ACMMSG_RESETCTRLLOW_Pos)         /*!< 0x00000200 */
-#define ETH_ACMMSG_RESETCTRLLOW_10          (0x400UL << ETH_ACMMSG_RESETCTRLLOW_Pos)         /*!< 0x00000400 */
-#define ETH_ACMMSG_RESETCTRLLOW_11          (0x800UL << ETH_ACMMSG_RESETCTRLLOW_Pos)         /*!< 0x00000800 */
-#define ETH_ACMMSG_RESETCTRLLOW_12          (0x1000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)        /*!< 0x00001000 */
-#define ETH_ACMMSG_RESETCTRLLOW_13          (0x2000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)        /*!< 0x00002000 */
-#define ETH_ACMMSG_RESETCTRLLOW_14          (0x4000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)        /*!< 0x00004000 */
-#define ETH_ACMMSG_RESETCTRLLOW_15          (0x8000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)        /*!< 0x00008000 */
-#define ETH_ACMMSG_RESETCTRLLOW_16          (0x10000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)       /*!< 0x00010000 */
-#define ETH_ACMMSG_RESETCTRLLOW_17          (0x20000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)       /*!< 0x00020000 */
-#define ETH_ACMMSG_RESETCTRLLOW_18          (0x40000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)       /*!< 0x00040000 */
-#define ETH_ACMMSG_RESETCTRLLOW_19          (0x80000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)       /*!< 0x00080000 */
-#define ETH_ACMMSG_RESETCTRLLOW_20          (0x100000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)      /*!< 0x00100000 */
-#define ETH_ACMMSG_RESETCTRLLOW_21          (0x200000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)      /*!< 0x00200000 */
-#define ETH_ACMMSG_RESETCTRLLOW_22          (0x400000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)      /*!< 0x00400000 */
-#define ETH_ACMMSG_RESETCTRLLOW_23          (0x800000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)      /*!< 0x00800000 */
-#define ETH_ACMMSG_RESETCTRLLOW_24          (0x1000000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)     /*!< 0x01000000 */
-#define ETH_ACMMSG_RESETCTRLLOW_25          (0x2000000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)     /*!< 0x02000000 */
-#define ETH_ACMMSG_RESETCTRLLOW_26          (0x4000000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)     /*!< 0x04000000 */
-#define ETH_ACMMSG_RESETCTRLLOW_27          (0x8000000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)     /*!< 0x08000000 */
-#define ETH_ACMMSG_RESETCTRLLOW_28          (0x10000000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)    /*!< 0x10000000 */
-#define ETH_ACMMSG_RESETCTRLLOW_29          (0x20000000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)    /*!< 0x20000000 */
-#define ETH_ACMMSG_RESETCTRLLOW_30          (0x40000000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)    /*!< 0x40000000 */
-#define ETH_ACMMSG_RESETCTRLLOW_31          (0x80000000UL << ETH_ACMMSG_RESETCTRLLOW_Pos)    /*!< 0x80000000 */
+/****************  Bit definition for ETH_DMAC2TXRLR register  ****************/
+#define ETH_DMAC2TXRLR_TDRL_Pos             (0U)
+#define ETH_DMAC2TXRLR_TDRL_Msk             (0x3FFUL << ETH_DMAC2TXRLR_TDRL_Pos)                  /*!< 0x000003FF */
+#define ETH_DMAC2TXRLR_TDRL                 ETH_DMAC2TXRLR_TDRL_Msk                             /*!< Transmit Descriptor Ring Length */
 
-/******************  Bit definition for ETH_ACMMSG_RESETCTRLHIGH register  *******************/
-#define ETH_ACMMSG_RESETCTRLHIGH_Pos        (0U)
-#define ETH_ACMMSG_RESETCTRLHIGH_Msk        (0xFFFFFFFFUL << ETH_ACMMSG_RESETCTRLHIGH_Pos)    /*!< 0xFFFFFFFF */
-#define ETH_ACMMSG_RESETCTRLHIGH            ETH_ACMMSG_RESETCTRLHIGH_Msk                     /*!< Reset control high */
-#define ETH_ACMMSG_RESETCTRLHIGH_0          (0x1UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)           /*!< 0x00000001 */
-#define ETH_ACMMSG_RESETCTRLHIGH_1          (0x2UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)           /*!< 0x00000002 */
-#define ETH_ACMMSG_RESETCTRLHIGH_2          (0x4UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)           /*!< 0x00000004 */
-#define ETH_ACMMSG_RESETCTRLHIGH_3          (0x8UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)           /*!< 0x00000008 */
-#define ETH_ACMMSG_RESETCTRLHIGH_4          (0x10UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)          /*!< 0x00000010 */
-#define ETH_ACMMSG_RESETCTRLHIGH_5          (0x20UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)          /*!< 0x00000020 */
-#define ETH_ACMMSG_RESETCTRLHIGH_6          (0x40UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)          /*!< 0x00000040 */
-#define ETH_ACMMSG_RESETCTRLHIGH_7          (0x80UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)          /*!< 0x00000080 */
-#define ETH_ACMMSG_RESETCTRLHIGH_8          (0x100UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)         /*!< 0x00000100 */
-#define ETH_ACMMSG_RESETCTRLHIGH_9          (0x200UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)         /*!< 0x00000200 */
-#define ETH_ACMMSG_RESETCTRLHIGH_10         (0x400UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)         /*!< 0x00000400 */
-#define ETH_ACMMSG_RESETCTRLHIGH_11         (0x800UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)         /*!< 0x00000800 */
-#define ETH_ACMMSG_RESETCTRLHIGH_12         (0x1000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)        /*!< 0x00001000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_13         (0x2000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)        /*!< 0x00002000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_14         (0x4000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)        /*!< 0x00004000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_15         (0x8000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)        /*!< 0x00008000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_16         (0x10000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)       /*!< 0x00010000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_17         (0x20000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)       /*!< 0x00020000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_18         (0x40000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)       /*!< 0x00040000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_19         (0x80000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)       /*!< 0x00080000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_20         (0x100000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)      /*!< 0x00100000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_21         (0x200000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)      /*!< 0x00200000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_22         (0x400000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)      /*!< 0x00400000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_23         (0x800000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)      /*!< 0x00800000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_24         (0x1000000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)     /*!< 0x01000000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_25         (0x2000000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)     /*!< 0x02000000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_26         (0x4000000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)     /*!< 0x04000000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_27         (0x8000000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)     /*!< 0x08000000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_28         (0x10000000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)    /*!< 0x10000000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_29         (0x20000000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)    /*!< 0x20000000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_30         (0x40000000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)    /*!< 0x40000000 */
-#define ETH_ACMMSG_RESETCTRLHIGH_31         (0x80000000UL << ETH_ACMMSG_RESETCTRLHIGH_Pos)    /*!< 0x80000000 */
+/*****************  Bit definition for ETH_DMAC2IER register  *****************/
+#define ETH_DMAC2IER_TIE_Pos                (0U)
+#define ETH_DMAC2IER_TIE_Msk                (0x1UL << ETH_DMAC2IER_TIE_Pos)                      /*!< 0x00000001 */
+#define ETH_DMAC2IER_TIE                    ETH_DMAC2IER_TIE_Msk                                /*!< Transmit Interrupt Enable */
+#define ETH_DMAC2IER_TXSE_Pos               (1U)
+#define ETH_DMAC2IER_TXSE_Msk               (0x1UL << ETH_DMAC2IER_TXSE_Pos)                     /*!< 0x00000002 */
+#define ETH_DMAC2IER_TXSE                   ETH_DMAC2IER_TXSE_Msk                               /*!< Transmit Stopped Enable */
+#define ETH_DMAC2IER_TBUE_Pos               (2U)
+#define ETH_DMAC2IER_TBUE_Msk               (0x1UL << ETH_DMAC2IER_TBUE_Pos)                     /*!< 0x00000004 */
+#define ETH_DMAC2IER_TBUE                   ETH_DMAC2IER_TBUE_Msk                               /*!< Transmit Buffer Unavailable Enable */
+#define ETH_DMAC2IER_RIE_Pos                (6U)
+#define ETH_DMAC2IER_RIE_Msk                (0x1UL << ETH_DMAC2IER_RIE_Pos)                      /*!< 0x00000040 */
+#define ETH_DMAC2IER_RIE                    ETH_DMAC2IER_RIE_Msk                                /*!< Receive Interrupt Enable */
+#define ETH_DMAC2IER_RBUE_Pos               (7U)
+#define ETH_DMAC2IER_RBUE_Msk               (0x1UL << ETH_DMAC2IER_RBUE_Pos)                     /*!< 0x00000080 */
+#define ETH_DMAC2IER_RBUE                   ETH_DMAC2IER_RBUE_Msk                               /*!< Receive Buffer Unavailable Enable */
+#define ETH_DMAC2IER_RSE_Pos                (8U)
+#define ETH_DMAC2IER_RSE_Msk                (0x1UL << ETH_DMAC2IER_RSE_Pos)                      /*!< 0x00000100 */
+#define ETH_DMAC2IER_RSE                    ETH_DMAC2IER_RSE_Msk                                /*!< Receive Stopped Enable */
+#define ETH_DMAC2IER_RWTE_Pos               (9U)
+#define ETH_DMAC2IER_RWTE_Msk               (0x1UL << ETH_DMAC2IER_RWTE_Pos)                     /*!< 0x00000200 */
+#define ETH_DMAC2IER_RWTE                   ETH_DMAC2IER_RWTE_Msk                               /*!< Receive Watchdog Timeout Enable */
+#define ETH_DMAC2IER_ETIE_Pos               (10U)
+#define ETH_DMAC2IER_ETIE_Msk               (0x1UL << ETH_DMAC2IER_ETIE_Pos)                     /*!< 0x00000400 */
+#define ETH_DMAC2IER_ETIE                   ETH_DMAC2IER_ETIE_Msk                               /*!< Early Transmit Interrupt Enable */
+#define ETH_DMAC2IER_ERIE_Pos               (11U)
+#define ETH_DMAC2IER_ERIE_Msk               (0x1UL << ETH_DMAC2IER_ERIE_Pos)                     /*!< 0x00000800 */
+#define ETH_DMAC2IER_ERIE                   ETH_DMAC2IER_ERIE_Msk                               /*!< Early receive interrupt Enable */
+#define ETH_DMAC2IER_FBEE_Pos               (12U)
+#define ETH_DMAC2IER_FBEE_Msk               (0x1UL << ETH_DMAC2IER_FBEE_Pos)                     /*!< 0x00001000 */
+#define ETH_DMAC2IER_FBEE                   ETH_DMAC2IER_FBEE_Msk                               /*!< Fatal Bus Error Enable */
+#define ETH_DMAC2IER_CDEE_Pos               (13U)
+#define ETH_DMAC2IER_CDEE_Msk               (0x1UL << ETH_DMAC2IER_CDEE_Pos)                     /*!< 0x00002000 */
+#define ETH_DMAC2IER_CDEE                   ETH_DMAC2IER_CDEE_Msk                               /*!< Context Descriptor Error Enable */
+#define ETH_DMAC2IER_AIE_Pos                (14U)
+#define ETH_DMAC2IER_AIE_Msk                (0x1UL << ETH_DMAC2IER_AIE_Pos)                      /*!< 0x00004000 */
+#define ETH_DMAC2IER_AIE                    ETH_DMAC2IER_AIE_Msk                                /*!< Abnormal Interrupt Summary Enable */
+#define ETH_DMAC2IER_NIE_Pos                (15U)
+#define ETH_DMAC2IER_NIE_Msk                (0x1UL << ETH_DMAC2IER_NIE_Pos)                      /*!< 0x00008000 */
+#define ETH_DMAC2IER_NIE                    ETH_DMAC2IER_NIE_Msk                                /*!< Normal Interrupt Summary Enable */
 
-/******************  Bit definition for ETH_ACMMSG_IRQSTATUSLOW register  *******************/
-#define ETH_ACMMSG_IRQSTATUSLOW_Pos         (0U)
-#define ETH_ACMMSG_IRQSTATUSLOW_Msk         (0xFFFFFFFFUL << ETH_ACMMSG_IRQSTATUSLOW_Pos)    /*!< 0xFFFFFFFF */
-#define ETH_ACMMSG_IRQSTATUSLOW             ETH_ACMMSG_IRQSTATUSLOW_Msk                     /*!< IRQ Status low */
-#define ETH_ACMMSG_IRQSTATUSLOW_0           (0x1UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)           /*!< 0x00000001 */
-#define ETH_ACMMSG_IRQSTATUSLOW_1           (0x2UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)           /*!< 0x00000002 */
-#define ETH_ACMMSG_IRQSTATUSLOW_2           (0x4UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)           /*!< 0x00000004 */
-#define ETH_ACMMSG_IRQSTATUSLOW_3           (0x8UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)           /*!< 0x00000008 */
-#define ETH_ACMMSG_IRQSTATUSLOW_4           (0x10UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)          /*!< 0x00000010 */
-#define ETH_ACMMSG_IRQSTATUSLOW_5           (0x20UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)          /*!< 0x00000020 */
-#define ETH_ACMMSG_IRQSTATUSLOW_6           (0x40UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)          /*!< 0x00000040 */
-#define ETH_ACMMSG_IRQSTATUSLOW_7           (0x80UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)          /*!< 0x00000080 */
-#define ETH_ACMMSG_IRQSTATUSLOW_8           (0x100UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)         /*!< 0x00000100 */
-#define ETH_ACMMSG_IRQSTATUSLOW_9           (0x200UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)         /*!< 0x00000200 */
-#define ETH_ACMMSG_IRQSTATUSLOW_10          (0x400UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)         /*!< 0x00000400 */
-#define ETH_ACMMSG_IRQSTATUSLOW_11          (0x800UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)         /*!< 0x00000800 */
-#define ETH_ACMMSG_IRQSTATUSLOW_12          (0x1000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)        /*!< 0x00001000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_13          (0x2000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)        /*!< 0x00002000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_14          (0x4000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)        /*!< 0x00004000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_15          (0x8000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)        /*!< 0x00008000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_16          (0x10000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)       /*!< 0x00010000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_17          (0x20000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)       /*!< 0x00020000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_18          (0x40000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)       /*!< 0x00040000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_19          (0x80000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)       /*!< 0x00080000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_20          (0x100000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)      /*!< 0x00100000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_21          (0x200000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)      /*!< 0x00200000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_22          (0x400000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)      /*!< 0x00400000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_23          (0x800000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)      /*!< 0x00800000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_24          (0x1000000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)     /*!< 0x01000000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_25          (0x2000000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)     /*!< 0x02000000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_26          (0x4000000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)     /*!< 0x04000000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_27          (0x8000000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)     /*!< 0x08000000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_28          (0x10000000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)    /*!< 0x10000000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_29          (0x20000000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)    /*!< 0x20000000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_30          (0x40000000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)    /*!< 0x40000000 */
-#define ETH_ACMMSG_IRQSTATUSLOW_31          (0x80000000UL << ETH_ACMMSG_IRQSTATUSLOW_Pos)    /*!< 0x80000000 */
+/****************  Bit definition for ETH_DMAC2SFCSR register  ****************/
+#define ETH_DMAC2SFCSR_ESC_Pos              (0U)
+#define ETH_DMAC2SFCSR_ESC_Msk              (0x1UL << ETH_DMAC2SFCSR_ESC_Pos)                    /*!< 0x00000001 */
+#define ETH_DMAC2SFCSR_ESC                  ETH_DMAC2SFCSR_ESC_Msk                              /*!< Enable Slot Comparison */
+#define ETH_DMAC2SFCSR_ASC_Pos              (1U)
+#define ETH_DMAC2SFCSR_ASC_Msk              (0x1UL << ETH_DMAC2SFCSR_ASC_Pos)                    /*!< 0x00000002 */
+#define ETH_DMAC2SFCSR_ASC                  ETH_DMAC2SFCSR_ASC_Msk                              /*!< Advance Slot Check */
+#define ETH_DMAC2SFCSR_SIV_Pos              (4U)
+#define ETH_DMAC2SFCSR_SIV_Msk              (0xFFFUL << ETH_DMAC2SFCSR_SIV_Pos)                   /*!< 0x0000FFF0 */
+#define ETH_DMAC2SFCSR_SIV                  ETH_DMAC2SFCSR_SIV_Msk                              /*!< Slot Interval Value */
+#define ETH_DMAC2SFCSR_RSN_Pos              (16U)
+#define ETH_DMAC2SFCSR_RSN_Msk              (0xFUL << ETH_DMAC2SFCSR_RSN_Pos)                     /*!< 0x000F0000 */
+#define ETH_DMAC2SFCSR_RSN                  ETH_DMAC2SFCSR_RSN_Msk                              /*!< Reference Slot Number */
 
-/******************  Bit definition for ETH_ACMMSG_IRQSTATUSHIGH register  *******************/
-#define ETH_ACMMSG_IRQSTATUSHIGH_Pos        (0U)
-#define ETH_ACMMSG_IRQSTATUSHIGH_Msk        (0xFFFFFFFFUL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)    /*!< 0xFFFFFFFF */
-#define ETH_ACMMSG_IRQSTATUSHIGH            ETH_ACMMSG_IRQSTATUSHIGH_Msk                     /*!< IRQ Status high */
-#define ETH_ACMMSG_IRQSTATUSHIGH_0          (0x1UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)           /*!< 0x00000001 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_1          (0x2UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)           /*!< 0x00000002 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_2          (0x4UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)           /*!< 0x00000004 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_3          (0x8UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)           /*!< 0x00000008 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_4          (0x10UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)          /*!< 0x00000010 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_5          (0x20UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)          /*!< 0x00000020 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_6          (0x40UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)          /*!< 0x00000040 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_7          (0x80UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)          /*!< 0x00000080 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_8          (0x100UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)         /*!< 0x00000100 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_9          (0x200UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)         /*!< 0x00000200 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_10         (0x400UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)         /*!< 0x00000400 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_11         (0x800UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)         /*!< 0x00000800 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_12         (0x1000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)        /*!< 0x00001000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_13         (0x2000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)        /*!< 0x00002000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_14         (0x4000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)        /*!< 0x00004000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_15         (0x8000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)        /*!< 0x00008000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_16         (0x10000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)       /*!< 0x00010000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_17         (0x20000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)       /*!< 0x00020000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_18         (0x40000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)       /*!< 0x00040000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_19         (0x80000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)       /*!< 0x00080000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_20         (0x100000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)      /*!< 0x00100000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_21         (0x200000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)      /*!< 0x00200000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_22         (0x400000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)      /*!< 0x00400000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_23         (0x800000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)      /*!< 0x00800000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_24         (0x1000000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)     /*!< 0x01000000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_25         (0x2000000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)     /*!< 0x02000000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_26         (0x4000000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)     /*!< 0x04000000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_27         (0x8000000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)     /*!< 0x08000000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_28         (0x10000000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)    /*!< 0x10000000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_29         (0x20000000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)    /*!< 0x20000000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_30         (0x40000000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)    /*!< 0x40000000 */
-#define ETH_ACMMSG_IRQSTATUSHIGH_31         (0x80000000UL << ETH_ACMMSG_IRQSTATUSHIGH_Pos)    /*!< 0x80000000 */
+/***************  Bit definition for ETH_DMAC2CATXDR register  ****************/
+#define ETH_DMAC2CATXDR_CURTDESAPTR_Pos     (0U)
+#define ETH_DMAC2CATXDR_CURTDESAPTR_Msk     (0xFFFFFFFFUL << ETH_DMAC2CATXDR_CURTDESAPTR_Pos)    /*!< 0xFFFFFFFF */
+#define ETH_DMAC2CATXDR_CURTDESAPTR         ETH_DMAC2CATXDR_CURTDESAPTR_Msk                     /*!< Application Transmit Descriptor Address Pointer */
 
-/******************  Bit definition for ETH_ACMMSG_IRQTESTLOW register  *******************/
-#define ETH_ACMMSG_IRQTESTLOW_Pos           (0U)
-#define ETH_ACMMSG_IRQTESTLOW_Msk           (0xFFFFFFFFUL << ETH_ACMMSG_IRQTESTLOW_Pos)    /*!< 0xFFFFFFFF */
-#define ETH_ACMMSG_IRQTESTLOW               ETH_ACMMSG_IRQTESTLOW_Msk                     /*!< IRQ Test low */
-#define ETH_ACMMSG_IRQTESTLOW_0             (0x1UL << ETH_ACMMSG_IRQTESTLOW_Pos)           /*!< 0x00000001 */
-#define ETH_ACMMSG_IRQTESTLOW_1             (0x2UL << ETH_ACMMSG_IRQTESTLOW_Pos)           /*!< 0x00000002 */
-#define ETH_ACMMSG_IRQTESTLOW_2             (0x4UL << ETH_ACMMSG_IRQTESTLOW_Pos)           /*!< 0x00000004 */
-#define ETH_ACMMSG_IRQTESTLOW_3             (0x8UL << ETH_ACMMSG_IRQTESTLOW_Pos)           /*!< 0x00000008 */
-#define ETH_ACMMSG_IRQTESTLOW_4             (0x10UL << ETH_ACMMSG_IRQTESTLOW_Pos)          /*!< 0x00000010 */
-#define ETH_ACMMSG_IRQTESTLOW_5             (0x20UL << ETH_ACMMSG_IRQTESTLOW_Pos)          /*!< 0x00000020 */
-#define ETH_ACMMSG_IRQTESTLOW_6             (0x40UL << ETH_ACMMSG_IRQTESTLOW_Pos)          /*!< 0x00000040 */
-#define ETH_ACMMSG_IRQTESTLOW_7             (0x80UL << ETH_ACMMSG_IRQTESTLOW_Pos)          /*!< 0x00000080 */
-#define ETH_ACMMSG_IRQTESTLOW_8             (0x100UL << ETH_ACMMSG_IRQTESTLOW_Pos)         /*!< 0x00000100 */
-#define ETH_ACMMSG_IRQTESTLOW_9             (0x200UL << ETH_ACMMSG_IRQTESTLOW_Pos)         /*!< 0x00000200 */
-#define ETH_ACMMSG_IRQTESTLOW_10            (0x400UL << ETH_ACMMSG_IRQTESTLOW_Pos)         /*!< 0x00000400 */
-#define ETH_ACMMSG_IRQTESTLOW_11            (0x800UL << ETH_ACMMSG_IRQTESTLOW_Pos)         /*!< 0x00000800 */
-#define ETH_ACMMSG_IRQTESTLOW_12            (0x1000UL << ETH_ACMMSG_IRQTESTLOW_Pos)        /*!< 0x00001000 */
-#define ETH_ACMMSG_IRQTESTLOW_13            (0x2000UL << ETH_ACMMSG_IRQTESTLOW_Pos)        /*!< 0x00002000 */
-#define ETH_ACMMSG_IRQTESTLOW_14            (0x4000UL << ETH_ACMMSG_IRQTESTLOW_Pos)        /*!< 0x00004000 */
-#define ETH_ACMMSG_IRQTESTLOW_15            (0x8000UL << ETH_ACMMSG_IRQTESTLOW_Pos)        /*!< 0x00008000 */
-#define ETH_ACMMSG_IRQTESTLOW_16            (0x10000UL << ETH_ACMMSG_IRQTESTLOW_Pos)       /*!< 0x00010000 */
-#define ETH_ACMMSG_IRQTESTLOW_17            (0x20000UL << ETH_ACMMSG_IRQTESTLOW_Pos)       /*!< 0x00020000 */
-#define ETH_ACMMSG_IRQTESTLOW_18            (0x40000UL << ETH_ACMMSG_IRQTESTLOW_Pos)       /*!< 0x00040000 */
-#define ETH_ACMMSG_IRQTESTLOW_19            (0x80000UL << ETH_ACMMSG_IRQTESTLOW_Pos)       /*!< 0x00080000 */
-#define ETH_ACMMSG_IRQTESTLOW_20            (0x100000UL << ETH_ACMMSG_IRQTESTLOW_Pos)      /*!< 0x00100000 */
-#define ETH_ACMMSG_IRQTESTLOW_21            (0x200000UL << ETH_ACMMSG_IRQTESTLOW_Pos)      /*!< 0x00200000 */
-#define ETH_ACMMSG_IRQTESTLOW_22            (0x400000UL << ETH_ACMMSG_IRQTESTLOW_Pos)      /*!< 0x00400000 */
-#define ETH_ACMMSG_IRQTESTLOW_23            (0x800000UL << ETH_ACMMSG_IRQTESTLOW_Pos)      /*!< 0x00800000 */
-#define ETH_ACMMSG_IRQTESTLOW_24            (0x1000000UL << ETH_ACMMSG_IRQTESTLOW_Pos)     /*!< 0x01000000 */
-#define ETH_ACMMSG_IRQTESTLOW_25            (0x2000000UL << ETH_ACMMSG_IRQTESTLOW_Pos)     /*!< 0x02000000 */
-#define ETH_ACMMSG_IRQTESTLOW_26            (0x4000000UL << ETH_ACMMSG_IRQTESTLOW_Pos)     /*!< 0x04000000 */
-#define ETH_ACMMSG_IRQTESTLOW_27            (0x8000000UL << ETH_ACMMSG_IRQTESTLOW_Pos)     /*!< 0x08000000 */
-#define ETH_ACMMSG_IRQTESTLOW_28            (0x10000000UL << ETH_ACMMSG_IRQTESTLOW_Pos)    /*!< 0x10000000 */
-#define ETH_ACMMSG_IRQTESTLOW_29            (0x20000000UL << ETH_ACMMSG_IRQTESTLOW_Pos)    /*!< 0x20000000 */
-#define ETH_ACMMSG_IRQTESTLOW_30            (0x40000000UL << ETH_ACMMSG_IRQTESTLOW_Pos)    /*!< 0x40000000 */
-#define ETH_ACMMSG_IRQTESTLOW_31            (0x80000000UL << ETH_ACMMSG_IRQTESTLOW_Pos)    /*!< 0x80000000 */
+/***************  Bit definition for ETH_DMAC2CATXBR register  ****************/
+#define ETH_DMAC2CATXBR_CURTBUFAPTR_Pos     (0U)
+#define ETH_DMAC2CATXBR_CURTBUFAPTR_Msk     (0xFFFFFFFFUL << ETH_DMAC2CATXBR_CURTBUFAPTR_Pos)    /*!< 0xFFFFFFFF */
+#define ETH_DMAC2CATXBR_CURTBUFAPTR         ETH_DMAC2CATXBR_CURTBUFAPTR_Msk                     /*!< Application Transmit Buffer Address Pointer */
 
-/******************  Bit definition for ETH_ACMMSG_IRQTESTHIGH register  *******************/
-#define ETH_ACMMSG_IRQTESTHIGH_Pos          (0U)
-#define ETH_ACMMSG_IRQTESTHIGH_Msk          (0xFFFFFFFFUL << ETH_ACMMSG_IRQTESTHIGH_Pos)    /*!< 0xFFFFFFFF */
-#define ETH_ACMMSG_IRQTESTHIGH              ETH_ACMMSG_IRQTESTHIGH_Msk                     /*!< IRQ Test high */
-#define ETH_ACMMSG_IRQTESTHIGH_0            (0x1UL << ETH_ACMMSG_IRQTESTHIGH_Pos)           /*!< 0x00000001 */
-#define ETH_ACMMSG_IRQTESTHIGH_1            (0x2UL << ETH_ACMMSG_IRQTESTHIGH_Pos)           /*!< 0x00000002 */
-#define ETH_ACMMSG_IRQTESTHIGH_2            (0x4UL << ETH_ACMMSG_IRQTESTHIGH_Pos)           /*!< 0x00000004 */
-#define ETH_ACMMSG_IRQTESTHIGH_3            (0x8UL << ETH_ACMMSG_IRQTESTHIGH_Pos)           /*!< 0x00000008 */
-#define ETH_ACMMSG_IRQTESTHIGH_4            (0x10UL << ETH_ACMMSG_IRQTESTHIGH_Pos)          /*!< 0x00000010 */
-#define ETH_ACMMSG_IRQTESTHIGH_5            (0x20UL << ETH_ACMMSG_IRQTESTHIGH_Pos)          /*!< 0x00000020 */
-#define ETH_ACMMSG_IRQTESTHIGH_6            (0x40UL << ETH_ACMMSG_IRQTESTHIGH_Pos)          /*!< 0x00000040 */
-#define ETH_ACMMSG_IRQTESTHIGH_7            (0x80UL << ETH_ACMMSG_IRQTESTHIGH_Pos)          /*!< 0x00000080 */
-#define ETH_ACMMSG_IRQTESTHIGH_8            (0x100UL << ETH_ACMMSG_IRQTESTHIGH_Pos)         /*!< 0x00000100 */
-#define ETH_ACMMSG_IRQTESTHIGH_9            (0x200UL << ETH_ACMMSG_IRQTESTHIGH_Pos)         /*!< 0x00000200 */
-#define ETH_ACMMSG_IRQTESTHIGH_10           (0x400UL << ETH_ACMMSG_IRQTESTHIGH_Pos)         /*!< 0x00000400 */
-#define ETH_ACMMSG_IRQTESTHIGH_11           (0x800UL << ETH_ACMMSG_IRQTESTHIGH_Pos)         /*!< 0x00000800 */
-#define ETH_ACMMSG_IRQTESTHIGH_12           (0x1000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)        /*!< 0x00001000 */
-#define ETH_ACMMSG_IRQTESTHIGH_13           (0x2000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)        /*!< 0x00002000 */
-#define ETH_ACMMSG_IRQTESTHIGH_14           (0x4000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)        /*!< 0x00004000 */
-#define ETH_ACMMSG_IRQTESTHIGH_15           (0x8000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)        /*!< 0x00008000 */
-#define ETH_ACMMSG_IRQTESTHIGH_16           (0x10000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)       /*!< 0x00010000 */
-#define ETH_ACMMSG_IRQTESTHIGH_17           (0x20000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)       /*!< 0x00020000 */
-#define ETH_ACMMSG_IRQTESTHIGH_18           (0x40000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)       /*!< 0x00040000 */
-#define ETH_ACMMSG_IRQTESTHIGH_19           (0x80000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)       /*!< 0x00080000 */
-#define ETH_ACMMSG_IRQTESTHIGH_20           (0x100000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)      /*!< 0x00100000 */
-#define ETH_ACMMSG_IRQTESTHIGH_21           (0x200000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)      /*!< 0x00200000 */
-#define ETH_ACMMSG_IRQTESTHIGH_22           (0x400000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)      /*!< 0x00400000 */
-#define ETH_ACMMSG_IRQTESTHIGH_23           (0x800000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)      /*!< 0x00800000 */
-#define ETH_ACMMSG_IRQTESTHIGH_24           (0x1000000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)     /*!< 0x01000000 */
-#define ETH_ACMMSG_IRQTESTHIGH_25           (0x2000000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)     /*!< 0x02000000 */
-#define ETH_ACMMSG_IRQTESTHIGH_26           (0x4000000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)     /*!< 0x04000000 */
-#define ETH_ACMMSG_IRQTESTHIGH_27           (0x8000000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)     /*!< 0x08000000 */
-#define ETH_ACMMSG_IRQTESTHIGH_28           (0x10000000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)    /*!< 0x10000000 */
-#define ETH_ACMMSG_IRQTESTHIGH_29           (0x20000000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)    /*!< 0x20000000 */
-#define ETH_ACMMSG_IRQTESTHIGH_30           (0x40000000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)    /*!< 0x40000000 */
-#define ETH_ACMMSG_IRQTESTHIGH_31           (0x80000000UL << ETH_ACMMSG_IRQTESTHIGH_Pos)    /*!< 0x80000000 */
+/*****************  Bit definition for ETH_DMAC2SR register  ******************/
+#define ETH_DMAC2SR_TI_Pos                  (0U)
+#define ETH_DMAC2SR_TI_Msk                  (0x1UL << ETH_DMAC2SR_TI_Pos)                        /*!< 0x00000001 */
+#define ETH_DMAC2SR_TI                      ETH_DMAC2SR_TI_Msk                                  /*!< Transmit Interrupt */
+#define ETH_DMAC2SR_TPS_Pos                 (1U)
+#define ETH_DMAC2SR_TPS_Msk                 (0x1UL << ETH_DMAC2SR_TPS_Pos)                       /*!< 0x00000002 */
+#define ETH_DMAC2SR_TPS                     ETH_DMAC2SR_TPS_Msk                                 /*!< Transmit Process Stopped */
+#define ETH_DMAC2SR_TBU_Pos                 (2U)
+#define ETH_DMAC2SR_TBU_Msk                 (0x1UL << ETH_DMAC2SR_TBU_Pos)                       /*!< 0x00000004 */
+#define ETH_DMAC2SR_TBU                     ETH_DMAC2SR_TBU_Msk                                 /*!< Transmit Buffer Unavailable */
+#define ETH_DMAC2SR_RI_Pos                  (6U)
+#define ETH_DMAC2SR_RI_Msk                  (0x1UL << ETH_DMAC2SR_RI_Pos)                        /*!< 0x00000040 */
+#define ETH_DMAC2SR_RI                      ETH_DMAC2SR_RI_Msk                                  /*!< Receive Interrupt */
+#define ETH_DMAC2SR_RBU_Pos                 (7U)
+#define ETH_DMAC2SR_RBU_Msk                 (0x1UL << ETH_DMAC2SR_RBU_Pos)                       /*!< 0x00000080 */
+#define ETH_DMAC2SR_RBU                     ETH_DMAC2SR_RBU_Msk                                 /*!< Receive Buffer Unavailable */
+#define ETH_DMAC2SR_RPS_Pos                 (8U)
+#define ETH_DMAC2SR_RPS_Msk                 (0x1UL << ETH_DMAC2SR_RPS_Pos)                       /*!< 0x00000100 */
+#define ETH_DMAC2SR_RPS                     ETH_DMAC2SR_RPS_Msk                                 /*!< Receive Process Stopped */
+#define ETH_DMAC2SR_RWT_Pos                 (9U)
+#define ETH_DMAC2SR_RWT_Msk                 (0x1UL << ETH_DMAC2SR_RWT_Pos)                       /*!< 0x00000200 */
+#define ETH_DMAC2SR_RWT                     ETH_DMAC2SR_RWT_Msk                                 /*!< Receive Watchdog Timeout */
+#define ETH_DMAC2SR_ETI_Pos                 (10U)
+#define ETH_DMAC2SR_ETI_Msk                 (0x1UL << ETH_DMAC2SR_ETI_Pos)                       /*!< 0x00000400 */
+#define ETH_DMAC2SR_ETI                     ETH_DMAC2SR_ETI_Msk                                 /*!< Early Transmit Interrupt */
+#define ETH_DMAC2SR_ERI_Pos                 (11U)
+#define ETH_DMAC2SR_ERI_Msk                 (0x1UL << ETH_DMAC2SR_ERI_Pos)                       /*!< 0x00000800 */
+#define ETH_DMAC2SR_ERI                     ETH_DMAC2SR_ERI_Msk                                 /*!< Early Receive Interrupt */
+#define ETH_DMAC2SR_FBE_Pos                 (12U)
+#define ETH_DMAC2SR_FBE_Msk                 (0x1UL << ETH_DMAC2SR_FBE_Pos)                       /*!< 0x00001000 */
+#define ETH_DMAC2SR_FBE                     ETH_DMAC2SR_FBE_Msk                                 /*!< Fatal Bus Error */
+#define ETH_DMAC2SR_CDE_Pos                 (13U)
+#define ETH_DMAC2SR_CDE_Msk                 (0x1UL << ETH_DMAC2SR_CDE_Pos)                       /*!< 0x00002000 */
+#define ETH_DMAC2SR_CDE                     ETH_DMAC2SR_CDE_Msk                                 /*!< Context Descriptor Error */
+#define ETH_DMAC2SR_AIS_Pos                 (14U)
+#define ETH_DMAC2SR_AIS_Msk                 (0x1UL << ETH_DMAC2SR_AIS_Pos)                       /*!< 0x00004000 */
+#define ETH_DMAC2SR_AIS                     ETH_DMAC2SR_AIS_Msk                                 /*!< Abnormal Interrupt Summary */
+#define ETH_DMAC2SR_NIS_Pos                 (15U)
+#define ETH_DMAC2SR_NIS_Msk                 (0x1UL << ETH_DMAC2SR_NIS_Pos)                       /*!< 0x00008000 */
+#define ETH_DMAC2SR_NIS                     ETH_DMAC2SR_NIS_Msk                                 /*!< Normal Interrupt Summary */
+#define ETH_DMAC2SR_TEB_Pos                 (16U)
+#define ETH_DMAC2SR_TEB_Msk                 (0x7UL << ETH_DMAC2SR_TEB_Pos)                        /*!< 0x00070000 */
+#define ETH_DMAC2SR_TEB                     ETH_DMAC2SR_TEB_Msk                                 /*!< Tx DMA Error Bits */
+#define ETH_DMAC2SR_REB_Pos                 (19U)
+#define ETH_DMAC2SR_REB_Msk                 (0x7UL << ETH_DMAC2SR_REB_Pos)                        /*!< 0x00380000 */
+#define ETH_DMAC2SR_REB                     ETH_DMAC2SR_REB_Msk                                 /*!< Rx DMA Error Bits */
 
-/******************  Bit definition for ETH_ACMMSG_MSGBUFSTATUS register  *******************/
-#define ETH_ACMMSG_MSGBUFSTATUS_FCS_STATE_Pos    (0U)
-#define ETH_ACMMSG_MSGBUFSTATUS_FCS_STATE_Msk    (0x1UL << ETH_ACMMSG_MSGBUFSTATUS_FCS_STATE_Pos)         /*!< 0x00000001 */
-#define ETH_ACMMSG_MSGBUFSTATUS_FCS_STATE        ETH_ACMMSG_MSGBUFSTATUS_FCS_STATE_Msk                   /*!< FCS state */
-#define ETH_ACMMSG_MSGBUFSTATUS_DSCR_ERR_Pos     (1U)
-#define ETH_ACMMSG_MSGBUFSTATUS_DSCR_ERR_Msk     (0x1UL << ETH_ACMMSG_MSGBUFSTATUS_DSCR_ERR_Pos)          /*!< 0x00000002 */
-#define ETH_ACMMSG_MSGBUFSTATUS_DSCR_ERR         ETH_ACMMSG_MSGBUFSTATUS_DSCR_ERR_Msk                    /*!< Descriptor error */
-#define ETH_ACMMSG_MSGBUFSTATUS_OVERWRITTEN_Pos  (2U)
-#define ETH_ACMMSG_MSGBUFSTATUS_OVERWRITTEN_Msk  (0x1UL << ETH_ACMMSG_MSGBUFSTATUS_OVERWRITTEN_Pos)       /*!< 0x00000004 */
-#define ETH_ACMMSG_MSGBUFSTATUS_OVERWRITTEN      ETH_ACMMSG_MSGBUFSTATUS_OVERWRITTEN_Msk                 /*!< Overwritten buffer */
-#define ETH_ACMMSG_MSGBUFSTATUS_D_LOCKED_Pos     (20U)
-#define ETH_ACMMSG_MSGBUFSTATUS_D_LOCKED_Msk     (0x1UL << ETH_ACMMSG_MSGBUFSTATUS_D_LOCKED_Pos)          /*!< 0x00100000 */
-#define ETH_ACMMSG_MSGBUFSTATUS_D_LOCKED         ETH_ACMMSG_MSGBUFSTATUS_D_LOCKED_Msk                    /*!< Dual locked */
-#define ETH_ACMMSG_MSGBUFSTATUS_FRESH_Pos        (24U)
-#define ETH_ACMMSG_MSGBUFSTATUS_FRESH_Msk        (0x1UL << ETH_ACMMSG_MSGBUFSTATUS_FRESH_Pos)             /*!< 0x01000000 */
-#define ETH_ACMMSG_MSGBUFSTATUS_FRESH            ETH_ACMMSG_MSGBUFSTATUS_FRESH_Msk                       /*!< Fresh */
-#define ETH_ACMMSG_MSGBUFSTATUS_EMPTY_Pos        (28U)
-#define ETH_ACMMSG_MSGBUFSTATUS_EMPTY_Msk        (0x1UL << ETH_ACMMSG_MSGBUFSTATUS_EMPTY_Pos)             /*!< 0x10000000 */
-#define ETH_ACMMSG_MSGBUFSTATUS_EMPTY            ETH_ACMMSG_MSGBUFSTATUS_EMPTY_Msk                       /*!< Empty */
+/*****************  Bit definition for ETH_DMAC3CR register  ******************/
+#define ETH_DMAC3CR_MSS_Pos                 (0U)
+#define ETH_DMAC3CR_MSS_Msk                 (0x3FFFUL << ETH_DMAC3CR_MSS_Pos)                     /*!< 0x00003FFF */
+#define ETH_DMAC3CR_MSS                     ETH_DMAC3CR_MSS_Msk                                 /*!< Maximum Segment Size */
+#define ETH_DMAC3CR_PBLX8_Pos               (16U)
+#define ETH_DMAC3CR_PBLX8_Msk               (0x1UL << ETH_DMAC3CR_PBLX8_Pos)                     /*!< 0x00010000 */
+#define ETH_DMAC3CR_PBLX8                   ETH_DMAC3CR_PBLX8_Msk                               /*!< 8xPBL mode */
+#define ETH_DMAC3CR_DSL_Pos                 (18U)
+#define ETH_DMAC3CR_DSL_Msk                 (0x7UL << ETH_DMAC3CR_DSL_Pos)                        /*!< 0x001C0000 */
+#define ETH_DMAC3CR_DSL                     ETH_DMAC3CR_DSL_Msk                                 /*!< Descriptor Skip Length */
+
+/****************  Bit definition for ETH_DMAC3TXCR register  *****************/
+#define ETH_DMAC3TXCR_ST_Pos                (0U)
+#define ETH_DMAC3TXCR_ST_Msk                (0x1UL << ETH_DMAC3TXCR_ST_Pos)                      /*!< 0x00000001 */
+#define ETH_DMAC3TXCR_ST                    ETH_DMAC3TXCR_ST_Msk                                /*!< Start or Stop Transmission Command */
+#define ETH_DMAC3TXCR_TCW_Pos               (1U)
+#define ETH_DMAC3TXCR_TCW_Msk               (0x7UL << ETH_DMAC3TXCR_TCW_Pos)                      /*!< 0x0000000E */
+#define ETH_DMAC3TXCR_TCW                   ETH_DMAC3TXCR_TCW_Msk                               /*!< Transmit Channel Weight */
+#define ETH_DMAC3TXCR_OSF_Pos               (4U)
+#define ETH_DMAC3TXCR_OSF_Msk               (0x1UL << ETH_DMAC3TXCR_OSF_Pos)                     /*!< 0x00000010 */
+#define ETH_DMAC3TXCR_OSF                   ETH_DMAC3TXCR_OSF_Msk                               /*!< Operate on Second Packet */
+#define ETH_DMAC3TXCR_TSE_Pos               (12U)
+#define ETH_DMAC3TXCR_TSE_Msk               (0x1UL << ETH_DMAC3TXCR_TSE_Pos)                     /*!< 0x00001000 */
+#define ETH_DMAC3TXCR_TSE                   ETH_DMAC3TXCR_TSE_Msk                               /*!< TCP Segmentation Enabled */
+#define ETH_DMAC3TXCR_IPBL_Pos              (15U)
+#define ETH_DMAC3TXCR_IPBL_Msk              (0x1UL << ETH_DMAC3TXCR_IPBL_Pos)                    /*!< 0x00008000 */
+#define ETH_DMAC3TXCR_IPBL                  ETH_DMAC3TXCR_IPBL_Msk                              /*!< Ignore PBL Requirement */
+#define ETH_DMAC3TXCR_TXPBL_Pos             (16U)
+#define ETH_DMAC3TXCR_TXPBL_Msk             (0x3FUL << ETH_DMAC3TXCR_TXPBL_Pos)                   /*!< 0x003F0000 */
+#define ETH_DMAC3TXCR_TXPBL                 ETH_DMAC3TXCR_TXPBL_Msk                             /*!< Transmit Programmable Burst Length */
+#define ETH_DMAC3TXCR_TQOS_Pos              (24U)
+#define ETH_DMAC3TXCR_TQOS_Msk              (0xFUL << ETH_DMAC3TXCR_TQOS_Pos)                     /*!< 0x0F000000 */
+#define ETH_DMAC3TXCR_TQOS                  ETH_DMAC3TXCR_TQOS_Msk                              /*!< Transmit QOS */
+#define ETH_DMAC3TXCR_EDSE_Pos              (28U)
+#define ETH_DMAC3TXCR_EDSE_Msk              (0x1UL << ETH_DMAC3TXCR_EDSE_Pos)                    /*!< 0x10000000 */
+#define ETH_DMAC3TXCR_EDSE                  ETH_DMAC3TXCR_EDSE_Msk                              /*!< Enhanced Descriptor Enable */
+#define ETH_DMAC3TXCR_TFSEL0_Pos            (29U)
+#define ETH_DMAC3TXCR_TFSEL0_Msk            (0x1UL << ETH_DMAC3TXCR_TFSEL0_Pos)                  /*!< 0x20000000 */
+#define ETH_DMAC3TXCR_TFSEL0                ETH_DMAC3TXCR_TFSEL0_Msk                            /*!< TBS Fetch Select */
+#define ETH_DMAC3TXCR_TFSEL1_Pos            (30U)
+#define ETH_DMAC3TXCR_TFSEL1_Msk            (0x1UL << ETH_DMAC3TXCR_TFSEL1_Pos)                  /*!< 0x40000000 */
+#define ETH_DMAC3TXCR_TFSEL1                ETH_DMAC3TXCR_TFSEL1_Msk                            /*!< TBS Fetch Select */
+
+/***************  Bit definition for ETH_DMAC3TXDLAR register  ****************/
+#define ETH_DMAC3TXDLAR_TDESLA_Pos          (0U)
+#define ETH_DMAC3TXDLAR_TDESLA_Msk          (0xFFFFFFFFUL << ETH_DMAC3TXDLAR_TDESLA_Pos)         /*!< 0xFFFFFFFF */
+#define ETH_DMAC3TXDLAR_TDESLA              ETH_DMAC3TXDLAR_TDESLA_Msk                          /*!< Start of Transmit List */
+
+/***************  Bit definition for ETH_DMAC3TXDTPR register  ****************/
+#define ETH_DMAC3TXDTPR_TDT_Pos             (0U)
+#define ETH_DMAC3TXDTPR_TDT_Msk             (0xFFFFFFFFUL << ETH_DMAC3TXDTPR_TDT_Pos)            /*!< 0xFFFFFFFF */
+#define ETH_DMAC3TXDTPR_TDT                 ETH_DMAC3TXDTPR_TDT_Msk                             /*!< Transmit Descriptor Tail Pointer */
+
+/****************  Bit definition for ETH_DMAC3TXRLR register  ****************/
+#define ETH_DMAC3TXRLR_TDRL_Pos             (0U)
+#define ETH_DMAC3TXRLR_TDRL_Msk             (0x3FFUL << ETH_DMAC3TXRLR_TDRL_Pos)                  /*!< 0x000003FF */
+#define ETH_DMAC3TXRLR_TDRL                 ETH_DMAC3TXRLR_TDRL_Msk                             /*!< Transmit Descriptor Ring Length */
+
+/*****************  Bit definition for ETH_DMAC3IER register  *****************/
+#define ETH_DMAC3IER_TIE_Pos                (0U)
+#define ETH_DMAC3IER_TIE_Msk                (0x1UL << ETH_DMAC3IER_TIE_Pos)                      /*!< 0x00000001 */
+#define ETH_DMAC3IER_TIE                    ETH_DMAC3IER_TIE_Msk                                /*!< Transmit Interrupt Enable */
+#define ETH_DMAC3IER_TXSE_Pos               (1U)
+#define ETH_DMAC3IER_TXSE_Msk               (0x1UL << ETH_DMAC3IER_TXSE_Pos)                     /*!< 0x00000002 */
+#define ETH_DMAC3IER_TXSE                   ETH_DMAC3IER_TXSE_Msk                               /*!< Transmit Stopped Enable */
+#define ETH_DMAC3IER_TBUE_Pos               (2U)
+#define ETH_DMAC3IER_TBUE_Msk               (0x1UL << ETH_DMAC3IER_TBUE_Pos)                     /*!< 0x00000004 */
+#define ETH_DMAC3IER_TBUE                   ETH_DMAC3IER_TBUE_Msk                               /*!< Transmit Buffer Unavailable Enable */
+#define ETH_DMAC3IER_RIE_Pos                (6U)
+#define ETH_DMAC3IER_RIE_Msk                (0x1UL << ETH_DMAC3IER_RIE_Pos)                      /*!< 0x00000040 */
+#define ETH_DMAC3IER_RIE                    ETH_DMAC3IER_RIE_Msk                                /*!< Receive Interrupt Enable */
+#define ETH_DMAC3IER_RBUE_Pos               (7U)
+#define ETH_DMAC3IER_RBUE_Msk               (0x1UL << ETH_DMAC3IER_RBUE_Pos)                     /*!< 0x00000080 */
+#define ETH_DMAC3IER_RBUE                   ETH_DMAC3IER_RBUE_Msk                               /*!< Receive Buffer Unavailable Enable */
+#define ETH_DMAC3IER_RSE_Pos                (8U)
+#define ETH_DMAC3IER_RSE_Msk                (0x1UL << ETH_DMAC3IER_RSE_Pos)                      /*!< 0x00000100 */
+#define ETH_DMAC3IER_RSE                    ETH_DMAC3IER_RSE_Msk                                /*!< Receive Stopped Enable */
+#define ETH_DMAC3IER_RWTE_Pos               (9U)
+#define ETH_DMAC3IER_RWTE_Msk               (0x1UL << ETH_DMAC3IER_RWTE_Pos)                     /*!< 0x00000200 */
+#define ETH_DMAC3IER_RWTE                   ETH_DMAC3IER_RWTE_Msk                               /*!< Receive Watchdog Timeout Enable */
+#define ETH_DMAC3IER_ETIE_Pos               (10U)
+#define ETH_DMAC3IER_ETIE_Msk               (0x1UL << ETH_DMAC3IER_ETIE_Pos)                     /*!< 0x00000400 */
+#define ETH_DMAC3IER_ETIE                   ETH_DMAC3IER_ETIE_Msk                               /*!< Early Transmit Interrupt Enable */
+#define ETH_DMAC3IER_ERIE_Pos               (11U)
+#define ETH_DMAC3IER_ERIE_Msk               (0x1UL << ETH_DMAC3IER_ERIE_Pos)                     /*!< 0x00000800 */
+#define ETH_DMAC3IER_ERIE                   ETH_DMAC3IER_ERIE_Msk                               /*!< Early receive interrupt Enable */
+#define ETH_DMAC3IER_FBEE_Pos               (12U)
+#define ETH_DMAC3IER_FBEE_Msk               (0x1UL << ETH_DMAC3IER_FBEE_Pos)                     /*!< 0x00001000 */
+#define ETH_DMAC3IER_FBEE                   ETH_DMAC3IER_FBEE_Msk                               /*!< Fatal Bus Error Enable */
+#define ETH_DMAC3IER_CDEE_Pos               (13U)
+#define ETH_DMAC3IER_CDEE_Msk               (0x1UL << ETH_DMAC3IER_CDEE_Pos)                     /*!< 0x00002000 */
+#define ETH_DMAC3IER_CDEE                   ETH_DMAC3IER_CDEE_Msk                               /*!< Context Descriptor Error Enable */
+#define ETH_DMAC3IER_AIE_Pos                (14U)
+#define ETH_DMAC3IER_AIE_Msk                (0x1UL << ETH_DMAC3IER_AIE_Pos)                      /*!< 0x00004000 */
+#define ETH_DMAC3IER_AIE                    ETH_DMAC3IER_AIE_Msk                                /*!< Abnormal Interrupt Summary Enable */
+#define ETH_DMAC3IER_NIE_Pos                (15U)
+#define ETH_DMAC3IER_NIE_Msk                (0x1UL << ETH_DMAC3IER_NIE_Pos)                      /*!< 0x00008000 */
+#define ETH_DMAC3IER_NIE                    ETH_DMAC3IER_NIE_Msk                                /*!< Normal Interrupt Summary Enable */
+
+/****************  Bit definition for ETH_DMAC3SFCSR register  ****************/
+#define ETH_DMAC3SFCSR_ESC_Pos              (0U)
+#define ETH_DMAC3SFCSR_ESC_Msk              (0x1UL << ETH_DMAC3SFCSR_ESC_Pos)                    /*!< 0x00000001 */
+#define ETH_DMAC3SFCSR_ESC                  ETH_DMAC3SFCSR_ESC_Msk                              /*!< Enable Slot Comparison */
+#define ETH_DMAC3SFCSR_ASC_Pos              (1U)
+#define ETH_DMAC3SFCSR_ASC_Msk              (0x1UL << ETH_DMAC3SFCSR_ASC_Pos)                    /*!< 0x00000002 */
+#define ETH_DMAC3SFCSR_ASC                  ETH_DMAC3SFCSR_ASC_Msk                              /*!< Advance Slot Check */
+#define ETH_DMAC3SFCSR_SIV_Pos              (4U)
+#define ETH_DMAC3SFCSR_SIV_Msk              (0xFFFUL << ETH_DMAC3SFCSR_SIV_Pos)                   /*!< 0x0000FFF0 */
+#define ETH_DMAC3SFCSR_SIV                  ETH_DMAC3SFCSR_SIV_Msk                              /*!< Slot Interval Value */
+#define ETH_DMAC3SFCSR_RSN_Pos              (16U)
+#define ETH_DMAC3SFCSR_RSN_Msk              (0xFUL << ETH_DMAC3SFCSR_RSN_Pos)                     /*!< 0x000F0000 */
+#define ETH_DMAC3SFCSR_RSN                  ETH_DMAC3SFCSR_RSN_Msk                              /*!< Reference Slot Number */
+
+/***************  Bit definition for ETH_DMAC3CATXDR register  ****************/
+#define ETH_DMAC3CATXDR_CURTDESAPTR_Pos     (0U)
+#define ETH_DMAC3CATXDR_CURTDESAPTR_Msk     (0xFFFFFFFFUL << ETH_DMAC3CATXDR_CURTDESAPTR_Pos)    /*!< 0xFFFFFFFF */
+#define ETH_DMAC3CATXDR_CURTDESAPTR         ETH_DMAC3CATXDR_CURTDESAPTR_Msk                     /*!< Application Transmit Descriptor Address Pointer */
+
+/***************  Bit definition for ETH_DMAC3CATXBR register  ****************/
+#define ETH_DMAC3CATXBR_CURTBUFAPTR_Pos     (0U)
+#define ETH_DMAC3CATXBR_CURTBUFAPTR_Msk     (0xFFFFFFFFUL << ETH_DMAC3CATXBR_CURTBUFAPTR_Pos)    /*!< 0xFFFFFFFF */
+#define ETH_DMAC3CATXBR_CURTBUFAPTR         ETH_DMAC3CATXBR_CURTBUFAPTR_Msk                     /*!< Application Transmit Buffer Address Pointer */
+
+/*****************  Bit definition for ETH_DMAC3SR register  ******************/
+#define ETH_DMAC3SR_TI_Pos                  (0U)
+#define ETH_DMAC3SR_TI_Msk                  (0x1UL << ETH_DMAC3SR_TI_Pos)                        /*!< 0x00000001 */
+#define ETH_DMAC3SR_TI                      ETH_DMAC3SR_TI_Msk                                  /*!< Transmit Interrupt */
+#define ETH_DMAC3SR_TPS_Pos                 (1U)
+#define ETH_DMAC3SR_TPS_Msk                 (0x1UL << ETH_DMAC3SR_TPS_Pos)                       /*!< 0x00000002 */
+#define ETH_DMAC3SR_TPS                     ETH_DMAC3SR_TPS_Msk                                 /*!< Transmit Process Stopped */
+#define ETH_DMAC3SR_TBU_Pos                 (2U)
+#define ETH_DMAC3SR_TBU_Msk                 (0x1UL << ETH_DMAC3SR_TBU_Pos)                       /*!< 0x00000004 */
+#define ETH_DMAC3SR_TBU                     ETH_DMAC3SR_TBU_Msk                                 /*!< Transmit Buffer Unavailable */
+#define ETH_DMAC3SR_RI_Pos                  (6U)
+#define ETH_DMAC3SR_RI_Msk                  (0x1UL << ETH_DMAC3SR_RI_Pos)                        /*!< 0x00000040 */
+#define ETH_DMAC3SR_RI                      ETH_DMAC3SR_RI_Msk                                  /*!< Receive Interrupt */
+#define ETH_DMAC3SR_RBU_Pos                 (7U)
+#define ETH_DMAC3SR_RBU_Msk                 (0x1UL << ETH_DMAC3SR_RBU_Pos)                       /*!< 0x00000080 */
+#define ETH_DMAC3SR_RBU                     ETH_DMAC3SR_RBU_Msk                                 /*!< Receive Buffer Unavailable */
+#define ETH_DMAC3SR_RPS_Pos                 (8U)
+#define ETH_DMAC3SR_RPS_Msk                 (0x1UL << ETH_DMAC3SR_RPS_Pos)                       /*!< 0x00000100 */
+#define ETH_DMAC3SR_RPS                     ETH_DMAC3SR_RPS_Msk                                 /*!< Receive Process Stopped */
+#define ETH_DMAC3SR_RWT_Pos                 (9U)
+#define ETH_DMAC3SR_RWT_Msk                 (0x1UL << ETH_DMAC3SR_RWT_Pos)                       /*!< 0x00000200 */
+#define ETH_DMAC3SR_RWT                     ETH_DMAC3SR_RWT_Msk                                 /*!< Receive Watchdog Timeout */
+#define ETH_DMAC3SR_ETI_Pos                 (10U)
+#define ETH_DMAC3SR_ETI_Msk                 (0x1UL << ETH_DMAC3SR_ETI_Pos)                       /*!< 0x00000400 */
+#define ETH_DMAC3SR_ETI                     ETH_DMAC3SR_ETI_Msk                                 /*!< Early Transmit Interrupt */
+#define ETH_DMAC3SR_ERI_Pos                 (11U)
+#define ETH_DMAC3SR_ERI_Msk                 (0x1UL << ETH_DMAC3SR_ERI_Pos)                       /*!< 0x00000800 */
+#define ETH_DMAC3SR_ERI                     ETH_DMAC3SR_ERI_Msk                                 /*!< Early Receive Interrupt */
+#define ETH_DMAC3SR_FBE_Pos                 (12U)
+#define ETH_DMAC3SR_FBE_Msk                 (0x1UL << ETH_DMAC3SR_FBE_Pos)                       /*!< 0x00001000 */
+#define ETH_DMAC3SR_FBE                     ETH_DMAC3SR_FBE_Msk                                 /*!< Fatal Bus Error */
+#define ETH_DMAC3SR_CDE_Pos                 (13U)
+#define ETH_DMAC3SR_CDE_Msk                 (0x1UL << ETH_DMAC3SR_CDE_Pos)                       /*!< 0x00002000 */
+#define ETH_DMAC3SR_CDE                     ETH_DMAC3SR_CDE_Msk                                 /*!< Context Descriptor Error */
+#define ETH_DMAC3SR_AIS_Pos                 (14U)
+#define ETH_DMAC3SR_AIS_Msk                 (0x1UL << ETH_DMAC3SR_AIS_Pos)                       /*!< 0x00004000 */
+#define ETH_DMAC3SR_AIS                     ETH_DMAC3SR_AIS_Msk                                 /*!< Abnormal Interrupt Summary */
+#define ETH_DMAC3SR_NIS_Pos                 (15U)
+#define ETH_DMAC3SR_NIS_Msk                 (0x1UL << ETH_DMAC3SR_NIS_Pos)                       /*!< 0x00008000 */
+#define ETH_DMAC3SR_NIS                     ETH_DMAC3SR_NIS_Msk                                 /*!< Normal Interrupt Summary */
+#define ETH_DMAC3SR_TEB_Pos                 (16U)
+#define ETH_DMAC3SR_TEB_Msk                 (0x7UL << ETH_DMAC3SR_TEB_Pos)                        /*!< 0x00070000 */
+#define ETH_DMAC3SR_TEB                     ETH_DMAC3SR_TEB_Msk                                 /*!< Tx DMA Error Bits */
+#define ETH_DMAC3SR_REB_Pos                 (19U)
+#define ETH_DMAC3SR_REB_Msk                 (0x7UL << ETH_DMAC3SR_REB_Pos)                        /*!< 0x00380000 */
+#define ETH_DMAC3SR_REB                     ETH_DMAC3SR_REB_Msk                                 /*!< Rx DMA Error Bits */
 
 /******************************************************************************/
 /*                                                                            */
@@ -43238,7 +44400,7 @@ typedef struct
 #define USB_OTG_GCCFG_FSVPLUS_Msk                (0x1UL << USB_OTG_GCCFG_FSVPLUS_Pos)          /*!< 0x00000002 */
 #define USB_OTG_GCCFG_FSVPLUS                    USB_OTG_GCCFG_FSVPLUS_Msk                    /*!< Single-Ended DP2 indicator DP voltage level  */
 #define USB_OTG_GCCFG_FSVMINUS_Pos               (2U)
-#define USB_OTG_GCCFG_FSVMINUS_Msk               0x1UL << USB_OTG_GCCFG_FSVMINUS_Pos)         /*!< 0x00000004 */
+#define USB_OTG_GCCFG_FSVMINUS_Msk               (0x1UL << USB_OTG_GCCFG_FSVMINUS_Pos)         /*!< 0x00000004 */
 #define USB_OTG_GCCFG_FSVMINUS                   USB_OTG_GCCFG_FSVMINUS_Msk                  /*!< Single-Ended DM2 indicator DM voltage level  */
 #define USB_OTG_GCCFG_SESSVLD_Pos                (3U)
 #define USB_OTG_GCCFG_SESSVLD_Msk                (0x1UL << USB_OTG_GCCFG_SESSVLD_Pos)          /*!< 0x00000008 */
@@ -44854,7 +46016,7 @@ typedef struct
 #define IS_HCD_ALL_INSTANCE(INSTANCE) ((INSTANCE) == USBDR)
 
 /******************************* WWDG Instances *******************************/
-#define IS_WWDG_ALL_INSTANCE(INSTANCE) (((INSTANCE) == WWDG1)
+#define IS_WWDG_ALL_INSTANCE(INSTANCE) (((INSTANCE) == WWDG1))
 /******************************* CRC VERSION ********************************/
 #define CRC_VERSION(__INSTANCE__) ((__INSTANCE__)->VERR)
 
