@@ -87,7 +87,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="_htmresc/mini-st.css" />
+  <link rel="stylesheet" href="../../../_htmresc/mini-st.css" />
 </head>
 <body>
 <h1 id="starterapp_m33td-demonstration-application">StarterApp_M33TD
@@ -128,9 +128,11 @@ task to manage the A35 lifecycle through TF-M secure services.</li>
 together with local button-triggered system actions.</li>
 <li><strong>Low-Power Orchestration</strong>: Includes the LowPowerMgr
 task in the default StarterApp profile.</li>
-<li><strong>FWU Transport Path</strong>: Includes the FWU manager task
-and RPMsg endpoint used to query components and drive the secure FWU
-flow with install, accept, and reject actions.</li>
+<li><strong>FWU Update Flow</strong>: Includes the FWU manager task and
+RPMsg endpoint that receive update commands from the A35 and coordinate
+the PSA Firmware Update service in TF-M. The runtime update flow that
+writes M33 firmware-update slots requires TF-M storage access to be
+enabled in the secure build.</li>
 <li><strong>Optional Display Pipeline</strong>:
 <code>BUILD_CONFIG=FULL</code> enables the display path;
 <code>BUILD_CONFIG=MINIMUM</code> keeps the non-display profile.</li>
@@ -201,11 +203,6 @@ reboot.</li>
 <h2 id="prerequisite-hardware-software-environment-setup">Prerequisite
 Hardware &amp; Software Environment Setup</h2>
 <ul>
-<li><strong>Trusted Firmware-M</strong>: The source code must be
-installed under the <code>Middlewares/Third_Party</code> directory with
-the path <code>Middlewares/Third_Party/trusted-firmware-m</code>. Ensure
-the correct version is used as described in the STM32 MPU release
-note.</li>
 <li><strong>Supported Devices</strong>: This example runs on STM32MP23xx
 devices and has been tested with the STMicroelectronics STM32MP235F-DK
 board. It can be tailored to other supported devices and development
@@ -215,18 +212,24 @@ the PC USB port to display traces.</li>
 </ul>
 <h3 id="software-versions">Software Versions</h3>
 <ul>
-<li><strong>Trusted Firmware-M (TFM)</strong>: Refer to the <a
-href="https://wiki.st.com/stm32mpu/wiki/Category:Trusted_Firmware-M">Trusted
-Firmware-M wiki</a> for recommended versions and integration
-details.</li>
-<li><strong>External Device Tree (externalDT)</strong>: See the <a
-href="https://wiki.st.com/stm32mpu/wiki/External_device_tree">External
-Device Tree wiki</a> for guidance on obtaining and using external DT
-sources.</li>
+<li><strong>Trusted Firmware-M</strong>: The source code must be
+installed under the <code>Middlewares/Third_Party</code> directory with
+the path <code>Middlewares/Third_Party/trusted-firmware-m</code>. Ensure
+the correct version is used as described in the STM32 MPU OSTL release
+note.</li>
+<li><strong>External Device Tree</strong>: The external device tree
+source must be installed under the <code>Utilities</code> directory with
+the path <code>Utilities/dt-stm32mp</code>. Clone the
+<code>dt-stm32mp</code> repository into <code>Utilities</code>. Ensure
+the correct version is used as described in the STM32 MPU OSTL release
+note.</li>
 <li><strong>STM32CubeIDE</strong>: For supported IDE versions and
 ecosystem information, refer the <a
 href="https://wiki.st.com/stm32mpu/wiki/">STM32 MPU wiki</a>.</li>
 </ul>
+<blockquote>
+<p><strong>Note:</strong> To keep the external device tree and Trusted Firmware-M in step, use the tags for both <code>dt-stm32mp</code> and <code>trusted-firmware-m</code> from the same OSTL release, as described in the STM32 MPU OSTL release note. Following this step keeps the device tree and TF-M aligned, so the secure build always uses a consistent configuration.</p>
+</blockquote>
 <hr />
 <h2 id="artifact-flow-build-sign-deploy">Artifact flow (build → sign →
 deploy)</h2>
@@ -276,14 +279,12 @@ Build CMake Project for M33TDCID (Through Command Line)</h2>
 <code>Firmware/Middlewares/Third_Party/trusted-firmware-m</code>.</p></li>
 <li><p>For SD card development mode, execute the following command:</p>
 <div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-B</span> config_default <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-DTFM_PLATFORM</span><span class="op">=</span>stm/stm32mp235f_dk <span class="at">-DTFM_TOOLCHAIN_FILE</span><span class="op">=</span>toolchain_GNUARM.cmake <span class="at">-DSTM32_BOOT_DEV</span><span class="op">=</span>sdmmc1 <span class="at">-DTFM_PROFILE</span><span class="op">=</span>profile_medium <span class="at">-DSTM32_M33TDCID</span><span class="op">=</span>ON <span class="at">-DCMAKE_BUILD_TYPE</span><span class="op">=</span>Relwithdebinfo <span class="at">-DNS</span><span class="op">=</span>OFF <span class="at">-DDTS_EXT_DIR</span><span class="op">=&lt;</span>EXT_DT_DIR<span class="op">&gt;</span> -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp235f-dk-cm33tdcid-ostl-sdcard-bl2.dts <span class="at">-DDTS_BOARD_S</span><span class="op">=</span>stm32mp2/m33-td/tfm/stm32mp235f-dk-cm33tdcid-ostl-sdcard-s.dts </span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp235f-dk-cm33tdcid-ostl-ns.dts</span> </span></code></pre></div></li>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-B</span> config_default <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-DTFM_PLATFORM</span><span class="op">=</span>stm/stm32mp235f_dk <span class="at">-DTFM_TOOLCHAIN_FILE</span><span class="op">=</span>toolchain_GNUARM.cmake <span class="at">-DSTM32_BOOT_DEV</span><span class="op">=</span>sdmmc1 <span class="at">-DTFM_PROFILE</span><span class="op">=</span>profile_medium <span class="at">-DSTM32_M33TDCID</span><span class="op">=</span>ON <span class="at">-DCMAKE_BUILD_TYPE</span><span class="op">=</span>Relwithdebinfo <span class="at">-DNS</span><span class="op">=</span>OFF <span class="at">-DDTS_EXT_DIR</span><span class="op">=&lt;</span>EXT_DT_DIR<span class="op">&gt;</span> -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp235f-dk-cm33tdcid-ostl-sdcard-bl2.dts <span class="at">-DDTS_BOARD_S</span><span class="op">=</span>stm32mp2/m33-td/tfm/stm32mp235f-dk-cm33tdcid-ostl-sdcard-s.dts </span> <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp235f-dk-cm33tdcid-ostl-ns.dts</span> </span></code></pre></div></li>
 <li><p>Build the project:</p>
 <div class="sourceCode" id="cb2"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">--build</span> config_default <span class="at">--</span> install</span></code></pre></div></li>
 </ol>
-<p><strong>Note</strong>: The external DT repository is placed in the
-<code>Utilities</code> directory.</p>
+<p><strong>Note</strong>: The external DT repository is located under the <code>Utilities</code> directory. Ensure <code>Utilities/dt-stm32mp</code> is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.</p>
 <hr />
 <h3
 id="non-secure-m33-firmware-build-starterapp_m33td-application">Non-Secure
@@ -306,8 +307,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="
      - `-DLOW_POWER_DEFAULT_POLICY_ENABLE=ON|OFF` (default: `OFF`)
      - `-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF` (default: `OFF`)
      - `-DFAULT_EXCEPTION_ENABLE=ON|OFF` (default: `ON`)
-     - `-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF` (default: `ON`)
-  - `ENABLE_FWU_MGR_TASK` is part of the fixed StarterApp project profile and is not exposed as a separate public CMake option.</code></pre></li>
+     - `-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF` (default: `ON`)</code></pre></li>
 <li><p>Build the project:</p>
 <div class="sourceCode" id="cb5"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> <span class="at">-C</span> build all</span></code></pre></div></li>
@@ -338,11 +338,15 @@ and update the CMake settings:</p>
 -DSTM32_M33TDCID=ON
 -DCMAKE_BUILD_TYPE=Relwithdebinfo
 -DNS=OFF
--DDTS_EXT_DIR=../../../../../../../../../Firmware/Utilities/dt-stm32mp
+-DDTS_EXT_DIR=../../../../../../../../Utilities/dt-stm32mp
 -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp235f-dk-cm33tdcid-ostl-sdcard-bl2.dts  # External DT file for sdcard_sdcard bootdevice mode 
 -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp235f-dk-cm33tdcid-ostl-sdcard-s.dts          # External DT file for sdcard_sdcard bootdevice mode 
 -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp235f-dk-cm33tdcid-ostl-ns.dts               # External DT file common for all bootdevice modes</code></pre></li>
-</ul></li>
+</ul>
+<p><strong>Note</strong>: <code>-DDTS_EXT_DIR</code> points to
+<code>Utilities/dt-stm32mp</code>. Ensure this is checked out at the
+required OpenSTLinux-release tag (see the External Device Tree
+prerequisite) so the secure build resolves the correct device tree.</p></li>
 <li>Configure the TFM CMake project:
 <ul>
 <li>Right-click on <code>StarterApp_M33TD_CM33_trusted-firmware-m</code>
@@ -717,6 +721,18 @@ required binaries for the specific TSV as described in the
 href="#reference-use-cases-for-mp23-dk-board-starterapp-project">Reference
 Use Cases for MP23-DK Board (StarterApp Project)</a>.</p></li>
 </ol>
+<hr />
+<h2 id="firmware-update-storage-access">Firmware Update Storage
+Access</h2>
+<p><code>STM32_FWU_STORAGE_ACCESS</code> enables the TF-M storage-write
+support used to stage and install firmware updates through the StarterApp
+FWU manager.</p>
+<p>This option applies only to dual-storage boot modes. In a dual-storage
+configuration, enable it only for a runtime FWU use case in which TF-M
+writes the M33 firmware-update slots.</p>
+<p>For an offline M33 firmware-update scenario in a dual-storage boot
+mode, leave the option disabled. Keep it disabled for single-storage boot
+modes.</p>
 <hr />
 <h2
 id="reference-use-cases-for-mp23-dk-board-starterapp-project">Reference

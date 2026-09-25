@@ -87,7 +87,7 @@
     code span.vs { color: #4070a0; } /* VerbatimString */
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="_htmresc/mini-st.css" />
+  <link rel="stylesheet" href="../../../_htmresc/mini-st.css" />
 </head>
 <body>
 <h1
@@ -146,8 +146,6 @@ be adjusted as the new application grows.</p>
 <h2 id="prerequisite-hardware-software-environment-setup">Prerequisite
 Hardware &amp; Software Environment Setup</h2>
 <ul>
-<li><strong>Trusted Firmware-M</strong>: Install the source code under
-<code>Middlewares/Third_Party/trusted-firmware-m</code>.</li>
 <li><strong>Supported Devices</strong>: This template targets
 STM32MP21xx devices and is provided for STM32MP215F-DK.</li>
 <li><strong>ST-Link Connection</strong>: Connect the ST-Link cable to
@@ -155,15 +153,23 @@ the PC USB port to display traces.</li>
 </ul>
 <h3 id="software-versions">Software Versions</h3>
 <ul>
-<li><strong>Trusted Firmware-M (TFM)</strong>: Refer to the <a
-href="https://wiki.st.com/stm32mpu/wiki/Category:Trusted_Firmware-M">Trusted
-Firmware-M wiki</a>.</li>
-<li><strong>External Device Tree (externalDT)</strong>: See the <a
-href="https://wiki.st.com/stm32mpu/wiki/External_device_tree">External
-Device Tree wiki</a>.</li>
+<li><strong>Trusted Firmware-M</strong>: The source code must be
+installed under the <code>Middlewares/Third_Party</code> directory with
+the path <code>Middlewares/Third_Party/trusted-firmware-m</code>. Ensure
+the correct version is used as described in the STM32 MPU OSTL release
+note.</li>
+<li><strong>External Device Tree</strong>: The external device tree
+source must be installed under the <code>Utilities</code> directory with
+the path <code>Utilities/dt-stm32mp</code>. Clone the
+<code>dt-stm32mp</code> repository into <code>Utilities</code>. Ensure
+the correct version is used as described in the STM32 MPU OSTL release
+note.</li>
 <li><strong>STM32CubeIDE</strong>: Refer to the <a
 href="https://wiki.st.com/stm32mpu/wiki/">STM32 MPU wiki</a>.</li>
 </ul>
+<blockquote>
+<p><strong>Note:</strong> To keep the external device tree and Trusted Firmware-M in step, use the tags for both <code>dt-stm32mp</code> and <code>trusted-firmware-m</code> from the same OSTL release, as described in the STM32 MPU OSTL release note. Following this step keeps the device tree and TF-M aligned, so the secure build always uses a consistent configuration.</p>
+</blockquote>
 <hr />
 <h2 id="to-build-cmake-project-for-m33tdcid-through-command-line">To
 Build CMake Project for M33TDCID (Through Command Line)</h2>
@@ -180,13 +186,14 @@ Build CMake Project for M33TDCID (Through Command Line)</h2>
 <ol type="1">
 <li>Navigate to
 <code>Firmware/Middlewares/Third_Party/trusted-firmware-m</code>.</li>
-<li>For SD card development mode, execute the TF-M configure command
-matching STM32MP215F-DK and your selected boot-device DTS files.</li>
-<li>Build the project:
-<code>bash  cmake --build config_default -- install</code></li>
+<li><p>For SD card development mode, execute the following command:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-B</span> config_default <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-DTFM_PLATFORM</span><span class="op">=</span>stm/stm32mp215f_dk <span class="at">-DTFM_TOOLCHAIN_FILE</span><span class="op">=</span>toolchain_GNUARM.cmake <span class="at">-DSTM32_BOOT_DEV</span><span class="op">=</span>sdmmc1 <span class="at">-DTFM_PROFILE</span><span class="op">=</span>profile_medium <span class="at">-DSTM32_M33TDCID</span><span class="op">=</span>ON <span class="at">-DCMAKE_BUILD_TYPE</span><span class="op">=</span>Relwithdebinfo <span class="at">-DNS</span><span class="op">=</span>OFF <span class="at">-DDTS_EXT_DIR</span><span class="op">=&lt;</span>EXT_DT_DIR<span class="op">&gt;</span> -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts <span class="at">-DDTS_BOARD_S</span><span class="op">=</span>stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts</span> <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts</span></span></code></pre></div></li>
+<li><p>Build the project:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">--build</span> config_default <span class="at">--</span> install</span></code></pre></div></li>
 </ol>
-<p><strong>Note</strong>: The external DT repository is placed in the
-<code>Utilities</code> directory.</p>
+<p><strong>Note</strong>: The external DT repository is located under the <code>Utilities</code> directory. Ensure <code>Utilities/dt-stm32mp</code> is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.</p>
 <hr />
 <h3
 id="non-secure-m33-firmware-build-template_starterapp_m33td-application">Non-Secure
@@ -228,11 +235,40 @@ MPU wiki</a> for project import guidance.</p>
 <h3 id="build-procedure-1">Build Procedure</h3>
 <h4 id="secure-tfm-firmware-build">Secure TFM Firmware Build</h4>
 <ol type="1">
-<li>Configure the TF-M CMake project with the same platform and DTS
-values used by the command-line flow.</li>
-<li>Run <code>CMake Configure</code> on
-<code>Template_StarterApp_M33TD_CM33_trusted-firmware-m</code>.</li>
-<li>Build the TF-M CMake project.</li>
+<li>Configure the CMake build options:
+<ul>
+<li><p>Navigate to
+<code>Template_StarterApp_M33TD_CM33_trusted-firmware-m</code> and update the
+CMake settings:</p>
+<pre><code>-DDEBUG_AUTHENTICATION=FULL  # Enabled for Debug Purpose, Default: this option is removed
+-DTFM_PLATFORM=stm/stm32mp215f_dk
+-DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake
+-DSTM32_BOOT_DEV=sdmmc1  # Building TFM for &quot;sdcard_sdcard&quot; bootdevice mode
+-DTFM_PROFILE=profile_medium
+-DSTM32_M33TDCID=ON
+-DCMAKE_BUILD_TYPE=Relwithdebinfo
+-DNS=OFF
+-DDTS_EXT_DIR=../../../../../../../../Utilities/dt-stm32mp
+-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts  # External DT file for sdcard_sdcard bootdevice mode
+-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts          # External DT file for sdcard_sdcard bootdevice mode
+-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts               # External DT file common for all bootdevice modes</code></pre></li>
+</ul>
+<p><strong>Note</strong>: <code>-DDTS_EXT_DIR</code> points to
+<code>Utilities/dt-stm32mp</code>. Ensure this is checked out at the
+required OpenSTLinux-release tag (see the External Device Tree
+prerequisite) so the secure build resolves the correct device tree.</p></li>
+<li>Configure the TFM CMake project:
+<ul>
+<li>Right-click on
+<code>Template_StarterApp_M33TD_CM33_trusted-firmware-m</code> -&gt;
+<code>CMake Configure</code>.</li>
+</ul></li>
+<li>Build the TFM CMake project:
+<ul>
+<li>Right-click on
+<code>Template_StarterApp_M33TD_CM33_trusted-firmware-m</code> -&gt;
+<code>Build Project</code>.</li>
+</ul></li>
 </ol>
 <h4 id="non-secure-stm32cubeide-project-build">Non-Secure STM32CubeIDE
 Project Build</h4>

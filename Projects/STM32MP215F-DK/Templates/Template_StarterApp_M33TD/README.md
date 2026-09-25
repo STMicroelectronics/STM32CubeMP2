@@ -41,14 +41,15 @@ Additional task enables are configured in the project headers and can be adjuste
 
 ## Prerequisite Hardware & Software Environment Setup
 
-- **Trusted Firmware-M**: Install the source code under `Middlewares/Third_Party/trusted-firmware-m`.
 - **Supported Devices**: This template targets STM32MP21xx devices and is provided for STM32MP215F-DK.
 - **ST-Link Connection**: Connect the ST-Link cable to the PC USB port to display traces.
 
 ### Software Versions
-- **Trusted Firmware-M (TFM)**: Refer to the [Trusted Firmware-M wiki](https://wiki.st.com/stm32mpu/wiki/Category:Trusted_Firmware-M).
-- **External Device Tree (externalDT)**: See the [External Device Tree wiki](https://wiki.st.com/stm32mpu/wiki/External_device_tree).
+- **Trusted Firmware-M**: The source code must be installed under the `Middlewares/Third_Party` directory with the path `Middlewares/Third_Party/trusted-firmware-m`. Ensure the correct version is used as described in the STM32 MPU OSTL release note.
+- **External Device Tree**: The external device tree source must be installed under the `Utilities` directory with the path `Utilities/dt-stm32mp`. Clone the `dt-stm32mp` repository into `Utilities`. Ensure the correct version is used as described in the STM32 MPU OSTL release note.
 - **STM32CubeIDE**: Refer to the [STM32 MPU wiki](https://wiki.st.com/stm32mpu/wiki/).
+
+> **Note:** To keep the external device tree and Trusted Firmware-M in step, use the tags for both `dt-stm32mp` and `trusted-firmware-m` from the same OSTL release, as described in the STM32 MPU OSTL release note. Following this step keeps the device tree and TF-M aligned, so the secure build always uses a consistent configuration.
 
 ---
 
@@ -64,13 +65,16 @@ Additional task enables are configured in the project headers and can be adjuste
 
 ### Secure Build (TFM)
 1. Navigate to `Firmware/Middlewares/Third_Party/trusted-firmware-m`.
-2. For SD card development mode, execute the TF-M configure command matching STM32MP215F-DK and your selected boot-device DTS files.
+2. For SD card development mode, execute the following command:
+	```bash
+	cmake -B config_default -G"Unix Makefiles" -DTFM_PLATFORM=stm/stm32mp215f_dk -DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake -DSTM32_BOOT_DEV=sdmmc1 -DTFM_PROFILE=profile_medium -DSTM32_M33TDCID=ON -DCMAKE_BUILD_TYPE=Relwithdebinfo -DNS=OFF -DDTS_EXT_DIR=<EXT_DT_DIR> -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts
+	```
 3. Build the project:
 	```bash
 	cmake --build config_default -- install
 	```
 
-**Note**: The external DT repository is placed in the `Utilities` directory.
+**Note**: The external DT repository is located under the `Utilities` directory. Ensure `Utilities/dt-stm32mp` is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.
 
 ---
 
@@ -108,9 +112,28 @@ Template_StarterApp_M33TD
 ### Build Procedure
 
 #### Secure TFM Firmware Build
-1. Configure the TF-M CMake project with the same platform and DTS values used by the command-line flow.
-2. Run `CMake Configure` on `Template_StarterApp_M33TD_CM33_trusted-firmware-m`.
-3. Build the TF-M CMake project.
+1. Configure the CMake build options:
+	- Navigate to `Template_StarterApp_M33TD_CM33_trusted-firmware-m` and update the CMake settings:
+	  ```
+	  -DDEBUG_AUTHENTICATION=FULL  # Enabled for Debug Purpose, Default: this option is removed
+	  -DTFM_PLATFORM=stm/stm32mp215f_dk
+	  -DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake
+	  -DSTM32_BOOT_DEV=sdmmc1  # Building TFM for "sdcard_sdcard" bootdevice mode
+	  -DTFM_PROFILE=profile_medium
+	  -DSTM32_M33TDCID=ON
+	  -DCMAKE_BUILD_TYPE=Relwithdebinfo
+	  -DNS=OFF
+	  -DDTS_EXT_DIR=../../../../../../../../Utilities/dt-stm32mp
+	  -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts  # External DT file for sdcard_sdcard bootdevice mode
+	  -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts          # External DT file for sdcard_sdcard bootdevice mode
+	  -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp215f-dk-cm33tdcid-ostl-ns.dts               # External DT file common for all bootdevice modes
+	  ```
+
+	**Note**: `-DDTS_EXT_DIR` points to `Utilities/dt-stm32mp`. Ensure this is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.
+2. Configure the TFM CMake project:
+	- Right-click on `Template_StarterApp_M33TD_CM33_trusted-firmware-m` -> `CMake Configure`.
+3. Build the TFM CMake project:
+	- Right-click on `Template_StarterApp_M33TD_CM33_trusted-firmware-m` -> `Build Project`.
 
 #### Non-Secure STM32CubeIDE Project Build
 1. Select the matching NonSecure build configuration.

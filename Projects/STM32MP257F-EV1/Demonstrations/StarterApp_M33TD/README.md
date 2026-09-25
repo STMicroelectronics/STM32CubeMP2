@@ -19,7 +19,7 @@ The StarterApp configuration enables OpenAMP, button handling, low-power orchest
 - **Integrate Utility Stack**: Uses `Utilities/M33TD_NSAppCore` for reusable tasks and thin driver abstractions.
 - **OpenAMP and Button Handling**: Keeps RPMsg transport services and local button-triggered power actions enabled in the default StarterApp profile.
 - **Low-Power Orchestration**: Includes the LowPowerMgr task in the default StarterApp profile.
-- **FWU Transport Path**: Includes the FWU manager task and RPMsg endpoint used to query components and drive the secure FWU flow with install, accept, and reject actions.
+- **FWU Update Flow**: Includes the FWU manager task and RPMsg endpoint that receive update commands from the A35 and coordinate the PSA Firmware Update service in TF-M. The runtime update flow that writes M33 firmware-update slots requires TF-M storage access to be enabled in the secure build.
 - **Optional Display Pipeline**: A build-time option enables a display panel path, with optional dynamic splash animation (see `BUILD_CONFIG` / `BOOT_SPLASHSCREEN`).
 
 ---
@@ -77,14 +77,15 @@ This application implements the StarterApp functionality (Non-Secure Application
 
 ## Prerequisite Hardware & Software Environment Setup
 
-- **Trusted Firmware-M**: The source code must be installed under the `Middlewares/Third_Party` directory with the path `Middlewares/Third_Party/trusted-firmware-m`. Ensure the correct version is used as described in the STM32 MPU release note.
 - **Supported Devices**: This example runs on STM32MP25xx devices and has been tested with the STMicroelectronics STM32MP257F-EV1 board. It can be tailored to other supported devices and development boards.
 - **ST-Link Connection**: Connect the ST-Link cable to the PC USB port to display traces.
 
 ### Software Versions
-- **Trusted Firmware-M (TFM)**: Refer to the [Trusted Firmware-M wiki](https://wiki.st.com/stm32mpu/wiki/Category:Trusted_Firmware-M) for recommended versions and integration details.
-- **External Device Tree (externalDT)**: See the [External Device Tree wiki](https://wiki.st.com/stm32mpu/wiki/External_device_tree) for guidance on obtaining and using external DT sources.
+- **Trusted Firmware-M**: The source code must be installed under the `Middlewares/Third_Party` directory with the path `Middlewares/Third_Party/trusted-firmware-m`. Ensure the correct version is used as described in the STM32 MPU OSTL release note.
+- **External Device Tree**: The external device tree source must be installed under the `Utilities` directory with the path `Utilities/dt-stm32mp`. Clone the `dt-stm32mp` repository into `Utilities`. Ensure the correct version is used as described in the STM32 MPU OSTL release note.
 - **STM32CubeIDE**: For supported IDE versions and ecosystem information, refer the [STM32 MPU wiki](https://wiki.st.com/stm32mpu/wiki/).
+
+> **Note:** To keep the external device tree and Trusted Firmware-M in step, use the tags for both `dt-stm32mp` and `trusted-firmware-m` from the same OSTL release, as described in the STM32 MPU OSTL release note. Following this step keeps the device tree and TF-M aligned, so the secure build always uses a consistent configuration.
 
 ---
 
@@ -137,15 +138,14 @@ Deploy into OSTL image tree
 1. Navigate to `Firmware/Middlewares/Third_Party/trusted-firmware-m`.
 2. For SD card development mode, execute the following command:
    ```bash
-   cmake -B config_default -G"Unix Makefiles" -DTFM_PLATFORM=stm/stm32mp257f_ev1 -DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake -DSTM32_BOOT_DEV=sdmmc1 -DTFM_PROFILE=profile_medium -DSTM32_M33TDCID=ON -DCMAKE_BUILD_TYPE=Relwithdebinfo -DNS=OFF -DDTS_EXT_DIR=<EXT_DT_DIR> -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-bl2.dts -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts 
-   -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts 
+   cmake -B config_default -G"Unix Makefiles" -DTFM_PLATFORM=stm/stm32mp257f_ev1 -DTFM_TOOLCHAIN_FILE=toolchain_GNUARM.cmake -DSTM32_BOOT_DEV=sdmmc1 -DTFM_PROFILE=profile_medium -DSTM32_M33TDCID=ON -DCMAKE_BUILD_TYPE=Relwithdebinfo -DNS=OFF -DDTS_EXT_DIR=<EXT_DT_DIR> -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-bl2.dts -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts
    ```
 3. Build the project:
    ```bash
    cmake --build config_default -- install
    ```
 
-**Note**: The external DT repository is placed in the `Utilities` directory.
+**Note**: The external DT repository is located under the `Utilities` directory. Ensure `Utilities/dt-stm32mp` is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.
 
 ---
 
@@ -168,7 +168,6 @@ Deploy into OSTL image tree
             - `-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF` (default: `OFF`)
             - `-DFAULT_EXCEPTION_ENABLE=ON|OFF` (default: `ON`)
             - `-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF` (default: `ON`)
-         - `ENABLE_FWU_MGR_TASK` is part of the fixed StarterApp project profile and is not exposed as a separate public CMake option.
 
 3. Build the project:
    ```bash
@@ -203,13 +202,14 @@ StarterApp_M33TD
       -DSTM32_M33TDCID=ON
       -DCMAKE_BUILD_TYPE=Relwithdebinfo
       -DNS=OFF
-      -DDTS_EXT_DIR=../../../../../../../../../Firmware/Utilities/dt-stm32mp
+      -DDTS_EXT_DIR=../../../../../../../../Utilities/dt-stm32mp
       -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-bl2.dts  # External DT file for sdcard_sdcard bootdevice mode 
       -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts          # External DT file for sdcard_sdcard bootdevice mode 
       -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts               # External DT file common for all bootdevice modes
       ```
 
-      
+    **Note**: `-DDTS_EXT_DIR` points to `Utilities/dt-stm32mp`. Ensure this is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.
+
 2. Configure the TFM CMake project:
     - Right-click on `StarterApp_M33TD_CM33_trusted-firmware-m` -> `CMake Configure`.
 3. Build the TFM CMake project:
@@ -517,6 +517,16 @@ For the MP25-EV1 board, five TSV flavors are provided to flash under the M33TDCI
 
 ---
 
+## Firmware Update Storage Access
+
+`STM32_FWU_STORAGE_ACCESS` enables the TF-M storage-write support used to stage and install firmware updates through the StarterApp FWU manager.
+
+This option is applicable only to the dual-storage boot modes `nor_emmc`, `nor_nor_sdcard`, and `nor_sdcard`. In these modes, enable it only for a runtime FWU use case in which TF-M writes the M33 firmware-update slots.
+
+For an offline M33 firmware-update scenario in a dual-storage boot mode, leave the option disabled. Keep it disabled for the single-storage modes `emmc_emmc` and `sdcard_sdcard`.
+
+---
+
 ## Reference Use Cases for MP25-EV1 Board (StarterApp Project)
 
 ### 1. FlashLayout_emmc_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv (emmc_emmc Boot Mode)
@@ -549,6 +559,7 @@ For the MP25-EV1 board, five TSV flavors are provided to flash under the M33TDCI
 -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts
 -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-emmc-s.dts
 -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts
+-DSTM32_FWU_STORAGE_ACCESS=ON  # Enables the StarterApp runtime FWU reference flow
 ```
 
 ---
@@ -566,6 +577,7 @@ For the MP25-EV1 board, five TSV flavors are provided to flash under the M33TDCI
 -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts
 -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-snor-s.dts
 -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts
+-DSTM32_FWU_STORAGE_ACCESS=ON  # Enables the StarterApp runtime FWU reference flow
 -DTFM_PARTITION_PROTECTED_STORAGE=OFF     #For this dev mode , Protected Storage feature needs to be disabled 
 ```
 
@@ -584,6 +596,7 @@ For the MP25-EV1 board, five TSV flavors are provided to flash under the M33TDCI
 -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts
 -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts
 -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts
+-DSTM32_FWU_STORAGE_ACCESS=ON  # Enables the StarterApp runtime FWU reference flow
 ```
 
 ---
