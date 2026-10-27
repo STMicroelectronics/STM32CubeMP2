@@ -26,6 +26,12 @@
 # include <atomic>
 using std::atomic_flag;
 using std::memory_order;
+using std::memory_order_relaxed;
+using std::memory_order_consume;
+using std::memory_order_acquire;
+using std::memory_order_release;
+using std::memory_order_acq_rel;
+using std::memory_order_seq_cst;
 
 using std::atomic_bool;
 using std::atomic_char;
@@ -94,14 +100,22 @@ using std::atomic_fetch_and_explicit;
 using std::atomic_thread_fence;
 using std::atomic_signal_fence;
 
-#elif defined(HAVE_STDATOMIC_H) && !defined(__CC_ARM) && \
-      !defined(__STDC_NO_ATOMICS__)
+#elif defined(HAVE_STDATOMIC_H) && !defined(__ARMCC_VERSION) && \
+!defined(__STDC_NO_ATOMICS__)
 # include <stdint.h>
 # include <stdatomic.h>
 #elif defined(__GNUC__)
 # include <metal/compiler/gcc/atomic.h>
 #else
+#if defined(HAVE_PROCESSOR_ATOMIC_H)
 # include <metal/processor/@PROJECT_PROCESSOR@/atomic.h>
+#else
+# include <metal/processor/generic/atomic.h>
+#endif /* defined(HAVE_PROCESSOR_ATOMIC_H) */
+#endif
+
+#if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 202311L && !defined(ATOMIC_VAR_INIT)
+# define ATOMIC_VAR_INIT(VAL) (VAL)
 #endif
 
 #endif /* __METAL_ATOMIC__H__ */

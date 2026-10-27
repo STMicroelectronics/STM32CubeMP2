@@ -59,6 +59,9 @@ defined in linker script */
     .type   Reset_Handler, %function
 Reset_Handler:
     ldr   sp, =_estack    /* set stack pointer */
+    .weak  _end
+    ldr   r0, =_end       /* stack limit = end of used RAM */
+    msr   MSPLIM, r0      /* set stack pointer limit (ARMv8-M) */
 
 /* Call the clock system initialization function.*/
     bl  SystemInit

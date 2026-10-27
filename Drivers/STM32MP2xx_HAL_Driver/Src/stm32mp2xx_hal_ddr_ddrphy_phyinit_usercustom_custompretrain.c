@@ -20,6 +20,13 @@
 /* DDRDBG registers */
 #define DDRDBG_DDR34_AC_SWIZZLE_ADD3_0 0x100U
 
+user_input_swizzle_t userinputswizzle;
+
+void *ddrphy_get_ui_swizzle_base(void)
+{
+  return (void *)&userinputswizzle;
+}
+
 /*
  * This function is called before training firmware is executed. Any
  * register override in this function might affect the firmware training
@@ -46,7 +53,7 @@
  */
 void ddrphy_phyinit_usercustom_pretrain(void)
 {
-  VERBOSE("%s Start\n", __func__);
+  DDR_VERBOSE("%s Start\n", __func__);
 
 #ifdef USE_STM32MP257CXX_EMU
   mmio_write_16((uintptr_t)(DDRPHYC_BASE + (4U * (BB0 | P0 | B0 | TDBYTE |
@@ -160,5 +167,5 @@ void ddrphy_phyinit_usercustom_pretrain(void)
 #endif /* STM32MP_DDR3_TYPE || STM32MP_DDR4_TYPE */
 #endif /* USE_STM32MP257CXX_EMU */
 
-  VERBOSE("%s End\n", __func__);
+  DDR_VERBOSE("%s End\n", __func__);
 }

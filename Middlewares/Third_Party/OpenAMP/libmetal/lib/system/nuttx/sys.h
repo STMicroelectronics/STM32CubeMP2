@@ -16,9 +16,14 @@
 #ifndef __METAL_NUTTX_SYS__H__
 #define __METAL_NUTTX_SYS__H__
 
+#include <metal/sleep.h>
+#include <syslog.h>
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define metal_yield() metal_sleep_usec(1000)
 
 #define METAL_INIT_DEFAULTS				\
 {							\

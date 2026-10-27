@@ -1082,7 +1082,7 @@ void HAL_PWREx_DisableSupply(uint32_t periph)
 
 /**
   * @brief  Enable a Peripheral Supply Monitoring (PVM)
-  * @note   For a peripheral, enable monitoring of its power suply
+  * @note   For a peripheral, enable monitoring of its power supply
   * @param  periph (single), for all PVM periph value, see  macro IS_PWR_PVM_PERIPH
   * @retval None
   */
@@ -1099,7 +1099,7 @@ void HAL_PWREx_EnableSupplyMonitoring(uint32_t periph)
 
 /**
   * @brief  Disable a Peripheral Supply Monitoring (PVM)
-  * @note   For a peripheral, enable monitoring of its power suply
+  * @note   For a peripheral, enable monitoring of its power supply
   * @param  periph (single), for all PVM periph value, see  macro IS_PWR_PVM_PERIPH
   * @retval None
   */

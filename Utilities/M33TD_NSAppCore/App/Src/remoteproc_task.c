@@ -25,6 +25,9 @@
 #include "remoteproc_driver.h"
 #include "scmi_mgr_task.h"
 #include "tfm_ioctl_cpu_api.h"
+#if ENABLE_OPENAMP_TASK
+#include "openamp_task.h"
+#endif
 #include <string.h>
 #include <stdio.h>
 
@@ -61,13 +64,14 @@ typedef struct {
 typedef enum tfm_platform_err_t (*RemoteProcCpuCmdFn_t)(uint32_t cpu_id, int32_t *status);
 
 /**
-  * @brief Recovery reason for a stop/start restart sequence.
+  * @brief Cause of a stop/reinitialize/start transaction.
   */
 typedef enum {
-    REMOTEPROC_RECOVERY_NONE = 0,
-    REMOTEPROC_RECOVERY_CRASH,
-    REMOTEPROC_RECOVERY_RESUME,
-} RemoteProcRecoveryType_t;
+    REMOTEPROC_REBOOT_NONE = 0,
+    REMOTEPROC_REBOOT_WARM_RESET,
+    REMOTEPROC_REBOOT_CRASH,
+    REMOTEPROC_REBOOT_RESUME_FAILURE,
+} RemoteProcRebootType_t;
 
 /**
   * @brief List of registered remote processor state callbacks.
@@ -107,14 +111,14 @@ static const char *remoteProcCpuStatusStr[] = {
 static uint32_t remoteProcCmdTick = 0U;
 
 /**
-  * @brief CPU ID to restart after stop/start recovery.
+  * @brief CPU ID to restart after the offline reinitialization phase.
   */
-static uint32_t remoteProcRecoveryCpuId = 0;
+static uint32_t remoteProcRebootCpuId = 0;
 
 /**
-  * @brief Recovery reason for a stop/start restart sequence.
+  * @brief Cause of the pending reboot transaction.
   */
-static RemoteProcRecoveryType_t remoteProcRecoveryType = REMOTEPROC_RECOVERY_NONE;
+static RemoteProcRebootType_t remoteProcRebootType = REMOTEPROC_REBOOT_NONE;
 
 /**
   * @brief Track whether SCMI notifications are currently masked for a stop sequence.
@@ -143,7 +147,7 @@ static void RemoteProcTask_NotifyCallbacks(RemoteProcState new_state);
 static void RemoteProcTask_HandleEvent(RemoteProcEvent event, uint32_t param);
 static void RemoteProcTask_HandleCoproCmd(RemoteProcCpuCmdFn_t cmd_fn, uint32_t cpu_id, int32_t expected_status);
 static bool RemoteProcTask_CheckCoproCmdStatus(uint32_t cpu_id, int32_t expected_status);
-static void RemoteProcTask_StartRecovery(uint32_t cpu_id, RemoteProcRecoveryType_t recovery_type);
+static void RemoteProcTask_StartReboot(uint32_t cpu_id, RemoteProcRebootType_t reboot_type);
 static void RemoteProcTask_CrashHandler(uint32_t cpu_id);
 static void RemoteProcTask_BeginStopSequence(void);
 static void RemoteProcTask_EndStopSequence(void);
@@ -306,15 +310,15 @@ static bool RemoteProcTask_CheckCoproCmdStatus(uint32_t cpu_id, int32_t expected
 }
 
 /**
-  * @brief Start a stop/start recovery sequence.
+  * @brief Start a stop/reinitialize/start transaction.
   * @param  cpu_id: CPU ID to recover.
-  * @param  recovery_type: Recovery reason.
+  * @param  reboot_type: Cause of the restart transaction.
   * @retval None
   */
-static void RemoteProcTask_StartRecovery(uint32_t cpu_id, RemoteProcRecoveryType_t recovery_type)
+static void RemoteProcTask_StartReboot(uint32_t cpu_id, RemoteProcRebootType_t reboot_type)
 {
-  remoteProcRecoveryType = recovery_type;
-  remoteProcRecoveryCpuId = cpu_id;
+  remoteProcRebootType = reboot_type;
+  remoteProcRebootCpuId = cpu_id;
   RemoteProcTask_BeginStopSequence();
   remoteProcCurrentState = REMOTEPROC_STATE_STOPPING;
   RemoteProcTask_NotifyCallbacks(remoteProcCurrentState);
@@ -493,6 +497,7 @@ static void RemoteProcTask_HandleEvent(RemoteProcEvent event, uint32_t param)
   case REMOTEPROC_STATE_OFFLINE:
     if (event == REMOTEPROC_EVENT_START)
     {
+      remoteProcRebootType = REMOTEPROC_REBOOT_NONE;
       remoteProcCurrentState = REMOTEPROC_STATE_STARTING;
       RemoteProcTask_HandleCoproCmd(tfm_platform_cpu_start, param, CPU_RUNNING);
     }
@@ -520,10 +525,15 @@ static void RemoteProcTask_HandleEvent(RemoteProcEvent event, uint32_t param)
       remoteProcCurrentState = REMOTEPROC_STATE_STOPPING;
       RemoteProcTask_HandleCoproCmd(tfm_platform_cpu_stop, param, CPU_OFFLINE);
     }
+    else if (event == REMOTEPROC_EVENT_REBOOT)
+    {
+      APP_LOG_INF("RemoteProc", "Warm reboot requested for cpu%lu", param);
+      RemoteProcTask_StartReboot(param, REMOTEPROC_REBOOT_WARM_RESET);
+    }
     else if (event == REMOTEPROC_EVENT_CRASH)
     {
       APP_LOG_INF("RemoteProc", "Crash detected on cpu%lu. Attempting recovery...", param);
-      RemoteProcTask_StartRecovery(param, REMOTEPROC_RECOVERY_CRASH);
+      RemoteProcTask_StartReboot(param, REMOTEPROC_REBOOT_CRASH);
     }
     else if (event == REMOTEPROC_EVENT_SUSPEND)
     {
@@ -559,6 +569,11 @@ static void RemoteProcTask_HandleEvent(RemoteProcEvent event, uint32_t param)
       remoteProcCurrentState = REMOTEPROC_STATE_STOPPING;
       RemoteProcTask_HandleCoproCmd(tfm_platform_cpu_stop, param, CPU_OFFLINE);
     }
+    else if (event == REMOTEPROC_EVENT_REBOOT)
+    {
+      APP_LOG_INF("RemoteProc", "Warm reboot requested for suspended cpu%lu", param);
+      RemoteProcTask_StartReboot(param, REMOTEPROC_REBOOT_WARM_RESET);
+    }
     break;
   case REMOTEPROC_STATE_RESUMING:
     if (event == REMOTEPROC_EVENT_CHECK_STATUS)
@@ -573,7 +588,7 @@ static void RemoteProcTask_HandleEvent(RemoteProcEvent event, uint32_t param)
     else if (event == REMOTEPROC_EVENT_ERROR)
     {
       APP_LOG_ERR("RemoteProc", "Resume failed for cpu%lu. Attempting stop/start recovery...", param);
-      RemoteProcTask_StartRecovery(param, REMOTEPROC_RECOVERY_RESUME);
+      RemoteProcTask_StartReboot(param, REMOTEPROC_REBOOT_RESUME_FAILURE);
     }
     break;
   case REMOTEPROC_STATE_STOPPING:
@@ -581,41 +596,52 @@ static void RemoteProcTask_HandleEvent(RemoteProcEvent event, uint32_t param)
     {
       if (RemoteProcTask_CheckCoproCmdStatus(param, CPU_OFFLINE))
       {
-        uint32_t recovery_cpu_id;
-        RemoteProcRecoveryType_t recovery_type;
+        uint32_t reboot_cpu_id;
+        RemoteProcRebootType_t reboot_type;
 
         APP_LOG_INF("RemoteProc", "copro %s stopped.", remoteProcCoproInfo.name);
         RemoteProcTask_EndStopSequence();
 
-        if (remoteProcRecoveryType == REMOTEPROC_RECOVERY_NONE)
-        {
-          remoteProcCurrentState = REMOTEPROC_STATE_OFFLINE;
-          RemoteProcTask_NotifyCallbacks(remoteProcCurrentState);
-        }
-        else
-        {
-          recovery_type = remoteProcRecoveryType;
-          recovery_cpu_id = remoteProcRecoveryCpuId;
-          remoteProcRecoveryType = REMOTEPROC_RECOVERY_NONE;
+        remoteProcCurrentState = REMOTEPROC_STATE_OFFLINE;
+        RemoteProcTask_NotifyCallbacks(remoteProcCurrentState);
 
-          if (recovery_type == REMOTEPROC_RECOVERY_CRASH)
+        if (remoteProcRebootType != REMOTEPROC_REBOOT_NONE)
+        {
+          reboot_type = remoteProcRebootType;
+          reboot_cpu_id = remoteProcRebootCpuId;
+
+          if (reboot_type == REMOTEPROC_REBOOT_CRASH)
           {
-            APP_LOG_INF("RemoteProc", "Crash recovery: restarting cpu%lu", recovery_cpu_id);
+            APP_LOG_INF("RemoteProc", "Crash recovery: restarting cpu%lu", reboot_cpu_id);
           }
-          else if (recovery_type == REMOTEPROC_RECOVERY_RESUME)
+          else if (reboot_type == REMOTEPROC_REBOOT_RESUME_FAILURE)
           {
-            APP_LOG_INF("RemoteProc", "Resume recovery: restarting cpu%lu", recovery_cpu_id);
+            APP_LOG_INF("RemoteProc", "Resume recovery: restarting cpu%lu", reboot_cpu_id);
+          }
+          else
+          {
+            APP_LOG_INF("RemoteProc", "Warm reboot: restarting cpu%lu", reboot_cpu_id);
           }
 
+#if ENABLE_OPENAMP_TASK
+          if (!OpenampTask_RequestReinit(reboot_cpu_id))
+          {
+            APP_LOG_WARN("RemoteProc", "OpenAMP reinit request not queued for cpu%lu", reboot_cpu_id);
+          }
+#endif
+          /*Offline window before restarting cpu*/
+          osDelay(100U);
+
+          remoteProcRebootType = REMOTEPROC_REBOOT_NONE;
           remoteProcCurrentState = REMOTEPROC_STATE_STARTING;
-          RemoteProcTask_HandleCoproCmd(tfm_platform_cpu_start, recovery_cpu_id, CPU_RUNNING);
+          RemoteProcTask_HandleCoproCmd(tfm_platform_cpu_start, reboot_cpu_id, CPU_RUNNING);
         }
       }
     }
     else if (event == REMOTEPROC_EVENT_ERROR)
     {
       remoteProcCurrentState = REMOTEPROC_STATE_OFFLINE;
-      remoteProcRecoveryType = REMOTEPROC_RECOVERY_NONE;
+      remoteProcRebootType = REMOTEPROC_REBOOT_NONE;
       RemoteProcTask_EndStopSequence();
 
       APP_LOG_ERR("RemoteProc", "Stop failed for cpu%lu. Forcing offline state. Last status: %s", param,
@@ -642,4 +668,3 @@ struct cpu_info_res RemoteProcTask_GetCoproInfo(void)
   */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

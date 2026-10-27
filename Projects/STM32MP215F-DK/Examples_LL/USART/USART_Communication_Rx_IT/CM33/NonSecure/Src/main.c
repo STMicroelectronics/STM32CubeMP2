@@ -344,16 +344,19 @@ void LED_Init(void)
   if (RESMGR_STATUS_ACCESS_OK == ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(97)))
   {
 	/* Enable GPIO Clock (to be able to program the configuration registers) */
-	LED3_LL_GPIO_CLK_ENABLE();
+	  LED3_GPIO_CLK_ENABLE();
   }
-  /* Acquire GPIOH6 using Resource manager */
-  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOH, RESMGR_GPIO_PIN(12)))
+
+  /* Acquire the LED3 GPIO using the Resource Manager */
+  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(LED3_GPIO_RIF_RES_TYP_GPIO, LED3_GPIO_RIF_RES_NUM_GPIO))
   {
     Error_Handler();
   }
 
-  /* Configure IO in output push-pull mode to drive external LED1 */
-  LL_GPIO_SetPinMode(LED3_LL_GPIO_PORT, LED3_LL_PIN, LL_GPIO_MODE_OUTPUT);
+  /* Configure LED3 as an output */
+  LL_GPIO_SetPinMode(LED3_GPIO_PORT, LED3_PIN, LL_GPIO_MODE_OUTPUT);
+
+  LL_GPIO_ResetOutputPin(LED3_GPIO_PORT, LED3_PIN);
 }
 
 /**
@@ -363,8 +366,8 @@ void LED_Init(void)
   */
 void LED_DeInit(void)
 {
-  /* Release GPIOH6 using Resource manager */
-  (void) ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOH, RESMGR_GPIO_PIN(6));
+  /* Release the LED3 GPIO using the Resource Manager */
+	(void) ResMgr_Release(LED3_GPIO_RIF_RES_TYP_GPIO, LED3_GPIO_RIF_RES_NUM_GPIO);
 }
 
 /**
@@ -375,7 +378,7 @@ void LED_DeInit(void)
 void LED_On(void)
 {
   /* Turn LED3 on */
-  LL_GPIO_SetOutputPin(LED3_LL_GPIO_PORT, LED3_LL_PIN);
+  LL_GPIO_SetOutputPin(LED3_GPIO_PORT, LED3_PIN);
 }
 
 /**
@@ -387,21 +390,19 @@ void UserButton_Init()
 {
   LL_EXTI_InitTypeDef exti_initstruct;
 
-  /* Enable GPIOG clock */
-  if (RESMGR_STATUS_ACCESS_OK == ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(92)))
+  if (!(BUTTON_USER2_GPIO_IS_CLK_ENABLE()))
   {
-	/* Enable GPIO Clock (to be able to program the configuration registers) */
-	USER2_BUTTON_GPIO_CLK_ENABLE();
+    if (RESMGR_STATUS_ACCESS_OK == ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(95)))
+    {
+      USER2_BUTTON_GPIO_CLK_ENABLE();
+    }
   }
-  /* Acquire GPIOF7 using Resource manager */
-  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOF, RESMGR_GPIO_PIN(7)))
+
+  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(BUTTON_USER2_RIF_RES_TYP_GPIO, BUTTON_USER2_RIF_RES_NUM_GPIO))
   {
     Error_Handler();
   }
 
-  /* Configure PF.7 pin as input floating */
-  /* -1- GPIO Config */
-  /* Configure IO */
   LL_GPIO_SetPinMode(USER2_BUTTON_GPIO_PORT, USER2_BUTTON_PIN, LL_GPIO_MODE_INPUT);
   LL_GPIO_SetPinPull(USER2_BUTTON_GPIO_PORT, USER2_BUTTON_PIN, LL_GPIO_PULL_NO);
 
@@ -420,9 +421,8 @@ void UserButton_Init()
   /* -2- Connect External Line to the GPIO*/
   LL_EXTI_SetEXTISource(EXTI2, LL_EXTI_EXTICR_PORTF, LL_EXTI_EXTI_LINE7);
 
-  /*-4- Configure NVIC for EXTI15_10_IRQn */
-  NVIC_EnableIRQ(USER2_BUTTON_EXTI_IRQn);
   NVIC_SetPriority(USER2_BUTTON_EXTI_IRQn, 0);
+  NVIC_EnableIRQ(USER2_BUTTON_EXTI_IRQn);
 }
 /**
   * @brief  Deinitialize User Button.
@@ -431,11 +431,11 @@ void UserButton_Init()
   */
 void UserButton_DeInit(void)
 {
-  /* Disable NVIC for EXTI15_10_IRQn */
-  NVIC_DisableIRQ(USER2_BUTTON_EXTI_IRQn);
+  /* Release GPIOF7 using the Resource Manager */
+  (void) ResMgr_Release(BUTTON_USER2_RIF_RES_TYP_GPIO, BUTTON_USER2_RIF_RES_NUM_GPIO);
 
-  /* Release GPIOG8 using Resource manager */
-  (void) ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOC, RESMGR_GPIO_PIN(11));
+  /* Disable NVIC for EXTI15_10_IRQn */
+  NVIC_DisableIRQ(BUTTON_USER2_EXTI_IRQn);
 
 }
 
@@ -457,69 +457,63 @@ void MX_LL_USART_Init(void)
 {
 
   /* (1) Enable GPIO clock and configures the USART pins *********************/
-  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIFSC, STM32MP21_RIFSC_UART4_ID))
+  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(COM_CM33_RIF_RES_TYP_UART, COM_CM33_RIF_RES_NUM_UART))
   {
     Error_Handler();
   }
 
   /* Acquire GPIOH7 using Resource manager */
-  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOH, RESMGR_GPIO_PIN(7)))
+  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(COM_CM33_RIF_RES_TYP_TX_PIN, COM_CM33_RIF_RES_NUM_TX_PIN))
   {
     Error_Handler();
   }
   /* Acquire GPIOH8 using Resource manager */
-  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOH, RESMGR_GPIO_PIN(8)))
+  if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(COM_CM33_RIF_RES_TYP_RX_PIN, COM_CM33_RIF_RES_NUM_RX_PIN))
   {
     Error_Handler();
   }
-  /* Enable GPIOs power supplies */
+  /* Enable the GPIOH clock */
   if (RESMGR_STATUS_ACCESS_OK == ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(97)))
   {
-    LL_RCC_GPIOH_EnableClock();
+    COM_CM33_TX_GPIO_CLK_ENABLE();
   }
 
   /* Configure Tx Pin as : Alternate function, High Speed, Push pull, Pull up */
-  LL_GPIO_SetPinMode(GPIOH, LL_GPIO_PIN_7, LL_GPIO_MODE_ALTERNATE);
-  LL_GPIO_SetAFPin_0_7(GPIOH, LL_GPIO_PIN_7, LL_GPIO_AF_4);
-  LL_GPIO_SetPinSpeed(GPIOH, LL_GPIO_PIN_7, LL_GPIO_SPEED_FREQ_HIGH);
-  LL_GPIO_SetPinOutputType(GPIOH, LL_GPIO_PIN_7, LL_GPIO_OUTPUT_PUSHPULL);
-  LL_GPIO_SetPinPull(GPIOH, LL_GPIO_PIN_7, LL_GPIO_PULL_UP);
+  LL_GPIO_SetPinMode(COM_CM33_TX_GPIO_PORT, COM_CM33_TX_PIN, LL_GPIO_MODE_ALTERNATE);
+  LL_GPIO_SetAFPin_0_7(COM_CM33_TX_GPIO_PORT, COM_CM33_TX_PIN, COM_CM33_TX_AF);
+  LL_GPIO_SetPinSpeed(COM_CM33_TX_GPIO_PORT, COM_CM33_TX_PIN, LL_GPIO_SPEED_FREQ_HIGH);
+  LL_GPIO_SetPinOutputType(COM_CM33_TX_GPIO_PORT, COM_CM33_TX_PIN, LL_GPIO_OUTPUT_PUSHPULL);
+  LL_GPIO_SetPinPull(COM_CM33_TX_GPIO_PORT, COM_CM33_TX_PIN, LL_GPIO_PULL_UP);
 
   /* Configure Rx Pin as : Alternate function, High Speed, Push pull, Pull up */
-  LL_GPIO_SetPinMode(GPIOH, LL_GPIO_PIN_8, LL_GPIO_MODE_ALTERNATE);
-  LL_GPIO_SetAFPin_8_15(GPIOH, LL_GPIO_PIN_8, LL_GPIO_AF_4);
-  LL_GPIO_SetPinSpeed(GPIOH, LL_GPIO_PIN_8, LL_GPIO_SPEED_FREQ_HIGH);
-  LL_GPIO_SetPinOutputType(GPIOH, LL_GPIO_PIN_8, LL_GPIO_OUTPUT_PUSHPULL);
-  LL_GPIO_SetPinPull(GPIOH, LL_GPIO_PIN_8, LL_GPIO_PULL_UP);
+  LL_GPIO_SetPinMode(COM_CM33_RX_GPIO_PORT, COM_CM33_RX_PIN, LL_GPIO_MODE_ALTERNATE);
+  LL_GPIO_SetAFPin_8_15(COM_CM33_RX_GPIO_PORT, COM_CM33_RX_PIN, COM_CM33_RX_AF);
+  LL_GPIO_SetPinSpeed(COM_CM33_RX_GPIO_PORT, COM_CM33_RX_PIN, LL_GPIO_SPEED_FREQ_HIGH);
+  LL_GPIO_SetPinOutputType(COM_CM33_RX_GPIO_PORT, COM_CM33_RX_PIN, LL_GPIO_OUTPUT_PUSHPULL);
+  LL_GPIO_SetPinPull(COM_CM33_RX_GPIO_PORT, COM_CM33_RX_PIN, LL_GPIO_PULL_UP);
 
-  /* (2) NVIC Configuration for USART interrupts */
-  /*  - Set priority for UART4_IRQn */
-  /*  - Enable UART4_IRQn */
-  NVIC_SetPriority(UART4_IRQn, 0);
-  NVIC_EnableIRQ(UART4_IRQn);
+  /* (2) Enable USART peripheral clock and clock source ***********************/
+  COM_CM33_CLK_ENABLE();
 
-  /* (3) Enable USART peripheral clock and clock source ***********************/
-  LL_RCC_UART4_EnableClock();
-
-  /* (4) Configure USART functional parameters ********************************/
+  /* (3) Configure USART functional parameters ********************************/
 
   /* Disable USART prior modifying configuration registers */
   /* Note: Commented as corresponding to Reset value */
-  // LL_USART_Disable(UART4);
+  LL_USART_Disable(COM_CM33_UART);
 
   /* TX/RX direction */
-  LL_USART_SetTransferDirection(UART4, LL_USART_DIRECTION_TX_RX);
+  LL_USART_SetTransferDirection(COM_CM33_UART, LL_USART_DIRECTION_TX_RX);
 
   /* 8 data bit, 1 start bit, 1 stop bit, no parity */
-  LL_USART_ConfigCharacter(UART4, LL_USART_DATAWIDTH_8B, LL_USART_PARITY_NONE, LL_USART_STOPBITS_1);
+  LL_USART_ConfigCharacter(COM_CM33_UART, LL_USART_DATAWIDTH_8B, LL_USART_PARITY_NONE, LL_USART_STOPBITS_1);
 
   /* No Hardware Flow control */
   /* Reset value is LL_USART_HWCONTROL_NONE */
-   LL_USART_SetHWFlowCtrl(UART4, LL_USART_HWCONTROL_NONE);
+  LL_USART_SetHWFlowCtrl(COM_CM33_UART, LL_USART_HWCONTROL_NONE);
 
   /* Oversampling by 16 */
   /* Reset value is LL_USART_OVERSAMPLING_16 */
-  LL_USART_SetOverSampling(UART4, LL_USART_OVERSAMPLING_8);
+  LL_USART_SetOverSampling(COM_CM33_UART, LL_USART_OVERSAMPLING_8);
 
   /* Set Baudrate to 115200 using APB frequency set to 125000000 Hz */
   /* Frequency available for USART peripheral can also be calculated through LL RCC macro */
@@ -528,19 +522,36 @@ void MX_LL_USART_Init(void)
 
       In this example, Peripheral Clock is expected to be equal to 125000000 Hz => equal to SystemCoreClock/(AHB_Div * APB_Div)
   */
-  LL_USART_SetBaudRate(UART4, HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_UART2_4)/(1), LL_USART_PRESCALER_DIV1, LL_USART_OVERSAMPLING_8, 115200);
+  LL_USART_SetBaudRate(COM_CM33_UART, HAL_RCCEx_GetPeriphCLKFreq(RCC_PERIPHCLK_UART2_4)/(1), LL_USART_PRESCALER_DIV1, LL_USART_OVERSAMPLING_8, 115200);
 
-  /* (5) Enable USART *********************************************************/
-  LL_USART_Enable(UART4);
+  /* (4) Enable USART *********************************************************/
+  LL_USART_Enable(COM_CM33_UART);
 
   /* Polling USART initialisation */
-  while((!(LL_USART_IsActiveFlag_TEACK(UART4))) || (!(LL_USART_IsActiveFlag_REACK(UART4))))
+  while((!(LL_USART_IsActiveFlag_TEACK(COM_CM33_UART))) || (!(LL_USART_IsActiveFlag_REACK(COM_CM33_UART))))
   {
   }
 
+  /* Clear pending RX data and error flags before enabling UART4 interrupts. */
+  if (LL_USART_IsActiveFlag_RXNE(COM_CM33_UART) != 0U)
+  {
+    (void) LL_USART_ReceiveData8(COM_CM33_UART);
+  }
+  LL_USART_ClearFlag_PE(COM_CM33_UART);
+  LL_USART_ClearFlag_FE(COM_CM33_UART);
+  LL_USART_ClearFlag_NE(COM_CM33_UART);
+  LL_USART_ClearFlag_ORE(COM_CM33_UART);
+
+  /* (5) NVIC Configuration for USART interrupts */
+  /*  - Set priority for UART4_IRQn */
+  /*  - Enable UART4_IRQn */
+  NVIC_ClearPendingIRQ(UART4_IRQn);
+  NVIC_SetPriority(UART4_IRQn, 0);
+  NVIC_EnableIRQ(UART4_IRQn);
+
   /* Enable RXNE and Error interrupts */
-  LL_USART_EnableIT_RXNE(UART4);
-  LL_USART_EnableIT_ERROR(UART4);
+  LL_USART_EnableIT_RXNE(COM_CM33_UART);
+  LL_USART_EnableIT_ERROR(COM_CM33_UART);
 }
 
 /**
@@ -552,22 +563,22 @@ void MX_LL_USART_DeInit(void)
 {
 
   /* Disable USART */
-  LL_USART_Disable(UART4);
+  LL_USART_Disable(COM_CM33_UART);
 
   /* Disable USART peripheral clock */
-  LL_RCC_UART4_DisableClock();
+  COM_CM33_CLK_DISABLE();
 
   /* Disable USARTx_IRQn */
   NVIC_DisableIRQ(UART4_IRQn);
 
   /* Release UART4 using Resource manager */
-  (void) ResMgr_Release(RESMGR_RESOURCE_RIFSC, STM32MP21_RIFSC_UART4_ID);
+  (void) ResMgr_Release(COM_CM33_RIF_RES_TYP_UART, COM_CM33_RIF_RES_NUM_UART);
 
-  /* Release GPIOG10 using Resource manager */
-  (void) ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOG, RESMGR_GPIO_PIN(10));
+  /* Release the CM33 UART TX pin using the Resource Manager */
+  (void) ResMgr_Release(COM_CM33_RIF_RES_TYP_TX_PIN, COM_CM33_RIF_RES_NUM_TX_PIN);
 
-  /* Release GPIOG9 using Resource manager */
-  (void) ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOG, RESMGR_GPIO_PIN(9));
+  /* Release the CM33 UART RX pin using the Resource Manager */
+  (void) ResMgr_Release(COM_CM33_RIF_RES_TYP_RX_PIN, COM_CM33_RIF_RES_NUM_RX_PIN);
 }
 
 /**
@@ -604,6 +615,13 @@ void CoproSync_ShutdownCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPC
 
   /* Deinitialize the LED */
   LED_DeInit();
+
+#ifdef ICACHE_DCACHE_ENABLE
+  HAL_DCACHE_CleanInvalidByAddr(&hdcache, (const uint32_t *)0x80A00000U, 0x003FFC00U);
+  HAL_DCACHE_Disable(&hdcache);
+  HAL_DCACHE_DeInit(&hdcache);
+  HAL_ICACHE_DeInit();
+#endif
 
   /* When ready, notify the remote processor that we can be shut down */
   HAL_IPCC_NotifyCPU(hipcc, ChannelIndex, IPCC_CHANNEL_DIR_RX);
@@ -747,7 +765,7 @@ void Error_Handler(void)
 void UserButton_Callback(void)
 {
   /* Turn LED3 Off on User push-button press (allow to restart sequence) */
-  LL_GPIO_ResetOutputPin(LED3_LL_GPIO_PORT, LED3_LL_PIN);
+  LL_GPIO_ResetOutputPin(LED3_GPIO_PORT, LED3_PIN);
 }
 
 /**
@@ -761,13 +779,13 @@ void USART_CharReception_Callback(void)
 __IO uint32_t received_char;
 
   /* Read Received character. RXNE flag is cleared by reading of RDR register */
-  received_char = LL_USART_ReceiveData8(UART4);
+  received_char = LL_USART_ReceiveData8(COM_CM33_UART);
 
   /* Check if received value is corresponding to specific one : S or s */
   if ((received_char == 'S') || (received_char == 's'))
   {
-    /* Turn LED1 On : Expected character has been received */
-    LL_GPIO_SetOutputPin(LED3_LL_GPIO_PORT, LED3_LL_PIN);
+	/* Turn LED3 On : Expected character has been received */
+	LL_GPIO_SetOutputPin(LED3_GPIO_PORT, LED3_PIN);
   }
 
   /* Echo received character on TX */

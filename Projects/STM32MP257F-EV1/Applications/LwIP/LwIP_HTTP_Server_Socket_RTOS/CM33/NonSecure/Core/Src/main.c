@@ -21,6 +21,7 @@
 #include "app_freertos.h"
 #include "cmsis_os2.h"
 #include "lwipopts.h"
+#include "copro_sync.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -46,8 +47,8 @@
 volatile uint8_t debug = 1;
 #endif /* DEBUG */
 
-ETH_DMADescTypeDef  __attribute__((section (".TxDecripSection"))) DMATxDscrTab[ETH_TX_DESC_CNT] ; /* Ethernet Tx DMA Descriptors */
-ETH_DMADescTypeDef  __attribute__((section (".RxDecripSection"))) DMARxDscrTab[ETH_RX_DESC_CNT] ; /* Ethernet Rx DMA Descriptors */
+ETH_DMADescTypeDef  __attribute__((section (".TxDescripSection"))) DMATxDscrTab[ETH_TX_DESC_CNT] ; /* Ethernet Tx DMA Descriptors */
+ETH_DMADescTypeDef  __attribute__((section (".RxDescripSection"))) DMARxDscrTab[ETH_RX_DESC_CNT] ; /* Ethernet Rx DMA Descriptors */
 
 ETH_TxPacketConfigTypeDef TxConfig;
 
@@ -62,12 +63,15 @@ DCACHE_HandleTypeDef hdcache;
 static uint8_t *ext_flash_addr;
 extern uint32_t __extflash_region_init_base;
 
+IPCC_HandleTypeDef hipcc1;
+
 /* USER CODE END PV */
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 void UART_Config(void);
 
 static void MX_ETH_Init(void);
+static void MX_IPCC_Init(void);
 
 #if (INSTRUCTION_CACHE_ENABLE == 1U) && (DATA_CACHE_ENABLE == 1U)
 static void MPU_Config(void);
@@ -142,6 +146,15 @@ int main(void)
   /* USER CODE END SysInit */
 
   BSP_LED_Init(LED3);
+
+  if(!IS_DEVELOPER_BOOT_MODE())
+  {
+    /* IPCC initialization */
+    MX_IPCC_Init();
+
+    /* Copro Sync Initialization */
+    CoproSync_Init();
+  }
 
   UART_Config();
 
@@ -353,6 +366,21 @@ void MX_ETH_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+/**
+  * @brief  Initialize the IPCC Peripheral
+  * @retval None
+  */
+static void MX_IPCC_Init(void)
+{
+  hipcc1.Instance = IPCC1;
+  if (HAL_IPCC_Init(&hipcc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  HAL_NVIC_SetPriority(IPCC1_RX_IRQn, configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY + DEFAULT_IRQ_PRIO, 0);
+  HAL_NVIC_EnableIRQ(IPCC1_RX_IRQn);
+}
 
 /* USER CODE END 4 */
 #if defined(INSTRUCTION_CACHE_ENABLE) && (INSTRUCTION_CACHE_ENABLE == 1U)

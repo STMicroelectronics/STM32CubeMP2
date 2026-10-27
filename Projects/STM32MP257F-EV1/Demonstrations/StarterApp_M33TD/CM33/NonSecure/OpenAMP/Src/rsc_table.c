@@ -1,4 +1,4 @@
-/**
+﻿/**
  ******************************************************************************
  * @file    rsc_table.c
  * @author  MCD Application Team
@@ -10,7 +10,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 STMicroelectronics.
+ * Copyright (c) 2019-2026 STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -32,20 +32,20 @@
   * @{
   */
 
-#if defined(__ICCARM__) || defined (__CC_ARM)
-#include <stddef.h> /* needed  for offsetof definition*/
-#endif
+#include <stddef.h>
+#include <string.h>
+#if defined(STM32MP157Cxx)
+#include "stm32mp1xx_hal.h"
+#elif defined(STM32MP25xxxx) || defined(STM32MP2)
 #include "stm32mp2xx_hal.h"
+#endif
+#include "openamp.h"
 #include "rsc_table.h"
-#include "openamp/open_amp.h"
 
 #define RPMSG_VIRTIO_FEATURE     1
-#define VRING_COUNT               2
+#define VRING_COUNT              2
 
-/* VirtIO rpmsg device id */
-#define VIRTIO_ID_RPMSG_          7
-
-#if defined (__ICCARM__)
+#if defined(__ICCARM__)
 /*
  * For IAR, the .icf file should contain the following lines:
  * define symbol __RSC_TABLE_region_start__ = BASE_ADDRESS; (0x38000400 for example)
@@ -96,7 +96,17 @@ extern int __RSC_TABLE_region_end__[];    /* defined by linker script */
 
 #endif
 
+#if !defined (VIRTIO_STATIC_VRING)
+#if (OPENAMP_ROLE == RPMSG_HOST) || !defined (LINUX_RPROC_MASTER)
+  #define CONST
+#else
+  #define CONST const
+#endif
+#else
+ #define CONST
+#endif
 
+#if (OPENAMP_ROLE == RPMSG_REMOTE)
 /**
   * @}
   */
@@ -113,21 +123,42 @@ extern int __RSC_TABLE_region_end__[];    /* defined by linker script */
   * @{
   */
 
-/* Since GCC is not initializing the resource_table at startup, it is declared as volatile to avoid compiler optimization
- * for the CM33 (see resource_table_init() below)
- */
-const struct shared_resource_table resource_table = {
+/* Place resource table in special ELF section */
+#if defined(__GNUC__)
+#if defined(LINUX_RPROC_MASTER)
+#define __section_t(S)          __attribute__((__section__(#S)))
+#define __resource              __section_t(.resource_table)
+#else
+#define __resource
+#endif
+#endif /* defined(__GNUC__ */
 
+#if defined (__LOG_TRACE_IO_)
+extern char system_log_buf[];
+#endif /* defined (__LOG_TRACE_IO_) */
+
+#if defined(__GNUC__)
+CONST struct shared_resource_table __resource __attribute__((used)) resource_table = {
+#elif defined(__ICCARM__)
+__root CONST struct shared_resource_table resource_table @ ".resource_table" = {
+#endif /* defined(__GNUC__) */
   .version = 1,
+#if defined (__LOG_TRACE_IO_)
+  .num = 2,
+#else
   .num = 1,
+#endif
   .reserved = {0, 0},
   .offset = {
     offsetof(struct shared_resource_table, vdev),
+#if defined (__LOG_TRACE_IO_)
+    offsetof(struct shared_resource_table, cm_trace),
+#endif
   },
 
   /* Virtio device entry */
   .vdev= {
-    RSC_VDEV, VIRTIO_ID_RPMSG_, 0, RPMSG_VIRTIO_FEATURE, 0, 0, 0,
+    RSC_VDEV, VIRTIO_ID_RPMSG, 0, RPMSG_VIRTIO_FEATURE, 0, 0, 0,
     VRING_COUNT, {0, 0},
   },
 
@@ -135,14 +166,52 @@ const struct shared_resource_table resource_table = {
   .vring0 = {VRING_TX_ADDRESS, VRING_ALIGNMENT, VRING_NUM_BUFFS, VRING0_ID, 0},
   .vring1 = {VRING_RX_ADDRESS, VRING_ALIGNMENT, VRING_NUM_BUFFS, VRING1_ID, 0},
 
-} ;
+#if defined (__LOG_TRACE_IO_)
+	.cm_trace = {
+		RSC_TRACE,
+		(uint32_t)system_log_buf, SYSTEM_TRACE_BUF_SZ, 0, "cm4_log",
+	},
+#endif /* defined (__LOG_TRACE_IO_) */
+};
 
 void resource_table_init(int RPMsgRole, void **table_ptr, int *length)
 {
-
   *length = sizeof(resource_table);
-  *table_ptr = RSCTAB_START_ADDRESS;
+#if !defined(LINUX_RPROC_MASTER)
 
   /* make a copy the resource table in shared memory that will be parsed by the Linux remoteproc*/
   memcpy(RSCTAB_START_ADDRESS, &resource_table, *length);
+  *table_ptr = RSCTAB_START_ADDRESS;
+#else
+  /* Directly provide the resource table address stored on link in .resource_table section */
+  *table_ptr =  (void *)&resource_table;
+#endif
 }
+
+#elif (OPENAMP_ROLE == RPMSG_HOST)
+void resource_table_init(int RPMsgRole, void **table_ptr, int *length)
+{
+  /* USER CODE BEGIN PRE_RSC_TABLE_INIT */
+	  /* USER CODE END PRE_RSC_TABLE_INIT */
+
+#if defined(RSC_TABLE_USE_BCKUP_REG)
+  /*
+   * Get the resource table address and length from backup registers to provide
+   * resource table information to the Cortex A
+   */
+  *table_ptr = (void *)HAL_RTCEx_BKUPRead(NULL, OPENAMP_RSCTAB_ADDR_BUP_IDX);
+  *length = HAL_RTCEx_BKUPRead(NULL, OPENAMP_RSCTAB_LGTH_BUP_IDX);
+#else
+  (void)RPMsgRole;
+
+  /*
+   * Use the linker-defined resource table region when backup-register-based
+   * handoff is not enabled.
+   */
+  *table_ptr = RSCTAB_START_ADDRESS;
+  *length = (int)RSCTAB_SIZE;
+#endif
+}
+#else
+#error "OPENAMP_ROLE must be set"
+#endif

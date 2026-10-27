@@ -38,6 +38,7 @@
 #include "lwip/debug.h"
 #include "lwip/stats.h"
 #include "lwip/tcp.h"
+#include <stdio.h>
 
 #if LWIP_TCP
 
@@ -71,6 +72,32 @@ static err_t tcp_echoserver_sent(void *arg, struct tcp_pcb *tpcb, u16_t len);
 static void tcp_echoserver_send(struct tcp_pcb *tpcb, struct tcp_echoserver_struct *es);
 static void tcp_echoserver_connection_close(struct tcp_pcb *tpcb, struct tcp_echoserver_struct *es);
 
+#if LOOPBACK_TEST_ENABLE
+/* Loopback test client states */
+enum loopback_test_states
+{
+  LOOPBACK_IDLE = 0,
+  LOOPBACK_CONNECTING,
+  LOOPBACK_WAIT_ECHO
+};
+
+static enum loopback_test_states loopback_state = LOOPBACK_IDLE;
+static struct tcp_pcb *loopback_pcb;
+static uint32_t loopback_last_tick;
+static uint32_t loopback_tx_seq;
+static uint32_t loopback_pass_count;
+static uint32_t loopback_fail_count;
+static char loopback_tx_buffer[64];
+static char loopback_rx_buffer[64];
+static uint16_t loopback_tx_len;
+static uint16_t loopback_rx_len;
+
+static err_t loopback_test_connected(void *arg, struct tcp_pcb *tpcb, err_t err);
+static err_t loopback_test_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err);
+static void loopback_test_error(void *arg, err_t err);
+static void loopback_test_report(uint8_t success);
+static void loopback_test_reset(void);
+#endif /* LOOPBACK_TEST_ENABLE */
 
 /**
   * @brief  Initializes the tcp echo server
@@ -86,8 +113,8 @@ void tcp_echoserver_init(void)
   {
     err_t err;
 
-    /* bind echo_pcb to port 7 (ECHO protocol) */
-    err = tcp_bind(tcp_echoserver_pcb, IP_ADDR_ANY, 7);
+    /* bind echo_pcb to port TCP_CLIENT_PORT (ECHO protocol) */
+    err = tcp_bind(tcp_echoserver_pcb, IP_ADDR_ANY, TCP_CLIENT_PORT);
 
     if (err == ERR_OK)
     {
@@ -177,6 +204,9 @@ static err_t tcp_echoserver_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p
   /* if we receive an empty tcp frame from client => close connection */
   if (p == NULL)
   {
+  /* remote host closed connection */
+  printf("Got EOF, closing connection\n\r");
+
     /* remote host closed connection */
     es->state = ES_CLOSING;
     if(es->p == NULL)
@@ -211,6 +241,9 @@ static err_t tcp_echoserver_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p
     /* first data chunk in p->payload */
     es->state = ES_RECEIVED;
 
+    /* print the received message */
+    printf("TCP received (%u bytes): %.*s\n\r",
+           (unsigned)p->len, (int)p->len, (char *)p->payload);
     /* store reference to incoming pbuf (chain) */
     es->p = p;
 
@@ -225,6 +258,9 @@ static err_t tcp_echoserver_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p
   else if (es->state == ES_RECEIVED)
   {
     /* more data received from client and previous data has been already sent*/
+    /* print the received message */
+    printf("TCP received (%u bytes): %.*s\n\r",
+           (unsigned)p->len, (int)p->len, (char *)p->payload);
     if(es->p == NULL)
     {
       es->p = p;
@@ -438,5 +474,224 @@ static void tcp_echoserver_connection_close(struct tcp_pcb *tpcb, struct tcp_ech
   /* close tcp connection */
   tcp_close(tpcb);
 }
+
+
+#if LOOPBACK_TEST_ENABLE
+/**
+  * @brief  Reset the loopback test client state so a new connection
+  *         attempt can be started on the next periodic call.
+  * @param  None
+  * @retval None
+  */
+static void loopback_test_reset(void)
+{
+  loopback_pcb = NULL;
+  loopback_state = LOOPBACK_IDLE;
+  loopback_last_tick = HAL_GetTick();
+  loopback_tx_seq++;
+}
+
+/**
+  * @brief  Report the outcome of one loopback test round-trip and, once
+  *         LOOPBACK_TEST_COUNT round-trips have been attempted, the
+  *         overall result of the test.
+  * @param  success 1 if the echoed data matched what was sent, 0 otherwise
+  * @retval None
+  */
+static void loopback_test_report(uint8_t success)
+{
+  if (success)
+  {
+    loopback_pass_count++;
+    printf("Loopback test: PASSED - echoed data matches (pass=%lu, fail=%lu)\r\n", (unsigned long)loopback_pass_count, (unsigned long)loopback_fail_count);
+    BSP_LED_On(LED_GREEN);
+  }
+  else
+  {
+    loopback_fail_count++;
+    printf("Loopback test: FAILED - echoed data mismatch (pass=%lu, fail=%lu)\r\n", (unsigned long)loopback_pass_count, (unsigned long)loopback_fail_count);
+    BSP_LED_On(LED_RED);
+  }
+
+  if ((loopback_pass_count + loopback_fail_count) >= LOOPBACK_TEST_COUNT)
+  {
+    if (loopback_fail_count == 0U)
+    {
+      printf("\r\nLwIP loopback self-test PASSED (%lu/%lu connections)\r\n",
+             (unsigned long)loopback_pass_count, (unsigned long)LOOPBACK_TEST_COUNT);
+    }
+    else
+    {
+      printf("\r\nLwIP loopback self-test completed with failures (%lu/%lu connections)\r\n",
+             (unsigned long)loopback_pass_count, (unsigned long)LOOPBACK_TEST_COUNT);
+    }
+  }
+}
+
+/**
+  * @brief  tcp_err callback for the loopback test client connection.
+  * @param  arg not used
+  * @param  err not used
+  * @retval None
+  */
+static void loopback_test_error(void *arg, err_t err)
+{
+  LWIP_UNUSED_ARG(arg);
+  LWIP_UNUSED_ARG(err);
+
+  printf("Loopback test: connection error\r\n");
+  loopback_test_report(0);
+  loopback_test_reset();
+}
+
+/**
+  * @brief  tcp_recv callback for the loopback test client: accumulates the
+  *         echoed payload and, once as much data as was sent has been
+  *         received back, compares it against the transmitted message.
+  * @param  arg not used
+  * @param  tpcb the tcp_pcb for the loopback test connection
+  * @param  p the packet buffer that was received, or NULL if the remote
+  *         host closed the connection
+  * @param  err not used
+  * @retval err_t: error code
+  */
+static err_t loopback_test_recv(void *arg, struct tcp_pcb *tpcb, struct pbuf *p, err_t err)
+{
+  LWIP_UNUSED_ARG(arg);
+  LWIP_UNUSED_ARG(err);
+
+  if (p == NULL)
+  {
+    /* server closed the connection before the whole message was echoed */
+    printf("Loopback test: connection closed by server before echo was complete\r\n");
+    tcp_close(tpcb);
+    loopback_test_report(0);
+    loopback_test_reset();
+    return ERR_OK;
+  }
+
+  if ((loopback_rx_len + p->tot_len) <= sizeof(loopback_rx_buffer))
+  {
+    pbuf_copy_partial(p, &loopback_rx_buffer[loopback_rx_len], p->tot_len, 0);
+    loopback_rx_len += p->tot_len;
+  }
+
+  tcp_recved(tpcb, p->tot_len);
+  pbuf_free(p);
+
+  if (loopback_rx_len >= loopback_tx_len)
+  {
+    uint8_t success = ((loopback_rx_len == loopback_tx_len) &&
+                        (memcmp(loopback_rx_buffer, loopback_tx_buffer, loopback_tx_len) == 0));
+
+    tcp_arg(tpcb, NULL);
+    tcp_recv(tpcb, NULL);
+    tcp_err(tpcb, NULL);
+    tcp_close(tpcb);
+
+    loopback_test_report(success);
+    loopback_test_reset();
+  }
+
+  return ERR_OK;
+}
+
+/**
+  * @brief  tcp_connect callback for the loopback test client: sends the
+  *         test message once the connection to the local TCP echo server
+  *         is established.
+  * @param  arg not used
+  * @param  tpcb the tcp_pcb for the loopback test connection
+  * @param  err error status of the connection attempt
+  * @retval err_t: error code
+  */
+static err_t loopback_test_connected(void *arg, struct tcp_pcb *tpcb, err_t err)
+{
+  LWIP_UNUSED_ARG(arg);
+
+  if (err != ERR_OK)
+  {
+    printf("Loopback test: failed to connect to the local echo server\r\n");
+    loopback_test_report(0);
+    loopback_test_reset();
+    return err;
+  }
+
+  loopback_tx_len = (uint16_t)snprintf(loopback_tx_buffer, sizeof(loopback_tx_buffer), "%s #%lu", LOOPBACK_MSG, (unsigned long)loopback_tx_seq);
+  loopback_rx_len = 0;
+
+  tcp_recv(tpcb, loopback_test_recv);
+
+  if ((tcp_write(tpcb, loopback_tx_buffer, loopback_tx_len, TCP_WRITE_FLAG_COPY) != ERR_OK) ||
+      (tcp_output(tpcb) != ERR_OK))
+  {
+    printf("Loopback test: failed to send the test message\r\n");
+    tcp_close(tpcb);
+    loopback_test_report(0);
+    loopback_test_reset();
+    return ERR_OK;
+  }
+
+  printf("Loopback test: sent \"%s\" to the local echo server\r\n", loopback_tx_buffer);
+  loopback_state = LOOPBACK_WAIT_ECHO;
+
+  return ERR_OK;
+}
+
+/**
+  * @brief  Periodic loopback test handler, to be called from the
+  *         application main loop when LOOPBACK_TEST_ENABLE is set to 1. As
+  *         soon as the network interface has a valid IP address and the
+  *         link is up, it periodically connects to the TCP echo server
+  *         running on this same board (this board's own IP address) to
+  *         exercise the full LwIP stack without requiring a second board
+  *         or PC.
+  * @param  netif the lwIP network interface structure for this ethernetif
+  * @retval None
+  */
+void loopback_test_periodic_handle(struct netif *netif)
+{
+  static uint8_t waiting_msg_shown = 0;
+
+  if (!netif_is_link_up(netif) || ip4_addr_isany(netif_ip4_addr(netif)))
+  {
+    if (!waiting_msg_shown)
+    {
+      printf("Loopback test: waiting for the link and an IP address...\r\n");
+      waiting_msg_shown = 1;
+    }
+    return;
+  }
+
+  if (loopback_tx_seq >= LOOPBACK_TEST_COUNT)
+  {
+    /* All test connections have been attempted: nothing left to do */
+    return;
+  }
+
+  if ((loopback_state == LOOPBACK_IDLE) &&
+      ((HAL_GetTick() - loopback_last_tick) >= LOOPBACK_TEST_PERIOD_MS))
+  {
+    loopback_pcb = tcp_new();
+
+    if (loopback_pcb == NULL)
+    {
+      printf("Loopback test: failed to allocate the client tcp_pcb\r\n");
+      loopback_test_reset();
+      return;
+    }
+
+    tcp_err(loopback_pcb, loopback_test_error);
+    loopback_state = LOOPBACK_CONNECTING;
+
+    if (tcp_connect(loopback_pcb, netif_ip4_addr(netif), 7, loopback_test_connected) != ERR_OK)
+    {
+      printf("Loopback test: failed to start the connection to the local echo server\r\n");
+      loopback_test_report(0);
+      loopback_test_reset();
+    }
+  }
+}
+#endif /* LOOPBACK_TEST_ENABLE */
 
 #endif /* LWIP_TCP */

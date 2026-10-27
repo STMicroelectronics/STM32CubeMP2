@@ -24,7 +24,7 @@
  * and encodes that value for the CSR field specified in targetcsr input,
  * based on DDR protocol.
  *
- * @param[in] drvstren_ohm drive strenght / ODT impedance in Ohms
+ * @param[in] drvstren_ohm drive strength / ODT impedance in Ohms
  *
  * @param[in] targetcsr Target CSR for the impedance value. on of following
  * enum drvtype:
@@ -477,9 +477,9 @@ int32_t ddrphy_phyinit_mapdrvstren(int32_t drvstren_ohm, drvtype targetcsr)
         stren_setting = 0x00;
         break;
       default:
-        ERROR("%s userinputadvanced.atximpedance %d Ohms value is not valid.\n",
+        DDR_ERROR("%s userinputadvanced.atximpedance %d Ohms value is not valid.\n",
               __func__, drvstren_ohm);
-        ERROR("Valid values are: 20, 24, 30, 40, 60 and 120 Ohms.\n");
+        DDR_ERROR("Valid values are: 20, 24, 30, 40, 60 and 120 Ohms.\n");
         break;
     }
   }

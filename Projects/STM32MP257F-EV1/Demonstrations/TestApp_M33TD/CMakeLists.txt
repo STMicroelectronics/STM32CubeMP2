@@ -121,6 +121,8 @@ set(DEFINITIONS "-DSTM32MP257Cxx \
 				-DUSE_STM32MP257F_EV1 \
 				-DCORE_CM33 \
 		        -DUSE_HAL_TIM_REGISTER_CALLBACKS=1 \
+				-DDISABLE_ADC_TEST \
+				-DDISABLE_TIMERS_TEST \
 				")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${CFLAGS} ${COMMON_COMPILE_FLAGS} -T${LINKER_SCRIPT} ${WARNING_FLAGS} ${DEFINITIONS}")
@@ -192,6 +194,7 @@ set(APPLICATION_SRC
 	${BASE_DIR}/CM33/NonSecure/Core/Src/stm32mp2xx_hal_msp.c
 	${BASE_DIR}/CM33/NonSecure/Core/Src/stm32mp2xx_hal_timebase_tim.c
 	${BASE_DIR}/CM33/NonSecure/Core/Src/stm32mp2xx_it.c
+	${BASE_DIR}/CM33/NonSecure/OpenAMP/Src/mbox_ipcc.c
 	${BASE_DIR}/CM33/NonSecure/OpenAMP/Src/openamp.c
 	${BASE_DIR}/CM33/NonSecure/OpenAMP/Src/rsc_table.c
 	${BASE_DIR}/CM33/NonSecure/TFM/App/tfm_ns_interface_freertos.c
@@ -231,7 +234,6 @@ set(SOURCE_FILES ${APPLICATION_SRC} ${LINKER_SCRIPT} ${S_VEENER_OBJECT_FILE})
 
 # Add executable
 add_executable(${PROJECT_NAME}.elf ${SOURCE_FILES} ${LINKER_SCRIPT})
-target_compile_definitions(${PROJECT_NAME}.elf PRIVATE LINUX_RPROC_MASTER)
 target_compile_definitions(${PROJECT_NAME}.elf PRIVATE ${OPENAMP_DEFINITIONS})
 
 # Link libraries

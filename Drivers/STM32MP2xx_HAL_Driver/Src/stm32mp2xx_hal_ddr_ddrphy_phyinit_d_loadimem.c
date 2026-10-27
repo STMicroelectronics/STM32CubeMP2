@@ -22,7 +22,7 @@
 /*
  * This function loads the training firmware IMEM image into the SRAM.
  *
- * This function reads the incv files form the firmware package to generate a
+ * This function reads the incv files from the firmware package to generate a
  * set of apb writes to load IMEM image into the SRAM. The exact steps in this
  * function are as follows:
  *
@@ -37,9 +37,8 @@
 void ddrphy_phyinit_d_loadimem(void)
 {
   uint16_t memresetl;
-  uint32_t *ptr32;
 
-  VERBOSE("%s Start\n", __func__);
+  DDR_VERBOSE("%s Start\n", __func__);
 
   /*
    * Set memresetl to avoid glitch on BP_MemReset_L during training
@@ -48,11 +47,12 @@ void ddrphy_phyinit_d_loadimem(void)
   mmio_write_16((uintptr_t)(DDRPHYC_BASE + (4U * (TMASTER | CSR_MEMRESETL_ADDR))), memresetl);
 
 #ifdef __AARCH64__
-  ptr32 = (uint32_t *)(ddr_pmu_train_bin + STM32MP_DDR_FW_IMEM_OFFSET);
+  ddrphy_phyinit_writeoutmem((uintptr_t)(ddr_pmu_train_bin + STM32MP_DDR_FW_IMEM_OFFSET),
+                             IMEM_ST_ADDR, IMEM_SIZE);
 #else /* __AARCH64__ */
-  ptr32 = (uint32_t *)(STM32MP_DDR_FW_BASE + STM32MP_DDR_FW_IMEM_OFFSET);
+  ddrphy_phyinit_writeoutmem((uintptr_t)(STM32MP_DDR_FW_BASE + STM32MP_DDR_FW_IMEM_OFFSET),
+                             IMEM_ST_ADDR, IMEM_SIZE);
 #endif /* __AARCH64__ */
-  ddrphy_phyinit_writeoutmem(ptr32, IMEM_ST_ADDR, IMEM_SIZE);
 
-  VERBOSE("%s End\n", __func__);
+  DDR_VERBOSE("%s End\n", __func__);
 }

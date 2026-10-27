@@ -53,6 +53,10 @@ void HAL_TIM_OnePulse_MspInit(TIM_HandleTypeDef* htim_base)
   /* USER CODE END TIM5_MspInit 0 */
   if(htim_base->Instance==TIM5)
   {
+    /* Reset TIM5 to clear any configuration left by a previously loaded firmware */
+    __HAL_RCC_TIM5_FORCE_RESET();
+    __HAL_RCC_TIM5_RELEASE_RESET();
+
     /* TIM5 clock enable */
 	__HAL_RCC_TIM5_CLK_ENABLE();
 
@@ -95,6 +99,10 @@ void HAL_TIM_OnePulse_MspDeInit(TIM_HandleTypeDef* htim)
 
   if(htim->Instance==TIM5)
   {
+    /* Reset TIM5 so that no configuration (e.g. CR1.OPM) is left for the next firmware */
+    __HAL_RCC_TIM5_FORCE_RESET();
+    __HAL_RCC_TIM5_RELEASE_RESET();
+
     /* Peripheral clock disable */
     __HAL_RCC_TIM5_CLK_DISABLE();
 

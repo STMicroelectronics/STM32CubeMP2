@@ -144,22 +144,17 @@ Deploy into OSTL image tree
 1. Navigate to `Firmware/Projects/STM32MP235F-DK/Demonstrations/StarterApp_M33TD`.
 2. Run the following command:
    ```bash
-         cmake -G"Unix Makefiles" -B build \
-            -DTFM_BUILD_DIR=<TFM_BUILD_DIRECTORY> \
-            -DREMOTE_PROC_AUTO_START=ON
+   cmake -G"Unix Makefiles" -B build -DTFM_BUILD_DIR=<TFM_BUILD_DIRECTORY>
    ```
-         - If `TFM_BUILD_DIR` is not specified, the default path `Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default` will be used (assuming the TF-M secure build step is completed).
-         - Common build options (see `CMakeLists.txt`):
-            - `-DBUILD_CONFIG=FULL|MINIMUM` (default: `FULL`)
-               - `FULL`: enables display pipeline (adds display panel files and HAL LTDC/LVDS dependencies)
-               - `MINIMUM`: disables display pipeline
-            - `-DBOOT_SPLASHSCREEN=DYNAMIC|STATIC` (default: `DYNAMIC`, only meaningful when `BUILD_CONFIG=FULL`)
-            - `-DREMOTE_PROC_AUTO_START=ON|OFF` (default: `ON`)
-            - `-DLOW_POWER_DEFAULT_POLICY_ENABLE=ON|OFF` (default: `OFF`)
-            - `-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF` (default: `OFF`)
-            - `-DFAULT_EXCEPTION_ENABLE=ON|OFF` (default: `ON`)
-            - `-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF` (default: `ON`)
-
+   - If `TFM_BUILD_DIR` is not specified, the default path `Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default` is used.
+   - Project CMake options:
+     - `-DBUILD_CONFIG=FULL|MINIMUM` (default: `FULL`)
+     - `-DBOOT_SPLASHSCREEN=DYNAMIC|STATIC` (default: `DYNAMIC`, meaningful with `BUILD_CONFIG=FULL`)
+     - `-DREMOTE_PROC_AUTO_START=ON|OFF` (default: `ON`)
+     - `-DLOW_POWER_DEFAULT_POLICY_ENABLE=ON|OFF` (default: `OFF`)
+     - `-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF` (default: `OFF`)
+     - `-DFAULT_EXCEPTION_ENABLE=ON|OFF` (default: `ON`)
+     - `-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF` (default: `ON`)
 3. Build the project:
    ```bash
    make -C build all
@@ -199,7 +194,7 @@ StarterApp_M33TD
       -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp235f-dk-cm33tdcid-ostl-ns.dts               # External DT file common for all bootdevice modes
       ```
 
-    **Note**: `-DDTS_EXT_DIR` points to `Utilities/dt-stm32mp`. Ensure this is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.
+   **Note**: `-DDTS_EXT_DIR` points to `Utilities/dt-stm32mp`. Ensure this is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.
 
 2. Configure the TFM CMake project:
     - Right-click on `StarterApp_M33TD_CM33_trusted-firmware-m` -> `CMake Configure`.

@@ -50,7 +50,7 @@ typedef struct
 } BSEC_HandleTypeDef;
 
 /**
-  * @brief  HAL BSEC Scratch and Write Once Scrtach Register Structure definition
+  * @brief  HAL BSEC Scratch and Write Once Scratch Register Structure definition
   */
 typedef struct
 {

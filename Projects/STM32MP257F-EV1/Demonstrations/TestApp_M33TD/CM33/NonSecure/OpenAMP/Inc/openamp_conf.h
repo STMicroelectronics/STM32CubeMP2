@@ -1,4 +1,4 @@
-/**
+﻿/**
  ******************************************************************************
  * @file    openamp_conf.h
  * @author  MCD Application Team
@@ -6,7 +6,7 @@
  ******************************************************************************
  * @attention
  *
- * Copyright (c) 2025 STMicroelectronics.
+ * Copyright (c) 2019-2026 STMicroelectronics.
  * All rights reserved.
  *
  * This software is licensed under terms that can be found in the LICENSE file
@@ -24,25 +24,90 @@
  extern "C" {
 #endif
 
+/* ########################## Module Selection ############################## */
+/* Enable if the TF-M manages the CM33 Secure context */
+#define OPENAMP_USE_TFM_NS_API
+
+/**
+ *  Define RPMSG role.
+ * On stm32MP series the Cortex-A has the host(driver) role, the Cortex-M
+ * has the remote(device) role
+ */
+#if (VIRTIO_DEVICE_SUPPORT == 1)
+#define OPENAMP_ROLE RPMSG_REMOTE
+#elif (VIRTIO_DRIVER_SUPPORT == 1)
+#define OPENAMP_ROLE RPMSG_HOST
+#elif !defined (OPENAMP_ROLE)
+#error  OPENAMP_ROLE must be defined
+#endif
+
+/* ########################## FreeRTOS Selection ############################## */
+/* Enable if FREERTOS OS is used */
+#define OPENAMP_USE_FREERTOS
+
 /* Includes ------------------------------------------------------------------*/
 #if defined (__LOG_TRACE_IO_) || defined(__LOG_UART_IO_)
 #include "openamp_log.h"
 #endif
+/* USER CODE BEGIN Includes */
 #include "nsappcore_config.h"
- /* ########################## Virtual Diver Module Selection ############################## */
+/* USER CODE END Includes */
+
+/* ########################## Mailbox Interface Selection ############################## */
+/**
+ * @brief This is the list of Mailbox interfaces to be used in the OpenAMP MW
+ *        Please note that not all interfaces are supported by a STM32 device
+ */
+#define MAILBOX_IPCC_IF_ENABLED
+//#define MAILBOX_HSEM_IF_ENABLED
+
+ /* Includes ------------------------------------------------------------------*/
  /**
-   * @brief This is the list of modules to be used in the OpenAMP Virtual driver module
-   *        Please note that virtual driver are not supported on all stm32 families
-   */
+ * @brief Include Mailbox interface header file
+ */
+
+#ifdef MAILBOX_IPCC_IF_ENABLED
+#include "mbox_ipcc.h"
+#endif /* MAILBOX_IPCC_IF_ENABLED */
+
+#ifdef MAILBOX_HSEM_IF_ENABLED
+#include "mbox_hsem.h"
+#endif /* MAILBOX_HSEM_IF_ENABLED */
+
+/* ########################## Virtual Driver Module Selection ############################## */
+/**
+  * @brief This is the list of modules to be used in the OpenAMP Virtual driver module
+  *        Please note that virtual drivers are not supported on all STM32 families
+  */
 #define VIRTUAL_UART_MODULE_ENABLED
 //#define VIRTUAL_I2C_MODULE_ENABLED
 //#define VIRTUAL_INTC_MODULE_ENABLED
 
 
- /* Includes ------------------------------------------------------------------*/
- /**
-   * @brief Include Virtual Driver module's  header file
-   */
+/* ########################## static vrings selection ###################### */
+/**
+ * @brief Due to MCU compatibility, it's important to distinguish if the resource
+ *        table is static or populated by the driver role.
+ *        In case VIRTIO_STATIC_VRING is defined, the resource table vdev and
+ *        vring are static and should be defined on both side with same values.
+ */
+//#define VIRTIO_STATIC_VRING
+
+/* ############### backup register for resource table selection ############# */
+/**
+ * @brief In case RSC_TABLE_USE_BCKUP_REG is defined, the resource table address
+ *        and length are retreivedfrom the backup registers.
+ */
+#define RSC_TABLE_USE_BCKUP_REG
+#if defined(RSC_TABLE_USE_BCKUP_REG)
+/* Backup register to store the resource table memory region */
+#define OPENAMP_RSCTAB_ADDR_BUP_IDX 121
+#define OPENAMP_RSCTAB_LGTH_BUP_IDX 122
+#endif /* RSC_TABLE_USE_BCKUP_REG */
+/* Includes ------------------------------------------------------------------*/
+/**
+  * @brief Include Virtual Driver module's header file
+  */
 
 #ifdef VIRTUAL_UART_MODULE_ENABLED
 #include "virt_uart.h"
@@ -56,11 +121,9 @@
 #include "virt_intc.h"
 #endif /* VIRTUAL_INTC_MODULE_ENABLED */
 
+/* USER CODE BEGIN Includes */
 
-
-/* USER CODE BEGIN INCLUDE */
-
-/* USER CODE END INCLUDE */
+/* USER CODE END Includes */
 
 /** @addtogroup OPENAMP_MW
   * @{
@@ -85,7 +148,6 @@
   * @{
   */
 
-
 #if defined (__ICCARM__)
 /*
  * For IAR, the .icf file should contain the following lines:
@@ -98,7 +160,7 @@
 extern const uint32_t  __OPENAMP_region_start__;
 extern const uint8_t  __OPENAMP_region_size__;
 #define SHM_START_ADDRESS       ((metal_phys_addr_t)&__OPENAMP_region_start__)
-#define SHM_SIZE        ((size_t)&__OPENAMP_region_size__)
+#define SHM_SIZE                ((size_t)&__OPENAMP_region_size__)
 
 #elif defined(__CC_ARM)
 /*
@@ -111,8 +173,8 @@ extern const uint8_t  __OPENAMP_region_size__;
  */
 extern unsigned int Image$$__OpenAMP_SHMEM__$$Base;
 extern unsigned int Image$$__OpenAMP_SHMEM__$$ZI$$Length;
-#define SHM_START_ADDRESS (unsigned int)&Image$$__OpenAMP_SHMEM__$$Base
-#define SHM_SIZE          ((size_t)&Image$$__OpenAMP_SHMEM__$$ZI$$Length)
+#define SHM_START_ADDRESS       ((unsigned int)&Image$$__OpenAMP_SHMEM__$$Base)
+#define SHM_SIZE                ((size_t)&Image$$__OpenAMP_SHMEM__$$ZI$$Length)
 
 #else
 /*
@@ -125,7 +187,7 @@ extern unsigned int Image$$__OpenAMP_SHMEM__$$ZI$$Length;
  * __OPENAMP_region_start__  = ORIGIN(OPEN_AMP_SHMEM);
  * __OPENAMP_region_end__ = ORIGIN(OPEN_AMP_SHMEM) + LENGTH(OPEN_AMP_SHMEM);
  *
- * using the LENGTH(OPEN_AMP_SHMEM) to set the SHM_SIZE lead to a crash thus we
+ * using the LENGTH(OPEN_AMP_SHMEM) to set the SHM_SIZE leads to a crash thus we
  * use the start and end address.
  */
 
@@ -133,22 +195,22 @@ extern int __OPENAMP_region_start__[];  /* defined by linker script */
 extern int __OPENAMP_region_end__[];    /* defined by linker script */
 
 #define SHM_START_ADDRESS       ((metal_phys_addr_t)__OPENAMP_region_start__)
-#define SHM_SIZE                (size_t)((void *)__OPENAMP_region_end__ - (void *) __OPENAMP_region_start__)
+#define SHM_SIZE                ((size_t)((void *)__OPENAMP_region_end__ - (void *)__OPENAMP_region_start__))
 
 #endif
 
-#if defined(STM32MP157Cxx) || defined(STM32MP257Cxx) || defined(STM32MP2)
-#define VRING_RX_ADDRESS        -1        /* allocated by Master processor: CA35 */
-#define VRING_TX_ADDRESS        -1        /* allocated by Master processor: CA35 */
-#define VRING_BUFF_ADDRESS      -1        /* allocated by Master processor: CA35 */
-#define VRING_ALIGNMENT         16        /* fixed to match with linux constraint */
-#define VRING_NUM_BUFFS         16		  /* number of rpmsg buffer */
+#if (OPENAMP_ROLE == RPMSG_REMOTE)
+#define VRING_RX_ADDRESS     ((unsigned int)-1)  /* allocated by Master processor: CA7 */
+#define VRING_TX_ADDRESS     ((unsigned int)-1)  /* allocated by Master processor: CA7 */
+#define VRING_BUFF_ADDRESS   ((unsigned int)-1)  /* allocated by Master processor: CA7 */
+#define VRING_ALIGNMENT      16        /* fixed to match with linux constraint */
+#define VRING_NUM_BUFFS      16        /* number of rpmsg buffers */
 #else
-#define VRING_RX_ADDRESS        SHM_START_ADDRESS
-#define VRING_TX_ADDRESS        (SHM_START_ADDRESS + 0x400)
-#define VRING_BUFF_ADDRESS      (SHM_START_ADDRESS + 0x800)
-#define VRING_ALIGNMENT         4
-#define VRING_NUM_BUFFS         4   /* number of rpmsg buffers */
+#define VRING_RX_ADDRESS     (SHM_START_ADDRESS)
+#define VRING_TX_ADDRESS     ((uintptr_t)(SHM_START_ADDRESS) + 0x400)
+#define VRING_BUFF_ADDRESS   ((uintptr_t)(SHM_START_ADDRESS) + 0x800)
+#define VRING_ALIGNMENT      16
+#define VRING_NUM_BUFFS      16         /* number of rpmsg buffers */
 #endif
 
 /* Fixed parameter */
@@ -169,16 +231,16 @@ extern int __OPENAMP_region_end__[];    /* defined by linker script */
   */
 
 /* DEBUG macros */
-#if defined (__LOG_TRACE_IO_) || defined(__LOG_UART_IO_)
+#if defined(__LOG_TRACE_IO_) || defined(__LOG_UART_IO_)
   #define OPENAMP_log_dbg               log_dbg
   #define OPENAMP_log_info              log_info
   #define OPENAMP_log_warn              log_warn
   #define OPENAMP_log_err               log_err
 #else
-  #define OPENAMP_log_dbg               APP_LOG_DBG
-  #define OPENAMP_log_info              APP_LOG_INF
-  #define OPENAMP_log_warn              APP_LOG_WARN
-  #define OPENAMP_log_err               APP_LOG_ERR
+#define OPENAMP_log_dbg(fmt, ...)   APP_LOG_DBG("OpenAMP", fmt, ##__VA_ARGS__)
+#define OPENAMP_log_info(fmt, ...)  APP_LOG_INF("OpenAMP", fmt, ##__VA_ARGS__)
+#define OPENAMP_log_warn(fmt, ...)  APP_LOG_WARN("OpenAMP", fmt, ##__VA_ARGS__)
+#define OPENAMP_log_err(fmt, ...)   APP_LOG_ERR("OpenAMP", fmt, ##__VA_ARGS__)
 #endif
 
 /**

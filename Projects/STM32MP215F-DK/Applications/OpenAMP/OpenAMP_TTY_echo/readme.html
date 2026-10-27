@@ -27,54 +27,226 @@
 <body>
 <div class="row">
 <div class="col-sm-12 col-lg-8">
-<div class="row">
-<div class="col-sm-12 col-lg-8">
-<h2 id="openamp_tty_echo-application-description"><b>OpenAMP_TTY_echo
-Application Description</b></h2>
+<h1 id="openamp-tty-echo-application">OpenAMP_TTY_echo Application</h1>
+<hr />
+<h2 id="application-description">Application Description</h2>
+<p>The OpenAMP_TTY_echo application demonstrates Inter-Processor Communication (IPC) using the</p>
+<p><strong>OpenAMP middleware</strong> over IPCC1. Two independent CubeIDE projects are provided under this</p>
+<p>folder, each targeting a different processor:</p>
+<h3 id="cm33-nonsecure">CM33 NonSecure</h3>
 <ul>
-<li><p>It demonstrates How to use OpenAMP MW + Virtual UART to create an
-Inter-Processor Communication channel seen as TTY device in Linux
-OS.</p></li>
-<li><p>This project deals with CPU2 (Cortex-M33) firmware and requires
-Linux OS running on CPU1 (Cortex-A35).</p></li>
-<li><p>Following command should be done in Linux console to run the
-example :</p>
-<pre><code>  stty -onlcr -echo -F /dev/ttyRPMSG0
-  cat /dev/ttyRPMSG0 &amp;
-  stty -onlcr -echo -F /dev/ttyRPMSG1
-  cat /dev/ttyRPMSG1 &amp;
-  echo &quot;Hello Virtual UART0&quot; &gt;/dev/ttyRPMSG0
-  echo &quot;Hello Virtual UART1&quot; &gt;/dev/ttyRPMSG1</code></pre></li>
+<li><strong>CM33</strong> acts as the <strong>REMOTE</strong> processor. It runs as a bare-metal firmware, loaded and started</li>
 </ul>
-<p>You should get “Hello Virtual UART0” and “Hello Virtual UART1” in
-Linux console</p>
-<h4 id="expected-success-behavior"><b>Expected success behavior</b></h4>
+<p>  by Linux on CA35 via the RemoteProc framework.</p>
 <ul>
-<li>Blink LED3 (orange)</li>
+<li><strong>CA35</strong> acts as the <strong>HOST</strong> (OpenAMP RPROC master). Linux controls the CM33 lifecycle and</li>
 </ul>
-<h4 id="error-behaviors"><b>Error behaviors</b></h4>
+<p>  exchanges messages through the RPMsg/VirtIO transport over IPCC1.</p>
 <ul>
-<li>LED3 (orange) does not blink</li>
+<li>The CM33 creates two Virtual UART channels (<strong>VirtUART0</strong> → <code>/dev/ttyRPMSG0</code>,</li>
 </ul>
-<h3 id="keywords"><b>Keywords</b></h3>
-<p>OpenAMP, RPMsg, TFM, IPCC, Inter-Processor Communication</p>
-<h3 id="hardware-and-software-environment"><b>Hardware and Software
-environment</b></h3>
+<p>  <strong>VirtUART1</strong> → <code>/dev/ttyRPMSG1</code>) and echoes back every message it receives.</p>
 <ul>
-<li><p>This example runs on STM32MP21xxxx devices</p></li>
-<li><p>This example has been tested with STMicroelectronics
-STM32MP215F-DK. and can be easily tailored to any other supported
-device and development board.</p></li>
-<li><p>Connect ST-Link cable to the PC USB port to display
-trace</p></li>
+<li><strong>LED3 (orange)</strong> toggles on each successfully received message.</li>
 </ul>
-<h3 id="how-to-use-it"><b>How to use it ?</b></h3>
-<p>In order to make the program work, you must do the following :</p>
+<h3 id="ca35-secure">CA35 Secure</h3>
 <ul>
-<li>Open your preferred toolchain</li>
-<li>Rebuild all files and load your image into target memory</li>
-<li>Run the application</li>
-<li>Connect a type C device on the Type-C connector 21</li>
+<li>This project targets the <strong>M33TD</strong> use case: CM33 is the Trusted Domain master; CA35 runs as a bare-metal coprocessor loaded and started by <strong>StarterApp_M33TD_BM</strong> on CM33 via RemoteProc.</li>
+<li><strong>CA35</strong> acts as the <strong>RPMsg HOST</strong> (<code>RPMSG_HOST</code> role), creating a fixed endpoint (name: <code>&quot;bm_echo&quot;</code>, address: <code>0x5C</code>) over IPCC1 and sending <code>&quot;Hello N from A35&quot;</code> every 3 s.</li>
+<li><strong>CM33</strong> (StarterApp_M33TD_BM) acts as the <strong>RPMsg REMOTE</strong> and echoes each message back.</li>
 </ul>
+<hr />
+<h2 id="expected-behavior">Expected Behavior</h2>
+<h3 id="cm33-nonsecure">CM33 NonSecure</h3>
+<ul>
+<li>LED3 (orange) toggles on each message received from Linux.</li>
+<li>Data written to <code>/dev/ttyRPMSG0</code> and <code>/dev/ttyRPMSG1</code> is echoed back and visible in the Linux</li>
+</ul>
+<p>  console.</p>
+<h3 id="ca35-secure">CA35 Secure</h3>
+<ul>
+<li>A35 UART prints <code>[OpenAMP] TX</code> and <code>[OpenAMP] RX echo</code> messages alternately every 3 seconds.</li>
+<li>Expected serial terminal output:</li>
+</ul>
+<p>  ```</p>
+<p>  <strong>** OpenAMP_TTY_echo application - CA35 Secure </strong>**</p>
+<p>  <strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong>****</p>
+<ul>
+<li>CA35 Frequency : 1200000 KHz</li>
+<li>CA35 FCK_SRC   : PLL1</li>
+</ul>
+<p>  <strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong><strong>*</strong>****</p>
+<p>  [OpenAMP] TX [32 bytes]: Hello 0 from A35</p>
+<p>  [OpenAMP] RX echo [32 bytes]: Hello 0 from A35</p>
+<p>  [OpenAMP] TX [32 bytes]: Hello 1 from A35</p>
+<p>  [OpenAMP] RX echo [32 bytes]: Hello 1 from A35</p>
+<p>  ```</p>
+<hr />
+<h2 id="error-behaviors">Error Behaviors</h2>
+<h3 id="cm33-nonsecure">CM33 NonSecure</h3>
+<ul>
+<li>LED3 (orange) does not blink: CM33 firmware did not start or VirtUART initialisation failed.</li>
+</ul>
+<p>  Check that the signed binary is correctly placed and RemoteProc state is <code>running</code>.</p>
+<h3 id="ca35-secure">CA35 Secure</h3>
+<ul>
+<li>No <code>[OpenAMP] RX echo</code> messages: verify that <strong>StarterApp_M33TD_BM</strong> is running on CM33.</li>
+<li><code>error while initializing OpenAMP</code>: check IPCC1 and shared memory configuration.</li>
+</ul>
+<hr />
+<h2 id="keywords">Keywords</h2>
+<p>OpenAMP, RPMsg, VirtUART, IPCC, Inter-Processor Communication, RemoteProc, bare-metal, CM33,</p>
+<p>CA35, Linux</p>
+<hr />
+<h2 id="directory-contents">Directory Contents</h2>
+<h3 id="cm33-nonsecure">CM33 NonSecure</h3>
+<pre><code>CM33/NonSecure/
+├── Core/
+│   ├── Inc/
+│   │   ├── main.h                        Main application header
+│   │   ├── stm32mp215f_disco_conf.h      STM32MP215F-DK board configuration
+│   │   ├── stm32mp2xx_hal_conf.h         HAL configuration
+│   │   └── stm32mp2xx_it.h              Interrupt handlers header
+│   └── Src/
+│       ├── main.c                        Main application (VirtUART init + echo loop)
+│       ├── stm32mp2xx_hal_msp.c          HAL MSP initialisation
+│       └── stm32mp2xx_it.c              Interrupt handlers
+└── OPENAMP/
+    ├── mbox_ipcc.c / .h                  IPCC1 mailbox implementation
+    ├── openamp.c / .h                    OpenAMP wrapper (init, deinit, poll)
+    ├── openamp_conf.h                    OpenAMP role and transport configuration
+    ├── openamp_log.c / .h                Trace/log helpers
+    └── rsc_table.c / .h                  Resource table (shared memory layout)</code></pre>
+<h3 id="ca35-secure">CA35 Secure</h3>
+<pre><code>CA35/Secure/
+├── Inc/
+│   ├── main.h                            Main header
+│   ├── stm32mp215f_disco_conf.h          STM32MP215F-DK board configuration
+│   ├── stm32mp2xx_hal_conf.h             HAL configuration
+│   ├── stm32mp2xx_it.h                   Interrupt handlers header
+│   ├── stm32mp2xx_mmu.h                  MMU definitions
+│   └── stm32mp2xx_mmu_conf.h             MMU region configuration (IPC shmem at 0x80A00000)
+├── OpenAMP/
+│   ├── Inc/
+│   │   ├── mbox_ipcc.h                   IPCC mailbox interface header
+│   │   ├── openamp.h                     OpenAMP wrapper header
+│   │   ├── openamp_conf.h                OpenAMP configuration (HOST role, IPCC mailbox)
+│   │   ├── openamp_log.h                 OpenAMP log interface
+│   │   └── rsc_table.h                   Resource table header
+│   └── Src/
+│       ├── mbox_ipcc.c                   IPCC mailbox implementation
+│       ├── openamp.c                     OpenAMP wrapper implementation
+│       └── rsc_table.c                   Resource table implementation
+└── Src/
+    ├── main.c                            Main program
+    ├── mmu_stm32mp2xx.c                  MMU translation table
+    ├── startup_stm32mp21xx_a35.c         A35 AArch32 start-up source
+    ├── stm32mp2xx_hal_msp.c              HAL MSP initialisation
+    ├── stm32mp2xx_it.c                   Interrupt handlers
+    ├── syscalls.c                        System calls (newlib stubs)
+    └── system_stm32mp2xx_a35.c          System initialisation</code></pre>
+<hr />
+<h2 id="hardware-and-software-environment">Hardware and Software Environment</h2>
+<ul>
+<li>This application runs on <strong>STM32MP21xxxx</strong> devices.</li>
+<li>Tested with <strong>STMicroelectronics STM32MP215F-DK</strong> board.</li>
+<li><strong>CM33 project</strong>: Linux must be running on CA35 with RemoteProc and RPMsg support enabled in</li>
+</ul>
+<p>  the kernel. Connect an ST-Link cable to the PC USB port to observe CM33 trace output.</p>
+<ul>
+<li><strong>CA35 project</strong> (M33TD): <strong>StarterApp_M33TD_BM</strong> runs on CM33 as Trusted Domain master, manages CA35 via RemoteProc, and acts as the RPMsg remote endpoint. Refer to <code>Projects/STM32MP215F-DK/Demonstrations/StarterApp_M33TD_BM</code>. Connect an ST-Link cable to the PC USB port to display A35 UART trace (USART2, 115200 baud, 8N1).</li>
+<hr />
+<h2 id="to-build-with-stm32cubeide">To Build with STM32CubeIDE</h2>
+<h3 id="project-structure">Project Structure</h3>
+<pre><code>STM32CubeIDE/
+├── .project                              Workspace-level project (import this)
+├── CM33/
+│   ├── .project                          CM33 aggregate project
+│   └── NonSecure/
+│       ├── .project                      OpenAMP_TTY_echo_CM33_NonSecure project
+│       └── .cproject                     Build configurations
+└── CA35/
+    ├── .project                          CA35 aggregate project
+    └── Secure/
+        ├── .project                      OpenAMP_TTY_echo_CA35_Secure project
+        └── .cproject                     Build configurations</code></pre>
+<blockquote>
+<p><strong>Note</strong>: Refer to the</p>
+<p><a href="https://wiki.st.com/stm32mpu/wiki/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE">STM32 MPU wiki</a></p>
+<p>for instructions on importing a project into STM32CubeIDE.</p>
+</blockquote>
+<h3 id="import">Import</h3>
+<ol start="auto"><li>Open STM32CubeIDE.</li></ol>
+<ol start="auto"><li><code>File → Import → General → Existing Projects into Workspace</code>.</li></ol>
+<ol start="auto"><li>Browse to <code>STM32CubeIDE/</code> and import all discovered projects.</li></ol>
+<h3 id="cm33-nonsecure-build-configurations">CM33 NonSecure Build Configurations</h3>
+<table>
+<tr><th>Configuration</th><th>Description</th></tr>
+<tr><td><code>CA35TDCID_m33_ns</code></td><td>Debug build — produces stripped ELF only</td></tr>
+<tr><td><code>CA35TDCID_m33_ns_sign</code></td><td><strong>Production build</strong> — runs <code>sign_rproc_fw.py</code> post-build to produce the signed binary</td></tr>
+</table>
+<p>To build:</p>
+<ul>
+<li>Right-click on <code>OpenAMP_TTY_echo_CM33_NonSecure</code> → <code>Build Configurations → Set Active</code> →</li>
+</ul>
+<p>  select <code>CA35TDCID_m33_ns_sign</code>.</p>
+<ul>
+<li>Right-click → <code>Build Project</code>.</li>
+</ul>
+<h3 id="ca35-secure-build-configuration">CA35 Secure Build Configuration</h3>
+<table>
+<tr><th>Configuration</th><th>Description</th></tr>
+<tr><td><code>CM33TDCID_a35_aarch32_s_sign</code></td><td>Signs and links <code>OpenAMP_TTY_echo.bin</code> for programming via StarterApp</td></tr>
+</table>
+<p>To build:</p>
+<ul>
+<li>Right-click on <code>OpenAMP_TTY_echo_CA35_Secure</code> → <code>Build Configurations → Set Active</code> →</li>
+</ul>
+<p>  select <code>CM33TDCID_a35_aarch32_s_sign</code>.</p>
+<ul>
+<li>Right-click → <code>Build Project</code>.</li>
+</ul>
+<hr />
+<h2 id="how-to-deploy-and-run">How to Deploy and Run</h2>
+<h3 id="cm33-linux-remoteproc">CM33 — Linux RemoteProc</h3>
+<ol start="auto"><li>Copy <code>OpenAMP_TTY_echo_CM33_NonSecure_sign.bin</code> to the Linux filesystem on the target board:</li></ol>
+<p>   ```bash</p>
+<p>   cp OpenAMP_TTY_echo_CM33_NonSecure_sign.bin /lib/firmware/</p>
+<p>   ```</p>
+<ol start="auto"><li>Load and start the CM33 firmware:</li></ol>
+<p>   ```bash</p>
+<p>   echo OpenAMP_TTY_echo_CM33_NonSecure_sign.bin &gt; /sys/class/remoteproc/remoteproc0/firmware</p>
+<p>   echo start &gt; /sys/class/remoteproc/remoteproc0/state</p>
+<p>   ```</p>
+<ol start="auto"><li>Configure the VirtUART channels and send test messages:</li></ol>
+<p>   ```bash</p>
+<p>   stty -onlcr -echo -F /dev/ttyRPMSG0</p>
+<p>   cat /dev/ttyRPMSG0 &amp;</p>
+<p>   stty -onlcr -echo -F /dev/ttyRPMSG1</p>
+<p>   cat /dev/ttyRPMSG1 &amp;</p>
+<p>   echo &quot;Hello Virtual UART0&quot; &gt; /dev/ttyRPMSG0</p>
+<p>   echo &quot;Hello Virtual UART1&quot; &gt; /dev/ttyRPMSG1</p>
+<p>   ```</p>
+<ol start="auto"><li>Expected output in the Linux console:</li></ol>
+<p>   ```</p>
+<p>   Hello Virtual UART0</p>
+<p>   Hello Virtual UART1</p>
+<p>   ```</p>
+<ol start="auto"><li>To stop the CM33 firmware:</li></ol>
+<p>   ```bash</p>
+<p>   echo stop &gt; /sys/class/remoteproc/remoteproc0/state</p>
+<p>   ```</p>
+<h3 id="ca35-m33td-bare-metal">CA35 — M33TD Bare-Metal</h3>
+<ol start="auto"><li>Build the CA35 Secure project in STM32CubeIDE.</li></ol>
+<ol start="auto"><li>Follow <code>Projects/STM32MP215F-DK/Demonstrations/StarterApp_M33TD_BM/README.md</code> to compile the remaining binaries. The CA35 application binary needs to be signed — while building TFM Secure in StarterApp_M33TD_BM, pass the absolute path to the CA35 application binary using:</li></ol>
+<p>   ```</p>
+<p>   -DSTM32_CA35_FW=&lt;absolute_path_to_CA35_binary&gt;</p>
+<p>   ```</p>
+<p>   The signed CA35 firmware will be generated in the <code>trusted-firmware-m/config_default/bin</code> folder.</p>
+<ol start="auto"><li>Program the signed CA35 binary along with all binaries generated in StarterApp_M33TD_BM and reset the board.</li></ol>
+<ol start="auto"><li>Open a serial terminal on the A35 UART (<strong>USART2, 115200 baud, 8N1</strong>) to observe the echo</li></ol>
+<p>   output.</p>
+</div>
+</div>
 </body>
 </html>

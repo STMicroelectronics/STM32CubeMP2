@@ -343,7 +343,7 @@ uint32_t BSP_PMIC_DDR_Power_Init()
   uint32_t  status = BSP_ERROR_NONE;
 
   /* vpp_ddr ==> LDO5 ==> 2500mV */
-  if (BSP_PMIC_WriteReg(board_regulators_table[VPP_DDR].control_reg1, 0x1E) != BSP_ERROR_NONE)
+  if (BSP_PMIC_WriteReg(board_regulators_table[VPP_DDR].control_reg1, 0x20) != BSP_ERROR_NONE)
   {
     return BSP_ERROR_PMIC;
   }

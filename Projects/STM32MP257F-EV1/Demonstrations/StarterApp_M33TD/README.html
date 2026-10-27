@@ -320,23 +320,33 @@ M33 Firmware Build (StarterApp_M33TD Application)</h3>
 <code>Firmware/Projects/STM32MP257F-EV1/Demonstrations/StarterApp_M33TD</code>.</p></li>
 <li><p>Run the following command:</p>
 <div class="sourceCode" id="cb3"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cmake</span> <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-B</span> build <span class="dt">\</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">-DTFM_BUILD_DIR</span><span class="op">=&lt;</span>TFM_BUILD_DIRECTORY<span class="op">&gt;</span> <span class="dt">\</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">-DREMOTE_PROC_AUTO_START</span><span class="op">=</span>ON</span></code></pre></div>
-<pre><code>  - If `TFM_BUILD_DIR` is not specified, the default path `Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default` will be used (assuming the TF-M secure build step is completed).
-  - Common build options (see `CMakeLists.txt`):
-     - `-DBUILD_CONFIG=FULL|MINIMUM` (default: `FULL`)
-        - `FULL`: enables display pipeline (adds display panel files and HAL LTDC/LVDS dependencies)
-        - `MINIMUM`: disables display pipeline
-     - `-DBOOT_SPLASHSCREEN=DYNAMIC|STATIC` (default: `DYNAMIC`, only meaningful when `BUILD_CONFIG=FULL`)
-     - `-DREMOTE_PROC_AUTO_START=ON|OFF` (default: `ON`)
-     - `-DLOW_POWER_DEFAULT_POLICY_ENABLE=ON|OFF` (default: `OFF`)
-     - `-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF` (default: `OFF`)
-     - `-DFAULT_EXCEPTION_ENABLE=ON|OFF` (default: `ON`)
-     - `-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF` (default: `ON`)</code></pre></li>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cmake</span> <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-B</span> build <span class="at">-DTFM_BUILD_DIR</span><span class="op">=&lt;</span>TFM_BUILD_DIRECTORY<span class="op">&gt;</span></span></code></pre></div>
+<ul>
+<li>If <code>TFM_BUILD_DIR</code> is not specified, the default path
+<code>Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default</code>
+is used.</li>
+<li>Project CMake options:
+<ul>
+<li><code>-DBUILD_CONFIG=FULL|MINIMUM</code> (default:
+<code>FULL</code>)</li>
+<li><code>-DBOOT_SPLASHSCREEN=DYNAMIC|STATIC</code> (default:
+<code>DYNAMIC</code>, meaningful with
+<code>BUILD_CONFIG=FULL</code>)</li>
+<li><code>-DREMOTE_PROC_AUTO_START=ON|OFF</code> (default:
+<code>ON</code>)</li>
+<li><code>-DLOW_POWER_DEFAULT_POLICY_ENABLE=ON|OFF</code> (default:
+<code>OFF</code>)</li>
+<li><code>-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF</code> (default:
+<code>OFF</code>)</li>
+<li><code>-DFAULT_EXCEPTION_ENABLE=ON|OFF</code> (default:
+<code>ON</code>)</li>
+<li><code>-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF</code> (default:
+<code>ON</code>)</li>
+</ul></li>
+</ul></li>
 <li><p>Build the project:</p>
-<div class="sourceCode" id="cb5"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> <span class="at">-C</span> build all</span></code></pre></div></li>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> <span class="at">-C</span> build all</span></code></pre></div></li>
 </ol>
 <hr />
 <h2 id="to-build-native-stm32cubeide-project">To Build Native
@@ -540,8 +550,8 @@ example crash/recovery and/or stop/start messages).</li>
 </ul></li>
 <li><strong>Simulate a Linux crash and observe recovery</strong>
 <ul>
-<li>On the Linux console (as <code>root</code>), run:
-<code>bash  sync; sleep 2; sync; echo c &gt; /proc/sysrq-trigger</code></li>
+<li><p>On the Linux console (as <code>root</code>), run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">sync; sleep 2; sync; echo c &gt; /proc/sysrq-trigger</code></pre></div></li>
 <li>This forces a kernel crash on the A35 side. On the CM33 UART,
 RemoteProc should report crash detection and attempt recovery (for
 example: <code>Crash detected ... Attempting recovery...</code>, then a
@@ -549,7 +559,8 @@ stop/restart sequence).</li>
 </ul></li>
 <li><strong>Cold reset from Linux</strong>
 <ul>
-<li>On Linux, run: <code>bash  reboot</code></li>
+<li><p>On Linux, run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">reboot</code></pre></div></li>
 <li>A cold reset typically reboots the full platform; you should see
 TF-M/MCUboot banners again on the CM33 UART. Depending on timing, you
 may also see an SCMI notification such as
@@ -557,8 +568,9 @@ may also see an SCMI notification such as
 </ul></li>
 <li><strong>Warm reset from Linux</strong>
 <ul>
-<li>On Linux, run:
-<code>bash  echo warm &gt;&gt; /sys/kernel/reboot/mode  reboot</code></li>
+<li><p>On Linux, run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo warm &gt;&gt; /sys/kernel/reboot/mode
+reboot</code></pre></div></li>
 <li>A warm reset typically restarts the A35 while keeping CM33 running;
 on the CM33 UART you should see <code>SYS_POWER_WARM_RESET</code> and a
 RemoteProc stop/start sequence. When OpenAMP is enabled, you should also
@@ -577,35 +589,43 @@ below assume that node is <code>/dev/rpmsg2</code>.</li>
 </ul></li>
 <li><strong>Suspend policy test: STOP2</strong>
 <ul>
-<li>This command limits the firmware suspend policy to STOP2 before
-Linux enters suspend:
-<code>bash  echo "LIMIT_PM_STOP2" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li><p>This command limits the firmware suspend policy to STOP2 before
+Linux enters suspend:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo "LIMIT_PM_STOP2" &gt; /dev/rpmsg2
+echo deep &gt; /sys/power/mem_sleep
+rtcwake -m mem -s 10</code></pre></div></li>
 <li>Expected behavior: Linux requests suspend, the firmware keeps the
 low-power target at STOP2, and the system wakes up after the RTC
 timeout.</li>
 </ul></li>
 <li><strong>Suspend policy test: LP_STOP2</strong>
 <ul>
-<li>This command allows the low-power manager to enter LP_STOP2 instead
-of plain STOP2:
-<code>bash  echo "LIMIT_PM_LP_STOP2" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li><p>This command allows the low-power manager to enter LP_STOP2 instead
+of plain STOP2:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo "LIMIT_PM_LP_STOP2" &gt; /dev/rpmsg2
+echo deep &gt; /sys/power/mem_sleep
+rtcwake -m mem -s 10</code></pre></div></li>
 <li>Expected behavior: Linux suspend still uses the RTC wake-up, but the
 firmware low-power target is constrained to LP_STOP2.</li>
 </ul></li>
 <li><strong>Suspend policy test: LPLV_STOP2</strong>
 <ul>
-<li>This command allows the deepest STOP-class mode currently exposed
-over the low-power endpoint:
-<code>bash  echo "LIMIT_PM_LPLV_STOP2" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li><p>This command allows the deepest STOP-class mode currently exposed
+over the low-power endpoint:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo "LIMIT_PM_LPLV_STOP2" &gt; /dev/rpmsg2
+echo deep &gt; /sys/power/mem_sleep
+rtcwake -m mem -s 10</code></pre></div></li>
 <li>Expected behavior: the firmware low-power manager accepts the deeper
 STOP-class mode and the system resumes after the RTC wake-up.</li>
 </ul></li>
 <li><strong>RUN2 test with RTC wake-up</strong>
 <ul>
-<li><code>LIMIT_PM_DISABLED</code> disables low-power entry in the
+<li><p><code>LIMIT_PM_DISABLED</code> disables low-power entry in the
 firmware. Linux can still enter its suspend path, but the M33 side stays
-in RUN2 while waiting for the wake-up source:
-<code>bash  echo "LIMIT_PM_DISABLED" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+in RUN2 while waiting for the wake-up source:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo "LIMIT_PM_DISABLED" &gt; /dev/rpmsg2
+echo deep &gt; /sys/power/mem_sleep
+rtcwake -m mem -s 10</code></pre></div></li>
 <li>Expected behavior: the CM33 logs should show the low-power request
 was rejected locally while the system still exercises the RUN2/D1
 standby synchronization path.</li>
@@ -781,15 +801,15 @@ Use Cases for MP25-EV1 Board (StarterApp Project)</a>.</p></li>
 <h2 id="firmware-update-storage-access">Firmware Update Storage
 Access</h2>
 <p><code>STM32_FWU_STORAGE_ACCESS</code> enables the TF-M storage-write
-support used to stage and install firmware updates through the StarterApp
-FWU manager.</p>
+support used to stage and install firmware updates through the
+StarterApp FWU manager.</p>
 <p>This option is applicable only to the dual-storage boot modes
-<code>nor_emmc</code>, <code>nor_nor_sdcard</code>, and
+<code>nor_emmc</code> and
 <code>nor_sdcard</code>. In these modes, enable it only for a runtime FWU
 use case in which TF-M writes the M33 firmware-update slots.</p>
 <p>For an offline M33 firmware-update scenario in a dual-storage boot
-mode, leave the option disabled. Keep it disabled for the single-storage
-modes <code>emmc_emmc</code> and <code>sdcard_sdcard</code>.</p>
+mode, leave the option disabled. Keep it disabled for the single-storage modes
+<code>emmc_emmc</code> and <code>sdcard_sdcard</code>.</p>
 <hr />
 <h2
 id="reference-use-cases-for-mp25-ev1-board-starterapp-project">Reference
@@ -845,8 +865,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href=
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-snor-s.dts</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-DSTM32_FWU_STORAGE_ACCESS=ON</span>  <span class="co"># Enables the StarterApp runtime FWU reference flow</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="ex">-DTFM_PARTITION_PROTECTED_STORAGE=OFF</span>     <span class="co">#For this dev mode , Protected Storage feature needs to be disabled </span></span></code></pre></div>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-DTFM_PARTITION_PROTECTED_STORAGE=OFF</span>     <span class="co">#For this dev mode , Protected Storage feature needs to be disabled </span></span></code></pre></div>
 <hr />
 <h3
 id="flashlayout_nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv-nor_sdcard-boot-mode">4.

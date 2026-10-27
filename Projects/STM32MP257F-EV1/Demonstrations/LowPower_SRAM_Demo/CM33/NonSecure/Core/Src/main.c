@@ -57,7 +57,7 @@ static void MX_IPCC_Init(void);
 void VIRT_UART0_RxCpltCallback(VIRT_UART_HandleTypeDef *huart);
 void Check_Delay(uint8_t *BuffRx, uint16_t BuffSize);
 void Check_Delayed_Sleep(uint8_t *BuffRx, uint16_t BuffSize);
-void PWR_EnterSTOPMode(uint32_t Regulator, uint8_t STOPEntry);
+void MX_PWR_EnterSTOPMode(uint32_t Regulator, uint8_t STOPEntry);
 static void MX_GPIO_Init(void);
 static void MX_IPCC_Init(void);
 
@@ -150,7 +150,8 @@ int main(void)
   SystemCoreClockUpdate();
   //HAL_PWR_EnterSTOPMode();
   /* OpenAmp initialisation ---------------------------------*/
-  MX_OPENAMP_Init(RPMSG_REMOTE, NULL);
+  MX_OPENAMP_Init(RPMSG_REMOTE, &hipcc1);
+  MX_OPENAMP_RPMsg_Init(RPMSG_REMOTE, NULL, &hipcc1);
   loc_printf("Virtual UART0 OpenAMP-rpmsg channel creation\r\n");
 
   if (VIRT_UART_Init(&huart0) != VIRT_UART_OK) {
@@ -288,7 +289,7 @@ void Check_Delayed_Sleep(uint8_t *BuffRx, uint16_t BuffSize)
     /* Clear the Low Power MPU flags before going into CSTOP */
    __HAL_PWR_CLEAR_FLAG();
 
-   HAL_PWR_EnterSTOPMode(lp_mode, PWR_STOPENTRY_WFI);
+    MX_PWR_EnterSTOPMode(lp_mode, PWR_STOPENTRY_WFI);
 
     /* Leaving CStop mode */
 
@@ -341,7 +342,7 @@ void CoproSync_ShutdownCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPC
 #endif
   BSP_COM_DeInit(COM_VCP_CM33);
 
-  OPENAMP_DeInit();
+  OPENAMP_DeInit(&hipcc1);
 
   /* Deinitialize the LED3 */
   BSP_LED_DeInit(LED3);
@@ -458,7 +459,7 @@ void Error_Handler(void)
   }
 }
 
-void PWR_EnterSTOPMode(uint32_t Regulator, uint8_t STOPEntry)
+void MX_PWR_EnterSTOPMode(uint32_t Regulator, uint8_t STOPEntry)
 {
   /* Check the parameters */
   assert_param(IS_PWR_STOP_MODE_REGULATOR(Regulator));
@@ -478,6 +479,7 @@ void PWR_EnterSTOPMode(uint32_t Regulator, uint8_t STOPEntry)
 /* Ensure core enters in  CSTOP mode on sleep (core and core-subsystem  clock are gated) */
   /* Set DEEP SLEEP bit of Cortex System Control Register */
   SET_BIT(SCB->SCR,SCB_SCR_SLEEPDEEP_Msk);
+  __DSB();
 
   /* Select Stop mode entry --------------------------------------------------*/
   if ((STOPEntry == PWR_STOPENTRY_WFI))

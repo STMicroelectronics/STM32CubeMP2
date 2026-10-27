@@ -756,10 +756,10 @@ typedef  void (*pTIM_CallbackTypeDef)(TIM_HandleTypeDef *htim);  /*!< pointer to
   * @{
   */
 #define TIM_DMA_UPDATE                     TIM_DIER_UDE                         /*!< DMA request is triggered by the update event */
-#define TIM_DMA_CC1                        TIM_DIER_CC1DE                       /*!< DMA request is triggered by the capture/compare macth 1 event */
-#define TIM_DMA_CC2                        TIM_DIER_CC2DE                       /*!< DMA request is triggered by the capture/compare macth 2 event event */
-#define TIM_DMA_CC3                        TIM_DIER_CC3DE                       /*!< DMA request is triggered by the capture/compare macth 3 event event */
-#define TIM_DMA_CC4                        TIM_DIER_CC4DE                       /*!< DMA request is triggered by the capture/compare macth 4 event event */
+#define TIM_DMA_CC1                        TIM_DIER_CC1DE                       /*!< DMA request is triggered by the capture/compare match 1 event */
+#define TIM_DMA_CC2                        TIM_DIER_CC2DE                       /*!< DMA request is triggered by the capture/compare match 2 event event */
+#define TIM_DMA_CC3                        TIM_DIER_CC3DE                       /*!< DMA request is triggered by the capture/compare match 3 event event */
+#define TIM_DMA_CC4                        TIM_DIER_CC4DE                       /*!< DMA request is triggered by the capture/compare match 4 event event */
 #define TIM_DMA_COM                        TIM_DIER_COMDE                       /*!< DMA request is triggered by the commutation event */
 #define TIM_DMA_TRIGGER                    TIM_DIER_TDE                         /*!< DMA request is triggered by the trigger event */
 /**

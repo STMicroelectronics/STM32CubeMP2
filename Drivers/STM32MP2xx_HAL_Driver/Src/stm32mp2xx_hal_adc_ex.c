@@ -1454,7 +1454,7 @@ HAL_StatusTypeDef HAL_ADCEx_RegularStop(ADC_HandleTypeDef *hadc)
 
 /**
   * @brief  Stop ADC conversion of ADC groups regular and injected,
-  *         disable interrution of end-of-conversion,
+  *         disable interruption of end-of-conversion,
   *         disable ADC peripheral if no conversion is on going
   *         on injected group.
   * @param hadc ADC handle
@@ -2351,12 +2351,14 @@ HAL_StatusTypeDef ADC_Calibration_MeasureOffset(ADC_HandleTypeDef *hadc,
         /* Wait for ADC conversion to end */
         /* Get tick count */
         tickstart = HAL_GetTick();
-        while ((LL_ADC_REG_IsConversionOngoing(hadc->Instance) != 0UL) && (LL_ADC_IsActiveFlag_EOC(hadc->Instance) != 1UL))
+        while ((LL_ADC_REG_IsConversionOngoing(hadc->Instance) != 0UL) && \
+               (LL_ADC_IsActiveFlag_EOC(hadc->Instance) != 1UL))
         {
           if ((HAL_GetTick() - tickstart) > ADC_CALIBRATION_TIMEOUT)
           {
             /* New check to avoid false timeout detection in case of preemption */
-            if ((LL_ADC_REG_IsConversionOngoing(hadc->Instance) != 0UL) && (LL_ADC_IsActiveFlag_EOC(hadc->Instance) != 1UL))
+            if ((LL_ADC_REG_IsConversionOngoing(hadc->Instance) != 0UL) && \
+                (LL_ADC_IsActiveFlag_EOC(hadc->Instance) != 1UL))
             {
               /* Update ADC state machine to error */
               SET_BIT(hadc->State, HAL_ADC_STATE_ERROR_INTERNAL);

@@ -53,8 +53,7 @@
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/
- void MX_FREERTOS_Init(void);
-
+void MX_FREERTOS_Init(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

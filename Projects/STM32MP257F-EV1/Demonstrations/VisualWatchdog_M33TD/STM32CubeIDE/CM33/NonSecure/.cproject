@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+﻿<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <?fileVersion 4.0.0?><cproject storage_type_id="org.eclipse.cdt.core.XmlProjectDescriptionStorage">
 	<storageModule moduleId="org.eclipse.cdt.core.settings">
 		<cconfiguration id="com.st.stm32cube.ide.mcu.gnu.managedbuild.config.exe.debug.1046744999.1956380480.499128076.374067324.142357950.1973418222.1860904877">
@@ -55,12 +55,13 @@
 									<listOptionValue builtIn="false" value="USE_HAL_TIM_REGISTER_CALLBACKS  = 1"/>
 									<listOptionValue builtIn="false" value="STM32MP25xxxx"/>
 									<listOptionValue builtIn="false" value="METAL_INTERNAL"/>
-									<listOptionValue builtIn="false" value="VIRTIO_DEVICE_ONLY"/>
+									<listOptionValue builtIn="false" value="NO_ATOMIC_64_SUPPORT"/>
+									<listOptionValue builtIn="false" value="VQ_RX_EMPTY_NOTIFY=0"/>
 									<listOptionValue builtIn="false" value="CORE_CM33"/>
 									<listOptionValue builtIn="false" value="USE_STM32MP257F_EV1"/>
-									<listOptionValue builtIn="false" value="NO_ATOMIC_64_SUPPORT"/>
+									                                                                        <listOptionValue builtIn="false" value="VIRTIO_DEVICE_SUPPORT=1"/>
+                                                                        <listOptionValue builtIn="false" value="VIRTIO_DRIVER_SUPPORT=0"/>
 									<listOptionValue builtIn="false" value="METAL_MAX_DEVICE_REGIONS=2"/>
-									<listOptionValue builtIn="false" value="LINUX_RPROC_MASTER"/>
 									<listOptionValue builtIn="false" value="HAL_LVDS_MODULE_ENABLED"/>
 									<listOptionValue builtIn="false" value="HAL_LTDC_MODULE_ENABLED"/>
 								</option>

@@ -50,10 +50,10 @@ extern "C" {
 
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
-/* UDP local connection port */
-#define UDP_SERVER_PORT    7
-/* UDP remote connection port */
-#define UDP_CLIENT_PORT    7
+/* TCP local connection port */
+#define TCP_SERVER_PORT    7
+/* TCP remote connection port */
+#define TCP_CLIENT_PORT    7
 
 /*Static IP ADDRESS*/
 #define IP_ADDR0   ((uint8_t)10U)
@@ -78,9 +78,11 @@ extern "C" {
 /* USER CODE BEGIN EFP */
 
 void Error_Handler(void);
+extern IPCC_HandleTypeDef hipcc1;
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define DEFAULT_IRQ_PRIO      1U
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

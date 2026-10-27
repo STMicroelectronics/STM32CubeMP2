@@ -31,14 +31,12 @@ USART Peripheral is configured in asynchronous mode (115200 bauds, 8 data bit, 1
 No HW flow control is used.
 GPIO associated to User push-button is linked with EXTI.
 USART RX Not Empty interrupt is enabled.
-Virtual Com port feature of STLINK could be used for UART communication between board and PC.
+UART4 communication can be connected to a USB-to-UART adapter through CN10 or to the ST-LINK Virtual COM port (VCP2), depending on the board configuration.
 
 Example execution:
-When character is received on USART Rx line, a RXNE interrupt occurs.
-USART IRQ Handler routine is then checking received character value.
-On a specific value ('S' or 's'), LED3 is turned On.
-Received character is echoed on Tx line.
-On press on User push-button, LED is turned Off.
+When a character is received on the USART RX line, an RXNE interrupt occurs and the character is echoed on the TX line.
+When the received character is 'S' or 's', LED3 is turned On.
+On press on USER2 push-button, LED3 is turned Off (allows to restart the sequence).
 In case of errors, LED turns ON continuously.
 
 @par Keywords
@@ -65,12 +63,15 @@ Connectivity, USART, Asynchronous mode, RS-232, baud rate, Interrupt, HyperTermi
     easily tailored to any other supported device and development board.
     
   - STM32MP215F-DK Set-up
-    In order to select use of Virtual Com port feature of STLINK for connection between STM32MP215F-DK and PC
-    If so, please ensure that USART communication between the target MPU and ST-LINK MPU is properly enabled 
-    on HW board in order to support Virtual Com Port (Default HW SB configuration allows use of VCP)
-    
-  - Launch VCP2 (UART4) serial communication SW on PC (as HyperTerminal or TeraTerm) with proper configuration 
-    (115200 bauds, 8 bits data, 1 stop bit, no parity, no HW flow control). 
+    For a direct UART connection using the CN10 header on board MB2059-MP215F-A01, connect a 3.3 V TTL USB-to-UART adapter as follows:
+    - CN10 pin 15 (EXP_GPIO22, UART4_TX.M33) to the adapter RX
+    - CN10 pin 16 (EXP_GPIO23, UART4_RX.M33) to the adapter TX
+    - Adapter GND to a GND pin on CN10
+    Do not connect the adapter's VCC pin. Use a common ground.
+
+    Alternatively, use VCP2 (UART4) through ST-LINK. Ensure that the board switch configuration routes UART4 between the target MPU and ST-LINK.
+
+  - Open the serial terminal on the PC (for example, HyperTerminal or TeraTerm) and configure it for 115200 bauds, 8 data bits, 1 stop bit, no parity, and no hardware flow control.
 
   - Launch the program. Enter characters on PC communication SW side.
 

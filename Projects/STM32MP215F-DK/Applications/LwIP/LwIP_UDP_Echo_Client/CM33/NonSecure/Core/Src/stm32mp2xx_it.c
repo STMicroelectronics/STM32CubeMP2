@@ -200,6 +200,11 @@ void BUTTON_USER2_EXTI_IRQ_HANDLER(void)
   HAL_EXTI_IRQHandler(&hexti);
 }
 
+void IPCC1_RX_IRQHandler(void)
+{
+  HAL_IPCC_RX_IRQHandler(&hipcc1);
+}
+
 /* USER CODE END 1 */
 
 

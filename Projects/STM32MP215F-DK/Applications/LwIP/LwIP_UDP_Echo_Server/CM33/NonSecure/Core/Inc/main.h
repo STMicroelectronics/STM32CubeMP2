@@ -80,8 +80,9 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define DEFAULT_IRQ_PRIO      1U
 /* USER CODE BEGIN Private defines */
-
+extern IPCC_HandleTypeDef hipcc1;
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

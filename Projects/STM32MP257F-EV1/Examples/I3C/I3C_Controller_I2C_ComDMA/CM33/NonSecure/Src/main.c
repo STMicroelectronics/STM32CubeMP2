@@ -257,6 +257,12 @@ int main(void)
     Error_Handler();
   }
 
+#ifdef ICACHE_DCACHE_ENABLE
+  /* Prepare the descriptor and receive buffer for DMA access. */
+  HAL_DCACHE_CleanByAddr(&hdcache, (uint32_t*)aControlBuffer, sizeof(aControlBuffer));
+  HAL_DCACHE_InvalidateByAddr(&hdcache, (uint32_t*)aRxBuffer, RXBUFFERSIZE);
+#endif /* ICACHE_DCACHE_ENABLE */
+
   /*##- Start the reception process ######################################*/
   /* Receive private data processus */
   if (HAL_I3C_Ctrl_Receive_DMA(&hi3c4, &aContextBuffers[I3C_IDX_FRAME_2]) != HAL_OK)
@@ -264,12 +270,6 @@ int main(void)
     /* Error_Handler() function is called when error occurs. */
     Error_Handler();
   }
-
-#ifdef ICACHE_DCACHE_ENABLE
-  /* Invalidating cache lines after DMA transfer */
-  HAL_DCACHE_InvalidateByAddr(&hdcache, (uint32_t*)aControlBuffer, sizeof(aControlBuffer));
-  HAL_DCACHE_InvalidateByAddr(&hdcache, (uint32_t*)aRxBuffer, RXBUFFERSIZE);
-#endif /* ICACHE_DCACHE_ENABLE */
 
   /*##- Wait for the end of the transfer #################################*/
   /*  Before starting a new communication transfer, you need to check the current
@@ -281,6 +281,11 @@ int main(void)
   while (HAL_I3C_GetState(&hi3c4) != HAL_I3C_STATE_READY)
   {
   }
+
+#ifdef ICACHE_DCACHE_ENABLE
+  /* Invalidate the receive buffer after DMA has completed writing it. */
+  HAL_DCACHE_InvalidateByAddr(&hdcache, (uint32_t*)aRxBuffer, RXBUFFERSIZE);
+#endif /* ICACHE_DCACHE_ENABLE */
 
   /*##- Compare the sent and received buffers ############################*/
   if (Buffercmp((uint8_t *)aTxBuffer, (uint8_t *)aRxBuffer, RXBUFFERSIZE))
@@ -703,6 +708,13 @@ void CoproSync_ShutdownCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPC
 
   /* Deinitialize the LED3 */
   BSP_LED_DeInit(LED3);
+
+#ifdef ICACHE_DCACHE_ENABLE
+  HAL_DCACHE_CleanInvalidByAddr(&hdcache, (const uint32_t *)0x80A00000U, 0x003FFC00U);
+  HAL_DCACHE_Disable(&hdcache);
+  HAL_DCACHE_DeInit(&hdcache);
+  HAL_ICACHE_DeInit();
+#endif
 
   /* When ready, notify the remote processor that we can be shut down */
   HAL_IPCC_NotifyCPU(hipcc, ChannelIndex, IPCC_CHANNEL_DIR_RX);

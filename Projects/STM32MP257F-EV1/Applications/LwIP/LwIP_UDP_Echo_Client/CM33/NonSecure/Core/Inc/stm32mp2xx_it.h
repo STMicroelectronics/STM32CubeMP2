@@ -48,6 +48,7 @@
 
 /* Exported functions prototypes ---------------------------------------------*/
 void ETH1_IRQHandler(void);
+void IPCC1_RX_IRQHandler(void);
 /* USER CODE BEGIN EFP */
 
 /* USER CODE END EFP */

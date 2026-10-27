@@ -501,7 +501,7 @@ void HAL_ICACHE_IRQHandler(void)
     /* Clear BSYENDF pending flag */
     WRITE_REG(ICACHE->FCR, ICACHE_FCR_CBSYENDF);
 
-    /* Instruction cache busyend interrupt user callback */
+    /* Instruction cache busy end interrupt user callback */
     HAL_ICACHE_InvalidateCompleteCallback();
   }
 }

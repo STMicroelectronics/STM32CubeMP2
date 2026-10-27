@@ -474,6 +474,32 @@ sig_size_type = {
 }
 
 
+def get_public_key_der(key, sign_type):
+    if sign_type == ENUM_SIGNATURE_TYPE['RSA']:
+        return key.publickey().export_key(format='DER')
+
+    if sign_type == ENUM_SIGNATURE_TYPE['ECC']:
+        return key.public_key().export_key(format='DER')
+
+    raise ValueError("Unsupported sign type")
+
+
+def validate_key_info_matches_private_key(key, sign_type, key_info):
+    pub_from_private = get_public_key_der(key, sign_type)
+
+    if pub_from_private == key_info:
+        return
+
+    key_info_hash = SHA256.new(key_info).hexdigest()
+    derived_pub_hash = SHA256.new(pub_from_private).hexdigest()
+
+    raise ValueError(
+        "--key_info does not match --key public key "
+        f"(key_info_sha256={key_info_hash}, "
+        f"derived_pub_sha256={derived_pub_hash})"
+    )
+
+
 def main():
     from Cryptodome.Signature import pss
     from Cryptodome.Hash import SHA256
@@ -599,6 +625,8 @@ def main():
     if args.key_info:
         with open(args.key_info, 'rb') as f:
             key_info = f.read()
+
+        validate_key_info_matches_private_key(key, sign_type, key_info)
         tlv.add('PKEYINFO', key_info)
 
     # Compute custom TLV that will be passed to the platform PTA

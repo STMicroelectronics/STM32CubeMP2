@@ -39,7 +39,7 @@
 #endif
 #define LOW_POWER_MGR_TIMEOUT_MS               1000U
 #define LOW_POWER_MGR_CHECK_INTERVAL_MS        10U
-#define LOW_POWER_MGR_RUN2_SYNC_INTERVAL_MS    100U
+#define LOW_POWER_MGR_RUN2_CHECK_INTERVAL_MS   100U
 #define LOW_POWER_MGR_MSEC_PER_SEC             1000U
 #define LOW_POWER_MGR_A35_CPU_ID               0U
 #define LOW_POWER_MGR_EXTI1_C2IMR1_GPIO        0x0000FFFFU
@@ -56,7 +56,6 @@ typedef enum {
     LOW_POWER_MGR_MSG_AGENT_SET,
     LOW_POWER_MGR_MSG_AGENT_CLEAR,
     LOW_POWER_MGR_MSG_AGENT_UNREGISTER,
-    LOW_POWER_MGR_MSG_RUN2_SYNC_CHECK,
 } LowPowerMgrMsgType_t;
 
 /* Private typedef -----------------------------------------------------------*/
@@ -110,7 +109,7 @@ typedef struct {
     LowPowerMgrMode_t active_mode;
     volatile bool copro_is_suspended;
     volatile bool copro_is_running;
-    bool run2_sync_pending;
+    volatile bool run2_active;
     bool shutdown_requested;
     bool standby1_exit;
     uint32_t last_error;
@@ -148,7 +147,7 @@ static LowPowerMgrTaskState_t lowPowerMgrState = {
     .active_mode = LOW_POWER_MGR_MODE_NONE,
     .copro_is_suspended = false,
     .copro_is_running = false,
-    .run2_sync_pending = false,
+    .run2_active = false,
     .shutdown_requested = false,
     .standby1_exit = false,
     .last_error = 0U,
@@ -173,7 +172,7 @@ static void LowPowerMgrTask_NotifyListeners(LowPowerMgrNotif_t notif, LowPowerMg
 static void LowPowerMgrTask_RemoteProcCallback(RemoteProcState new_state, void *context);
 static void LowPowerMgrTask_RecomputeAllowedMode(void);
 static void LowPowerMgrTask_ResetSuspendPolicy(void);
-static void LowPowerMgrTask_HandleRun2SyncCheck(void);
+static void LowPowerMgrTask_UpdateRun2State(void);
 static const char *LowPowerMgrTask_GetModeStr(LowPowerMgrMode_t mode);
 static const char *LowPowerMgrTask_GetAgentLabel(uint32_t agent_index);
 static LowPowerMgrMode_t LowPowerMgrTask_GetSuspendMode(LowPowerMgrMode_t allowed_mode);
@@ -187,7 +186,6 @@ static void LowPowerMgrTask_ResumeRtosTick(void);
 static HAL_StatusTypeDef LowPowerMgrTask_PostAgentMessage(LowPowerMgrMsgType_t type,
                                                           LowPowerMgrAgentHandle_t agent,
                                                           LowPowerMgrMode_t mode);
-static HAL_StatusTypeDef LowPowerMgrTask_PostRun2SyncCheck(void);
 
 extern void vPortSetupTimerInterrupt(void);
 
@@ -210,48 +208,28 @@ static void LowPowerMgrTask_ResetSuspendPolicy(void)
   lowPowerMgrState.active_mode = LOW_POWER_MGR_MODE_NONE;
   lowPowerMgrState.copro_is_suspended = false;
   lowPowerMgrState.copro_is_running = false;
-  lowPowerMgrState.run2_sync_pending = false;
+  lowPowerMgrState.run2_active = false;
   lowPowerMgrState.shutdown_requested = false;
 }
 
 /**
-  * @brief  Monitor A35 D1 standby exit while RUN2 remains valid on the M33 side.
+  * @brief  Update RUN2 state when A35 exits D1 Standby.
   * @retval None
   */
-static void LowPowerMgrTask_HandleRun2SyncCheck(void)
+static void LowPowerMgrTask_UpdateRun2State(void)
 {
-  RemoteProcState remoteproc_state;
-
-  if (!lowPowerMgrState.run2_sync_pending)
+  if (!lowPowerMgrState.run2_active)
   {
     return;
   }
 
   if (HAL_PWR_D1State() == PWR_D1_DSTANDBY)
   {
-    osDelay(LOW_POWER_MGR_RUN2_SYNC_INTERVAL_MS);
-    (void)LowPowerMgrTask_PostRun2SyncCheck();
     return;
   }
 
-  remoteproc_state = RemoteProcTask_GetState();
-  if (remoteproc_state == REMOTEPROC_STATE_SUSPENDED)
-  {
-    APP_LOG_INF("LowPowerMgr", "A35 exited D1 standby, resynchronizing copro state");
-    (void)RemoteProcTask_PostEvent(REMOTEPROC_EVENT_RESUME, LOW_POWER_MGR_A35_CPU_ID);
-    lowPowerMgrState.run2_sync_pending = false;
-  }
-  else if ((remoteproc_state == REMOTEPROC_STATE_RUNNING) ||
-           (remoteproc_state == REMOTEPROC_STATE_RESUMING) ||
-           (remoteproc_state == REMOTEPROC_STATE_OFFLINE))
-  {
-    lowPowerMgrState.run2_sync_pending = false;
-  }
-  else
-  {
-    osDelay(LOW_POWER_MGR_RUN2_SYNC_INTERVAL_MS);
-    (void)LowPowerMgrTask_PostRun2SyncCheck();
-  }
+  APP_LOG_INF("LowPowerMgr", "A35 exited D1 DStandby, system back to RUN mode");
+  lowPowerMgrState.run2_active = false;
 }
 
 /**
@@ -957,6 +935,16 @@ HAL_StatusTypeDef LowPowerMgrTask_PostEvent(LowPowerMgrEvent_t event, uint32_t p
 }
 
 /**
+  * @brief  Check whether the rejected A35 suspend request is in RUN2/D1 Standby.
+  * @retval true if RUN2 is active and D1 remains in Standby, false otherwise.
+  */
+bool LowPowerMgrTask_IsRun2Active(void)
+{
+  return lowPowerMgrState.run2_active &&
+         (HAL_PWR_D1State() == PWR_D1_DSTANDBY);
+}
+
+/**
   * @brief  Post a private agent update message to the Low Power Manager Task queue.
   * @param  type: Agent message kind.
   * @param  agent: Target agent handle.
@@ -973,28 +961,6 @@ static HAL_StatusTypeDef LowPowerMgrTask_PostAgentMessage(LowPowerMgrMsgType_t t
     .param = 0U,
     .agent = agent,
     .mode = mode,
-  };
-
-  if (lowPowerMgrQueueHandle == NULL)
-  {
-    return HAL_ERROR;
-  }
-
-  return (osMessageQueuePut(lowPowerMgrQueueHandle, &msg, 0U, 0U) == osOK) ? HAL_OK : HAL_ERROR;
-}
-
-/**
-  * @brief  Post a private RUN2 synchronization check message.
-  * @retval HAL_OK if posted, HAL_ERROR otherwise.
-  */
-static HAL_StatusTypeDef LowPowerMgrTask_PostRun2SyncCheck(void)
-{
-  LowPowerMgrEventMsg_t msg = {
-    .type = LOW_POWER_MGR_MSG_RUN2_SYNC_CHECK,
-    .event = LOW_POWER_MGR_EVENT_SUSPEND,
-    .param = 0U,
-    .agent = LOW_POWER_MGR_AGENT_HANDLE_INVALID,
-    .mode = LOW_POWER_MGR_MODE_INVALID,
   };
 
   if (lowPowerMgrQueueHandle == NULL)
@@ -1091,13 +1057,22 @@ int LowPowerMgrTask_RpmsgCallback(struct rpmsg_endpoint *ept, void *data,
 static void LowPowerMgrTask(void *argument)
 {
   LowPowerMgrEventMsg_t cmd;
+  osStatus_t status;
+  uint32_t timeout;
   uint32_t agent_index;
 
   (void)argument;
 
   for (;;)
   {
-    if (osMessageQueueGet(lowPowerMgrQueueHandle, &cmd, NULL, osWaitForever) == osOK)
+    timeout = ((lowPowerMgrState.state == LOW_POWER_MGR_STATE_IDLE) &&
+               lowPowerMgrState.run2_active) ?
+              LOW_POWER_MGR_RUN2_CHECK_INTERVAL_MS : osWaitForever;
+
+    status = osMessageQueueGet(lowPowerMgrQueueHandle, &cmd, NULL, timeout);
+    LowPowerMgrTask_UpdateRun2State();
+
+    if (status == osOK)
     {
       switch (lowPowerMgrState.state)
       {
@@ -1135,12 +1110,9 @@ static void LowPowerMgrTask(void *argument)
         {
           LowPowerMgrTask_RecomputeAllowedMode();
         }
-        else if (cmd.type == LOW_POWER_MGR_MSG_RUN2_SYNC_CHECK)
-        {
-          LowPowerMgrTask_HandleRun2SyncCheck();
-        }
         else if (cmd.event == LOW_POWER_MGR_EVENT_SHUTDOWN)
         {
+          lowPowerMgrState.run2_active = false;
           lowPowerMgrState.shutdown_requested = true;
           lowPowerMgrState.state = LOW_POWER_MGR_STATE_PREPARING;
           (void)LowPowerMgrTask_PostEvent(LOW_POWER_MGR_EVENT_PREPARE_SLEEP, 0U);
@@ -1154,19 +1126,12 @@ static void LowPowerMgrTask(void *argument)
               *        while the M33-side low power policy rejects the request.
               * @note In this situation the M33 rejects the local low power request,
               *       but Linux may already have progressed into the D1 standby path.
-              *       When D1 standby is observed within the expected timeout, a
-              *       suspend event is forwarded to the remote processor.
               */
             APP_LOG_WARN("LowPowerMgr", "Suspend request rejected: low power disabled");
 
             if (LowPowerMgrTask_WaitD1State(LOW_POWER_MGR_TIMEOUT_MS, PWR_D1_DSTANDBY) == 0)
             {
-              (void)RemoteProcTask_PostEvent(REMOTEPROC_EVENT_SUSPEND, LOW_POWER_MGR_A35_CPU_ID);
-              if (!lowPowerMgrState.run2_sync_pending)
-              {
-                lowPowerMgrState.run2_sync_pending = true;
-                (void)LowPowerMgrTask_PostRun2SyncCheck();
-              }
+              lowPowerMgrState.run2_active = true;
               APP_LOG_INF("LowPowerMgr", "System entered into RUN2/D1_Standby1 mode");
             }
 
@@ -1174,6 +1139,7 @@ static void LowPowerMgrTask(void *argument)
           }
           else
           {
+            lowPowerMgrState.run2_active = false;
             lowPowerMgrState.state = LOW_POWER_MGR_STATE_PREPARING;
             (void)LowPowerMgrTask_PostEvent(LOW_POWER_MGR_EVENT_PREPARE_SLEEP, 0U);
           }

@@ -77,7 +77,7 @@ typedef struct
                                         CCM : named B1 composed of the associated data length and Associated Data. */
   uint32_t HeaderSize;                 /*!< The size of header buffer in word  */
   uint32_t *B0;                        /*!< B0 is first authentication block used only in AES CCM mode */
-  uint32_t DataWidthUnit;              /*!< Data With Unit, this parameter can be value of @ref CRYP_Data_Width_Unit*/
+  uint32_t DataWidthUnit;              /*!< Data Width Unit, this parameter can be value of @ref CRYP_Data_Width_Unit*/
   uint32_t HeaderWidthUnit;            /*!< Header Width Unit, this parameter can be value
                                             of @ref CRYP_Header_Width_Unit */
   uint32_t KeyIVConfigSkip;            /*!< CRYP peripheral Key and IV configuration skip,

@@ -1,3 +1,17 @@
-add_subdirectory (${PROJECT_PROCESSOR})
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_PROCESSOR}/cpu.h")
+	collect (PROJECT_LIB_HEADERS ${PROJECT_PROCESSOR}/cpu.h)
+	set(HAVE_PROCESSOR_CPU_H 1 CACHE INTERNAL "Have include ${PROJECT_PROCESSOR}/cpu.h")
+else()
+	collect (PROJECT_LIB_HEADERS generic/cpu.h)
+endif()
 
-# vim: expandtab:ts=2:sw=2:smartindent
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_PROCESSOR}/cpu.c")
+	collect (PROJECT_LIB_SOURCES ${PROJECT_PROCESSOR}/cpu.c)
+endif()
+
+if (EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${PROJECT_PROCESSOR}/atomic.h")
+	collect (PROJECT_LIB_HEADERS ${PROJECT_PROCESSOR}/atomic.h)
+	set(HAVE_PROCESSOR_ATOMIC_H 1 CACHE INTERNAL "Have include ${PROJECT_PROCESSOR}/atomic.h")
+else()
+	collect (PROJECT_LIB_HEADERS generic/atomic.h)
+endif()

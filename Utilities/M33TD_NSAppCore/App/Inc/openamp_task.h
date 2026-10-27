@@ -87,6 +87,13 @@ void OpenampTask_DeInit(void);
   */
 bool OpenampTask_PostCommand(const OpenampTaskCommand_t *cmd);
 
+/**
+  * @brief  Request OpenAMP reinitialization for a remote processor restart.
+  * @param  cpu_id: Remote processor CPU identifier associated with the restart.
+  * @retval true if the reinit command was accepted, false otherwise.
+  */
+bool OpenampTask_RequestReinit(uint32_t cpu_id);
+
 #ifdef __cplusplus
 }
 #endif
@@ -94,4 +101,3 @@ bool OpenampTask_PostCommand(const OpenampTaskCommand_t *cmd);
 #endif /* OPENAMP_TASK_H */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

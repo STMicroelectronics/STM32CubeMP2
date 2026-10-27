@@ -1895,7 +1895,7 @@ HAL_StatusTypeDef HAL_ADC_Start_IT(ADC_HandleTypeDef *hadc)
 
 /**
   * @brief  Stop ADC conversion of regular group (and injected group in
-  *         case of auto_injection mode), disable interrution of
+  *         case of auto_injection mode), disable interruption of
   *         end-of-conversion, disable ADC peripheral.
   * @param hadc ADC handle
   * @retval HAL status.

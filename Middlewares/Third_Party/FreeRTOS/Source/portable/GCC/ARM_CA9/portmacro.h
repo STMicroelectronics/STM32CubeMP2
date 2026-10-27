@@ -90,8 +90,9 @@ extern uint32_t ulPortYieldRequired;            \
 #define portYIELD_FROM_ISR( x ) portEND_SWITCHING_ISR( x )
 #if defined(CORE_CA35)
 /* CA35 uses the architecturally current supervisor-call mnemonic SVC.
-It raises the same supervisor exception path handled by FreeRTOS_SWI_Handler,
-but avoids relying on the older SWI spelling kept in the legacy ARM_CA9 port. */
+It raises the same supervisor exception path handled by SVC_Handler,
+which the port also exports as FreeRTOS_SVC_Handler and the legacy
+FreeRTOS_SWI_Handler alias for compatibility. */
 #define portYIELD() __asm volatile ( "SVC 0" ::: "memory" );
 #else
 #define portYIELD() __asm volatile ( "SWI 0" ::: "memory" );

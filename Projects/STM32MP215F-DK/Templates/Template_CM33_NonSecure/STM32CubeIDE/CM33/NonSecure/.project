@@ -46,11 +46,6 @@
 			<locationURI>PARENT-7-PROJECT_LOC/Utilities/ResourcesManager/res_mgr.c</locationURI>
 		</link>
 		<link>
-			<name>Application/Startup/startup_stm32mp21xx_m33.S</name>
-			<type>1</type>
-			<locationURI>PARENT-7-PROJECT_LOC/Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/gcc/startup_stm32mp21xx_m33.S</locationURI>
-		</link>
-		<link>
 			<name>Application/Startup/startup_stm32mp21xx_m33_ns.S</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Drivers/CMSIS/Device/ST/STM32MP2xx/Source/Templates/gcc/startup_stm32mp21xx_m33_ns.S</locationURI>

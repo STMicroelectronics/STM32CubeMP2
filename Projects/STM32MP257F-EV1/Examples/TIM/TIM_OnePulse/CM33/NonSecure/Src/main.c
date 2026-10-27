@@ -332,13 +332,15 @@ static void MX_TIM12_Init(void)
 	{
 		__HAL_RCC_GPIOB_CLK_ENABLE();
 	}
+	/* Acquire GPIOB7 (TIM12_CH1) using Resource manager */
 	if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOB, RESMGR_GPIO_PIN(7)))
 	{
-		/* Acquire GPIOB11 using Resource manager */
-		if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOB, RESMGR_GPIO_PIN(11)))
-		{
-			Error_Handler();
-		}
+		Error_Handler();
+	}
+	/* Acquire GPIOB11 (TIM12_CH2) using Resource manager */
+	if (RESMGR_STATUS_ACCESS_OK != ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOB, RESMGR_GPIO_PIN(11)))
+	{
+		Error_Handler();
 	}
 
   /* Timer One Pulse Configuration Structure declaration */
@@ -457,6 +459,13 @@ void CoproSync_ShutdownCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPC
 
   /* Deinitialize the LED3 */
   BSP_LED_DeInit(LED3);
+
+#ifdef ICACHE_DCACHE_ENABLE
+  HAL_DCACHE_CleanInvalidByAddr(&hdcache, (const uint32_t *)0x80A00000U, 0x003FFC00U);
+  HAL_DCACHE_Disable(&hdcache);
+  HAL_DCACHE_DeInit(&hdcache);
+  HAL_ICACHE_DeInit();
+#endif
 
   /* When ready, notify the remote processor that we can be shut down */
   HAL_IPCC_NotifyCPU(hipcc, ChannelIndex, IPCC_CHANNEL_DIR_RX);

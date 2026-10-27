@@ -176,6 +176,11 @@
 			<locationURI>PARENT-3-PROJECT_LOC/CM33/NonSecure/OPENAMP/rsc_table.c</locationURI>
 		</link>
 		<link>
+			<name>Middlewares/OpenAMP/openamp/utils/utilities.c</name>
+			<type>1</type>
+			<locationURI>PARENT-8-PROJECT_LOC/Middlewares/Third_Party/OpenAMP/open-amp/lib/utils/utilities.c</locationURI>
+		</link>
+		<link>
 			<name>Drivers/BSP/STM32MP215F-DK/stm32mp215f_disco.c</name>
 			<type>1</type>
 			<locationURI>PARENT-8-PROJECT_LOC/Drivers/BSP/STM32MP215F-DK/stm32mp215f_disco.c</locationURI>

@@ -63,7 +63,7 @@ Regardless of the interface type, the pipe configuration is necessary:
      (#)Default Shared Data Flow
         By default, or by invoking HAL_DCMIPP_PIPE_CSI_EnableShare() ,the dataflow of PIPE1 is shared with PIPE2.
         In this case the VC and DataType are the same as those configured for PIPE1 thus
-        data acquistion can be started for PIPE2 without any additional configuration.
+        data acquisition can be started for PIPE2 without any additional configuration.
      (#)Disabling Shared Data Flow
         The shared dataflow between Pixel Pipes can be disabled by calling HAL_DCMIPP_PIPE_CSI_DisableShare().
         This action must be performed before starting data acquisition on either pipe
@@ -306,7 +306,7 @@ static HAL_StatusTypeDef DCMIPP_Stop(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pip
 #if defined(DCMIPP_CSI2_SUPPORT)
 static void DCMIPP_CSI_WritePHYReg(CSI_TypeDef *hcsi, uint32_t reg_msb, uint32_t reg_lsb, uint32_t val);
 static HAL_StatusTypeDef DCMIPP_CSI_SetVCConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Pipe, uint32_t VirtualChannel);
-static HAL_StatusTypeDef DCMIPP_CSI_VCStop(DCMIPP_HandleTypeDef *hdcmipp, uint32_t VirtualChannel);
+static HAL_StatusTypeDef DCMIPP_CSI_VCStop(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t VirtualChannel);
 #endif /* DCMIPP_CSI2_SUPPORT */
 /**
   * @}
@@ -622,7 +622,7 @@ HAL_StatusTypeDef HAL_DCMIPP_PARALLEL_SetConfig(DCMIPP_HandleTypeDef *hdcmipp,
   *                     configuration information for DCMIPP.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCMIPP_CSI_SetConfig(DCMIPP_HandleTypeDef *hdcmipp,
+HAL_StatusTypeDef HAL_DCMIPP_CSI_SetConfig(const DCMIPP_HandleTypeDef *hdcmipp,
                                            const DCMIPP_CSI_ConfTypeDef *pCSI_Config)
 {
   CSI_TypeDef *csi_instance;
@@ -922,7 +922,7 @@ HAL_StatusTypeDef HAL_DCMIPP_CSI_PIPE_SetConfig(DCMIPP_HandleTypeDef *hdcmipp, u
   *                            the Virtual Channel Filtering configuration information.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCMIPP_CSI_SetVCFilteringConfig(DCMIPP_HandleTypeDef *hdcmipp,
+HAL_StatusTypeDef HAL_DCMIPP_CSI_SetVCFilteringConfig(const DCMIPP_HandleTypeDef *hdcmipp,
                                                       uint32_t VirtualChannel,
                                                       const DCMIPP_CSI_VCFilteringConfTypeDef
                                                       *pVCFilteringConfig)
@@ -1015,7 +1015,7 @@ HAL_StatusTypeDef HAL_DCMIPP_CSI_SetVCFilteringConfig(DCMIPP_HandleTypeDef *hdcm
   * @param  DataTypeFormat Specifies the Data Type Format, can be a value from @ref DCMIPP_CSI_DataTypeFormat.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCMIPP_CSI_SetVCConfig(DCMIPP_HandleTypeDef *hdcmipp,
+HAL_StatusTypeDef HAL_DCMIPP_CSI_SetVCConfig(const DCMIPP_HandleTypeDef *hdcmipp,
                                              uint32_t VirtualChannel,
                                              uint32_t DataTypeFormat)
 {
@@ -7936,7 +7936,7 @@ uint32_t HAL_DCMIPP_PIPE_IsEnabledISPAreaStatisticExtraction(const DCMIPP_Handle
   *                         configuration information for CSI.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCMIPP_CSI_SetLineByteCounterConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter,
+HAL_StatusTypeDef HAL_DCMIPP_CSI_SetLineByteCounterConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter,
                                                           const DCMIPP_CSI_LineByteCounterConfTypeDef *pLineByteConfig)
 {
   CSI_TypeDef *csi_instance;
@@ -7989,7 +7989,7 @@ HAL_StatusTypeDef HAL_DCMIPP_CSI_SetLineByteCounterConfig(DCMIPP_HandleTypeDef *
   * @param  Counter         Specifies the counter, can be a value from @ref DCMIPP_CSI_Counter
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCMIPP_CSI_EnableLineByteCounter(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter)
+HAL_StatusTypeDef HAL_DCMIPP_CSI_EnableLineByteCounter(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter)
 {
   CSI_TypeDef *csi_instance;
   csi_instance = CSI;
@@ -8016,7 +8016,7 @@ HAL_StatusTypeDef HAL_DCMIPP_CSI_EnableLineByteCounter(DCMIPP_HandleTypeDef *hdc
   * @param  Counter         Specifies the counter, can be a value from @ref DCMIPP_CSI_Counter
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCMIPP_CSI_DisableLineByteCounter(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter)
+HAL_StatusTypeDef HAL_DCMIPP_CSI_DisableLineByteCounter(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter)
 {
   CSI_TypeDef *csi_instance;
   csi_instance = CSI;
@@ -8045,7 +8045,7 @@ HAL_StatusTypeDef HAL_DCMIPP_CSI_DisableLineByteCounter(DCMIPP_HandleTypeDef *hd
   *                     configuration information for CSI.
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCMIPP_CSI_SetTimerConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Timer,
+HAL_StatusTypeDef HAL_DCMIPP_CSI_SetTimerConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Timer,
                                                 const DCMIPP_CSI_TimerConfTypeDef *TimerConfig)
 {
   CSI_TypeDef *csi_instance;
@@ -8098,7 +8098,7 @@ HAL_StatusTypeDef HAL_DCMIPP_CSI_SetTimerConfig(DCMIPP_HandleTypeDef *hdcmipp, u
   * @param  Timer       Specifies the Timer, can be a value from @ref DCMIPP_CSI_Timer
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCMIPP_CSI_EnableTimer(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Timer)
+HAL_StatusTypeDef HAL_DCMIPP_CSI_EnableTimer(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Timer)
 {
   CSI_TypeDef *csi_instance;
   csi_instance = CSI;
@@ -8125,7 +8125,7 @@ HAL_StatusTypeDef HAL_DCMIPP_CSI_EnableTimer(DCMIPP_HandleTypeDef *hdcmipp, uint
   * @param  Timer       Specifies the Timer, can be a value from @ref DCMIPP_CSI_Timer
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCMIPP_CSI_DisableTimer(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Timer)
+HAL_StatusTypeDef HAL_DCMIPP_CSI_DisableTimer(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Timer)
 {
   CSI_TypeDef *csi_instance;
   csi_instance = CSI;
@@ -8152,7 +8152,7 @@ HAL_StatusTypeDef HAL_DCMIPP_CSI_DisableTimer(DCMIPP_HandleTypeDef *hdcmipp, uin
   * @param  Counter  Specifies the watchdog counter value
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_DCMIPP_CSI_SetWatchdogCounterConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter)
+HAL_StatusTypeDef HAL_DCMIPP_CSI_SetWatchdogCounterConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter)
 {
   UNUSED(hdcmipp);
   CSI_TypeDef *csi_instance;
@@ -8614,7 +8614,7 @@ static HAL_StatusTypeDef DCMIPP_CSI_SetVCConfig(DCMIPP_HandleTypeDef *hdcmipp, u
   * @param  hdcmipp         Pointer to DCMIPP handle
   * @param  VirtualChannel  Specifies the virtual channel, can be a value from @ref DCMIPP_Virtual_Channel
   */
-static HAL_StatusTypeDef DCMIPP_CSI_VCStop(DCMIPP_HandleTypeDef *hdcmipp, uint32_t VirtualChannel)
+static HAL_StatusTypeDef DCMIPP_CSI_VCStop(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t VirtualChannel)
 {
   CSI_TypeDef *csi_instance;
   csi_instance = CSI;

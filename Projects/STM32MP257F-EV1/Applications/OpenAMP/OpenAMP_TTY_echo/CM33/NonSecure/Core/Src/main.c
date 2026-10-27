@@ -69,7 +69,6 @@ void VIRT_UART1_RxCpltCallback(VIRT_UART_HandleTypeDef *huart);
   */
 int main(void)
 {
-  unsigned int counter = 0;
 
   /* STM32MP2xx HAL library initialization:
      - Configure the Systick to generate an interrupt each 1 msec
@@ -135,7 +134,8 @@ int main(void)
   SystemCoreClockUpdate();
 
   /* OpenAmp initialisation ---------------------------------*/
-  MX_OPENAMP_Init(RPMSG_REMOTE, NULL);
+  MX_OPENAMP_Init(RPMSG_REMOTE, &hipcc1);
+  MX_OPENAMP_RPMsg_Init(RPMSG_REMOTE, NULL, &hipcc1);
   loc_printf("Virtual UART0 OpenAMP-rpmsg channel creation\r\n");
 
   if (VIRT_UART_Init(&huart0) != VIRT_UART_OK) {
@@ -178,11 +178,8 @@ int main(void)
       VIRT_UART_Transmit(&huart1, VirtUart1ChannelBuffRx, VirtUart1ChannelRxSize);
     }
 
-    if(counter++ == 200000)
-    {
-        BSP_LED_Toggle(LED3);
-        counter = 0;
-    }
+    HAL_Delay(500);
+    BSP_LED_Toggle(LED3);
   }
   /* USER CODE END WHILE */
 
@@ -244,10 +241,15 @@ void CoproSync_ShutdownCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPC
   VIRT_UART_DeInit(&huart1);
   BSP_COM_DeInit(COM_VCP_CM33);
 
-  OPENAMP_DeInit();
+  OPENAMP_DeInit(&hipcc1);
 
   /* Deinitialize the LED3 */
   BSP_LED_DeInit(LED3);
+
+#ifdef ICACHE_DCACHE_ENABLE
+  HAL_DCACHE_DeInit(&hdcache);
+  HAL_ICACHE_Disable();
+#endif
 
   /* When ready, notify the remote processor that we can be shut down */
   HAL_IPCC_NotifyCPU(hipcc, ChannelIndex, IPCC_CHANNEL_DIR_RX);

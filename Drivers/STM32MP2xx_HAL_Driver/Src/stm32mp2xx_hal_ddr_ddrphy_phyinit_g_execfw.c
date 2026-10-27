@@ -36,7 +36,7 @@ int32_t ddrphy_phyinit_g_execfw(void)
 {
   int32_t ret;
 
-  VERBOSE("%s Start\n", __func__);
+  DDR_VERBOSE("%s Start\n", __func__);
 
   /*
    * 1. Reset the firmware microcontroller by writing the MicroReset CSR to set the
@@ -68,7 +68,7 @@ int32_t ddrphy_phyinit_g_execfw(void)
   mmio_write_16((uintptr_t)(DDRPHYC_BASE + (4U * (TAPBONLY | CSR_MICRORESET_ADDR))),
                 CSR_STALLTOMICRO_MASK);
 
-  VERBOSE("%s End\n", __func__);
+  DDR_VERBOSE("%s End\n", __func__);
 
   return 0;
 }

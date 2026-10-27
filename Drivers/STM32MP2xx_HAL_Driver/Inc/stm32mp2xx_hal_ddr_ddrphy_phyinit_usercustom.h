@@ -159,8 +159,13 @@ static inline void mmio_write_32(uintptr_t addr, uint32_t value)
   WRITE_REG(*(volatile uint32_t*)addr, value);
 }
 
-#define VERBOSE(...)
-#define ERROR(...)
+static inline uint32_t mmio_read_32(uintptr_t addr)
+{
+  return (uint32_t)READ_REG(*(volatile uint32_t*)addr);
+}
+
+#define DDR_VERBOSE(...)
+#define DDR_ERROR(...)
 
 #define MIN(a, b) ((a) < (b) ? (a) : (b))
 #define MAX(a, b) ((a) > (b) ? (a) : (b))
@@ -170,7 +175,7 @@ static inline void mmio_write_32(uintptr_t addr, uint32_t value)
  * Fixed Function prototypes
  * -------------------------------------------------------------
  */
-int32_t ddrphy_phyinit_sequence(bool skip_training, bool reten);
+int32_t ddrphy_phyinit_sequence(bool skip_training);
 int32_t ddrphy_phyinit_restore_sequence(void);
 int32_t ddrphy_phyinit_c_initphyconfig(void);
 void ddrphy_phyinit_d_loadimem(void);
@@ -181,8 +186,8 @@ void ddrphy_phyinit_i_loadpieimage(bool skip_training);
 void ddrphy_phyinit_loadpieprodcode(void);
 int32_t ddrphy_phyinit_mapdrvstren(int32_t drvstren_ohm, drvtype targetcsr);
 int32_t ddrphy_phyinit_calcmb(void);
-void ddrphy_phyinit_writeoutmem(const uint32_t *mem, uint32_t mem_offset, int32_t mem_size);
-void ddrphy_phyinit_writeoutmsgblk(uint16_t *mem, uint32_t mem_offset, int32_t mem_size);
+void ddrphy_phyinit_writeoutmem(uintptr_t mem_addr, uint32_t mem_offset, int32_t mem_size);
+void ddrphy_phyinit_writeoutmsgblk(uintptr_t mem_addr, uint32_t mem_offset, int32_t mem_size);
 int32_t ddrphy_phyinit_isdbytedisabled(int32_t dbytenumber);
 int32_t ddrphy_phyinit_setretreglistbase(uintptr_t base);
 int32_t ddrphy_phyinit_read_numpstates(void);

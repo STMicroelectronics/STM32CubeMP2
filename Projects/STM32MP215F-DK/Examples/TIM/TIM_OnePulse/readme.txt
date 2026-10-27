@@ -107,7 +107,7 @@ Timer, Output, signals, One Pulse, PWM, Oscilloscope, External signal, Autoreloa
 
   - STM32MP215F-DK Set-up
     - Connect the external signal to the TIM5_CH2 pin (PI.5) (pin 19 in CN10 connector)
-    - Connect the TIM5_CH1 pin(PH.8) (pin 3 in CN1 connector) to an oscilloscope to monitor the waveform. 
+    - Connect the TIM5_CH1 pin(PH.8) (pin 16 in CN10 connector) to an oscilloscope to monitor the waveform. 
 
 @par How to use it ?
 

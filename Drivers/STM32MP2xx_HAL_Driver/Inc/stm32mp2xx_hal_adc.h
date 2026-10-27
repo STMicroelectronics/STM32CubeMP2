@@ -798,14 +798,14 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
 /** @defgroup ADC_HAL_EC_CHANNEL_SAMPLINGTIME  Channel - Sampling time
   * @{
   */
-#define ADC_SAMPLETIME_2CYCLES_5         (LL_ADC_SAMPLINGTIME_2CYCLES_5)    /*!< Sampling time 2.5 ADC clock cycles */
-#define ADC_SAMPLETIME_3CYCLES_5         (LL_ADC_SAMPLINGTIME_3CYCLES_5)    /*!< Sampling time 3.5 ADC clock cycles */
-#define ADC_SAMPLETIME_7CYCLES_5         (LL_ADC_SAMPLINGTIME_7CYCLES_5)    /*!< Sampling time 7.5 ADC clock cycles */
-#define ADC_SAMPLETIME_12CYCLES_5        (LL_ADC_SAMPLINGTIME_12CYCLES_5)   /*!< Sampling time 12.5 ADC clock cycles */
-#define ADC_SAMPLETIME_24CYCLES_5        (LL_ADC_SAMPLINGTIME_24CYCLES_5)   /*!< Sampling time 24.5 ADC clock cycles */
-#define ADC_SAMPLETIME_47CYCLES_5        (LL_ADC_SAMPLINGTIME_47CYCLES_5)   /*!< Sampling time 47.5 ADC clock cycles */
-#define ADC_SAMPLETIME_247CYCLES_5       (LL_ADC_SAMPLINGTIME_247CYCLES_5)  /*!< Sampling time 247.5 ADC clock cycles */
-#define ADC_SAMPLETIME_1501CYCLES_5      (LL_ADC_SAMPLINGTIME_1501CYCLES_5) /*!< Sampling time 1501.5 ADC clock cycles */
+#define ADC_SAMPLETIME_1CYCLES_5     (LL_ADC_SAMPLINGTIME_1CYCLES_5)     /*!< Sampling time 1.5 ADC clock cycles    */
+#define ADC_SAMPLETIME_2CYCLES_5     (LL_ADC_SAMPLINGTIME_2CYCLES_5)     /*!< Sampling time 2.5 ADC clock cycles    */
+#define ADC_SAMPLETIME_6CYCLES_5     (LL_ADC_SAMPLINGTIME_6CYCLES_5)     /*!< Sampling time 6.5 ADC clock cycles    */
+#define ADC_SAMPLETIME_11CYCLES_5    (LL_ADC_SAMPLINGTIME_11CYCLES_5)    /*!< Sampling time 11.5 ADC clock cycles   */
+#define ADC_SAMPLETIME_23CYCLES_5    (LL_ADC_SAMPLINGTIME_23CYCLES_5)    /*!< Sampling time 23.5 ADC clock cycles   */
+#define ADC_SAMPLETIME_46CYCLES_5    (LL_ADC_SAMPLINGTIME_46CYCLES_5)    /*!< Sampling time 46.5 ADC clock cycles   */
+#define ADC_SAMPLETIME_246CYCLES_5   (LL_ADC_SAMPLINGTIME_246CYCLES_5)   /*!< Sampling time 246.5 ADC clock cycles  */
+#define ADC_SAMPLETIME_1499CYCLES_5  (LL_ADC_SAMPLINGTIME_1499CYCLES_5)  /*!< Sampling time 1499.5 ADC clock cycles */
 /**
   * @}
   */
@@ -1436,14 +1436,14 @@ typedef  void (*pADC_CallbackTypeDef)(ADC_HandleTypeDef *hadc); /*!< pointer to 
   * @param __SAMPLING_TIME__ ADC conversions sampling time.
   * @retval SET (__SAMPLING_TIME__ is a valid value) or RESET (__SAMPLING_TIME__ is invalid)
   */
-#define IS_ADC_SAMPLING_TIME(__SAMPLING_TIME__) (((__SAMPLING_TIME__) == ADC_SAMPLETIME_2CYCLES_5)   || \
-                                                 ((__SAMPLING_TIME__) == ADC_SAMPLETIME_3CYCLES_5)   || \
-                                                 ((__SAMPLING_TIME__) == ADC_SAMPLETIME_7CYCLES_5)   || \
-                                                 ((__SAMPLING_TIME__) == ADC_SAMPLETIME_12CYCLES_5)  || \
-                                                 ((__SAMPLING_TIME__) == ADC_SAMPLETIME_24CYCLES_5)  || \
-                                                 ((__SAMPLING_TIME__) == ADC_SAMPLETIME_47CYCLES_5)  || \
-                                                 ((__SAMPLING_TIME__) == ADC_SAMPLETIME_247CYCLES_5) || \
-                                                 ((__SAMPLING_TIME__) == ADC_SAMPLETIME_1501CYCLES_5)   )
+#define IS_ADC_SAMPLING_TIME(__SAMPLING_TIME__) (((__SAMPLING_TIME__) == ADC_SAMPLETIME_1CYCLES_5)   || \
+                                                 ((__SAMPLING_TIME__) == ADC_SAMPLETIME_2CYCLES_5)   || \
+                                                 ((__SAMPLING_TIME__) == ADC_SAMPLETIME_6CYCLES_5)   || \
+                                                 ((__SAMPLING_TIME__) == ADC_SAMPLETIME_11CYCLES_5)  || \
+                                                 ((__SAMPLING_TIME__) == ADC_SAMPLETIME_23CYCLES_5)  || \
+                                                 ((__SAMPLING_TIME__) == ADC_SAMPLETIME_46CYCLES_5)  || \
+                                                 ((__SAMPLING_TIME__) == ADC_SAMPLETIME_246CYCLES_5) || \
+                                                 ((__SAMPLING_TIME__) == ADC_SAMPLETIME_1499CYCLES_5)   )
 
 /**
   * @brief Verify the ADC regular channel setting.

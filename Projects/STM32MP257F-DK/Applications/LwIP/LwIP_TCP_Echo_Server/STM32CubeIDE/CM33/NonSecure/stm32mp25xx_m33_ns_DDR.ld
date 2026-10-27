@@ -8,7 +8,7 @@ MEMORY
   LWIP          (rwx)   : ORIGIN = 0x81100000,  LENGTH = 1M
   VIRTIO_SHMEM  (rw)    : ORIGIN = 0x812F8000,	LENGTH = 32K
   IPC_SHMEM     (rw)    : ORIGIN = 0x81200000,	LENGTH = 8M - LENGTH(VIRTIO_SHMEM)
-  SRAM   		(rwx) 	    : ORIGIN = 0x0A060000,  LENGTH = 128K
+  SRAM          (rwx)   : ORIGIN = 0x0A060000,  LENGTH = 128K
 }
 
  /* Symbols needed for OpenAMP to enable rpmsg */
@@ -206,16 +206,20 @@ SECTIONS
 		KEEP(*(.heap*))
 		__HeapLimit = .;
 	} > RAM
-	
-    .tcp_sec (NOLOAD) : 
+
+	.eth_desc (NOLOAD) :
 	{
 		. = ALIGN(4);
-    	*(.RxDecripSection)
+		*(.RxDecripSection)
 		. = ALIGN(4);
-    	*(.TxDecripSection)
+		*(.TxDecripSection)
+	} > SRAM
+
+	.tcp_sec (NOLOAD) :
+	{
 		. = ALIGN(4);
-    	*(.Rx_PoolSection)
-  } > ETH
+		*(.Rx_PoolSection)
+	} > ETH
 
 	/* .stack_dummy section doesn't contains any symbols. It is only
 	 * used for linker to calculate size of stack sections, and assign
@@ -225,11 +229,14 @@ SECTIONS
 		KEEP(*(.stack*))
 	} > RAM
 
-  /* Set stack top to end of RAM, and stack limit move down by
-   * size of stack_dummy section */
+  /* Set stack top to end of RAM. __StackLimit sets MSPLIM (Reset_Handler
+   * in startup_stm32mp2xx_m33_ns.S), so it drives the actual guarded
+   * stack size, not the startup file's SIZEOF(.stack_dummy)/Stack_Size
+   * (1KB): the LwIP/Ethernet call chain (RX ISR -> ip4/udp/etharp -> HAL
+   * ETH) needs more headroom, so reserve 8KB here instead. */
+  _Min_Stack_Size = 0x2000;
   __StackTop = ORIGIN(RAM) + LENGTH(RAM);
-  __StackLimit = __StackTop - SIZEOF(.stack_dummy);
-  PROVIDE(__stack = __StackTop);
+  __StackLimit = __StackTop - _Min_Stack_Size;
 
   /* Check if data + heap + stack exceeds RAM limit */
   ASSERT(__StackLimit >= __HeapLimit, "region RAM overflowed with stack")

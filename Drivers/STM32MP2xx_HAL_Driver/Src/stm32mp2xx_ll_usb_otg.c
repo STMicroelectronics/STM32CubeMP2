@@ -884,7 +884,7 @@ HAL_StatusTypeDef USB_EPStartXfer(USB_OTG_GlobalTypeDef *USBx, USB_OTG_EPTypeDef
 
 
 /**
-   * @brief  USB_EPStoptXfer  Stop transfer on an EP
+   * @brief  USB_EPStopXfer  Stop transfer on an EP
    * @param  USBx  usb device instance
    * @param  ep pointer to endpoint structure
    * @retval HAL status

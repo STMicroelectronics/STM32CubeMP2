@@ -47,7 +47,7 @@ Additional task enables are configured in the project headers and can be adjuste
 
 ## Prerequisite Hardware & Software Environment Setup
 
-- **Supported Devices**: This example runs on STM32MP25xx devices and has been tested with the STMicroelectronics STM32MP257F-DK board. It can be tailored to other supported devices and development boards.
+- **Supported Devices**: This template targets STM32MP25xx devices and is provided for STM32MP257F-DK.
 - **ST-Link Connection**: Connect the ST-Link cable to the PC USB port to display traces.
 
 ### Software Versions
@@ -119,17 +119,19 @@ Deploy into OSTL image tree
 ### Non-Secure M33 Firmware Build (Template_StarterApp_M33TD Application)
 1. Navigate to `Firmware/Projects/STM32MP257F-DK/Templates/Template_StarterApp_M33TD`.
 2. Run the following command:
-   ```bash
-      cmake -G"Unix Makefiles" -B build -DTFM_BUILD_DIR=<TFM_BUILD_DIRECTORY> -DREMOTE_PROC_AUTO_START=ON
-   ```
-      - If `TFM_BUILD_DIR` is not specified, the default path `Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default` will be used, assuming the TFM Secure Build step is completed.
-      - By default:
-        - `REMOTE_PROC_AUTO_START` is set to `1` for Template_StarterApp_M33TD unless explicitly provided
-
+	```bash
+	cmake -G"Unix Makefiles" -B build -DTFM_BUILD_DIR=<TFM_BUILD_DIRECTORY>
+	```
+	- If `TFM_BUILD_DIR` is not specified, the default path `Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default` is used.
+	- Current project CMake options:
+	  - `-DREMOTE_PROC_AUTO_START=ON|OFF` (default: `ON`)
+	  - `-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF` (default: `OFF`)
+	  - `-DFAULT_EXCEPTION_ENABLE=ON|OFF` (default: `ON`)
+	  - `-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF` (default: `ON`)
 3. Build the project:
-   ```bash
-   make -C build all
-   ```
+	```bash
+	make -C build all
+	```
 
 ---
 
@@ -164,8 +166,7 @@ Template_StarterApp_M33TD
       -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-dk-cm33tdcid-ostl-sdcard-s.dts          # External DT file for sdcard_sdcard bootdevice mode 
       -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-dk-cm33tdcid-ostl-ns.dts               # External DT file common for all bootdevice modes
       ```
-
-    **Note**: `-DDTS_EXT_DIR` points to `Utilities/dt-stm32mp`. Ensure this is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.
+   **Note**: `-DDTS_EXT_DIR` points to `Utilities/dt-stm32mp`. Ensure this is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.
 
 2. Configure the TFM CMake project:
     - Right-click on `Template_StarterApp_M33TD_CM33_trusted-firmware-m` -> `CMake Configure`.
@@ -393,6 +394,7 @@ For the MP25-DK board, five TSV flavors are provided to flash under the M33TDCID
 -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-dk-cm33tdcid-ostl-sdcard-s.dts
 -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-dk-cm33tdcid-ostl-ns.dts
 ```
+
 
 ---
 

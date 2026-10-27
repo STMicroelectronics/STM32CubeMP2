@@ -1,9 +1,9 @@
 /**
   @page LwIP_UDP_Echo_Client LwIP UDP Echo Client Application
-  
+
   @verbatim
   ******************** (C) COPYRIGHT 2024 STMicroelectronics *******************
-  * @file    LwIP/LwIP_UDP_Echo_Client/readme.txt 
+  * @file    LwIP/LwIP_UDP_Echo_Client/readme.txt
   * @author  MCD Application Team
   * @brief   Description of the LwIP UDP Echo Client Application.
   ******************************************************************************
@@ -19,9 +19,9 @@
   ******************************************************************************
   @endverbatim
 
-@par Application Description 
+@par Application Description
 
-This application guides STM32Cube HAL API users to run a UDP Echo Client application 
+This application guides STM32Cube HAL API users to run a UDP Echo Client application
 based on Raw API of LwIP TCP/IP stack
 
 To run this application, On the remote PC, open a command prompt window.
@@ -31,28 +31,34 @@ At the command prompt, enter:
 where:
     – /p transport layer protocol used for communication (UDP)
     – /s is the actual mode of connection (Server mode)
-    
-Each time the user pushes the User Button 2 of the STM32MP257F-DK board, an echo 
+
+Each time the user pushes the User Button 2 of the STM32MP257F-DK board, an echo
 request is sent to the server
 
-If a DHCP server is available, a dynamic IP address can be allocated by enabling 
+If a DHCP server is available, a dynamic IP address can be allocated by enabling
 the DHCP process (#define LWIP_DHCP to 1 in lwipopts.h)
 
-At the beginning of the main program the HAL_Init() function is called to reset 
+At the beginning of the main program the HAL_Init() function is called to reset
 all the peripherals, initialize the Flash interface and the systick.
 The SystemClock_Config() function is used to configure the system clock for STM32MP257F Devices :
-The CPU at 400MHz 
+The CPU at 400MHz
 
 @note Care must be taken when using HAL_Delay(), this function provides accurate delay (in milliseconds)
       based on variable incremented in SysTick ISR. This implies that if HAL_Delay() is called from
       a peripheral ISR process, then the SysTick interrupt must have higher priority (numerically lower)
       than the peripheral interrupt. Otherwise the caller ISR process will be blocked.
       To change the SysTick interrupt priority you have to use HAL_NVIC_SetPriority() function.
-      
+
 @note The application needs to ensure that the SysTick time base is always set to 1 millisecond
       to have correct HAL operation.
 
 For more details about this application, refer to UM1713 "STM32Cube interfacing with LwIP and applications"
+
+@par Optional single-board loopback self-test
+
+This application also embeds an optional loopback self-test, disabled by default,
+that lets the LwIP stack be exercised on this single board without requiring a
+second board or PC: set LOOPBACK_TEST_ENABLE to 1 in lwipopts.h to enable it.
 
 @par Keywords
 
@@ -73,22 +79,21 @@ Connectivity, LwIP, Ethernet, TCP/IP, DHCP, UDP echo client
   - LwIP/LwIP_UDP_Echo_Client/CM33/NonSecure/LWIP/Target/Inc/lwipopts.h           LwIP stack configuration options
   - LwIP/LwIP_UDP_Echo_Client/CM33/NonSecure/LWIP/Target/Inc/ethernetif.h         header for ethernetif.c file
   - LwIP/LwIP_UDP_Echo_Client/CM33/NonSecure/LWIP/Target/Src/ethernetif.c         Interfacing LwIP to ETH driver
-  
-                     
+
 @par Hardware and Software environment
 
   - This application runs on STM32MP257FAIx devices.
-    
+
   - This application has been tested with the following environments:
      - STM32MP257F-DK board
      - echotool: (http://bansky.net/echotool/) is used as echo server that sends
        back every incoming data.
-     - DHCP server:  PC utility TFTPD32 (http://tftpd32.jounin.net/) is used as a DHCP server     
-      
+     - DHCP server:  PC utility TFTPD32 (http://tftpd32.jounin.net/) is used as a DHCP server
+
   - STM32MP257F-DK Set-up
     - Connect the DK board to remote PC (through a crossover ethernet cable)
       or to your local network (through a straight ethernet cable)
-  
+
   - Remote PC Set-up
     - PC must share the same LAN network configuration with the DK board
       the IP address must be the same as destination address value in (main.h)
@@ -102,7 +107,7 @@ In order to make the program work, you must do the following:
 - ssh root@192.168.7.1 'mkdir -p /home/root/LwIP_UDP_Echo_Client/lib/firmware'
 - scp LwIP_UDP_Echo_Client_CM33_NonSecure_sign.bin root@192.168.7.1:/home/root/LwIP_UDP_Echo_Client/lib/firmware
 - scp fw_cortex_m33.sh root@192.168.7.1:/home/root/LwIP_UDP_Echo_Client/
-- To run the example on target: 
+- To run the example on target:
 	On target shell run:
 	- cd /home/root/LwIP_UDP_Echo_Client
 	- ./fw_cortex_m33.sh start

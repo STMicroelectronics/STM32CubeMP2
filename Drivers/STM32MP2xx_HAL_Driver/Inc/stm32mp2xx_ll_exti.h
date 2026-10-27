@@ -48,11 +48,11 @@ extern "C" {
   *         a register from a register basis from which an offset
   *         is applied.
   * @param  __REG__ Register basis from which the offset is applied.
-  * @param  __REG_OFFFSET__ Offset to be applied (unit: number of registers).
+  * @param  __REG_OFFSET__ Offset to be applied (unit: number of registers).
   * @retval Pointer to register address
   */
-#define __EXTI_PTR_REG_OFFSET(__REG__, __REG_OFFFSET__)                         \
-  ((__IO uint32_t *)((uint32_t) ((uint32_t)(&(__REG__)) + ((__REG_OFFFSET__) << 2UL))))
+#define __EXTI_PTR_REG_OFFSET(__REG__, __REG_OFFSET__)                         \
+  ((__IO uint32_t *)((uint32_t) ((uint32_t)(&(__REG__)) + ((__REG_OFFSET__) << 2UL))))
 
 #if defined(USE_FULL_LL_DRIVER)
 /** @defgroup EXTI_LL_Private_Macros EXTI Private Macros

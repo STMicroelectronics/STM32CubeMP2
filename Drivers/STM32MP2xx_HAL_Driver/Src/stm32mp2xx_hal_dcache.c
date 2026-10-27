@@ -34,7 +34,7 @@
             (++) Blocking call until operation is done.
         (+) Use HAL_DCACHE_InvalidateByAddr() to invalidate cache content for specific range:
             (++) Cache content for specific range is lost, and reloaded when needed.
-            (++) Used when excepting a buffer to be updated by a peripheral (typically DMA transfer)
+            (++) Used when expecting a buffer to be updated by a peripheral (typically DMA transfer)
             (++) Blocking call until operation is done.
         (+) Use HAL_DCACHE_CleanByAddr() to clean cache content for a specific range:
             (++) Cache content for specific range is written back to memory.

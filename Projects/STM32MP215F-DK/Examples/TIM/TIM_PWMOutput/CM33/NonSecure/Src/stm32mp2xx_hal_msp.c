@@ -49,6 +49,10 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* htim_pwm)
     {
 	Error_Handler();
     }
+    /* Reset TIM8 to clear any configuration left by a previously loaded firmware */
+    __HAL_RCC_TIM8_FORCE_RESET();
+    __HAL_RCC_TIM8_RELEASE_RESET();
+
     /* TIM8 clock enable */
 	__HAL_RCC_TIM8_CLK_ENABLE();
   }
@@ -94,6 +98,10 @@ void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim_pwm)
 
   if(htim_pwm->Instance==TIM8)
   {
+    /* Reset TIM8 so that no configuration is left for the next firmware */
+    __HAL_RCC_TIM8_FORCE_RESET();
+    __HAL_RCC_TIM8_RELEASE_RESET();
+
     __HAL_RCC_TIM8_CLK_DISABLE();
 
     /* Peripheral clock disable */

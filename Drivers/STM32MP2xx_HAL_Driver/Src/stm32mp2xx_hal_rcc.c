@@ -2110,7 +2110,8 @@ void HAL_RCC_GetOscConfig(RCC_OscInitTypeDef  *pRCC_OscInitStruct)
   {
     pRCC_OscInitStruct->HSIState = RCC_HSI_OFF;
   }
-  pRCC_OscInitStruct->HSICalibrationValue = LL_RCC_HSI_GetCalibration();
+  /* HSITRIM is what HAL_RCC_OscConfig() writes back, HSICAL is read-only */
+  pRCC_OscInitStruct->HSICalibrationValue = LL_RCC_HSI_GetCalibTrimming();
 
   /* Get MSI Config */
 #if defined(RCC_D3DCR_MSION)

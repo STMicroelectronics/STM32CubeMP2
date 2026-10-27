@@ -66,31 +66,31 @@ NS_STACK_SIZE       = 0x0001000;
 /* Entry Point */
 ENTRY(Reset_Handler)
 
+IPC_SHM_RSC_TAB_SIZE   = 4K;
+IPC_SHM_VIRTIO_SIZE    = 32K;
+
 
 
 _Min_Heap_Size      = NS_HEAP_SIZE;     /* required amount of heap  */
 _Min_Stack_Size     = NS_STACK_SIZE;    /* required amount of stack */
+
 
 /* Memories definition */
 MEMORY
 {
     FLASH   (rx)    : ORIGIN = NS_CODE_START, LENGTH = NS_CODE_SIZE
     RAM     (rw)    : ORIGIN = NS_DATA_START, LENGTH = NS_DATA_SIZE
-    VIRTIO_SHMEM  (rw)    : ORIGIN = 0x80aF8000,	LENGTH = 32K
-    RSC_TABLE_SHMEM(rw)   : ORIGIN = 0x80a07000,	LENGTH = 4K
-    IPC_SHMEM(rw)         : ORIGIN = 0x80a00000,	LENGTH = 8M - LENGTH(VIRTIO_SHMEM) - LENGTH(RSC_TABLE_SHMEM)
+    IPC_SHMEM(rw)         : ORIGIN = 0x80a00000, LENGTH = 1M
 }
 
 /* Highest address of the user mode stack */
 _estack             = ORIGIN(RAM) + LENGTH(RAM);    /* end of "RAM" Ram type memory */
 
 /* Symbols needed for OpenAMP to enable rpmsg */
-__OPENAMP_region_start__    = ORIGIN(VIRTIO_SHMEM);
-__OPENAMP_region_end__      = ORIGIN(VIRTIO_SHMEM) + LENGTH(VIRTIO_SHMEM);
-
-/* Symbols needed for OpenAMP to enable rpmsg */
-__RSC_TABLE_region_start__  = ORIGIN(RSC_TABLE_SHMEM);
-__RSC_TABLE_region_end__    = ORIGIN(RSC_TABLE_SHMEM) + LENGTH(RSC_TABLE_SHMEM);
+__OPENAMP_region_end__      = ORIGIN(IPC_SHMEM) + LENGTH(IPC_SHMEM);
+__OPENAMP_region_start__    = __OPENAMP_region_end__ - IPC_SHM_VIRTIO_SIZE;
+__RSC_TABLE_region_end__    = __OPENAMP_region_start__;
+__RSC_TABLE_region_start__  = __RSC_TABLE_region_end__ - IPC_SHM_RSC_TAB_SIZE;
 
 /* Symbols needed for MPU configuration */
 __MPU_CODE_region_start__ = ORIGIN(FLASH);
@@ -98,7 +98,7 @@ __MPU_CODE_region_end__   = ORIGIN(FLASH) + LENGTH(FLASH);
 __MPU_DATA_region_start__ = ORIGIN(RAM);
 __MPU_DATA_region_end__   = ORIGIN(RAM) + LENGTH(RAM);
 __MPU_SHARED_NC_region_start__ = ORIGIN(IPC_SHMEM);
-__MPU_SHARED_NC_region_end__   = ORIGIN(VIRTIO_SHMEM) + LENGTH(VIRTIO_SHMEM);
+__MPU_SHARED_NC_region_end__   = ORIGIN(IPC_SHMEM) + LENGTH(IPC_SHMEM);
 
 /* Library configurations */
 GROUP(libgcc.a libc.a libm.a libnosys.a)

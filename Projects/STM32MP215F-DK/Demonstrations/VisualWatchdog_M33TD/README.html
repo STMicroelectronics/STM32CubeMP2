@@ -490,8 +490,8 @@ returning to <strong>Running</strong></li>
 </ul></li>
 <li><strong>Simulate a Linux crash and observe recovery</strong>
 <ul>
-<li>On the Linux console (as <code>root</code>), run:
-<code>bash  sync; sleep 2; sync; echo c &gt; /proc/sysrq-trigger</code></li>
+<li><p>On the Linux console (as <code>root</code>), run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">sync; sleep 2; sync; echo c &gt; /proc/sysrq-trigger</code></pre></div></li>
 <li>This forces a kernel crash on the A35 side. On the CM33 UART,
 RemoteProc should report crash detection and attempt recovery (for
 example: <code>Crash detected ... Attempting recovery...</code>, then a
@@ -499,7 +499,8 @@ stop/restart sequence).</li>
 </ul></li>
 <li><strong>Cold reset from Linux</strong>
 <ul>
-<li>On Linux, run: <code>bash  reboot</code></li>
+<li><p>On Linux, run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">reboot</code></pre></div></li>
 <li>A cold reset typically reboots the full platform; you should see
 TF-M/MCUboot banners again on the CM33 UART. Depending on timing, you
 may also see an SCMI notification such as
@@ -507,8 +508,9 @@ may also see an SCMI notification such as
 </ul></li>
 <li><strong>Warm reset from Linux</strong>
 <ul>
-<li>On Linux, run:
-<code>bash  echo warm &gt;&gt; /sys/kernel/reboot/mode  reboot</code></li>
+<li><p>On Linux, run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo warm &gt;&gt; /sys/kernel/reboot/mode
+reboot</code></pre></div></li>
 <li>A warm reset typically restarts the A35 while keeping CM33 running;
 on the CM33 UART you should see <code>SYS_POWER_WARM_RESET</code> and a
 RemoteProc stop/start sequence. When OpenAMP is enabled, you should also

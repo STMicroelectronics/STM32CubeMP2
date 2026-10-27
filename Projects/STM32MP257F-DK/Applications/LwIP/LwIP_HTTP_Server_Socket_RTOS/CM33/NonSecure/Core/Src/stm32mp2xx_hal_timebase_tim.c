@@ -20,6 +20,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32mp2xx_hal.h"
 #include "stm32mp2xx_hal_tim.h"
+#include "stm32mp257f_disco.h"
 
 /* Private typedef -----------------------------------------------------------*/
 /* Private define ------------------------------------------------------------*/
@@ -94,6 +95,19 @@ HAL_StatusTypeDef HAL_InitTick(uint32_t TickPriority)
   HAL_NVIC_EnableIRQ(TIM6_IRQn);
  /* Return function status */
   return status;
+}
+
+/**
+  * @brief  This function Disable the TIM6 as a time base source.
+  * @param  None
+  * @retval None
+  */
+void HAL_DeInitTick(void)
+{
+  HAL_TIM_Base_DeInit(&htim6);
+  HAL_NVIC_DisableIRQ(TIM6_IRQn);
+  /* Release TIM6 using Resource manager */
+  (void) ResMgr_Release(RESMGR_RESOURCE_RIFSC, RESMGR_RIFSC_TIM6_ID);
 }
 
 /**

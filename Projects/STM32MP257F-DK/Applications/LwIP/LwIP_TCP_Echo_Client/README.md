@@ -1,6 +1,6 @@
 /**
   @page LwIP_TCP_Echo_Client LwIP TCP Echo Client Application
-  
+
   @verbatim
   ******************** (C) COPYRIGHT 2024 STMicroelectronics *******************
   * @file    LwIP/LwIP_TCP_Echo_Client/readme.txt
@@ -35,7 +35,7 @@ where:
 Each time the user pushes the User Button 2 of the STM32MP257F-DK board, an echo
 request is sent to the server
 
-If a DHCP server is available, a dynamic IP address can be allocated by enabling 
+If a DHCP server is available, a dynamic IP address can be allocated by enabling
 the DHCP process (#define LWIP_DHCP to 1 in lwipopts.h)
 
 @note Care must be taken when using HAL_Delay(), this function provides accurate delay (in milliseconds)
@@ -71,7 +71,7 @@ Connectivity, LwIP, Ethernet, TCP/IP, DHCP, TCP echo client
 @par Hardware and Software environment
 
   - This application runs on STM32MP257FAIx devices.
-    
+
   - This application has been tested with the following environments:
      - STM32MP257F-DK board
      - echotool: (http://bansky.net/echotool/) is used as echo server that sends
@@ -81,7 +81,7 @@ Connectivity, LwIP, Ethernet, TCP/IP, DHCP, TCP echo client
   - STM32MP257F-DK Set-up
     - Connect the DK board to remote PC (through a crossover ethernet cable)
       or to your local network (through a straight ethernet cable)
-  
+
   - Remote PC Set-up
     - PC must share the same LAN network configuration with the DK board
       the IP address must be the same as destination address value in (main.h)
@@ -95,10 +95,14 @@ In order to make the program work, you must do the following:
 - ssh root@192.168.7.1 'mkdir -p /home/root/LwIP_TCP_Echo_Client/lib/firmware'
 - scp LwIP_TCP_Echo_Client_CM33_NonSecure_sign.bin root@192.168.7.1:/home/root/LwIP_TCP_Echo_Client/lib/firmware
 - scp fw_cortex_m33.sh root@192.168.7.1:/home/root/LwIP_TCP_Echo_Client/
-- To run the example on target: 
+- To run the example on target:
 	On target shell run:
 	- cd /home/root/LwIP_TCP_Echo_Client
 	- ./fw_cortex_m33.sh start
 
+@par Optional single-board loopback self-test
+
+Set LOOPBACK_TEST_ENABLE to 1 in lwipopts.h to exercise the LwIP stack locally
+without requiring a second board or PC. The option is disabled by default.
 
  */

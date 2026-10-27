@@ -7,27 +7,30 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include <internal/utilities.h>
 #include <openamp/rpmsg.h>
 #include <metal/alloc.h>
 
 #include "rpmsg_internal.h"
 
 /**
- * rpmsg_get_address
+ * @internal
+ *
+ * @brief rpmsg_get_address
  *
  * This function provides unique 32 bit address.
  *
- * @param bitmap - bit map for addresses
- * @param size   - size of bitmap
+ * @param bitmap	Bit map for addresses
+ * @param size		Size of bitmap
  *
- * return - a unique address
+ * @return A unique address
  */
-static uint32_t rpmsg_get_address(unsigned long *bitmap, int size)
+static uint32_t rpmsg_get_address(unsigned long *bitmap, unsigned int start, int size)
 {
 	unsigned int addr = RPMSG_ADDR_ANY;
 	unsigned int nextbit;
 
-	nextbit = metal_bitmap_next_clear_bit(bitmap, 0, size);
+	nextbit = metal_bitmap_next_clear_bit(bitmap, start, size);
 	if (nextbit < (uint32_t)size) {
 		addr = RPMSG_RESERVED_ADDRESSES + nextbit;
 		metal_bitmap_set_bit(bitmap, nextbit);
@@ -37,13 +40,13 @@ static uint32_t rpmsg_get_address(unsigned long *bitmap, int size)
 }
 
 /**
- * rpmsg_release_address
+ * @internal
  *
- * Frees the given address.
+ * @brief Frees the given address.
  *
- * @param bitmap - bit map for addresses
- * @param size   - size of bitmap
- * @param addr   - address to free
+ * @param bitmap	Bit map for addresses
+ * @param size		Size of bitmap
+ * @param addr		Address to free
  */
 static void rpmsg_release_address(unsigned long *bitmap, int size,
 				  int addr)
@@ -54,15 +57,15 @@ static void rpmsg_release_address(unsigned long *bitmap, int size,
 }
 
 /**
- * rpmsg_is_address_set
+ * @internal
  *
- * Checks whether address is used or free.
+ * @brief Checks whether address is used or free.
  *
- * @param bitmap - bit map for addresses
- * @param size   - size of bitmap
- * @param addr   - address to free
+ * @param bitmap	Bit map for addresses
+ * @param size		Size of bitmap
+ * @param addr		Address to free
  *
- * return - TRUE/FALSE
+ * @return TRUE/FALSE
  */
 static int rpmsg_is_address_set(unsigned long *bitmap, int size, int addr)
 {
@@ -74,15 +77,15 @@ static int rpmsg_is_address_set(unsigned long *bitmap, int size, int addr)
 }
 
 /**
- * rpmsg_set_address
+ * @internal
  *
- * Marks the address as consumed.
+ * @brief Marks the address as consumed.
  *
- * @param bitmap - bit map for addresses
- * @param size   - size of bitmap
- * @param addr   - address to free
+ * @param bitmap	Bit map for addresses
+ * @param size		Size of bitmap
+ * @param addr		Address to free
  *
- * return - none
+ * @return 0 on success, otherwise error code
  */
 static int rpmsg_set_address(unsigned long *bitmap, int size, int addr)
 {
@@ -95,20 +98,25 @@ static int rpmsg_set_address(unsigned long *bitmap, int size, int addr)
 	}
 }
 
-/**
- * This function sends rpmsg "message" to remote device.
- *
- * @param ept     - pointer to end point
- * @param src     - source address of channel
- * @param dst     - destination address of channel
- * @param data    - data to transmit
- * @param len     - size of data
- * @param wait    - boolean, wait or not for buffer to become
- *                  available
- *
- * @return - size of data sent or negative value for failure.
- *
- */
+void rpmsg_ept_incref(struct rpmsg_endpoint *ept)
+{
+	if (ept)
+		ept->refcnt++;
+}
+
+void rpmsg_ept_decref(struct rpmsg_endpoint *ept)
+{
+	if (ept) {
+		ept->refcnt--;
+		if (!ept->refcnt) {
+			if (ept->release_cb)
+				ept->release_cb(ept);
+			else
+				ept->rdev = NULL;
+		}
+	}
+}
+
 int rpmsg_send_offchannel_raw(struct rpmsg_endpoint *ept, uint32_t src,
 			      uint32_t dst, const void *data, int len,
 			      int wait)
@@ -134,7 +142,7 @@ int rpmsg_send_ns_message(struct rpmsg_endpoint *ept, unsigned long flags)
 
 	ns_msg.flags = flags;
 	ns_msg.addr = ept->addr;
-	strncpy(ns_msg.name, ept->name, sizeof(ns_msg.name));
+	(void)safe_strcpy(ns_msg.name, sizeof(ns_msg.name), ept->name, sizeof(ept->name));
 	ret = rpmsg_send_offchannel_raw(ept, ept->addr,
 					RPMSG_NS_EPT_ADDR,
 					&ns_msg, sizeof(ns_msg), true);
@@ -201,6 +209,36 @@ void *rpmsg_get_tx_payload_buffer(struct rpmsg_endpoint *ept,
 	return NULL;
 }
 
+int rpmsg_get_tx_buffer_size(struct rpmsg_endpoint *ept)
+{
+	struct rpmsg_device *rdev;
+
+	if (!ept || !ept->rdev)
+		return RPMSG_ERR_PARAM;
+
+	rdev = ept->rdev;
+
+	if (rdev->ops.get_tx_buffer_size)
+		return rdev->ops.get_tx_buffer_size(rdev);
+
+	return RPMSG_EOPNOTSUPP;
+}
+
+int rpmsg_get_rx_buffer_size(struct rpmsg_endpoint *ept)
+{
+	struct rpmsg_device *rdev;
+
+	if (!ept || !ept->rdev)
+		return RPMSG_ERR_PARAM;
+
+	rdev = ept->rdev;
+
+	if (rdev->ops.get_rx_buffer_size)
+		return rdev->ops.get_rx_buffer_size(rdev);
+
+	return RPMSG_EOPNOTSUPP;
+}
+
 int rpmsg_send_offchannel_nocopy(struct rpmsg_endpoint *ept, uint32_t src,
 				 uint32_t dst, const void *data, int len)
 {
@@ -257,7 +295,7 @@ static void rpmsg_unregister_endpoint(struct rpmsg_endpoint *ept)
 		rpmsg_release_address(rdev->bitmap, RPMSG_ADDR_BMP_SIZE,
 				      ept->addr);
 	metal_list_del(&ept->node);
-	ept->rdev = NULL;
+	rpmsg_ept_decref(ept);
 	metal_mutex_release(&rdev->lock);
 }
 
@@ -266,13 +304,19 @@ void rpmsg_register_endpoint(struct rpmsg_device *rdev,
 			     const char *name,
 			     uint32_t src, uint32_t dest,
 			     rpmsg_ept_cb cb,
-			     rpmsg_ns_unbind_cb ns_unbind_cb)
+			     rpmsg_ns_unbind_cb ns_unbind_cb, void *priv)
 {
-	strncpy(ept->name, name ? name : "", sizeof(ept->name));
+	if (name)
+		(void)safe_strcpy(ept->name, sizeof(ept->name), name, RPMSG_NAME_SIZE);
+	else
+		ept->name[0] = 0;
+
+	ept->refcnt = 1;
 	ept->addr = src;
 	ept->dest_addr = dest;
 	ept->cb = cb;
 	ept->ns_unbind_cb = ns_unbind_cb;
+	ept->priv = priv;
 	ept->rdev = rdev;
 	metal_list_add_tail(&rdev->endpoints, &ept->node);
 }
@@ -289,11 +333,12 @@ int rpmsg_create_ept(struct rpmsg_endpoint *ept, struct rpmsg_device *rdev,
 
 	metal_mutex_acquire(&rdev->lock);
 	if (src == RPMSG_ADDR_ANY) {
-		addr = rpmsg_get_address(rdev->bitmap, RPMSG_ADDR_BMP_SIZE);
+		addr = rpmsg_get_address(rdev->bitmap, rdev->bitnext, RPMSG_ADDR_BMP_SIZE);
 		if (addr == RPMSG_ADDR_ANY) {
 			status = RPMSG_ERR_ADDR;
 			goto ret_status;
 		}
+		rdev->bitnext = (addr + 1) % RPMSG_ADDR_BMP_SIZE;
 	} else if (src >= RPMSG_RESERVED_ADDRESSES) {
 		status = rpmsg_is_address_set(rdev->bitmap,
 					      RPMSG_ADDR_BMP_SIZE, src);
@@ -314,7 +359,7 @@ int rpmsg_create_ept(struct rpmsg_endpoint *ept, struct rpmsg_device *rdev,
 		 */
 	}
 
-	rpmsg_register_endpoint(rdev, ept, name, addr, dest, cb, unbind_cb);
+	rpmsg_register_endpoint(rdev, ept, name, addr, dest, cb, unbind_cb, ept->priv);
 	metal_mutex_release(&rdev->lock);
 
 	/* Send NS announcement to remote processor */
@@ -331,14 +376,6 @@ ret_status:
 	return status;
 }
 
-/**
- * rpmsg_destroy_ept
- *
- * This function deletes rpmsg endpoint and performs cleanup.
- *
- * @param ept - pointer to endpoint to destroy
- *
- */
 void rpmsg_destroy_ept(struct rpmsg_endpoint *ept)
 {
 	struct rpmsg_device *rdev;

@@ -410,6 +410,9 @@ Reset_Handler:
 /* set stack pointer */
   ldr   r0, =__StackTop
   mov   sp, r0
+  .weak __StackLimit
+  ldr   r0, =__StackLimit    /* stack limit */
+  msr   MSPLIM, r0           /* set stack pointer limit (ARMv8-M) */
 
 /*  Firstly it copies data from read only memory to RAM. There are two schemes
  *  to copy. One can copy more than one sections. Another can only copy

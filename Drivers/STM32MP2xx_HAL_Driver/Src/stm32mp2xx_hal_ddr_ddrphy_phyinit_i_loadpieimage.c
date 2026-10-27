@@ -384,7 +384,7 @@ static void calrate_program(void)
  */
 void ddrphy_phyinit_i_loadpieimage(bool skip_training)
 {
-  VERBOSE("%s Start\n", __func__);
+  DDR_VERBOSE("%s Start\n", __func__);
 
   /*
    * Enable access to the internal CSRs by setting the MicroContMuxSel CSR to 0.
@@ -447,5 +447,5 @@ void ddrphy_phyinit_i_loadpieimage(bool skip_training)
   /* Isolate the APB access from the internal CSRs by setting the MicroContMuxSel CSR to 1 */
   mmio_write_16((uintptr_t)(DDRPHYC_BASE + (4U * (TAPBONLY | CSR_MICROCONTMUXSEL_ADDR))), 0x1U);
 
-  VERBOSE("%s End\n", __func__);
+  DDR_VERBOSE("%s End\n", __func__);
 }

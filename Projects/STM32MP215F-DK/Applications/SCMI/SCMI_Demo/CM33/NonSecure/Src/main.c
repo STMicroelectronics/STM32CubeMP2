@@ -57,6 +57,7 @@ uint32_t j = 0;
 char clk_name[17]       = {0};
 unsigned int clk_rate_khz = 0;
 uint32_t clk_attributes = 0;
+uint32_t clk_enable_delay = 0;
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -383,8 +384,9 @@ static void Get_SCMI_Clock_Attributes(void)
     g_message_received_flag = scmi_clock_get_attributes(&scmi_channel,
                                                         j,
                                                         (char *)&clk_name,
-                                                        j,
-                                                        &clk_attributes);
+                                                        (int)(sizeof(clk_name) - 1U),
+                                                        &clk_attributes, &clk_enable_delay);
+    clk_name[sizeof(clk_name) - 1U] = '\0';
 
     printf("Clock domain %d: Name = %s, attributes = 0x%lx, Return received from SCMI server = %ld\r\n",
            j, (char *)&clk_name, clk_attributes, g_message_received_flag);

@@ -29,21 +29,27 @@ To run this application, On the remote PC, open a command prompt window.
 At the command prompt, enter:
   C:\>echotool IP_address /p udp /r 7 /l 7 /n 15 /t 2 /d Testing LwIP UDP echo server
 where:
-    � IP_address is the actual board�s IP address. By default, the follo
+    - IP_address is the actual board's IP address. By default, the following
     static IP address is used: 192.168.0.10
-    � /p transport layer protocol used for communication (UDP)
-    � /r is the actual remote port on the echo server (echo port)
+    - /p transport layer protocol used for communication (UDP)
+    - /r is the actual remote port on the echo server (echo port)
     - /l is the actual local port for the client (echo port)
-    � /n is the number of echo requests (for application, 15)
-    � /t is the connection timeout in seconds (for application, 2)
-    � /d is the message to be sent for ec
+    - /n is the number of echo requests (for application, 15)
+    - /t is the connection timeout in seconds (for application, 2)
+    - /d is the message to be sent for echo
 
 If a DHCP server is available, a dynamic IP address can be allocated by enabling
 the DHCP process (#define LWIP_DHCP to 1 in lwipopts.h)
 
+@par Optional single-board loopback self-test
+
+This application also embeds an optional loopback self-test, disabled by default,
+that lets the LwIP stack be exercised on this single board without requiring a
+remote PC/echotool: set LOOPBACK_TEST_ENABLE to 1 in lwipopts.h to enable it.
+
 @par Keywords
 
-Connectivity, LwIP, Ethernet, TCP/IP, DHCP, echo server, 	
+Connectivity, LwIP, Ethernet, TCP/IP, DHCP, echo server
 
 @par Directory contents
 

@@ -1,0 +1,193 @@
+/**
+  ******************************************************************************
+  * @file    LwIP/LwIP_UDP_Echo_Server/Src/app_ethernet.c
+  * @author  MCD Application Team
+  * @brief   Ethernet specefic module
+  ******************************************************************************
+  * @attention
+  *
+  * Copyright (c) 2024 STMicroelectronics.
+  * All rights reserved.
+  *
+  * This software is licensed under terms that can be found in the LICENSE file
+  * in the root directory of this software component.
+  * If no LICENSE file comes with this software, it is provided AS-IS.
+  *
+  ******************************************************************************
+  */
+/* Includes ------------------------------------------------------------------*/
+#include "lwip/opt.h"
+#include "main.h"
+#if LWIP_DHCP
+#include "lwip/dhcp.h"
+#endif
+#include "ethernetif.h"
+#include "app_ethernet.h"
+
+/* Private typedef -----------------------------------------------------------*/
+/* Private define ------------------------------------------------------------*/
+/* Private macro -------------------------------------------------------------*/
+/* Private variables ---------------------------------------------------------*/
+
+uint32_t EthernetLinkTimer;
+
+#if LWIP_DHCP
+#define MAX_DHCP_TRIES  4
+uint32_t DHCPfineTimer = 0;
+uint8_t DHCP_state = DHCP_OFF;
+#endif
+
+/* Private function prototypes -----------------------------------------------*/
+/* Private functions ---------------------------------------------------------*/
+/**
+  * @brief  Notify the User about the network interface config status
+  * @param  netif: the network interface
+  * @retval None
+  */
+void ethernet_link_status_updated(struct netif *netif)
+{
+#if LWIP_DHCP
+  eth_if_ctx_t *ctx = (eth_if_ctx_t *)netif->state;
+#endif
+
+  if (netif_is_link_up(netif))
+  {
+#if LWIP_DHCP
+    /* Start DHCP independently on this interface */
+    ctx->DHCP_state = DHCP_START;
+#else
+    uint8_t iptxt[20];
+    sprintf((char *)iptxt, "%s", ip4addr_ntoa(netif_ip4_addr(netif)));
+    printf("Static IP address: %s\r\n", iptxt);
+#endif /* LWIP_DHCP */
+  }
+  else
+  {
+#if LWIP_DHCP
+    ctx->DHCP_state = DHCP_LINK_DOWN;
+#else
+    printf("The network cable is not connected \r\n");
+#endif /* LWIP_DHCP */
+  }
+}
+
+#if LWIP_NETIF_LINK_CALLBACK
+/**
+  * @brief  Ethernet Link periodic check
+  * @param  netif
+  * @retval None
+  */
+void Ethernet_Link_Periodic_Handle(struct netif *netif)
+{
+  eth_if_ctx_t *ctx = (eth_if_ctx_t *)netif->state;
+  /* Ethernet Link every 100ms, tracked per interface. */
+  if (HAL_GetTick() - ctx->link_timer >= 100)
+  {
+    ctx->link_timer = HAL_GetTick();
+    ethernet_link_check_state(netif);
+  }
+}
+#endif
+
+#if LWIP_DHCP
+/**
+  * @brief  DHCP_Process_Handle
+  * @param  netif: the lwIP network interface structure for this ethernetif
+  * @retval None
+  */
+void DHCP_Process(struct netif *netif)
+{
+  eth_if_ctx_t *ctx = (eth_if_ctx_t *)netif->state;
+  ip_addr_t ipaddr;
+  ip_addr_t netmask;
+  ip_addr_t gw;
+  struct dhcp *dhcp;
+  uint8_t iptxt[20];
+
+  switch (ctx->DHCP_state)
+  {
+    case DHCP_START:
+    {
+      printf("State: Looking for DHCP server ...\r\n");
+      BSP_LED_Off(LED_GREEN);
+      BSP_LED_Off(LED_RED);
+
+      ip_addr_set_zero_ip4(&netif->ip_addr);
+      ip_addr_set_zero_ip4(&netif->netmask);
+      ip_addr_set_zero_ip4(&netif->gw);
+      dhcp_stop(netif);
+      dhcp_start(netif);
+      ctx->DHCP_state = DHCP_WAIT_ADDRESS;
+      printf("DHCP process started. Waiting for address...\r\n");
+    }
+    break;
+
+    case DHCP_WAIT_ADDRESS:
+    {
+      if (dhcp_supplied_address(netif))
+      {
+        ctx->DHCP_state = DHCP_ADDRESS_ASSIGNED;
+        sprintf((char *)iptxt, "%s", ip4addr_ntoa(netif_ip4_addr(netif)));
+        printf("IP address assigned by a DHCP server: %s\r\n", iptxt);
+        BSP_LED_On(LED_GREEN);
+        BSP_LED_Off(LED_RED);
+      }
+      else
+      {
+        dhcp = (struct dhcp *)netif_get_client_data(netif, LWIP_NETIF_CLIENT_DATA_INDEX_DHCP);
+
+        /* DHCP timeout */
+        if ((dhcp != NULL) && (dhcp->tries > MAX_DHCP_TRIES))
+        {
+          ctx->DHCP_state = DHCP_TIMEOUT;
+
+          /* Static address used */
+          IP_ADDR4(&ipaddr, IP_ADDR0 ,IP_ADDR1 , IP_ADDR2 , IP_ADDR3 );
+          IP_ADDR4(&netmask, NETMASK_ADDR0, NETMASK_ADDR1, NETMASK_ADDR2, NETMASK_ADDR3);
+          IP_ADDR4(&gw, GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
+          netif_set_addr(netif, &ipaddr, &netmask, &gw);
+
+          sprintf((char *)iptxt, "%s", ip4addr_ntoa(netif_ip4_addr(netif)));
+          printf("DHCP Timeout !!\r\n");
+          printf("Static IP address: %s\r\n", iptxt);
+          BSP_LED_On(LED_GREEN);
+          BSP_LED_Off(LED_RED);
+        }
+      }
+    }
+    break;
+
+    case DHCP_LINK_DOWN:
+    {
+      dhcp_stop(netif);
+      ctx->DHCP_state = DHCP_OFF;
+      printf("The network cable is not connected\r\n");
+      BSP_LED_Off(LED_GREEN);
+      BSP_LED_On(LED_RED);
+    }
+    break;
+
+    default:
+    break;
+  }
+}
+
+/**
+  * @brief  DHCP periodic check
+  * @param  netif
+  * @retval None
+  */
+void DHCP_Periodic_Handle(struct netif *netif)
+{
+  eth_if_ctx_t *ctx = (eth_if_ctx_t *)netif->state;
+  /* Fine DHCP periodic process every 500ms, per interface */
+  if (HAL_GetTick() - ctx->DHCPfineTimer >= DHCP_FINE_TIMER_MSECS)
+  {
+    ctx->DHCPfineTimer = HAL_GetTick();
+    DHCP_Process(netif);
+  }
+}
+
+#endif  /* LWIP_DHCP */
+
+

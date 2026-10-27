@@ -399,10 +399,10 @@ ENABLE_AUTO_TEST is ON (Set to 1)</strong></h4>
 <li><strong>Behavior</strong>:
 <ul>
 <li>The TestApp will execute automatically.</li>
-<li><strong>AUTO</strong> tests will be fully executed, including all
+<li>Enabled <strong>AUTO</strong> tests will be fully executed, including all
 steps (AcquireResource -&gt; Init -&gt; Run -&gt; Deinit -&gt;
 ReleaseResource).</li>
-<li><strong>MANUAL</strong> tests will be partially executed, performing
+<li>Enabled <strong>MANUAL</strong> tests will be partially executed, performing
 only the resource acquisition and release steps (AcquireResource -&gt;
 ReleaseResource).</li>
 </ul></li>
@@ -419,7 +419,7 @@ ENABLE_AUTO_TEST is OFF (Set to 0)</strong></h4>
 <ul>
 <li>The TestApp will execute tests fully based on <strong>User Button
 2</strong> actions.</li>
-<li>Both <strong>AUTO</strong> and <strong>MANUAL</strong> tests will be
+<li>Enabled <strong>AUTO</strong> and <strong>MANUAL</strong> tests will be
 executed completely (AcquireResource -&gt; Init -&gt; Run -&gt; Deinit
 -&gt; ReleaseResource).</li>
 </ul></li>
@@ -468,8 +468,9 @@ execution of the TestApp task based on their requirements, providing
 flexibility for both automated and manual testing scenarios.</p>
 <hr />
 <h4 id="uart-console-output">UART Console Output</h4>
-<p>Below is a sample UART log output from the CM33 during the boot and
-runtime sequence:</p>
+<p>Below is an illustrative UART log from the CM33 during the boot and
+runtime sequence, aligned with the default EV1 test selection. Firmware
+versions and interleaving with other tasks may vary:</p>
 <pre><code>[INF] init:pmic@33 STPMIC:20 V1.1
 
 [INF] welcome to MCUboot: v2.1.3-stm32mp-r2-rc8-1-gd0c0251d4
@@ -515,31 +516,22 @@ INFO: low power firmware &quot;v1.0.0.rc1&quot;
 [INF][Crypto] Init HW accelerator...
 [INF][Crypto] Init HW accelerator... complete.
 [NS] [INF] Non-Secure system starting...
-[NS] [INF] STM32Cube FW version: v1.2.0-rc0
+[NS] [INF] STM32Cube FW version: v1.3.1-rc0
 [NS] [INF] [DisplayTask] Display is initialized and ready...
 [NS] [INF] [WdgMonitor] watchdog timeout: 120000ms
 [NS] [INF] [OpenAMP] waiting remote processor initialisation...
 [NS] [INF] [RemoteProc] starting copro cpu@0... (pending)
-[NS] [INF] [TestApp] Acquiring resources for test: TIMERS
-[NS] [INF] [TestApp] Running test: TIMERS
-[NS] [INF] [RemoteProc] copro cpu@0 started.
-[NS] [INF] [TestApp] Test TIMERS: PASSED
-[NS] [INF] [TestApp] Releasing resources for test: TIMERS
 [NS] [INF] [TestApp] Acquiring resources for test: I2C
 [NS] [INF] [TestApp] Skipping manual test in auto Test mode: I2C
 [NS] [INF] [TestApp] Releasing resources for test: I2C
 [NS] [INF] [TestApp] Acquiring resources for test: SPI
 [NS] [INF] [TestApp] Skipping manual test in auto Test mode: SPI
 [NS] [INF] [TestApp] Releasing resources for test: SPI
-[NS] [INF] [TestApp] Acquiring resources for test: ADC
-[NS] [INF] [TestApp] Running test: ADC
-[NS] [INF] [TestApp] Test ADC: PASSED
-[NS] [INF] [TestApp] Releasing resources for test: ADC
 [NS] [INF] [TestApp] Acquiring resources for test: I3C
 [NS] [INF] [TestApp] Skipping manual test in auto Test mode: I3C
 [NS] [INF] [TestApp] Releasing resources for test: I3C
 [NS] [INF] [TestApp] All tests completed.
-[NS] [INF] [OpenAMP]  Ready for RPMsg communication</code></pre>
+[NS] [INF] [RemoteProc] copro cpu@0 started.</code></pre>
 <h3 id="understanding-testapp-logs">Understanding TestApp Logs</h3>
 <p>This log demonstrates the CM33 boot sequence (MCUboot/TF-M),
 secure-non-secure handover, and the main runtime tasks from the shared
@@ -549,6 +541,9 @@ utility stack, plus the TestApp test execution flow.</p>
 <code>Skipping manual test in auto Test mode: ...</code> indicates the
 project was built with <code>ENABLE_AUTO_TEST=1</code> (for example via
 <code>-DENABLE_AUTO_TEST=ON</code>).</p>
+</blockquote>
+<blockquote>
+<p><strong>Note:</strong> ADC and TIMERS are excluded from the default build, so they produce no TestApp resource-acquisition, execution, or release logs in either mode.</p>
 </blockquote>
 <p>The log also reflects the specific firmware and configuration used
 for the device boot:</p>
@@ -574,8 +569,9 @@ build)</li>
 <code>[RemoteProc] copro cpu@0 started.</code></li>
 <li>TestApp progress:
 <ul>
-<li>Test start/finish lines (for example:
-<code>Running test: ...</code>, <code>Test ...: PASSED</code>,
+<li>Resource acquisition/release and completion lines (for example:
+<code>Acquiring resources for test: ...</code>,
+<code>Releasing resources for test: ...</code>,
 <code>All tests completed.</code>)</li>
 <li>Auto-test behavior for MANUAL tests (for example:
 <code>Skipping manual test in auto Test mode: ...</code>)</li>
@@ -603,10 +599,11 @@ checks below. For each test, look for the corresponding activity on the
 <li>Build with <code>-DENABLE_AUTO_TEST=ON</code>.</li>
 <li>Expected CM33 logs:
 <ul>
-<li><code>[TestApp] ... Running test: ...</code> for
-<strong>AUTO</strong> tests</li>
+<li><code>[TestApp] Acquiring resources for test: ...</code> and
+<code>[TestApp] Releasing resources for test: ...</code> for I2C, SPI,
+and I3C</li>
 <li><code>[TestApp] Skipping manual test in auto Test mode: ...</code>
-for <strong>MANUAL</strong> tests</li>
+for I2C, SPI, and I3C</li>
 <li><code>[TestApp] All tests completed.</code></li>
 </ul></li>
 </ul></li>
@@ -617,9 +614,8 @@ USER2-triggered)</strong>
 <li>Press <strong>USER2</strong> to trigger the TestApp sequence as
 described in <a href="#testapp-task-configuration">TestApp Task
 Configuration</a>.</li>
-<li>Expected CM33 logs: both <strong>AUTO</strong> and
-<strong>MANUAL</strong> tests execute fully (no “Skipping manual test”
-messages).</li>
+<li>Expected CM33 logs: the enabled tests execute fully (no “Skipping
+manual test” messages).</li>
 </ul></li>
 <li><strong>Button-triggered A35 reboot (USER2, very long
 press)</strong>
@@ -637,21 +633,23 @@ remote processor.</li>
 </ul></li>
 <li><strong>Simulate a Linux crash and observe recovery</strong>
 <ul>
-<li>On the Linux console (as <code>root</code>), run:
-<code>bash  sync; sleep 2; sync; echo c &gt; /proc/sysrq-trigger</code></li>
+<li><p>On the Linux console (as <code>root</code>), run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">sync; sleep 2; sync; echo c &gt; /proc/sysrq-trigger</code></pre></div></li>
 <li>On the CM33 UART, RemoteProc should report crash detection and
 attempt recovery (stop/start sequence).</li>
 </ul></li>
 <li><strong>Cold reset from Linux</strong>
 <ul>
-<li>On Linux, run: <code>bash  reboot</code></li>
+<li><p>On Linux, run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">reboot</code></pre></div></li>
 <li>A cold reset typically reboots the full platform; you should see
 MCUboot/TF-M banners again on the CM33 UART.</li>
 </ul></li>
 <li><strong>Warm reset from Linux</strong>
 <ul>
-<li>On Linux, run:
-<code>bash  echo warm &gt;&gt; /sys/kernel/reboot/mode  reboot</code></li>
+<li><p>On Linux, run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo warm &gt;&gt; /sys/kernel/reboot/mode
+reboot</code></pre></div></li>
 <li>A warm reset typically restarts the A35 while keeping CM33 running;
 on the CM33 UART you should see the relevant SCMI notification and
 RemoteProc/OpenAMP re-init sequence (messages may vary by build
@@ -670,18 +668,22 @@ below assume that node is <code>/dev/rpmsg2</code>.</li>
 </ul></li>
 <li><strong>Suspend policy test: STOP2</strong>
 <ul>
-<li>Limit the firmware suspend policy to STOP2 before Linux enters
-suspend:
-<code>bash  echo "LIMIT_PM_STOP2" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li><p>Limit the firmware suspend policy to STOP2 before Linux enters
+suspend:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo "LIMIT_PM_STOP2" &gt; /dev/rpmsg2
+echo deep &gt; /sys/power/mem_sleep
+rtcwake -m mem -s 10</code></pre></div></li>
 <li>Expected behavior: Linux requests suspend, the firmware keeps the
 low-power target at STOP2, and the system wakes up after the RTC
 timeout.</li>
 </ul></li>
 <li><strong>Suspend policy test: LP_STOP2</strong>
 <ul>
-<li>Allow the low-power manager to enter LP_STOP2 instead of plain
-STOP2:
-<code>bash  echo "LIMIT_PM_LP_STOP2" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li><p>Allow the low-power manager to enter LP_STOP2 instead of plain
+STOP2:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo "LIMIT_PM_LP_STOP2" &gt; /dev/rpmsg2
+echo deep &gt; /sys/power/mem_sleep
+rtcwake -m mem -s 10</code></pre></div></li>
 <li>Expected behavior: Linux suspend still uses the RTC wake-up, but the
 firmware low-power target is constrained to LP_STOP2.</li>
 </ul></li>

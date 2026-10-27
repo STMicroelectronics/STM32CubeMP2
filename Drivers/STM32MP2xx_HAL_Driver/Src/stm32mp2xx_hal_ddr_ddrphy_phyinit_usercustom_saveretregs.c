@@ -59,12 +59,12 @@ int32_t ddrphy_phyinit_usercustom_saveretregs(void)
   uint32_t r_addr;
   int32_t ret;
 
-  VERBOSE("%s Start\n", __func__);
+  DDR_VERBOSE("%s Start\n", __func__);
 
   numpstates = ddrphy_phyinit_read_numpstates();
   numanib = ddrphy_phyinit_read_numanib();
   numdbyte = ddrphy_phyinit_read_numdbyte();
-  if (!(numpstates) || !(numanib) || !(numdbyte))
+  if ((numpstates == 0) || (numanib == 0) || (numdbyte == 0))
   {
     /* Incorrect initialization (or not yet done) */
     return -1;
@@ -464,7 +464,10 @@ int32_t ddrphy_phyinit_usercustom_saveretregs(void)
 
   mmio_write_16((uintptr_t)(DDRPHYC_BASE + (4U * (TAPBONLY | CSR_MICROCONTMUXSEL_ADDR))), 0x1U);
 
-  VERBOSE("%s End\n", __func__);
+  /* Tracked registers have been successfully saved, set related variable */
+  retention_enable = true;
+
+  DDR_VERBOSE("%s End\n", __func__);
 
   return 0;
 }

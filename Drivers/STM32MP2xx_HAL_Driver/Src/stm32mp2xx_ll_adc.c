@@ -45,7 +45,7 @@
   */
 
 /* Definitions of ADC hardware constraints delays */
-/* Note: Only ADC peripheral HW delays are defined in ADC LL driver driver,   */
+/* Note: Only ADC peripheral HW delays are defined in ADC LL driver,          */
 /*       not timeout values:                                                  */
 /*       Timeout values for ADC operations are dependent to device clock      */
 /*       configuration (system clock versus ADC clock),                       */
@@ -443,7 +443,7 @@ ErrorStatus LL_ADC_CommonDeInit(const ADC_Common_TypeDef *ADCxy_COMMON)
   }
 #endif /* ADC12_COMMON */
 #if defined(ADC3_COMMON)
-  if ( ADCxy_COMMON == ADC3_COMMON)
+  if (ADCxy_COMMON == ADC3_COMMON)
   {
     __HAL_RCC_ADC3_FORCE_RESET();
     __HAL_RCC_ADC3_RELEASE_RESET();

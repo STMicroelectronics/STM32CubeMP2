@@ -42,7 +42,7 @@
  */
 void ddrphy_phyinit_usercustom_posttrain(void)
 {
-  VERBOSE("%s Start\n", __func__);
+  DDR_VERBOSE("%s Start\n", __func__);
 
 #ifdef USE_STM32MP257CXX_EMU
 #if STM32MP_DDR3_TYPE
@@ -549,6 +549,6 @@ void ddrphy_phyinit_usercustom_posttrain(void)
 #endif /* STM32MP_LPDDR4_TYPE */
 #endif /* USE_STM32MP257CXX_EMU */
 
-  VERBOSE("%s End\n", __func__);
+  DDR_VERBOSE("%s End\n", __func__);
 }
 

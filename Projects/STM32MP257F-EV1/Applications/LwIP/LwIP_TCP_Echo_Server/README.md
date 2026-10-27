@@ -41,6 +41,12 @@ where:
 If a DHCP server is available, a dynamic IP address can be allocated by enabling
 the DHCP process (#define LWIP_DHCP to 1 in lwipopts.h)
 
+@par Optional single-board loopback self-test
+
+This application also embeds an optional loopback self-test, disabled by default,
+that lets the LwIP stack be exercised on this single board without requiring a
+remote PC: set LOOPBACK_TEST_ENABLE to 1 in lwipopts.h to enable it.
+
 @par Keywords
 
 Connectivity, LwIP, Ethernet, TCP/IP, DHCP, echo server.

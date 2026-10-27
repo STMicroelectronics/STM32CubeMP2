@@ -36,7 +36,7 @@
         (++) Falling
         (++) Both of them
 
-    (+) When set in interrupt mode, configurable Exti lines have two diffenrents
+    (+) When set in interrupt mode, configurable Exti lines have two different
         interrupt pending registers which allow to distinguish which transition
         occurs:
         (++) Rising edge pending interrupt
@@ -61,14 +61,14 @@
 
     (#) Get current Exti configuration of a dedicated line using
         HAL_EXTI_GetConfigLine().
-        (++) Provide exiting handle as parameter.
+        (++) Provide existing handle as parameter.
         (++) Provide pointer on EXTI_ConfigTypeDef structure as second parameter.
 
     (#) Clear Exti configuration of a dedicated line using HAL_EXTI_GetConfigLine().
-        (++) Provide exiting handle as parameter.
+        (++) Provide existing handle as parameter.
 
     (#) Register callback to treat Exti interrupts using HAL_EXTI_RegisterCallback().
-        (++) Provide exiting handle as first parameter.
+        (++) Provide existing handle as first parameter.
         (++) Provide which callback will be registered using one value from
              EXTI_CallbackIDTypeDef.
         (++) Provide callback function pointer.
@@ -725,7 +725,7 @@ HAL_StatusTypeDef HAL_EXTI_GetHandle(EXTI_HandleTypeDef *hexti, uint32_t ExtiLin
   * @param  hexti Exti handle.
   * @retval none.
   */
-void HAL_EXTI_IRQHandler(EXTI_HandleTypeDef *hexti)
+void HAL_EXTI_IRQHandler(const EXTI_HandleTypeDef *hexti)
 {
   __IO uint32_t *regaddr;
   uint32_t regval;
@@ -840,7 +840,7 @@ uint32_t HAL_EXTI_GetPending(const EXTI_HandleTypeDef *hexti, uint32_t Edge)
   *           @arg @ref EXTI_TRIGGER_RISING_FALLING
   * @retval None.
   */
-void HAL_EXTI_ClearPending(EXTI_HandleTypeDef *hexti, uint32_t Edge)
+void HAL_EXTI_ClearPending(const EXTI_HandleTypeDef *hexti, uint32_t Edge)
 {
   __IO uint32_t *regaddr;
   uint32_t maskline;

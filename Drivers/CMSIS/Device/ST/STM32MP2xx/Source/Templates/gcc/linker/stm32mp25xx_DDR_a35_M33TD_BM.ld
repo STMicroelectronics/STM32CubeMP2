@@ -42,8 +42,8 @@ MEMORY
     IPC_SHMEM(rw)         : ORIGIN = 0x80a00000,  LENGTH = 1M
 }
 
+IPC_SHM_RSC_TAB_SIZE = 4K;
 IPC_SHM_VIRTIO_SIZE  = 32K;
-IPC_SHM_RSC_TAB_SIZE = 1K;
 
 /* Fixed entry point address for Reset_Handler */
 __RESET_HANDLER_ADDR__ = ORIGIN(FLASH);
@@ -54,12 +54,10 @@ __SCMI_SHM_region_start__  = ORIGIN(SCMI_SHMEM);
 __SCMI_SHM_region_end__    = ORIGIN(SCMI_SHMEM) + LENGTH(SCMI_SHMEM);
 
 /* Symbols needed for OpenAMP to enable rpmsg */
-__RSC_TABLE_region_start__  = ORIGIN(IPC_SHMEM);
-__RSC_TABLE_region_end__    = ORIGIN(IPC_SHMEM) + IPC_SHM_RSC_TAB_SIZE;
-
-/* Symbols needed for OpenAMP to enable rpmsg */
-__OPENAMP_region_start__    = ORIGIN(IPC_SHMEM) + IPC_SHM_RSC_TAB_SIZE;
-__OPENAMP_region_end__      = ORIGIN(IPC_SHMEM) + IPC_SHM_RSC_TAB_SIZE + IPC_SHM_VIRTIO_SIZE;
+__OPENAMP_region_end__      = ORIGIN(IPC_SHMEM) + LENGTH(IPC_SHMEM);
+__OPENAMP_region_start__    = __OPENAMP_region_end__ - IPC_SHM_VIRTIO_SIZE;
+__RSC_TABLE_region_end__    = __OPENAMP_region_start__;
+__RSC_TABLE_region_start__  = __RSC_TABLE_region_end__ - IPC_SHM_RSC_TAB_SIZE;
 
 _Min_Heap_Size = 0x200;     /* required amount of heap  */
 _Min_Stack_Size = 0x400;    /* required amount of stack */

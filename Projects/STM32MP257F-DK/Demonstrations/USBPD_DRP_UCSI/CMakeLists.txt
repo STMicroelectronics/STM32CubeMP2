@@ -20,7 +20,9 @@ set(DEFINITIONS "-DSTM32MP257Cxx \
 				-DUSE_STM32MP257F_DK \
 				-DNO_ATOMIC_64_SUPPORT \
 				-DMETAL_INTERNAL \
-				-DVIRTIO_DEVICE_ONLY \
+				-DVIRTIO_DEVICE_SUPPORT=1 \
+				-DVIRTIO_DRIVER_SUPPORT=0 \
+				-DVQ_RX_EMPTY_NOTIFY=0 \
 				-DMETAL_MAX_DEVICE_REGIONS=2 \
 				-DLINUX_RPROC_MASTER \
 				-DCORE_CM33 \
@@ -76,6 +78,7 @@ set(OPENAMP_SRC_FILES ${OPENAMP_SRC_FILES}
 						${BASE_DIR}/../../../../Middlewares/Third_Party/OpenAMP/open-amp/lib/rpmsg/rpmsg_virtio.c 
 						${BASE_DIR}/../../../../Middlewares/Third_Party/OpenAMP/open-amp/lib/virtio/virtio.c 
 						${BASE_DIR}/../../../../Middlewares/Third_Party/OpenAMP/open-amp/lib/virtio/virtqueue.c 
+						${BASE_DIR}/../../../../Middlewares/Third_Party/OpenAMP/open-amp/lib/utils/utilities.c 
 						${BASE_DIR}/../../../../Middlewares/Third_Party/OpenAMP/libmetal/lib/system/freertos/condition.c 
 						${BASE_DIR}/../../../../Middlewares/Third_Party/OpenAMP/libmetal/lib/system/freertos/time.c 
 						${BASE_DIR}/../../../../Middlewares/Third_Party/OpenAMP/libmetal/lib/system/freertos/template/sys.c 

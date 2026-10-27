@@ -1529,24 +1529,24 @@ typedef struct
  */
 typedef struct
 {
-  __IO uint32_t LP_DISABLE;                       /*!< DDRDBG low-power disable register                 Address offset: 0x000  */
-  __IO uint32_t BYPASS_PCLKEN;                    /*!< DDRDBG bypass PCLKEN register                     Address offset: 0x004  */
-  __IO uint32_t DDRC_AUTO_SR_DELAY;               /*!< DDRDBG DDRC auto SR delay register                Address offset: 0x008  */
-  __IO uint32_t OBSP_CTRL;                        /*!< DDRDBG OBSP control register                      Address offset: 0x00C  */
-  __IO uint32_t FRAC_PLL_LOCK;                    /*!< DDRDBG FRAC PLL lock register                     Address offset: 0x010  */
-  __IO uint32_t DTO_OUTPUT;                       /*!< DDRDBG DTO output register                        Address offset: 0x014  */
-       uint32_t RESERVED0[6];                     /*!< Reserved                                          Address offset: 0x018-0x02C */
-  __IO uint32_t DFI_ERRORS_CTRL;                  /*!< DDRDBG DFI error control register                 Address offset: 0x030  */
-  __IO uint32_t DFI_ERROR_STATUS;                 /*!< DDRDBG DFI error status register                  Address offset: 0x034  */
-  __IO uint32_t DFI_ERROR_MSK;                    /*!< DDRDBG DFI error mask register                    Address offset: 0x038  */
-       uint32_t RESERVED1[49];                    /*!< Reserved                                          Address offset: 0x03C-0x0FC */
-  __IO uint32_t DDR34_AC_SWIZZLE_ADD3_0;          /*!< DDRDBG DDR34 AC swizzle ADD3_0 register           Address offset: 0x100  */
-  __IO uint32_t DDR34_AC_SWIZZLE_ADD7_4;          /*!< DDRDBG DDR34 AC swizzle ADD7_4 register           Address offset: 0x104  */
-  __IO uint32_t DDR34_AC_SWIZZLE_ADD11_8;         /*!< DDRDBG DDR34 AC swizzle ADD11_8 register          Address offset: 0x108  */
-  __IO uint32_t DDR34_AC_SWIZZLE_ADD15_12;        /*!< DDRDBG DDR34 AC swizzle ADD15_12 register         Address offset: 0x10C  */
-  __IO uint32_t DDR34_AC_SWIZZLE_BK2_0_ACTN;      /*!< DDRDBG DDR34 AC swizzle BK2 0 ACTN register       Address offset: 0x110  */
-  __IO uint32_t DDR34_AC_SWIZZLE_RASN_CASN_BG1_0; /*!< DDRDBG DDR34 AC swizzle RASN CASN BG1_0 register  Address offset: 0x114  */
-  __IO uint32_t DDR34_AC_SWIZZLE_WEN;             /*!< DDRDBG DDR34 AC swizzle WEN register              Address offset: 0x118  */
+  __IO uint32_t LP_DISABLE;         /*!< DDRDBG low-power disable register                 Address offset: 0x000  */
+  __IO uint32_t BYPASS_PCLKEN;      /*!< DDRDBG bypass PCLKEN register                     Address offset: 0x004  */
+  __IO uint32_t DDRC_AUTO_SR_DELAY; /*!< DDRDBG DDRC auto SR delay register                Address offset: 0x008  */
+  __IO uint32_t OBSP_CTRL;          /*!< DDRDBG OBSP control register                      Address offset: 0x00C  */
+  __IO uint32_t FRAC_PLL_LOCK;      /*!< DDRDBG FRAC PLL lock register                     Address offset: 0x010  */
+  __IO uint32_t DTO_OUTPUT;         /*!< DDRDBG DTO output register                        Address offset: 0x014  */
+       uint32_t RESERVED0[6];       /*!< Reserved                                          Address offset: 0x018-0x02C */
+  __IO uint32_t DFI_ERRORS_CTRL;    /*!< DDRDBG DFI error control register                 Address offset: 0x030  */
+  __IO uint32_t DFI_ERROR_STATUS;   /*!< DDRDBG DFI error status register                  Address offset: 0x034  */
+  __IO uint32_t DFI_ERROR_MSK;      /*!< DDRDBG DFI error mask register                    Address offset: 0x038  */
+       uint32_t RESERVED1[49];      /*!< Reserved                                          Address offset: 0x03C-0x0FC */
+  __IO uint32_t DDR34_AC_SWIZZLE_0; /*!< DDRDBG DDR34 AC swizzle ADD3_0 register           Address offset: 0x100  */
+  __IO uint32_t DDR34_AC_SWIZZLE_1; /*!< DDRDBG DDR34 AC swizzle ADD7_4 register           Address offset: 0x104  */
+  __IO uint32_t DDR34_AC_SWIZZLE_2; /*!< DDRDBG DDR34 AC swizzle ADD11_8 register          Address offset: 0x108  */
+  __IO uint32_t DDR34_AC_SWIZZLE_3; /*!< DDRDBG DDR34 AC swizzle ADD15_12 register         Address offset: 0x10C  */
+  __IO uint32_t DDR34_AC_SWIZZLE_4; /*!< DDRDBG DDR34 AC swizzle BK2 0 ACTN register       Address offset: 0x110  */
+  __IO uint32_t DDR34_AC_SWIZZLE_5; /*!< DDRDBG DDR34 AC swizzle RASN CASN BG1_0 register  Address offset: 0x114  */
+  __IO uint32_t DDR34_AC_SWIZZLE_6; /*!< DDRDBG DDR34 AC swizzle WEN register              Address offset: 0x118  */
 } DDRDBG_TypeDef;
 
 /*
@@ -14144,94 +14144,94 @@ typedef struct
 #define DDRDBG_DFI_ERROR_MSK_DFI_ERROR1_MASK_Msk  (0x1UL << DDRDBG_DFI_ERROR_MSK_DFI_ERROR1_MASK_Pos)  /*!< 0x00000100 */
 #define DDRDBG_DFI_ERROR_MSK_DFI_ERROR1_MASK      DDRDBG_DFI_ERROR_MSK_DFI_ERROR1_MASK_Msk            /*!< Interrupt linked to dfi_error1 is masked. Clears the interrupt linked with dfi_error1. */
 
-/***************  Bit definition for DDRDBG_DDR34_AC_SWIZZLE_ADD3_0  *******/
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD0_Pos  (0U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD0_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD0_Pos)  /*!< 0x0000001F */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD0      DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD0_Msk             /* Remapping input bit on add0 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD1_Pos  (8U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD1_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD1_Pos)  /*!< 0x00001F00 */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD1      DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD1_Msk             /* Remapping input bit on add1 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD2_Pos  (16U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD2_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD2_Pos)  /*!< 0x001F0000 */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD2      DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD2_Msk             /* Remapping input bit on add2 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD3_Pos  (24U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD3_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD3_Pos)  /*!< 0x1F000000 */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD3      DDRDBG_DDR34_AC_SWIZZLE_ADD3_0_DDR34_AC_SWIZZLING_ADD3_Msk             /* Remapping input bit on add3 DDRPHYC input at the DFI interface. */
+/***************  Bit definition for DDRDBG_DDR34_AC_SWIZZLE_ADD3_0 (DDRDBG_DDR34_AC_SWIZZLE_0)  *******/
+#define DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD0_Pos  (0U)
+#define DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD0_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD0_Pos)  /*!< 0x0000001F */
+#define DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD0      DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD0_Msk             /* Remapping input bit on add0 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD1_Pos  (8U)
+#define DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD1_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD1_Pos)  /*!< 0x00001F00 */
+#define DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD1      DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD1_Msk             /* Remapping input bit on add1 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD2_Pos  (16U)
+#define DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD2_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD2_Pos)  /*!< 0x001F0000 */
+#define DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD2      DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD2_Msk             /* Remapping input bit on add2 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD3_Pos  (24U)
+#define DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD3_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD3_Pos)  /*!< 0x1F000000 */
+#define DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD3      DDRDBG_DDR34_AC_SWIZZLE_0_DDR34_AC_SWIZZLING_ADD3_Msk             /* Remapping input bit on add3 DDRPHYC input at the DFI interface. */
 
-/***************  Bit definition for DDRDBG_DDR34_AC_SWIZZLE_ADD7_4  *******/
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD4_Pos  (0U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD4_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD4_Pos)  /*!< 0x0000001F */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD4      DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD4_Msk             /* Remapping input bit on add4 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD5_Pos  (8U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD5_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD5_Pos)  /*!< 0x00001F00 */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD5      DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD5_Msk             /* Remapping input bit on add5 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD6_Pos  (16U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD6_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD6_Pos)  /*!< 0x001F0000 */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD6      DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD6_Msk             /* Remapping input bit on add6 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD7_Pos  (24U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD7_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD7_Pos)  /*!< 0x1F000000 */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD7      DDRDBG_DDR34_AC_SWIZZLE_ADD7_4_DDR34_AC_SWIZZLING_ADD7_Msk             /* Remapping input bit on add7 DDRPHYC input at the DFI interface. */
+/***************  Bit definition for DDRDBG_DDR34_AC_SWIZZLE_ADD7_4 (DDRDBG_DDR34_AC_SWIZZLE_1)  *******/
+#define DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD4_Pos  (0U)
+#define DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD4_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD4_Pos)  /*!< 0x0000001F */
+#define DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD4      DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD4_Msk             /* Remapping input bit on add4 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD5_Pos  (8U)
+#define DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD5_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD5_Pos)  /*!< 0x00001F00 */
+#define DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD5      DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD5_Msk             /* Remapping input bit on add5 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD6_Pos  (16U)
+#define DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD6_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD6_Pos)  /*!< 0x001F0000 */
+#define DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD6      DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD6_Msk             /* Remapping input bit on add6 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD7_Pos  (24U)
+#define DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD7_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD7_Pos)  /*!< 0x1F000000 */
+#define DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD7      DDRDBG_DDR34_AC_SWIZZLE_1_DDR34_AC_SWIZZLING_ADD7_Msk             /* Remapping input bit on add7 DDRPHYC input at the DFI interface. */
 
-/***************  Bit definition for DDRDBG_DDR34_AC_SWIZZLE_ADD11_8  ******/
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD8_Pos   (0U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD8_Msk   (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD8_Pos)   /*!< 0x0000001F */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD8       DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD8_Msk              /* Remapping input bit on add8 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD9_Pos   (8U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD9_Msk   (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD9_Pos)   /*!< 0x00001F00 */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD9       DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD9_Msk              /* Remapping input bit on add9 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD10_Pos  (16U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD10_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD10_Pos)  /*!< 0x001F0000 */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD10      DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD10_Msk             /* Remapping input bit on add10 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD11_Pos  (24U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD11_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD11_Pos)  /*!< 0x1F000000 */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD11      DDRDBG_DDR34_AC_SWIZZLE_ADD11_8_DDR34_AC_SWIZZLING_ADD11_Msk             /* Remapping input bit on add11 DDRPHYC input at the DFI interface. */
+/***************  Bit definition for DDRDBG_DDR34_AC_SWIZZLE_ADD11_8 (DDRDBG_DDR34_AC_SWIZZLE_2)  ******/
+#define DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD8_Pos   (0U)
+#define DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD8_Msk   (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD8_Pos)   /*!< 0x0000001F */
+#define DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD8       DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD8_Msk              /* Remapping input bit on add8 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD9_Pos   (8U)
+#define DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD9_Msk   (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD9_Pos)   /*!< 0x00001F00 */
+#define DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD9       DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD9_Msk              /* Remapping input bit on add9 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD10_Pos  (16U)
+#define DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD10_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD10_Pos)  /*!< 0x001F0000 */
+#define DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD10      DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD10_Msk             /* Remapping input bit on add10 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD11_Pos  (24U)
+#define DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD11_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD11_Pos)  /*!< 0x1F000000 */
+#define DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD11      DDRDBG_DDR34_AC_SWIZZLE_2_DDR34_AC_SWIZZLING_ADD11_Msk             /* Remapping input bit on add11 DDRPHYC input at the DFI interface. */
 
-/***************  Bit definition for DDRDBG_DDR34_AC_SWIZZLE_ADD15_12  *****/
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD12_Pos  (0U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD12_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD12_Pos)  /*!< 0x0000001F */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD12      DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD12_Msk             /* Remapping input bit on add12 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD13_Pos  (8U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD13_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD13_Pos)  /*!< 0x00001F00 */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD13      DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD13_Msk             /* Remapping input bit on add13 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD14_Pos  (16U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD14_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD14_Pos)  /*!< 0x001F0000 */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD14      DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD14_Msk             /* Remapping input bit on add14 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD15_Pos  (24U)
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD15_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD15_Pos)  /*!< 0x1F000000 */
-#define DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD15      DDRDBG_DDR34_AC_SWIZZLE_ADD15_12_DDR34_AC_SWIZZLING_ADD15_Msk             /* Remapping input bit on add15 DDRPHYC input at the DFI interface. */
+/***************  Bit definition for DDRDBG_DDR34_AC_SWIZZLE_ADD15_12 (DDRDBG_DDR34_AC_SWIZZLE_3)  *****/
+#define DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD12_Pos  (0U)
+#define DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD12_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD12_Pos)  /*!< 0x0000001F */
+#define DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD12      DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD12_Msk             /* Remapping input bit on add12 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD13_Pos  (8U)
+#define DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD13_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD13_Pos)  /*!< 0x00001F00 */
+#define DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD13      DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD13_Msk             /* Remapping input bit on add13 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD14_Pos  (16U)
+#define DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD14_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD14_Pos)  /*!< 0x001F0000 */
+#define DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD14      DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD14_Msk             /* Remapping input bit on add14 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD15_Pos  (24U)
+#define DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD15_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD15_Pos)  /*!< 0x1F000000 */
+#define DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD15      DDRDBG_DDR34_AC_SWIZZLE_3_DDR34_AC_SWIZZLING_ADD15_Msk             /* Remapping input bit on add15 DDRPHYC input at the DFI interface. */
 
-/***************  Bit definition for DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN  ***/
-#define DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_ACTN_Pos  (0U)
-#define DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_ACTN_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_ACTN_Pos)  /*!< 0x0000001F */
-#define DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_ACTN      DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_ACTN_Msk             /* Remapping input bit on actn DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_BK0_Pos   (8U)
-#define DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_BK0_Msk   (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_BK0_Pos)   /*!< 0x00001F00 */
-#define DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_BK0       DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_BK0_Msk              /* Remapping input bit on bk0 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_BK1_Pos   (16U)
-#define DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_BK1_Msk   (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_BK1_Pos)   /*!< 0x001F0000 */
-#define DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_BK1       DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_BK1_Msk              /* Remapping input bit on bk1 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_BK2_Pos   (24U)
-#define DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_BK2_Msk   (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_BK2_Pos)   /*!< 0x1F000000 */
-#define DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_BK2       DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN_DDR34_AC_SWIZZLING_BK2_Msk              /* Remapping input bit on bk2 DDRPHYC input at the DFI interface. */
+/***************  Bit definition for DDRDBG_DDR34_AC_SWIZZLE_BK2_0_ACTN (DDRDBG_DDR34_AC_SWIZZLE_4)  ***/
+#define DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_ACTN_Pos  (0U)
+#define DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_ACTN_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_ACTN_Pos)  /*!< 0x0000001F */
+#define DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_ACTN      DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_ACTN_Msk             /* Remapping input bit on actn DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_BK0_Pos   (8U)
+#define DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_BK0_Msk   (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_BK0_Pos)   /*!< 0x00001F00 */
+#define DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_BK0       DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_BK0_Msk              /* Remapping input bit on bk0 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_BK1_Pos   (16U)
+#define DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_BK1_Msk   (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_BK1_Pos)   /*!< 0x001F0000 */
+#define DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_BK1       DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_BK1_Msk              /* Remapping input bit on bk1 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_BK2_Pos   (24U)
+#define DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_BK2_Msk   (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_BK2_Pos)   /*!< 0x1F000000 */
+#define DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_BK2       DDRDBG_DDR34_AC_SWIZZLE_4_DDR34_AC_SWIZZLING_BK2_Msk              /* Remapping input bit on bk2 DDRPHYC input at the DFI interface. */
 
-/***************  Bit definition for DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0  */
-#define DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_BG0_Pos   (0U)
-#define DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_BG0_Msk   (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_BG0_Pos)   /*!< 0x0000001F */
-#define DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_BG0       DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_BG0_Msk              /* Remapping input bit on bg0 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_BG1_Pos   (8U)
-#define DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_BG1_Msk   (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_BG1_Pos)   /*!< 0x00001F00 */
-#define DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_BG1       DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_BG1_Msk              /* Remapping input bit on bg1 DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_CASN_Pos  (16U)
-#define DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_CASN_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_CASN_Pos)  /*!< 0x001F0000 */
-#define DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_CASN      DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_CASN_Msk             /* Remapping input bit on casn DDRPHYC input at the DFI interface. */
-#define DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_RASN_Pos  (24U)
-#define DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_RASN_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_RASN_Pos)  /*!< 0x1F000000 */
-#define DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_RASN      DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0_DDR34_AC_SWIZZLING_RASN_Msk             /* Remapping input bit on rasn DDRPHYC input at the DFI interface. */
+/***************  Bit definition for DDRDBG_DDR34_AC_SWIZZLE_RASN_CASN_BG1_0 (DDRDBG_DDR34_AC_SWIZZLE_5)  */
+#define DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_BG0_Pos   (0U)
+#define DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_BG0_Msk   (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_BG0_Pos)   /*!< 0x0000001F */
+#define DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_BG0       DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_BG0_Msk              /* Remapping input bit on bg0 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_BG1_Pos   (8U)
+#define DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_BG1_Msk   (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_BG1_Pos)   /*!< 0x00001F00 */
+#define DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_BG1       DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_BG1_Msk              /* Remapping input bit on bg1 DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_CASN_Pos  (16U)
+#define DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_CASN_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_CASN_Pos)  /*!< 0x001F0000 */
+#define DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_CASN      DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_CASN_Msk             /* Remapping input bit on casn DDRPHYC input at the DFI interface. */
+#define DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_RASN_Pos  (24U)
+#define DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_RASN_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_RASN_Pos)  /*!< 0x1F000000 */
+#define DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_RASN      DDRDBG_DDR34_AC_SWIZZLE_5_DDR34_AC_SWIZZLING_RASN_Msk             /* Remapping input bit on rasn DDRPHYC input at the DFI interface. */
 
-/***************  Bit definition for DDRDBG_DDR34_AC_SWIZZLE_WEN  **********/
-#define DDRDBG_DDR34_AC_SWIZZLE_WEN_DDR34_AC_SWIZZLING_WEN_Pos  (0U)
-#define DDRDBG_DDR34_AC_SWIZZLE_WEN_DDR34_AC_SWIZZLING_WEN_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_WEN_DDR34_AC_SWIZZLING_WEN_Pos)   /*!< 0x0000001F */
-#define DDRDBG_DDR34_AC_SWIZZLE_WEN_DDR34_AC_SWIZZLING_WEN      DDRDBG_DDR34_AC_SWIZZLE_WEN_DDR34_AC_SWIZZLING_WEN_Msk              /* Remapping input bit on wen DDRPHYC input at the DFI interface. */
+/***************  Bit definition for DDRDBG_DDR34_AC_SWIZZLE_WEN (DDRDBG_DDR34_AC_SWIZZLE_6)  **********/
+#define DDRDBG_DDR34_AC_SWIZZLE_6_DDR34_AC_SWIZZLING_WEN_Pos  (0U)
+#define DDRDBG_DDR34_AC_SWIZZLE_6_DDR34_AC_SWIZZLING_WEN_Msk  (0x1FUL << DDRDBG_DDR34_AC_SWIZZLE_6_DDR34_AC_SWIZZLING_WEN_Pos)   /*!< 0x0000001F */
+#define DDRDBG_DDR34_AC_SWIZZLE_6_DDR34_AC_SWIZZLING_WEN      DDRDBG_DDR34_AC_SWIZZLE_6_DDR34_AC_SWIZZLING_WEN_Msk              /* Remapping input bit on wen DDRPHYC input at the DFI interface. */
 
 /******************************************************************************/
 /*                                                                            */
@@ -17386,7 +17386,7 @@ typedef struct
 #define ETH_MACHWF0R_RXCOESEL_Msk           (0x1UL << ETH_MACHWF0R_RXCOESEL_Pos)                  /*!< 0x00010000 */
 #define ETH_MACHWF0R_RXCOESEL               ETH_MACHWF0R_RXCOESEL_Msk                            /*!< Receive Checksum Offload Enabled */
 #define ETH_MACHWF0R_ADDMACADRSEL_Pos       (18U)
-#define ETH_MACHWF0R_ADDMACADRSEL_Msk       (0x1FU << ETH_MACHWF0R_ADDMACADRSEL_Pos)             /*!< 0x007C0000 */
+#define ETH_MACHWF0R_ADDMACADRSEL_Msk       (0x1FUL << ETH_MACHWF0R_ADDMACADRSEL_Pos)             /*!< 0x007C0000 */
 #define ETH_MACHWF0R_ADDMACADRSEL           ETH_MACHWF0R_ADDMACADRSEL_Msk                        /*!< MAC Addresses 1-31 Selected */
 #define ETH_MACHWF0R_MACADR32SEL_Pos        (23U)
 #define ETH_MACHWF0R_MACADR32SEL_Msk        (0x1UL << ETH_MACHWF0R_MACADR32SEL_Pos)               /*!< 0x00800000 */
@@ -17395,13 +17395,13 @@ typedef struct
 #define ETH_MACHWF0R_MACADR64SEL_Msk        (0x1UL << ETH_MACHWF0R_MACADR64SEL_Pos)               /*!< 0x01000000 */
 #define ETH_MACHWF0R_MACADR64SEL            ETH_MACHWF0R_MACADR64SEL_Msk                         /*!< MAC Addresses 64-127 Selected */
 #define ETH_MACHWF0R_TSSTSSEL_Pos           (25U)
-#define ETH_MACHWF0R_TSSTSSEL_Msk           (0x3U << ETH_MACHWF0R_TSSTSSEL_Pos)                  /*!< 0x06000000 */
+#define ETH_MACHWF0R_TSSTSSEL_Msk           (0x3UL << ETH_MACHWF0R_TSSTSSEL_Pos)                  /*!< 0x06000000 */
 #define ETH_MACHWF0R_TSSTSSEL               ETH_MACHWF0R_TSSTSSEL_Msk                            /*!< Timestamp System Time Source */
 #define ETH_MACHWF0R_SAVLANINS_Pos          (27U)
 #define ETH_MACHWF0R_SAVLANINS_Msk          (0x1UL << ETH_MACHWF0R_SAVLANINS_Pos)                 /*!< 0x08000000 */
 #define ETH_MACHWF0R_SAVLANINS              ETH_MACHWF0R_SAVLANINS_Msk                           /*!< Source Address or VLAN Insertion Enable */
 #define ETH_MACHWF0R_ACTPHYSEL_Pos          (28U)
-#define ETH_MACHWF0R_ACTPHYSEL_Msk          (0x7U << ETH_MACHWF0R_ACTPHYSEL_Pos)                 /*!< 0x70000000 */
+#define ETH_MACHWF0R_ACTPHYSEL_Msk          (0x7UL << ETH_MACHWF0R_ACTPHYSEL_Pos)                 /*!< 0x70000000 */
 #define ETH_MACHWF0R_ACTPHYSEL              ETH_MACHWF0R_ACTPHYSEL_Msk                           /*!< Active PHY Selected */
 
 /*************  Bit definition for ETH_MACHWF1R register  **************/
@@ -54731,393 +54731,393 @@ typedef struct
 /******************************************************************************/
 /********************  Bit definition for USBH_EHCI_HCCAPBASE register  ********************/
 #define USBH_EHCI_HCCAPBASE_CAPLENGTH_Pos        (0U)
-#define USBH_EHCI_HCCAPBASE_CAPLENGTH_Msk        (0x7FU << USBH_EHCI_HCCAPBASE_CAPLENGTH_Pos)      /*!< 0x0000007F */
+#define USBH_EHCI_HCCAPBASE_CAPLENGTH_Msk        (0x7FUL << USBH_EHCI_HCCAPBASE_CAPLENGTH_Pos)     /*!< 0x0000007F */
 #define USBH_EHCI_HCCAPBASE_CAPLENGTH            USBH_EHCI_HCCAPBASE_CAPLENGTH_Msk                 /*!< Capability Register Length */
 
 #define USBH_EHCI_HCCAPBASE_HCIVERSION_Pos       (16U)
-#define USBH_EHCI_HCCAPBASE_HCIVERSION_Msk       (0xFFFF0000U << USBH_EHCI_HCCAPBASE_HCIVERSION_Pos) /*!< 0xFFFF0000U */
-#define USBH_EHCI_HCCAPBASE_HCIVERSION           USBH_EHCI_HCCAPBASE_HCIVERSION_Msk                  /*!< Capability Register Length */
+#define USBH_EHCI_HCCAPBASE_HCIVERSION_Msk       (0xFFFFUL << USBH_EHCI_HCCAPBASE_HCIVERSION_Pos) /*!< 0xFFFF0000U */
+#define USBH_EHCI_HCCAPBASE_HCIVERSION           USBH_EHCI_HCCAPBASE_HCIVERSION_Msk               /*!< Host Controller Interface Version */
 
 /********************  Bit definition for USBH_EHCI_HCSPARAMS register  ********************/
 #define USBH_EHCI_HCSPARAMS_N_PORTS_Pos    (0U)
-#define USBH_EHCI_HCSPARAMS_N_PORTS_Msk    (0xFU << USBH_EHCI_HCSPARAMS_N_PORTS_Pos)         /*!< 0x0000000F */
+#define USBH_EHCI_HCSPARAMS_N_PORTS_Msk    (0xFUL << USBH_EHCI_HCSPARAMS_N_PORTS_Pos)         /*!< 0x0000000F */
 #define USBH_EHCI_HCSPARAMS_N_PORTS        USBH_EHCI_HCSPARAMS_N_PORTS_Msk                   /*!< Number of Ports */
 
 #define USBH_EHCI_HCSPARAMS_PPC_Pos        (4U)
-#define USBH_EHCI_HCSPARAMS_PPC_Msk        (0x1U << USBH_EHCI_HCSPARAMS_PPC_Pos)             /*!< 0x00000010 */
+#define USBH_EHCI_HCSPARAMS_PPC_Msk        (0x1UL << USBH_EHCI_HCSPARAMS_PPC_Pos)             /*!< 0x00000010 */
 #define USBH_EHCI_HCSPARAMS_PPC            USBH_EHCI_HCSPARAMS_PPC_Msk                       /*!< Port Power Control */
 
 #define USBH_EHCI_HCSPARAMS_PRR_Pos        (7U)
-#define USBH_EHCI_HCSPARAMS_PRR_Msk        (0x1U << USBH_EHCI_HCSPARAMS_PRR_Pos)             /*!< 0x00000080 */
+#define USBH_EHCI_HCSPARAMS_PRR_Msk        (0x1UL << USBH_EHCI_HCSPARAMS_PRR_Pos)             /*!< 0x00000080 */
 #define USBH_EHCI_HCSPARAMS_PRR            USBH_EHCI_HCSPARAMS_PRR_Msk                       /*!< Port Routing Rules */
 
 #define USBH_EHCI_HCSPARAMS_N_PCC_Pos      (8U)
-#define USBH_EHCI_HCSPARAMS_N_PCC_Msk      (0xFU << USBH_EHCI_HCSPARAMS_N_PCC_Pos)           /*!< 0x00000F00 */
+#define USBH_EHCI_HCSPARAMS_N_PCC_Msk      (0xFUL << USBH_EHCI_HCSPARAMS_N_PCC_Pos)           /*!< 0x00000F00 */
 #define USBH_EHCI_HCSPARAMS_N_PCC          USBH_EHCI_HCSPARAMS_N_PCC_Msk                     /*!< Number of Ports per Companion Controller */
 
 #define USBH_EHCI_HCSPARAMS_N_CC_Pos       (12U)
-#define USBH_EHCI_HCSPARAMS_N_CC_Msk       (0xFU << USBH_EHCI_HCSPARAMS_N_CC_Pos)            /*!< 0x0000F000 */
+#define USBH_EHCI_HCSPARAMS_N_CC_Msk       (0xFUL << USBH_EHCI_HCSPARAMS_N_CC_Pos)            /*!< 0x0000F000 */
 #define USBH_EHCI_HCSPARAMS_N_CC           USBH_EHCI_HCSPARAMS_N_CC_Msk                      /*!< Number of Companion Controller */
 
 #define USBH_EHCI_HCSPARAMS_P_INDICATOR_Pos (16U)
-#define USBH_EHCI_HCSPARAMS_P_INDICATOR_Msk (0x1U << USBH_EHCI_HCSPARAMS_P_INDICATOR_Pos)    /*!< 0x00010000 */
+#define USBH_EHCI_HCSPARAMS_P_INDICATOR_Msk (0x1UL << USBH_EHCI_HCSPARAMS_P_INDICATOR_Pos)    /*!< 0x00010000 */
 #define USBH_EHCI_HCSPARAMS_P_INDICATOR    USBH_EHCI_HCSPARAMS_P_INDICATOR_Msk               /*!< Port Indicators */
 
 #define USBH_EHCI_HCSPARAMS_DPN_Pos        (20U)
-#define USBH_EHCI_HCSPARAMS_DPN_Msk        (0xFU << USBH_EHCI_HCSPARAMS_DPN_Pos)             /*!< 0x00F00000 */
+#define USBH_EHCI_HCSPARAMS_DPN_Msk        (0xFUL << USBH_EHCI_HCSPARAMS_DPN_Pos)             /*!< 0x00F00000 */
 #define USBH_EHCI_HCSPARAMS_DPN            USBH_EHCI_HCSPARAMS_DPN_Msk                       /*!< Debug Port Number */
 
 /********************  Bit definition for USBH_EHCI_HCCPARAMS register  ********************/
 #define USBH_EHCI_HCCPARAMS_SFAC_Pos      (0U)
-#define USBH_EHCI_HCCPARAMS_SFAC_Msk      (0x1U << USBH_EHCI_HCCPARAMS_SFAC_Pos)           /*!< 0x00000001 */
+#define USBH_EHCI_HCCPARAMS_SFAC_Msk      (0x1UL << USBH_EHCI_HCCPARAMS_SFAC_Pos)           /*!< 0x00000001 */
 #define USBH_EHCI_HCCPARAMS_SFAC          USBH_EHCI_HCCPARAMS_SFAC_Msk                     /*!< 64-bit Addressing Capability */
 
 #define USBH_EHCI_HCCPARAMS_PFLF_Pos       (1U)
-#define USBH_EHCI_HCCPARAMS_PFLF_Msk       (0x1U << USBH_EHCI_HCCPARAMS_PFLF_Pos)            /*!< 0x00000002 */
+#define USBH_EHCI_HCCPARAMS_PFLF_Msk       (0x1UL << USBH_EHCI_HCCPARAMS_PFLF_Pos)            /*!< 0x00000002 */
 #define USBH_EHCI_HCCPARAMS_PFLF           USBH_EHCI_HCCPARAMS_PFLF_Msk                      /*!< Programmable Frame List Flag */
 
 #define USBH_EHCI_HCCPARAMS_ASPC_Pos       (2U)
-#define USBH_EHCI_HCCPARAMS_ASPC_Msk       (0x1U << USBH_EHCI_HCCPARAMS_ASPC_Pos)            /*!< 0x00000004 */
+#define USBH_EHCI_HCCPARAMS_ASPC_Msk       (0x1UL << USBH_EHCI_HCCPARAMS_ASPC_Pos)            /*!< 0x00000004 */
 #define USBH_EHCI_HCCPARAMS_ASPC           USBH_EHCI_HCCPARAMS_ASPC_Msk                      /*!< Asynchronous Schedule Park Capability */
 
 #define USBH_EHCI_HCCPARAMS_ISO_Pos        (4U)
-#define USBH_EHCI_HCCPARAMS_ISO_Msk        (0xFU << USBH_EHCI_HCCPARAMS_ISO_Pos)             /*!< 0x000000F0 */
+#define USBH_EHCI_HCCPARAMS_ISO_Msk        (0xFUL << USBH_EHCI_HCCPARAMS_ISO_Pos)             /*!< 0x000000F0 */
 #define USBH_EHCI_HCCPARAMS_ISO            USBH_EHCI_HCCPARAMS_ISO_Msk                       /*!< Isochronous Scheduling Threshold */
 
 #define USBH_EHCI_HCCPARAMS_EECP_Pos       (8U)
-#define USBH_EHCI_HCCPARAMS_EECP_Msk       (0xFFU << USBH_EHCI_HCCPARAMS_EECP_Pos)           /*!< 0x0000FF00 */
+#define USBH_EHCI_HCCPARAMS_EECP_Msk       (0xFFUL << USBH_EHCI_HCCPARAMS_EECP_Pos)           /*!< 0x0000FF00 */
 #define USBH_EHCI_HCCPARAMS_EECP           USBH_EHCI_HCCPARAMS_EECP_Msk                      /*!< EHCI Extended Capabilities Pointer */
 
 #define USBH_EHCI_HCCPARAMS_LPM_Pos        (17U)
-#define USBH_EHCI_HCCPARAMS_LPM_Msk        (0x1U << USBH_EHCI_HCCPARAMS_LPM_Pos)             /*!< 0x00020000 */
+#define USBH_EHCI_HCCPARAMS_LPM_Msk        (0x1UL << USBH_EHCI_HCCPARAMS_LPM_Pos)             /*!< 0x00020000 */
 #define USBH_EHCI_HCCPARAMS_LPM            USBH_EHCI_HCCPARAMS_LPM_Msk                       /*!< Link Power Management Capability */
 
 #define USBH_EHCI_HCCPARAMS_PPCE_Pos       (18U)
-#define USBH_EHCI_HCCPARAMS_PPCE_Msk       (0x1U << USBH_EHCI_HCCPARAMS_PPCE_Pos)            /*!< 0x00040000 */
+#define USBH_EHCI_HCCPARAMS_PPCE_Msk       (0x1UL << USBH_EHCI_HCCPARAMS_PPCE_Pos)            /*!< 0x00040000 */
 #define USBH_EHCI_HCCPARAMS_PPCE           USBH_EHCI_HCCPARAMS_PPCE_Msk                      /*!< Per-Port Change Event Capability */
 
 #define USBH_EHCI_HCCPARAMS_32FPC_Pos      (19U)
-#define USBH_EHCI_HCCPARAMS_32FPC_Msk      (0x1U << USBH_EHCI_HCCPARAMS_32FPC_Pos)           /*!< 0x00080000 */
+#define USBH_EHCI_HCCPARAMS_32FPC_Msk      (0x1UL << USBH_EHCI_HCCPARAMS_32FPC_Pos)           /*!< 0x00080000 */
 #define USBH_EHCI_HCCPARAMS_32FPC          USBH_EHCI_HCCPARAMS_32FPC_Msk                     /*!< 32-Frame Periodic List Capability */
 
 /********************  Bit definition for USBH_EHCI_USBCMD register  ***********************/
 #define USBH_EHCI_USBCMD_RS_Pos            (0U)
-#define USBH_EHCI_USBCMD_RS_Msk            (0x1U << USBH_EHCI_USBCMD_RS_Pos)                 /*!< 0x00000001 */
+#define USBH_EHCI_USBCMD_RS_Msk            (0x1UL << USBH_EHCI_USBCMD_RS_Pos)                 /*!< 0x00000001 */
 #define USBH_EHCI_USBCMD_RS                USBH_EHCI_USBCMD_RS_Msk                           /*!< Run/Stop */
 
 #define USBH_EHCI_USBCMD_HCRESET_Pos       (1U)
-#define USBH_EHCI_USBCMD_HCRESET_Msk       (0x1U << USBH_EHCI_USBCMD_HCRESET_Pos)            /*!< 0x00000002 */
+#define USBH_EHCI_USBCMD_HCRESET_Msk       (0x1UL << USBH_EHCI_USBCMD_HCRESET_Pos)            /*!< 0x00000002 */
 #define USBH_EHCI_USBCMD_HCRESET           USBH_EHCI_USBCMD_HCRESET_Msk                      /*!< Host Controller Reset */
 
 #define USBH_EHCI_USBCMD_FLS_Pos           (2U)
-#define USBH_EHCI_USBCMD_FLS_Msk           (0x3U << USBH_EHCI_USBCMD_FLS_Pos)                /*!< 0x0000000C */
+#define USBH_EHCI_USBCMD_FLS_Msk           (0x3UL << USBH_EHCI_USBCMD_FLS_Pos)                /*!< 0x0000000C */
 #define USBH_EHCI_USBCMD_FLS               USBH_EHCI_USBCMD_FLS_Msk                          /*!< Frame List Size */
 
 #define USBH_EHCI_USBCMD_PSE_Pos           (4U)
-#define USBH_EHCI_USBCMD_PSE_Msk           (0x1U << USBH_EHCI_USBCMD_PSE_Pos)                /*!< 0x00000010 */
+#define USBH_EHCI_USBCMD_PSE_Msk           (0x1UL << USBH_EHCI_USBCMD_PSE_Pos)                /*!< 0x00000010 */
 #define USBH_EHCI_USBCMD_PSE               USBH_EHCI_USBCMD_PSE_Msk                          /*!< Periodic Schedule Enable */
 
 #define USBH_EHCI_USBCMD_ASE_Pos           (5U)
-#define USBH_EHCI_USBCMD_ASE_Msk           (0x1U << USBH_EHCI_USBCMD_ASE_Pos)                /*!< 0x00000020 */
+#define USBH_EHCI_USBCMD_ASE_Msk           (0x1UL << USBH_EHCI_USBCMD_ASE_Pos)                /*!< 0x00000020 */
 #define USBH_EHCI_USBCMD_ASE               USBH_EHCI_USBCMD_ASE_Msk                          /*!< Asynchronous Schedule Enable */
 
 #define USBH_EHCI_USBCMD_IAA_Pos           (6U)
-#define USBH_EHCI_USBCMD_IAA_Msk           (0x1U << USBH_EHCI_USBCMD_IAA_Pos)                /*!< 0x00000040 */
+#define USBH_EHCI_USBCMD_IAA_Msk           (0x1UL << USBH_EHCI_USBCMD_IAA_Pos)                /*!< 0x00000040 */
 #define USBH_EHCI_USBCMD_IAA               USBH_EHCI_USBCMD_IAA_Msk                          /*!< Interrupt on Async Advance Doorbell */
 
 #define USBH_EHCI_USBCMD_LHCRESET_Pos      (7U)
-#define USBH_EHCI_USBCMD_LHCRESET_Msk      (0x1U << USBH_EHCI_USBCMD_LHCRESET_Pos)           /*!< 0x00000080 */
+#define USBH_EHCI_USBCMD_LHCRESET_Msk      (0x1UL << USBH_EHCI_USBCMD_LHCRESET_Pos)           /*!< 0x00000080 */
 #define USBH_EHCI_USBCMD_LHCRESET          USBH_EHCI_USBCMD_LHCRESET_Msk                     /*!< Light Host Controller Reset (OPTIONAL) */
 
 #define USBH_EHCI_USBCMD_ASPMC_Pos         (8U)
-#define USBH_EHCI_USBCMD_ASPMC_Msk         (0x3U << USBH_EHCI_USBCMD_ASPMC_Pos)              /*!< 0x00000300 */
+#define USBH_EHCI_USBCMD_ASPMC_Msk         (0x3UL << USBH_EHCI_USBCMD_ASPMC_Pos)              /*!< 0x00000300 */
 #define USBH_EHCI_USBCMD_ASPMC             USBH_EHCI_USBCMD_ASPMC_Msk                        /*!< Asynchronous Schedule Park Mode Count (OPTIONAL) */
 
 #define USBH_EHCI_USBCMD_ASPME_Pos         (11U)
-#define USBH_EHCI_USBCMD_ASPME_Msk         (0x1U << USBH_EHCI_USBCMD_ASPME_Pos)              /*!< 0x00000800 */
+#define USBH_EHCI_USBCMD_ASPME_Msk         (0x1UL << USBH_EHCI_USBCMD_ASPME_Pos)              /*!< 0x00000800 */
 #define USBH_EHCI_USBCMD_ASPME             USBH_EHCI_USBCMD_ASPME_Msk                        /*!< Asynchronous Schedule Park Mode Enable (OPTIONAL) */
 
 #define USBH_EHCI_USBCMD_ITC_Pos           (16U)
-#define USBH_EHCI_USBCMD_ITC_Msk           (0xFFU << USBH_EHCI_USBCMD_ITC_Pos)               /*!< 0x00FF0000 */
+#define USBH_EHCI_USBCMD_ITC_Msk           (0xFFUL << USBH_EHCI_USBCMD_ITC_Pos)               /*!< 0x00FF0000 */
 #define USBH_EHCI_USBCMD_ITC               USBH_EHCI_USBCMD_ITC_Msk                          /*!< Interrupt Threshold Control */
 
 #define USBH_EHCI_USBCMD_HIRD_Pos          (24U)
-#define USBH_EHCI_USBCMD_HIRD_Msk          (0xFU << USBH_EHCI_USBCMD_HIRD_Pos)               /*!< 0x0F000000 */
+#define USBH_EHCI_USBCMD_HIRD_Msk          (0xFUL << USBH_EHCI_USBCMD_HIRD_Pos)               /*!< 0x0F000000 */
 #define USBH_EHCI_USBCMD_HIRD              USBH_EHCI_USBCMD_HIRD_Msk                         /*!< Host-Initiated Resume Duration */
 
 /********************  Bit definition for USBH_EHCI_USBSTS register  ***********************/
 #define USBH_EHCI_USBSTS_USBINT_Pos        (0U)
-#define USBH_EHCI_USBSTS_USBINT_Msk        (0x1U << USBH_EHCI_USBSTS_USBINT_Pos)             /*!< 0x00000001 */
+#define USBH_EHCI_USBSTS_USBINT_Msk        (0x1UL << USBH_EHCI_USBSTS_USBINT_Pos)             /*!< 0x00000001 */
 #define USBH_EHCI_USBSTS_USBINT            USBH_EHCI_USBSTS_USBINT_Msk                       /*!< USB Interrupt (USBINT) */
 
 #define USBH_EHCI_USBSTS_USBERRINT_Pos     (1U)
-#define USBH_EHCI_USBSTS_USBERRINT_Msk     (0x1U << USBH_EHCI_USBSTS_USBERRINT_Pos)          /*!< 0x00000002 */
+#define USBH_EHCI_USBSTS_USBERRINT_Msk     (0x1UL << USBH_EHCI_USBSTS_USBERRINT_Pos)          /*!< 0x00000002 */
 #define USBH_EHCI_USBSTS_USBERRINT         USBH_EHCI_USBSTS_USBERRINT_Msk                    /*!< USB Error Interrupt (USBERRINT) */
 
 #define USBH_EHCI_USBSTS_PCD_Pos           (2U)
-#define USBH_EHCI_USBSTS_PCD_Msk           (0x1U << USBH_EHCI_USBSTS_PCD_Pos)                /*!< 0x00000004 */
+#define USBH_EHCI_USBSTS_PCD_Msk           (0x1UL << USBH_EHCI_USBSTS_PCD_Pos)                /*!< 0x00000004 */
 #define USBH_EHCI_USBSTS_PCD               USBH_EHCI_USBSTS_PCD_Msk                          /*!< Port Change Detect */
 
 #define USBH_EHCI_USBSTS_FLR_Pos           (3U)
-#define USBH_EHCI_USBSTS_FLR_Msk           (0x1U << USBH_EHCI_USBSTS_FLR_Pos)                /*!< 0x00000008 */
+#define USBH_EHCI_USBSTS_FLR_Msk           (0x1UL << USBH_EHCI_USBSTS_FLR_Pos)                /*!< 0x00000008 */
 #define USBH_EHCI_USBSTS_FLR               USBH_EHCI_USBSTS_FLR_Msk                          /*!< Frame List Rollover */
 
 #define USBH_EHCI_USBSTS_HSE_Pos           (4U)
-#define USBH_EHCI_USBSTS_HSE_Msk           (0x1U << USBH_EHCI_USBSTS_HSE_Pos)                /*!< 0x00000010 */
+#define USBH_EHCI_USBSTS_HSE_Msk           (0x1UL << USBH_EHCI_USBSTS_HSE_Pos)                /*!< 0x00000010 */
 #define USBH_EHCI_USBSTS_HSE               USBH_EHCI_USBSTS_HSE_Msk                          /*!< Host System Error */
 
 #define USBH_EHCI_USBSTS_IAA_Pos           (5U)
-#define USBH_EHCI_USBSTS_IAA_Msk           (0x1U << USBH_EHCI_USBSTS_IAA_Pos)                /*!< 0x00000020 */
+#define USBH_EHCI_USBSTS_IAA_Msk           (0x1UL << USBH_EHCI_USBSTS_IAA_Pos)                /*!< 0x00000020 */
 #define USBH_EHCI_USBSTS_IAA               USBH_EHCI_USBSTS_IAA_Msk                          /*!< Interrupt on Async Advance */
 
 #define USBH_EHCI_USBSTS_HCH_Pos           (12U)
-#define USBH_EHCI_USBSTS_HCH_Msk           (0x1U << USBH_EHCI_USBSTS_HCH_Pos)                /*!< 0x00001000 */
+#define USBH_EHCI_USBSTS_HCH_Msk           (0x1UL << USBH_EHCI_USBSTS_HCH_Pos)                /*!< 0x00001000 */
 #define USBH_EHCI_USBSTS_HCH               USBH_EHCI_USBSTS_HCH_Msk                          /*!< HCHalted */
 
 #define USBH_EHCI_USBSTS_RECL_Pos          (13U)
-#define USBH_EHCI_USBSTS_RECL_Msk          (0x1U << USBH_EHCI_USBSTS_RECL_Pos)               /*!< 0x00002000 */
+#define USBH_EHCI_USBSTS_RECL_Msk          (0x1UL << USBH_EHCI_USBSTS_RECL_Pos)               /*!< 0x00002000 */
 #define USBH_EHCI_USBSTS_RECL              USBH_EHCI_USBSTS_RECL_Msk                         /*!< Reclamation */
 
 #define USBH_EHCI_USBSTS_PSS_Pos           (14U)
-#define USBH_EHCI_USBSTS_PSS_Msk           (0x1U << USBH_EHCI_USBSTS_PSS_Pos)                /*!< 0x00004000 */
+#define USBH_EHCI_USBSTS_PSS_Msk           (0x1UL << USBH_EHCI_USBSTS_PSS_Pos)                /*!< 0x00004000 */
 #define USBH_EHCI_USBSTS_PSS               USBH_EHCI_USBSTS_PSS_Msk                          /*!< Periodic Schedule Status */
 
 #define USBH_EHCI_USBSTS_ASS_Pos           (15U)
-#define USBH_EHCI_USBSTS_ASS_Msk           (0x1U << USBH_EHCI_USBSTS_ASS_Pos)                /*!< 0x00008000 */
+#define USBH_EHCI_USBSTS_ASS_Msk           (0x1UL << USBH_EHCI_USBSTS_ASS_Pos)                /*!< 0x00008000 */
 #define USBH_EHCI_USBSTS_ASS               USBH_EHCI_USBSTS_ASS_Msk                          /*!< Asynchronous Schedule Status */
 
 /********************  Bit definition for USBH_EHCI_USBINTR register  **********************/
 #define USBH_EHCI_USBINTR_USBIE_Pos        (0U)
-#define USBH_EHCI_USBINTR_USBIE_Msk        (0x1U << USBH_EHCI_USBINTR_USBIE_Pos)             /*!< 0x00000001 */
+#define USBH_EHCI_USBINTR_USBIE_Msk        (0x1UL << USBH_EHCI_USBINTR_USBIE_Pos)             /*!< 0x00000001 */
 #define USBH_EHCI_USBINTR_USBIE            USBH_EHCI_USBINTR_USBIE_Msk                       /*!< USB Interrupt Enable */
 
 #define USBH_EHCI_USBINTR_USBEIE_Pos       (1U)
-#define USBH_EHCI_USBINTR_USBEIE_Msk       (0x1U << USBH_EHCI_USBINTR_USBEIE_Pos)            /*!< 0x00000002 */
+#define USBH_EHCI_USBINTR_USBEIE_Msk       (0x1UL << USBH_EHCI_USBINTR_USBEIE_Pos)            /*!< 0x00000002 */
 #define USBH_EHCI_USBINTR_USBEIE           USBH_EHCI_USBINTR_USBEIE_Msk                      /*!< USB Error Interrupt Enable */
 
 #define USBH_EHCI_USBINTR_PCIE_Pos         (2U)
-#define USBH_EHCI_USBINTR_PCIE_Msk         (0x1U << USBH_EHCI_USBINTR_PCIE_Pos)              /*!< 0x00000004 */
+#define USBH_EHCI_USBINTR_PCIE_Msk         (0x1UL << USBH_EHCI_USBINTR_PCIE_Pos)              /*!< 0x00000004 */
 #define USBH_EHCI_USBINTR_PCIE             USBH_EHCI_USBINTR_PCIE_Msk                        /*!< Port Change Interrupt Enable */
 
 #define USBH_EHCI_USBINTR_FLRE_Pos         (3U)
-#define USBH_EHCI_USBINTR_FLRE_Msk         (0x1U << USBH_EHCI_USBINTR_FLRE_Pos)              /*!< 0x00000008 */
+#define USBH_EHCI_USBINTR_FLRE_Msk         (0x1UL << USBH_EHCI_USBINTR_FLRE_Pos)              /*!< 0x00000008 */
 #define USBH_EHCI_USBINTR_FLRE             USBH_EHCI_USBINTR_FLRE_Msk                        /*!< Frame List Rollover Enable */
 
 #define USBH_EHCI_USBINTR_HSEE_Pos         (4U)
-#define USBH_EHCI_USBINTR_HSEE_Msk         (0x1U << USBH_EHCI_USBINTR_HSEE_Pos)              /*!< 0x00000010 */
+#define USBH_EHCI_USBINTR_HSEE_Msk         (0x1UL << USBH_EHCI_USBINTR_HSEE_Pos)              /*!< 0x00000010 */
 #define USBH_EHCI_USBINTR_HSEE             USBH_EHCI_USBINTR_HSEE_Msk                        /*!< Host System Error Enable */
 
 #define USBH_EHCI_USBINTR_IAAE_Pos         (5U)
-#define USBH_EHCI_USBINTR_IAAE_Msk         (0x1U << USBH_EHCI_USBINTR_IAAE_Pos)              /*!< 0x00000020 */
+#define USBH_EHCI_USBINTR_IAAE_Msk         (0x1UL << USBH_EHCI_USBINTR_IAAE_Pos)              /*!< 0x00000020 */
 #define USBH_EHCI_USBINTR_IAAE             USBH_EHCI_USBINTR_IAAE_Msk                        /*!< Interrupt on Async Advance Enable */
 
 /********************  Bit definition for USBH_EHCI_FRINDEX register  **********************/
 #define USBH_EHCI_FRINDEX_FRAMEINDEX_Pos   (0U)
-#define USBH_EHCI_FRINDEX_FRAMEINDEX_Msk   (0x3FFFU << USBH_EHCI_FRINDEX_FRAMEINDEX_Pos)     /*!< 0x00003FFF */
+#define USBH_EHCI_FRINDEX_FRAMEINDEX_Msk   (0x3FFFUL << USBH_EHCI_FRINDEX_FRAMEINDEX_Pos)     /*!< 0x00003FFF */
 #define USBH_EHCI_FRINDEX_FRAMEINDEX       USBH_EHCI_FRINDEX_FRAMEINDEX_Msk                  /*!< Frame Index */
 
 /********************  Bit definition for USBH_EHCI_CTRLDSSEGMENT register  ****************/
 #define USBH_EHCI_CTRLDSSEGMENT_SEGMENT_Pos (0U)
-#define USBH_EHCI_CTRLDSSEGMENT_SEGMENT_Msk (0xFFFFFFFFU << USBH_EHCI_CTRLDSSEGMENT_SEGMENT_Pos) /*!< 0xFFFFFFFF */
+#define USBH_EHCI_CTRLDSSEGMENT_SEGMENT_Msk (0xFFFFFFFFUL << USBH_EHCI_CTRLDSSEGMENT_SEGMENT_Pos) /*!< 0xFFFFFFFF */
 #define USBH_EHCI_CTRLDSSEGMENT_SEGMENT     USBH_EHCI_CTRLDSSEGMENT_SEGMENT_Msk                  /*!< Control Data Structure Segment */
 
 /********************  Bit definition for USBH_EHCI_PERIODICLISTBASE register  *************/
 #define USBH_EHCI_PERIODICLISTBASE_BASEADDR_Pos (12U)
-#define USBH_EHCI_PERIODICLISTBASE_BASEADDR_Msk (0xFFFFFU << USBH_EHCI_PERIODICLISTBASE_BASEADDR_Pos) /*!< 0xFFFFF000 */
+#define USBH_EHCI_PERIODICLISTBASE_BASEADDR_Msk (0xFFFFFUL << USBH_EHCI_PERIODICLISTBASE_BASEADDR_Pos) /*!< 0xFFFFF000 */
 #define USBH_EHCI_PERIODICLISTBASE_BASEADDR     USBH_EHCI_PERIODICLISTBASE_BASEADDR_Msk                /*!< Base Address (Low) */
 
 /********************  Bit definition for USBH_EHCI_ASYNCLISTADDR register  ****************/
 #define USBH_EHCI_ASYNCLISTADDR_LPL_Pos    (5U)
-#define USBH_EHCI_ASYNCLISTADDR_LPL_Msk    (0x7FFFFFFU << USBH_EHCI_ASYNCLISTADDR_LPL_Pos)    /*!< 0xFFFFFFE0 */
+#define USBH_EHCI_ASYNCLISTADDR_LPL_Msk    (0x7FFFFFFUL << USBH_EHCI_ASYNCLISTADDR_LPL_Pos)    /*!< 0xFFFFFFE0 */
 #define USBH_EHCI_ASYNCLISTADDR_LPL        USBH_EHCI_ASYNCLISTADDR_LPL_Msk                   /*!< Link Pointer Low (LPL) */
 
 /********************  Bit definition for USBH_EHCI_CONFIGFLAG register  *******************/
 #define USBH_EHCI_CONFIGFLAG_CF_Pos        (0U)
-#define USBH_EHCI_CONFIGFLAG_CF_Msk        (0x1U << USBH_EHCI_CONFIGFLAG_CF_Pos)             /*!< 0x00000001 */
+#define USBH_EHCI_CONFIGFLAG_CF_Msk        (0x1UL << USBH_EHCI_CONFIGFLAG_CF_Pos)             /*!< 0x00000001 */
 #define USBH_EHCI_CONFIGFLAG_CF            USBH_EHCI_CONFIGFLAG_CF_Msk                       /*!< Configure Flag (CF) */
 
 /********************  Bit definition for USBH_EHCI_PORTSC register  ***********************/
 #define USBH_EHCI_PORTSC_CCS_Pos           (0U)
-#define USBH_EHCI_PORTSC_CCS_Msk           (0x1U << USBH_EHCI_PORTSC_CCS_Pos)                /*!< 0x00000001 */
+#define USBH_EHCI_PORTSC_CCS_Msk           (0x1UL << USBH_EHCI_PORTSC_CCS_Pos)                /*!< 0x00000001 */
 #define USBH_EHCI_PORTSC_CCS               USBH_EHCI_PORTSC_CCS_Msk                          /*!< Current Connect Status */
 
 #define USBH_EHCI_PORTSC_CSC_Pos           (1U)
-#define USBH_EHCI_PORTSC_CSC_Msk           (0x1U << USBH_EHCI_PORTSC_CSC_Pos)                /*!< 0x00000002 */
+#define USBH_EHCI_PORTSC_CSC_Msk           (0x1UL << USBH_EHCI_PORTSC_CSC_Pos)                /*!< 0x00000002 */
 #define USBH_EHCI_PORTSC_CSC               USBH_EHCI_PORTSC_CSC_Msk                          /*!< Connect Status Change */
 
 #define USBH_EHCI_PORTSC_PED_Pos           (2U)
-#define USBH_EHCI_PORTSC_PED_Msk           (0x1U << USBH_EHCI_PORTSC_PED_Pos)                /*!< 0x00000004 */
+#define USBH_EHCI_PORTSC_PED_Msk           (0x1UL << USBH_EHCI_PORTSC_PED_Pos)                /*!< 0x00000004 */
 #define USBH_EHCI_PORTSC_PED               USBH_EHCI_PORTSC_PED_Msk                          /*!< Port Enabled/Disabled */
 
 #define USBH_EHCI_PORTSC_PEC_Pos           (3U)
-#define USBH_EHCI_PORTSC_PEC_Msk           (0x1U << USBH_EHCI_PORTSC_PEC_Pos)                /*!< 0x00000008 */
+#define USBH_EHCI_PORTSC_PEC_Msk           (0x1UL << USBH_EHCI_PORTSC_PEC_Pos)                /*!< 0x00000008 */
 #define USBH_EHCI_PORTSC_PEC               USBH_EHCI_PORTSC_PEC_Msk                          /*!< Port Enable/Disable Change */
 
 #define USBH_EHCI_PORTSC_OCA_Pos           (4U)
-#define USBH_EHCI_PORTSC_OCA_Msk           (0x1U << USBH_EHCI_PORTSC_OCA_Pos)                /*!< 0x00000010 */
+#define USBH_EHCI_PORTSC_OCA_Msk           (0x1UL << USBH_EHCI_PORTSC_OCA_Pos)                /*!< 0x00000010 */
 #define USBH_EHCI_PORTSC_OCA               USBH_EHCI_PORTSC_OCA_Msk                          /*!< Over-current Active */
 
 #define USBH_EHCI_PORTSC_OCC_Pos           (5U)
-#define USBH_EHCI_PORTSC_OCC_Msk           (0x1U << USBH_EHCI_PORTSC_OCC_Pos)                /*!< 0x00000020 */
+#define USBH_EHCI_PORTSC_OCC_Msk           (0x1UL << USBH_EHCI_PORTSC_OCC_Pos)                /*!< 0x00000020 */
 #define USBH_EHCI_PORTSC_OCC               USBH_EHCI_PORTSC_OCC_Msk                          /*!< Over-current Change */
 
 #define USBH_EHCI_PORTSC_FPR_Pos           (6U)
-#define USBH_EHCI_PORTSC_FPR_Msk           (0x1U << USBH_EHCI_PORTSC_FPR_Pos)                /*!< 0x00000040 */
+#define USBH_EHCI_PORTSC_FPR_Msk           (0x1UL << USBH_EHCI_PORTSC_FPR_Pos)                /*!< 0x00000040 */
 #define USBH_EHCI_PORTSC_FPR               USBH_EHCI_PORTSC_FPR_Msk                          /*!< Force Port Resume */
 
 #define USBH_EHCI_PORTSC_SUSP_Pos          (7U)
-#define USBH_EHCI_PORTSC_SUSP_Msk          (0x1U << USBH_EHCI_PORTSC_SUSP_Pos)               /*!< 0x00000080 */
+#define USBH_EHCI_PORTSC_SUSP_Msk          (0x1UL << USBH_EHCI_PORTSC_SUSP_Pos)               /*!< 0x00000080 */
 #define USBH_EHCI_PORTSC_SUSP              USBH_EHCI_PORTSC_SUSP_Msk                         /*!< Suspend */
 
 #define USBH_EHCI_PORTSC_PR_Pos            (8U)
-#define USBH_EHCI_PORTSC_PR_Msk            (0x1U << USBH_EHCI_PORTSC_PR_Pos)                 /*!< 0x00000100 */
+#define USBH_EHCI_PORTSC_PR_Msk            (0x1UL << USBH_EHCI_PORTSC_PR_Pos)                 /*!< 0x00000100 */
 #define USBH_EHCI_PORTSC_PR                USBH_EHCI_PORTSC_PR_Msk                           /*!< Port Reset */
 
 #define USBH_EHCI_PORTSC_SUSPEND_L1_Pos    (9U)
-#define USBH_EHCI_PORTSC_SUSPEND_L1_Msk    (0x1U << USBH_EHCI_PORTSC_SUSPEND_L1_Pos)         /*!< 0x00000200 */
+#define USBH_EHCI_PORTSC_SUSPEND_L1_Msk    (0x1UL << USBH_EHCI_PORTSC_SUSPEND_L1_Pos)         /*!< 0x00000200 */
 #define USBH_EHCI_PORTSC_SUSPEND_L1        USBH_EHCI_PORTSC_SUSPEND_L1_Msk                   /*!< Suspend using L1 */
 
 #define USBH_EHCI_PORTSC_LS_Pos            (10U)
-#define USBH_EHCI_PORTSC_LS_Msk            (0x3U << USBH_EHCI_PORTSC_LS_Pos)                 /*!< 0x00000C00 */
+#define USBH_EHCI_PORTSC_LS_Msk            (0x3UL << USBH_EHCI_PORTSC_LS_Pos)                 /*!< 0x00000C00 */
 #define USBH_EHCI_PORTSC_LS                USBH_EHCI_PORTSC_LS_Msk                           /*!< Line Status */
 
 #define USBH_EHCI_PORTSC_PP_Pos            (12U)
-#define USBH_EHCI_PORTSC_PP_Msk            (0x1U << USBH_EHCI_PORTSC_PP_Pos)                 /*!< 0x00001000 */
+#define USBH_EHCI_PORTSC_PP_Msk            (0x1UL << USBH_EHCI_PORTSC_PP_Pos)                 /*!< 0x00001000 */
 #define USBH_EHCI_PORTSC_PP                USBH_EHCI_PORTSC_PP_Msk                           /*!< Port Power */
 
 #define USBH_EHCI_PORTSC_PO_Pos            (13U)
-#define USBH_EHCI_PORTSC_PO_Msk            (0x1U << USBH_EHCI_PORTSC_PO_Pos)                 /*!< 0x00002000 */
+#define USBH_EHCI_PORTSC_PO_Msk            (0x1UL << USBH_EHCI_PORTSC_PO_Pos)                 /*!< 0x00002000 */
 #define USBH_EHCI_PORTSC_PO                USBH_EHCI_PORTSC_PO_Msk                           /*!< Port Owner */
 
 #define USBH_EHCI_PORTSC_PIC_Pos           (14U)
-#define USBH_EHCI_PORTSC_PIC_Msk           (0x3U << USBH_EHCI_PORTSC_PIC_Pos)                /*!< 0x0000C000 */
+#define USBH_EHCI_PORTSC_PIC_Msk           (0x3UL << USBH_EHCI_PORTSC_PIC_Pos)                /*!< 0x0000C000 */
 #define USBH_EHCI_PORTSC_PIC               USBH_EHCI_PORTSC_PIC_Msk                          /*!< Port Indicator Control */
 
 #define USBH_EHCI_PORTSC_PTC_Pos           (16U)
-#define USBH_EHCI_PORTSC_PTC_Msk           (0xFU << USBH_EHCI_PORTSC_PTC_Pos)                /*!< 0x000F0000 */
+#define USBH_EHCI_PORTSC_PTC_Msk           (0xFUL << USBH_EHCI_PORTSC_PTC_Pos)                /*!< 0x000F0000 */
 #define USBH_EHCI_PORTSC_PTC               USBH_EHCI_PORTSC_PTC_Msk                          /*!< Port Test Control */
 
 #define USBH_EHCI_PORTSC_WKCNNT_E_Pos      (20U)
-#define USBH_EHCI_PORTSC_WKCNNT_E_Msk      (0x1U << USBH_EHCI_PORTSC_WKCNNT_E_Pos)           /*!< 0x00100000 */
+#define USBH_EHCI_PORTSC_WKCNNT_E_Msk      (0x1UL << USBH_EHCI_PORTSC_WKCNNT_E_Pos)           /*!< 0x00100000 */
 #define USBH_EHCI_PORTSC_WKCNNT_E          USBH_EHCI_PORTSC_WKCNNT_E_Msk                     /*!< Wake on Connect Enable */
 
 #define USBH_EHCI_PORTSC_WKDSCNNT_E_Pos    (21U)
-#define USBH_EHCI_PORTSC_WKDSCNNT_E_Msk    (0x1U << USBH_EHCI_PORTSC_WKDSCNNT_E_Pos)         /*!< 0x00200000 */
+#define USBH_EHCI_PORTSC_WKDSCNNT_E_Msk    (0x1UL << USBH_EHCI_PORTSC_WKDSCNNT_E_Pos)         /*!< 0x00200000 */
 #define USBH_EHCI_PORTSC_WKDSCNNT_E        USBH_EHCI_PORTSC_WKDSCNNT_E_Msk                   /*!< Wake on Disconnect Enable */
 
 #define USBH_EHCI_PORTSC_WKOC_E_Pos        (22U)
-#define USBH_EHCI_PORTSC_WKOC_E_Msk        (0x1U << USBH_EHCI_PORTSC_WKOC_E_Pos)             /*!< 0x00400000 */
+#define USBH_EHCI_PORTSC_WKOC_E_Msk        (0x1UL << USBH_EHCI_PORTSC_WKOC_E_Pos)             /*!< 0x00400000 */
 #define USBH_EHCI_PORTSC_WKOC_E            USBH_EHCI_PORTSC_WKOC_E_Msk                       /*!< Wake on Over-current Enable */
 
 #define USBH_EHCI_PORTSC_SUSPEND_STATUS_Pos (23U)
-#define USBH_EHCI_PORTSC_SUSPEND_STATUS_Msk (0x3U << USBH_EHCI_PORTSC_SUSPEND_STATUS_Pos)    /*!< 0x01800000 */
+#define USBH_EHCI_PORTSC_SUSPEND_STATUS_Msk (0x3UL << USBH_EHCI_PORTSC_SUSPEND_STATUS_Pos)    /*!< 0x01800000 */
 #define USBH_EHCI_PORTSC_SUSPEND_STATUS    USBH_EHCI_PORTSC_SUSPEND_STATUS_Msk               /*!< Suspend Status */
 
 #define USBH_EHCI_PORTSC_DEVICE_ADDR_Pos   (25U)
-#define USBH_EHCI_PORTSC_DEVICE_ADDR_Msk   (0x7FU << USBH_EHCI_PORTSC_DEVICE_ADDR_Pos)       /*!< 0xFE000000 */
+#define USBH_EHCI_PORTSC_DEVICE_ADDR_Msk   (0x7FUL << USBH_EHCI_PORTSC_DEVICE_ADDR_Pos)       /*!< 0xFE000000 */
 #define USBH_EHCI_PORTSC_DEVICE_ADDR       USBH_EHCI_PORTSC_DEVICE_ADDR_Msk                  /*!< Device Address */
 
 /********************  Bit definition for USBH_EHCI_INSNREG01 register  **********************/
 #define USBH_EHCI_INSNREG01_IN_THRESHOLD_Pos        (0U)
-#define USBH_EHCI_INSNREG01_IN_THRESHOLD_Msk        (0xFFU << USBH_EHCI_INSNREG01_IN_THRESHOLD_Pos)            /*!< 0x000000FF */
+#define USBH_EHCI_INSNREG01_IN_THRESHOLD_Msk        (0xFFUL << USBH_EHCI_INSNREG01_IN_THRESHOLD_Pos)            /*!< 0x000000FF */
 #define USBH_EHCI_INSNREG01_IN_THRESHOLD            USBH_EHCI_INSNREG01_IN_THRESHOLD_Msk                       /*!< The value specified here is the number of 32-bit words */
 
 #define USBH_EHCI_INSNREG01_OUT_THRESHOLD_Pos       (16U)
-#define USBH_EHCI_INSNREG01_OUT_THRESHOLD_Msk       (0xFFU << USBH_EHCI_INSNREG01_OUT_THRESHOLD_Pos)           /*!< 0x00FF0000 */
+#define USBH_EHCI_INSNREG01_OUT_THRESHOLD_Msk       (0xFFUL << USBH_EHCI_INSNREG01_OUT_THRESHOLD_Pos)           /*!< 0x00FF0000 */
 #define USBH_EHCI_INSNREG01_OUT_THRESHOLD           USBH_EHCI_INSNREG01_OUT_THRESHOLD_Msk                      /*!< The value specified here is the number of 32-bit words */
 
 /********************  Bit definition for USBH_EHCI_INSNREG02 register  **********************/
 #define USBH_EHCI_INSNREG02_PKT_BUF_Pos             (0U)
-#define USBH_EHCI_INSNREG02_PKT_BUF_Msk             (0xFFU << USBH_EHCI_INSNREG02_PKT_BUF_Pos)                 /*!< 0x000000FF */
+#define USBH_EHCI_INSNREG02_PKT_BUF_Msk             (0xFFUL << USBH_EHCI_INSNREG02_PKT_BUF_Pos)                 /*!< 0x000000FF */
 #define USBH_EHCI_INSNREG02_PKT_BUF                 USBH_EHCI_INSNREG02_PKT_BUF_Msk                            /*!< Programmable packet buffer depth */
 
 /********************  Bit definition for USBH_EHCI_INSNREG03 register  **********************/
 #define USBH_EHCI_INSNREG03_BRK_MEM_TRANS_Pos       (0U)
-#define USBH_EHCI_INSNREG03_BRK_MEM_TRANS_Msk       (0x1U << USBH_EHCI_INSNREG03_BRK_MEM_TRANS_Pos)            /*!< 0x00000001 */
+#define USBH_EHCI_INSNREG03_BRK_MEM_TRANS_Msk       (0x1UL << USBH_EHCI_INSNREG03_BRK_MEM_TRANS_Pos)            /*!< 0x00000001 */
 #define USBH_EHCI_INSNREG03_BRK_MEM_TRANS           USBH_EHCI_INSNREG03_BRK_MEM_TRANS_Msk                      /*!< Break memory transfer */
 
 #define USBH_EHCI_INSNREG03_TIME_AVAIL_OFF_Pos      (1U)
-#define USBH_EHCI_INSNREG03_TIME_AVAIL_OFF_Msk      (0xFFU << USBH_EHCI_INSNREG03_TIME_AVAIL_OFF_Pos)          /*!< 0x000001FE */
+#define USBH_EHCI_INSNREG03_TIME_AVAIL_OFF_Msk      (0xFFUL << USBH_EHCI_INSNREG03_TIME_AVAIL_OFF_Pos)          /*!< 0x000001FE */
 #define USBH_EHCI_INSNREG03_TIME_AVAIL_OFF          USBH_EHCI_INSNREG03_TIME_AVAIL_OFF_Msk                     /*!< Time available offset */
 
 #define USBH_EHCI_INSNREG03_FRM_LST_FETCH_Pos       (9U)
-#define USBH_EHCI_INSNREG03_FRM_LST_FETCH_Msk       (0x1U << USBH_EHCI_INSNREG03_FRM_LST_FETCH_Pos)            /*!< 0x00000200 */
+#define USBH_EHCI_INSNREG03_FRM_LST_FETCH_Msk       (0x1UL << USBH_EHCI_INSNREG03_FRM_LST_FETCH_Pos)            /*!< 0x00000200 */
 #define USBH_EHCI_INSNREG03_FRM_LST_FETCH           USBH_EHCI_INSNREG03_FRM_LST_FETCH_Msk                      /*!< Setting this bit will force the host controller to fetch the periodic frame list in every microfram */
 
 #define USBH_EHCI_INSNREG03_TX_TRA_DELAY_Pos        (10U)
-#define USBH_EHCI_INSNREG03_TX_TRA_DELAY_Msk        (0x7U << USBH_EHCI_INSNREG03_TX_TRA_DELAY_Pos)             /*!< 0x00001C00 */
+#define USBH_EHCI_INSNREG03_TX_TRA_DELAY_Msk        (0x7UL << USBH_EHCI_INSNREG03_TX_TRA_DELAY_Pos)             /*!< 0x00001C00 */
 #define USBH_EHCI_INSNREG03_TX_TRA_DELAY            USBH_EHCI_INSNREG03_TX_TRA_DELAY_Msk                       /*!< Tx-Tx turnaround delay add on */
 
 #define USBH_EHCI_INSNREG03_TESTSE_NAK_Pos          (13U)
-#define USBH_EHCI_INSNREG03_TESTSE_NAK_Msk          (0x1U << USBH_EHCI_INSNREG03_TESTSE_NAK_Pos)               /*!< 0x00002000 */
+#define USBH_EHCI_INSNREG03_TESTSE_NAK_Msk          (0x1UL << USBH_EHCI_INSNREG03_TESTSE_NAK_Pos)               /*!< 0x00002000 */
 #define USBH_EHCI_INSNREG03_TESTSE_NAK              USBH_EHCI_INSNREG03_TESTSE_NAK_Msk                         /*!< TestSE NAK */
 
 #define USBH_EHCI_INSNREG03_EN_CLK256_CHECK_Pos     (14U)
-#define USBH_EHCI_INSNREG03_EN_CLK256_CHECK_Msk     (0x1U << USBH_EHCI_INSNREG03_EN_CLK256_CHECK_Pos)          /*!< 0x00004000 */
+#define USBH_EHCI_INSNREG03_EN_CLK256_CHECK_Msk     (0x1UL << USBH_EHCI_INSNREG03_EN_CLK256_CHECK_Pos)          /*!< 0x00004000 */
 #define USBH_EHCI_INSNREG03_EN_CLK256_CHECK         USBH_EHCI_INSNREG03_EN_CLK256_CHECK_Msk                    /*!< Enable 256 clock checking */
 
 #define USBH_EHCI_INSNREG03_ENABLE_LS_GLITCH_Pos    (16U)
-#define USBH_EHCI_INSNREG03_ENABLE_LS_GLITCH_Msk    (0x1U << USBH_EHCI_INSNREG03_ENABLE_LS_GLITCH_Pos)         /*!< 0x00010000 */
+#define USBH_EHCI_INSNREG03_ENABLE_LS_GLITCH_Msk    (0x1UL << USBH_EHCI_INSNREG03_ENABLE_LS_GLITCH_Pos)         /*!< 0x00010000 */
 #define USBH_EHCI_INSNREG03_ENABLE_LS_GLITCH        USBH_EHCI_INSNREG03_ENABLE_LS_GLITCH_Msk                   /*!< Enable/disable enhancement for line state glitch */
 
 /********************  Bit definition for USBH_EHCI_INSNREG04 register  **********************/
 #define USBH_EHCI_INSNREG04_HCSPARAMS_WRT_Pos       (0U)
-#define USBH_EHCI_INSNREG04_HCSPARAMS_WRT_Msk       (0x1U << USBH_EHCI_INSNREG04_HCSPARAMS_WRT_Pos)            /*!< 0x00000001 */
+#define USBH_EHCI_INSNREG04_HCSPARAMS_WRT_Msk       (0x1UL << USBH_EHCI_INSNREG04_HCSPARAMS_WRT_Pos)            /*!< 0x00000001 */
 #define USBH_EHCI_INSNREG04_HCSPARAMS_WRT           USBH_EHCI_INSNREG04_HCSPARAMS_WRT_Msk                      /*!< Bit 0 */
 
 #define USBH_EHCI_INSNREG04_HCCPARAMS_WRT_Pos       (1U)
-#define USBH_EHCI_INSNREG04_HCCPARAMS_WRT_Msk       (0x1U << USBH_EHCI_INSNREG04_HCCPARAMS_WRT_Pos)            /*!< 0x00000002 */
+#define USBH_EHCI_INSNREG04_HCCPARAMS_WRT_Msk       (0x1UL << USBH_EHCI_INSNREG04_HCCPARAMS_WRT_Pos)            /*!< 0x00000002 */
 #define USBH_EHCI_INSNREG04_HCCPARAMS_WRT           USBH_EHCI_INSNREG04_HCCPARAMS_WRT_Msk                      /*!< When this bit is 1, the USBH_EHCI_HCSPARAMS register becomes writable */
 
 #define USBH_EHCI_INSNREG04_ASYNC_PIPELINE_DIS_Pos  (3U)
-#define USBH_EHCI_INSNREG04_ASYNC_PIPELINE_DIS_Msk  (0x1U << USBH_EHCI_INSNREG04_ASYNC_PIPELINE_DIS_Pos)       /*!< 0x00000008 */
+#define USBH_EHCI_INSNREG04_ASYNC_PIPELINE_DIS_Msk  (0x1UL << USBH_EHCI_INSNREG04_ASYNC_PIPELINE_DIS_Pos)       /*!< 0x00000008 */
 #define USBH_EHCI_INSNREG04_ASYNC_PIPELINE_DIS      USBH_EHCI_INSNREG04_ASYNC_PIPELINE_DIS_Msk                 /*!< When this bit is 1, the USBH_EHCI_HCCPARAMS register bits 17, 15:4, and 2:0 become writable */
 
 #define USBH_EHCI_INSNREG04_SUSPEND_SIGNAL_Pos      (5U)
-#define USBH_EHCI_INSNREG04_SUSPEND_SIGNAL_Msk      (0x1U << USBH_EHCI_INSNREG04_SUSPEND_SIGNAL_Pos)           /*!< 0x00000020 */
+#define USBH_EHCI_INSNREG04_SUSPEND_SIGNAL_Msk      (0x1UL << USBH_EHCI_INSNREG04_SUSPEND_SIGNAL_Pos)           /*!< 0x00000020 */
 #define USBH_EHCI_INSNREG04_SUSPEND_SIGNAL          USBH_EHCI_INSNREG04_SUSPEND_SIGNAL_Msk                     /*!< Suspend signal */
 
 /********************  Bit definition for USBH_EHCI_INSNREG05 register  **********************/
 #define USBH_EHCI_INSNREG05_VSTATUS_Pos             (0U)
-#define USBH_EHCI_INSNREG05_VSTATUS_Msk             (0xFFU << USBH_EHCI_INSNREG05_VSTATUS_Pos)                 /*!< 0x000000FF */
+#define USBH_EHCI_INSNREG05_VSTATUS_Msk             (0xFFUL << USBH_EHCI_INSNREG05_VSTATUS_Pos)                 /*!< 0x000000FF */
 #define USBH_EHCI_INSNREG05_VSTATUS                 USBH_EHCI_INSNREG05_VSTATUS_Msk                            /*!< UTMI VStatus (vendor status) */
 
 #define USBH_EHCI_INSNREG05_VCONTROL_Pos            (8U)
-#define USBH_EHCI_INSNREG05_VCONTROL_Msk            (0xFU << USBH_EHCI_INSNREG05_VCONTROL_Pos)                 /*!< 0x00000F00 */
+#define USBH_EHCI_INSNREG05_VCONTROL_Msk            (0xFUL << USBH_EHCI_INSNREG05_VCONTROL_Pos)                 /*!< 0x00000F00 */
 #define USBH_EHCI_INSNREG05_VCONTROL                USBH_EHCI_INSNREG05_VCONTROL_Msk                           /*!< UTMI VCONTROL (vendor control) */
 
 #define USBH_EHCI_INSNREG05_VCONTROL_LDM_Pos        (12U)
-#define USBH_EHCI_INSNREG05_VCONTROL_LDM_Msk        (0x1U << USBH_EHCI_INSNREG05_VCONTROL_LDM_Pos)             /*!< 0x00001000 */
+#define USBH_EHCI_INSNREG05_VCONTROL_LDM_Msk        (0x1UL << USBH_EHCI_INSNREG05_VCONTROL_LDM_Pos)             /*!< 0x00001000 */
 #define USBH_EHCI_INSNREG05_VCONTROL_LDM            USBH_EHCI_INSNREG05_VCONTROL_LDM_Msk                       /*!< UTMI VCONTROLLoad (vendor control load) */
 
 #define USBH_EHCI_INSNREG05_VPORT_Pos               (13U)
-#define USBH_EHCI_INSNREG05_VPORT_Msk               (0xFU << USBH_EHCI_INSNREG05_VPORT_Pos)                    /*!< 0x0001E000 */
+#define USBH_EHCI_INSNREG05_VPORT_Msk               (0xFUL << USBH_EHCI_INSNREG05_VPORT_Pos)                    /*!< 0x0001E000 */
 #define USBH_EHCI_INSNREG05_VPORT                   USBH_EHCI_INSNREG05_VPORT_Msk                              /*!< UTMI VPORT */
 
 #define USBH_EHCI_INSNREG05_VBUSY_Pos               (17U)
-#define USBH_EHCI_INSNREG05_VBUSY_Msk               (0x1U << USBH_EHCI_INSNREG05_VBUSY_Pos)                    /*!< 0x00020000 */
+#define USBH_EHCI_INSNREG05_VBUSY_Msk               (0x1UL << USBH_EHCI_INSNREG05_VBUSY_Pos)                    /*!< 0x00020000 */
 #define USBH_EHCI_INSNREG05_VBUSY                   USBH_EHCI_INSNREG05_VBUSY_Msk                              /*!< UTMI VBUSY */
 
 /********************  Bit definition for USBH_EHCI_INSNREG06 register  **********************/
 #define USBH_EHCI_INSNREG06_SUC_BEATS_Pos           (0U)
-#define USBH_EHCI_INSNREG06_SUC_BEATS_Msk           (0xFU << USBH_EHCI_INSNREG06_SUC_BEATS_Pos)                /*!< 0x0000000F */
+#define USBH_EHCI_INSNREG06_SUC_BEATS_Msk           (0xFUL << USBH_EHCI_INSNREG06_SUC_BEATS_Pos)                /*!< 0x0000000F */
 #define USBH_EHCI_INSNREG06_SUC_BEATS               USBH_EHCI_INSNREG06_SUC_BEATS_Msk                          /*!< Number of successful beats */
 
 #define USBH_EHCI_INSNREG06_EXP_BEATS_Pos           (4U)
-#define USBH_EHCI_INSNREG06_EXP_BEATS_Msk           (0x1FU << USBH_EHCI_INSNREG06_EXP_BEATS_Pos)               /*!< 0x000001F0 */
+#define USBH_EHCI_INSNREG06_EXP_BEATS_Msk           (0x1FUL << USBH_EHCI_INSNREG06_EXP_BEATS_Pos)               /*!< 0x000001F0 */
 #define USBH_EHCI_INSNREG06_EXP_BEATS               USBH_EHCI_INSNREG06_EXP_BEATS_Msk                          /*!< Number of expected beats */
 
 #define USBH_EHCI_INSNREG06_HBURST_Pos              (9U)
-#define USBH_EHCI_INSNREG06_HBURST_Msk              (0x7U << USBH_EHCI_INSNREG06_HBURST_Pos)                   /*!< 0x00000E00 */
+#define USBH_EHCI_INSNREG06_HBURST_Msk              (0x7UL << USBH_EHCI_INSNREG06_HBURST_Pos)                   /*!< 0x00000E00 */
 #define USBH_EHCI_INSNREG06_HBURST                  USBH_EHCI_INSNREG06_HBURST_Msk                             /*!< HBURST value of the control phase at which the AHB error occurred */
 
 #define USBH_EHCI_INSNREG06_AHB_ECAP_Pos            (31U)
-#define USBH_EHCI_INSNREG06_AHB_ECAP_Msk            (0x1U << USBH_EHCI_INSNREG06_AHB_ECAP_Pos)                 /*!< 0x80000000 */
+#define USBH_EHCI_INSNREG06_AHB_ECAP_Msk            (0x1UL << USBH_EHCI_INSNREG06_AHB_ECAP_Pos)                 /*!< 0x80000000 */
 #define USBH_EHCI_INSNREG06_AHB_ECAP                USBH_EHCI_INSNREG06_AHB_ECAP_Msk                           /*!< AHB error captured */
 
 /********************  Bit definition for USBH_EHCI_INSNREG07 register  **********************/
 #define USBH_EHCI_INSNREG07_AHB_MST_ERR_Pos          (0U)
-#define USBH_EHCI_INSNREG07_AHB_MST_ERR_Msk          (0xFFFFFFFFU << USBH_EHCI_INSNREG07_AHB_MST_ERR_Pos)      /*!< 0xFFFFFFFF */
+#define USBH_EHCI_INSNREG07_AHB_MST_ERR_Msk          (0xFFFFFFFFUL << USBH_EHCI_INSNREG07_AHB_MST_ERR_Pos)      /*!< 0xFFFFFFFF */
 #define USBH_EHCI_INSNREG07_AHB_MST_ERR              USBH_EHCI_INSNREG07_AHB_MST_ERR_Msk                       /*!< AHB master error address */
 
 /******************************************************************************/

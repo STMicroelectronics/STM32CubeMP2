@@ -78,9 +78,11 @@ extern "C" {
 /* USER CODE BEGIN EFP */
 
 void Error_Handler(void);
+extern IPCC_HandleTypeDef hipcc1;
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
+#define DEFAULT_IRQ_PRIO      1U
 /* USER CODE BEGIN Private defines */
 
 /* USER CODE END Private defines */

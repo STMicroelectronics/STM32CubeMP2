@@ -137,8 +137,8 @@ extern "C" {
 /** @defgroup CORTEX_LL_MPU_Region_Enable CORTEX LL MPU Region Enable
   * @{
   */
-#define LL_MPU_REGION_ENABLE               1U
-#define LL_MPU_REGION_DISABLE              0U
+#define LL_MPU_REGION_ENABLE               1U /*!< Enable region */
+#define LL_MPU_REGION_DISABLE              0U /*!< Disable region */
 /**
   * @}
   */
@@ -148,8 +148,8 @@ extern "C" {
   */
 /* Register MPU_RBAR (Cortex-M33) : bit 0 */
 #if defined(CORE_CM33)
-#define LL_MPU_INSTRUCTION_ACCESS_ENABLE   (0U << MPU_RBAR_XN_Pos)
-#define LL_MPU_INSTRUCTION_ACCESS_DISABLE  (1U << MPU_RBAR_XN_Pos)
+#define LL_MPU_INSTRUCTION_ACCESS_ENABLE   (0U << MPU_RBAR_XN_Pos) /*!< Execute attribute */
+#define LL_MPU_INSTRUCTION_ACCESS_DISABLE  (1U << MPU_RBAR_XN_Pos) /*!< Execute never attribute */
 /* Register MPU_RASR (Cortex-M0+) : bit 28 */
 #else /* defined(CORE_CM33) */
 #define LL_MPU_INSTRUCTION_ACCESS_ENABLE   0x00U            /*!< Instruction fetches enabled */
@@ -164,9 +164,9 @@ extern "C" {
   */
 /* Register MPU_RBAR (Cortex-M33) : bits [4:3] */
 #if defined(CORE_CM33)
-#define LL_MPU_ACCESS_NOT_SHAREABLE        (0U << MPU_RBAR_SH_Pos)
-#define LL_MPU_ACCESS_OUTER_SHAREABLE      (2U << MPU_RBAR_SH_Pos)
-#define LL_MPU_ACCESS_INNER_SHAREABLE      (3U << MPU_RBAR_SH_Pos)
+#define LL_MPU_ACCESS_NOT_SHAREABLE        (0U << MPU_RBAR_SH_Pos) /*!< Not shareable attribute */
+#define LL_MPU_ACCESS_OUTER_SHAREABLE      (2U << MPU_RBAR_SH_Pos) /*!< Outer shareable attribute */
+#define LL_MPU_ACCESS_INNER_SHAREABLE      (3U << MPU_RBAR_SH_Pos) /*!< Inner shareable attribute */
 /* Register MPU_RASR (Cortex-M0+) : bit 18 */
 #else /* defined(CORE_CM33) */
 #define LL_MPU_ACCESS_SHAREABLE            MPU_RASR_S_Msk   /*!< Shareable memory attribute */
@@ -181,10 +181,10 @@ extern "C" {
   */
 /* Register MPU_RBAR (Cortex-M33) : bits [2:1] */
 #if defined(CORE_CM33)
-#define LL_MPU_REGION_PRIV_RW              (0U << MPU_RBAR_AP_Pos)
-#define LL_MPU_REGION_ALL_RW               (1U << MPU_RBAR_AP_Pos)
-#define LL_MPU_REGION_PRIV_RO              (2U << MPU_RBAR_AP_Pos)
-#define LL_MPU_REGION_ALL_RO               (3U << MPU_RBAR_AP_Pos)
+#define LL_MPU_REGION_PRIV_RW              (0U << MPU_RBAR_AP_Pos) /*!< Read/write privileged-only attribute */
+#define LL_MPU_REGION_ALL_RW               (1U << MPU_RBAR_AP_Pos) /*!< Read/write privileged/unprivileged attribute */
+#define LL_MPU_REGION_PRIV_RO              (2U << MPU_RBAR_AP_Pos) /*!< Read-only privileged-only attribute */
+#define LL_MPU_REGION_ALL_RO               (3U << MPU_RBAR_AP_Pos) /*!< Read-only privileged/unprivileged attribute */
 /* Register MPU_RASR (Cortex-M0+) : bits [26:24] */
 #else /* defined(CORE_CM33) */
 #define LL_MPU_REGION_NO_ACCESS            (0x00U << MPU_RASR_AP_Pos) /*!< No access*/
@@ -303,19 +303,25 @@ extern "C" {
   * @{
   */
 /* Registers MPU_MAIR0/MPU_MAIR1 (Cortex-M33) : MAIR_ATTR bits [7:0] */
+/* Device memory attributes */
 /* - bits [3:2] (bits [7:4] = 0b0000 - bits [1:0] = 0b00) */
 #define  LL_MPU_DEVICE_NGNRNE          0x00U  /* Device, noGather, noReorder, noEarly acknowledge. */
 #define  LL_MPU_DEVICE_NGNRE           0x04U  /* Device, noGather, noReorder, Early acknowledge.   */
 #define  LL_MPU_DEVICE_NGRE            0x08U  /* Device, noGather, Reorder, Early acknowledge.     */
 #define  LL_MPU_DEVICE_GRE             0x0CU  /* Device, Gather, Reorder, Early acknowledge.       */
+/* Normal Memory attributes */
+/* Non-cacheable memory attribute */
 /* - bits [7:6] / bits [3:2] */
 #define  LL_MPU_NOT_CACHEABLE          0x4U  /* Normal memory, non-cacheable. */
+/* Cacheable memory attributes: combination of cache write policy, transient and allocation */
 /* - bit 6 / bit 2 */
 #define  LL_MPU_WRITE_THROUGH          0x0U  /* Normal memory, write-through. */
 #define  LL_MPU_WRITE_BACK             0x4U  /* Normal memory, write-back.    */
+/* - transient mode attribute */
 /* - bit 7 / bit 3 */
 #define  LL_MPU_TRANSIENT              0x0U  /* Normal memory, transient.     */
 #define  LL_MPU_NON_TRANSIENT          0x8U  /* Normal memory, non-transient. */
+/* - allocation attribute */
 /* - bits [5:4] / bits [1:0] */
 #define  LL_MPU_NO_ALLOCATE            0x0U  /* Normal memory, no allocate.         */
 #define  LL_MPU_W_ALLOCATE             0x1U  /* Normal memory, write allocate.      */

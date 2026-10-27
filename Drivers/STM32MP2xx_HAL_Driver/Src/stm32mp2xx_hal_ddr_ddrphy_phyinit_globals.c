@@ -15,15 +15,15 @@
 #include "stm32mp2xx_hal_ddr_ddrphy_phyinit.h"
 
 /* Global struct defines */
-bool retention_enable;      /*
-                             * Retention Enable input parameter, instructs phyinit to issue
-                             * register reads during initialization to retention registers.
-                             */
+
+/*
+ * Retention Enable input parameter, instructs phyinit to issue
+ * register reads during initialization to retention registers.
+ */
+bool retention_enable = false;
 
 user_input_basic_t userinputbasic;
 user_input_advanced_t userinputadvanced;
-user_input_mode_register_t userinputmoderegister;
-user_input_swizzle_t userinputswizzle;
 
 /* Firmware 1D Message Block structures */
 pmu_smb_ddr_1d_t mb_ddr_1d[NB_PS];

@@ -120,6 +120,27 @@ a lot of data that needs to be copied, this should be set high. */
  */
 #define LWIP_NETIF_LINK_CALLBACK        1
 
+/* Optional single-board loopback self-test: set to 1 to enable an
+   additional UDP echo server and client thread that exercise the LwIP
+   stack on this single board, without requiring a second board or PC. Disabled
+   by default. */
+#define LOOPBACK_TEST_ENABLE             0
+
+/* LWIP_NETIF_LOOPBACK==1: Support sending packets with a destination IP
+   address equal to the netif's own IP address. Required when the optional
+   loopback self-test above (LOOPBACK_TEST_ENABLE) is enabled. */
+#define LWIP_NETIF_LOOPBACK             LOOPBACK_TEST_ENABLE
+
+#if LWIP_NETIF_LOOPBACK
+/* LWIP_LOOPBACK_MAX_PKTS: maximum number of pbufs queued on the loopback
+   traffic while waiting to be processed by netif_poll(). */
+#define LWIP_LOOPBACK_MAX_PKTS          4
+
+/* Give the loopback self-test sockets a receive timeout so they cannot
+   block forever if a reply is unexpectedly not received. */
+#define LWIP_SO_RCVTIMEO                1
+#endif
+
 /*
    --------------------------------------
    ---------- Checksum options ----------

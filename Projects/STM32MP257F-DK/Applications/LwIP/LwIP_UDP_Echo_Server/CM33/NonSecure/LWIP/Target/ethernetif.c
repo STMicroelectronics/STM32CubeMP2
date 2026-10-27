@@ -27,6 +27,10 @@
 #include <string.h>
 
 /* Private typedef -----------------------------------------------------------*/
+#if defined(INSTRUCTION_CACHE_ENABLE) && (INSTRUCTION_CACHE_ENABLE == 1U)
+extern DCACHE_HandleTypeDef hdcache;
+#endif
+
 /* Private define ------------------------------------------------------------*/
 /* Network interface name */
 #define IFNAME0 's'
@@ -90,6 +94,8 @@ ETH_TxPacketConfigTypeDef TxConfig;
 
 extern struct netif gnetif;
 
+uint8_t RxCplFlag = 0;
+uint8_t TxCplFlag = 0;
 /* Private function prototypes -----------------------------------------------*/
 u32_t sys_now(void);
 
@@ -121,28 +127,6 @@ void pbuf_free_custom(struct pbuf *p);
   */
 static void low_level_init(struct netif *netif)
 {
-  /* Start ETH HAL Init */
-#if 0  // done in main.c MX_ETH_Init()
-  uint8_t macaddress[6]= {ETH_MAC_ADDR0, ETH_MAC_ADDR1, ETH_MAC_ADDR2, ETH_MAC_ADDR3, ETH_MAC_ADDR4, ETH_MAC_ADDR5};
-
-  heth.Instance = ETH;
-  heth.Init.MACAddr = macaddress;
-  heth.Init.MediaInterface = HAL_ETH_RMII_MODE;
-  heth.Init.RxDesc = DMARxDscrTab;
-  heth.Init.TxDesc = DMATxDscrTab;
-  heth.Init.RxBuffLen = ETH_RX_BUFFER_SIZE;
-
-  /* configure ethernet peripheral (GPIOs, clocks, MAC, DMA) */
-  HAL_ETH_Init(&heth);
-
-  /* Set Tx packet config common parameters */
-  memset(&TxConfig, 0 , sizeof(ETH_TxPacketConfig_t));
-  TxConfig.Attributes = ETH_TX_PACKETS_FEATURES_CSUM | ETH_TX_PACKETS_FEATURES_CRCPAD;
-  TxConfig.ChecksumCtrl = ETH_CHECKSUM_IPHDR_PAYLOAD_INSERT_PHDR_CALC;
-  TxConfig.CRCPadCtrl = ETH_CRC_PAD_INSERT;
-
-#endif
-  /* End ETH HAL Init */
 
   /* set MAC hardware address length */
   netif->hwaddr_len = ETH_HWADDR_LEN;
@@ -225,8 +209,11 @@ static err_t low_level_output(struct netif *netif, struct pbuf *p)
 	TxConfig.TxBuffer = Txbuffer;
 	TxConfig.pData = p;
 
-  HAL_ETH_Transmit_IT(&heth, &TxConfig);
+	pbuf_ref(p);
+    HAL_ETH_Transmit_IT(&heth, &TxConfig);
+	while(!TxCplFlag);
 
+    HAL_ETH_ReleaseTxPacket(&heth);
 	return errval;
 }
 
@@ -262,17 +249,21 @@ static struct pbuf * low_level_input(struct netif *netif)
 void ethernetif_input(struct netif *netif)
 {
   struct pbuf *p = NULL;
-    do
-    {
-      p = low_level_input( netif );
-      if (p != NULL)
-      {
-        if (netif->input( p, netif) != ERR_OK )
-        {
-          pbuf_free(p);
-        }
-      }
-    } while(p!=NULL);
+  if(RxCplFlag)
+  {
+	RxCplFlag = 0;
+	do
+	{
+	  p = low_level_input( netif );
+	  if (p != NULL)
+	  {
+	    if (netif->input( p, netif) != ERR_OK )
+	    {
+	      pbuf_free(p);
+	    }
+	  }
+	} while(p!=NULL);
+  }
 }
 
 /**
@@ -558,10 +549,10 @@ void HAL_ETH_RxLinkCallback(void **pStart, void **pEnd, uint8_t *buff, uint16_t 
     p->tot_len += Length;
   }
 
+#if defined(INSTRUCTION_CACHE_ENABLE) && (INSTRUCTION_CACHE_ENABLE == 1U)
   /* Invalidate data cache because Rx DMA's writing to physical memory makes it stale. */
-//  SCB_InvalidateDCache_by_Addr((uint32_t *)buff, Length);
-
-/* USER CODE END HAL ETH RxLinkCallback */
+  HAL_DCACHE_InvalidateByAddr(&hdcache,(uint32_t *)buff, Length);
+#endif
 }
 
 void HAL_ETH_TxFreeCallback(uint32_t * buff)
@@ -573,3 +564,26 @@ void HAL_ETH_TxFreeCallback(uint32_t * buff)
 /* USER CODE END HAL ETH TxFreeCallback */
 }
 
+/**
+  * @brief  Rx Transfer completed callbacks.
+  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+  *         the configuration information for ETHERNET module
+  * @retval None
+  */
+void HAL_ETH_RxCpltCallback(ETH_HandleTypeDef *heth)
+{
+    /* Receive Complete Flag is set on receiving the packet */
+	RxCplFlag=1;
+}
+
+/**
+  * @brief  Tx Transfer completed callbacks.
+  * @param  heth: pointer to a ETH_HandleTypeDef structure that contains
+  *         the configuration information for ETHERNET module
+  * @retval None
+  */
+void HAL_ETH_TxCpltCallback(ETH_HandleTypeDef *heth)
+{
+    /* Transmission Complete Flag is set on receiving the packet */
+	TxCplFlag=1;
+}

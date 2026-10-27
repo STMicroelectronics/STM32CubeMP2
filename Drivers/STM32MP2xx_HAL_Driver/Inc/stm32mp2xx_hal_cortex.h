@@ -185,10 +185,10 @@ typedef struct
 /** @defgroup CORTEX_MPU_HFNMI_PRIVDEF_Control CORTEX MPU HFNMI and PRIVILEGED Access control
   * @{
   */
-#define  MPU_HFNMI_PRIVDEF_NONE           0x00000000U
-#define  MPU_HARDFAULT_NMI                (MPU_CTRL_HFNMIENA_Msk)
-#define  MPU_PRIVILEGED_DEFAULT           (MPU_CTRL_PRIVDEFENA_Msk)
-#define  MPU_HFNMI_PRIVDEF                (MPU_CTRL_HFNMIENA_Msk | MPU_CTRL_PRIVDEFENA_Msk)
+#define  MPU_HFNMI_PRIVDEF_NONE           0x00000000U /*!< Background region access not allowed, MPU disabled for Hardfaults, NMIs, and exception handlers when FAULTMASK=1 */
+#define  MPU_HARDFAULT_NMI                (MPU_CTRL_HFNMIENA_Msk) /*!< Background region access not allowed, MPU enabled for Hardfaults, NMIs, and exception handlers when FAULTMASK=1 */
+#define  MPU_PRIVILEGED_DEFAULT           (MPU_CTRL_PRIVDEFENA_Msk) /*!< Background region privileged-only access allowed, MPU disabled for Hardfaults, NMIs, and exception handlers when FAULTMASK=1 */
+#define  MPU_HFNMI_PRIVDEF                (MPU_CTRL_HFNMIENA_Msk | MPU_CTRL_PRIVDEFENA_Msk) /*!< Background region privileged-only access allowed, MPU enabled for Hardfaults, NMIs, and exception handlers when FAULTMASK=1 */
 /**
   * @}
   */
@@ -196,8 +196,8 @@ typedef struct
 /** @defgroup CORTEX_MPU_Region_Enable CORTEX MPU Region Enable
   * @{
   */
-#define  MPU_REGION_ENABLE     ((uint8_t)0x01)
-#define  MPU_REGION_DISABLE    ((uint8_t)0x00)
+#define  MPU_REGION_ENABLE     ((uint8_t)0x01) /*!< Enable region */
+#define  MPU_REGION_DISABLE    ((uint8_t)0x00) /*!< Disable region */
 /**
   * @}
   */
@@ -205,8 +205,8 @@ typedef struct
 /** @defgroup CORTEX_MPU_Instruction_Access CORTEX MPU Instruction Access
   * @{
   */
-#define  MPU_INSTRUCTION_ACCESS_ENABLE      ((uint8_t)0x00)
-#define  MPU_INSTRUCTION_ACCESS_DISABLE     ((uint8_t)0x01)
+#define  MPU_INSTRUCTION_ACCESS_ENABLE      ((uint8_t)0x00) /*!< Execute attribute */
+#define  MPU_INSTRUCTION_ACCESS_DISABLE     ((uint8_t)0x01) /*!< Execute never attribute */
 /**
   * @}
   */
@@ -214,23 +214,23 @@ typedef struct
 /** @defgroup CORTEX_MPU_Region_Number CORTEX MPU Region Number
   * @{
   */
-#define  MPU_REGION_NUMBER0    ((uint8_t)0x00)
-#define  MPU_REGION_NUMBER1    ((uint8_t)0x01)
-#define  MPU_REGION_NUMBER2    ((uint8_t)0x02)
-#define  MPU_REGION_NUMBER3    ((uint8_t)0x03)
-#define  MPU_REGION_NUMBER4    ((uint8_t)0x04)
-#define  MPU_REGION_NUMBER5    ((uint8_t)0x05)
-#define  MPU_REGION_NUMBER6    ((uint8_t)0x06)
-#define  MPU_REGION_NUMBER7    ((uint8_t)0x07)
+#define  MPU_REGION_NUMBER0    ((uint8_t)0x00) /*!< Region Index 0 */
+#define  MPU_REGION_NUMBER1    ((uint8_t)0x01) /*!< Region Index 1 */
+#define  MPU_REGION_NUMBER2    ((uint8_t)0x02) /*!< Region Index 2 */
+#define  MPU_REGION_NUMBER3    ((uint8_t)0x03) /*!< Region Index 3 */
+#define  MPU_REGION_NUMBER4    ((uint8_t)0x04) /*!< Region Index 4 */
+#define  MPU_REGION_NUMBER5    ((uint8_t)0x05) /*!< Region Index 5 */
+#define  MPU_REGION_NUMBER6    ((uint8_t)0x06) /*!< Region Index 6 */
+#define  MPU_REGION_NUMBER7    ((uint8_t)0x07) /*!< Region Index 7 */
 #ifdef CORE_CM33
-#define  MPU_REGION_NUMBER8    ((uint8_t)0x08)
-#define  MPU_REGION_NUMBER9    ((uint8_t)0x09)
-#define  MPU_REGION_NUMBER10   ((uint8_t)0x0A)
-#define  MPU_REGION_NUMBER11   ((uint8_t)0x0B)
-#define  MPU_REGION_NUMBER12   ((uint8_t)0x0C)
-#define  MPU_REGION_NUMBER13   ((uint8_t)0x0D)
-#define  MPU_REGION_NUMBER14   ((uint8_t)0x0E)
-#define  MPU_REGION_NUMBER15   ((uint8_t)0x0F)
+#define  MPU_REGION_NUMBER8    ((uint8_t)0x08) /*!< Region Index 8 */
+#define  MPU_REGION_NUMBER9    ((uint8_t)0x09) /*!< Region Index 9 */
+#define  MPU_REGION_NUMBER10   ((uint8_t)0x0A) /*!< Region Index 10 */
+#define  MPU_REGION_NUMBER11   ((uint8_t)0x0B) /*!< Region Index 11 */
+#define  MPU_REGION_NUMBER12   ((uint8_t)0x0C) /*!< Region Index 12 */
+#define  MPU_REGION_NUMBER13   ((uint8_t)0x0D) /*!< Region Index 13 */
+#define  MPU_REGION_NUMBER14   ((uint8_t)0x0E) /*!< Region Index 14 */
+#define  MPU_REGION_NUMBER15   ((uint8_t)0x0F) /*!< Region Index 15 */
 #endif /* CORE_CM33 */
 /**
   * @}
@@ -241,8 +241,8 @@ typedef struct
 /** @defgroup CORTEX_MPU_Access_Shareable CORTEX MPU Instruction Access Shareable
   * @{
   */
-#define  MPU_ACCESS_NOT_SHAREABLE    ((uint8_t)0x00)
-#define  MPU_ACCESS_SHAREABLE        ((uint8_t)0x01)
+#define  MPU_ACCESS_NOT_SHAREABLE    ((uint8_t)0x00) /*!< Not shareable attribute */
+#define  MPU_ACCESS_SHAREABLE        ((uint8_t)0x01) /*!< Shareable memory attribute */
 /**
   * @}
   */
@@ -250,8 +250,8 @@ typedef struct
 /** @defgroup CORTEX_MPU_Access_Cacheable CORTEX MPU Instruction Access Cacheable
   * @{
   */
-#define  MPU_ACCESS_NOT_CACHEABLE     ((uint8_t)0x00)
-#define  MPU_ACCESS_CACHEABLE         ((uint8_t)0x01)
+#define  MPU_ACCESS_NOT_CACHEABLE     ((uint8_t)0x00) /*!< Not Cacheable memory attribute */
+#define  MPU_ACCESS_CACHEABLE         ((uint8_t)0x01) /*!< Cacheable memory attribute */
 /**
   * @}
   */
@@ -259,8 +259,8 @@ typedef struct
 /** @defgroup CORTEX_MPU_Access_Bufferable CORTEX MPU Instruction Access Bufferable
   * @{
   */
-#define  MPU_ACCESS_NOT_BUFFERABLE     ((uint8_t)0x00)
-#define  MPU_ACCESS_BUFFERABLE         ((uint8_t)0x01)
+#define  MPU_ACCESS_NOT_BUFFERABLE     ((uint8_t)0x00) /*!< Not Bufferable memory attribute */
+#define  MPU_ACCESS_BUFFERABLE         ((uint8_t)0x01) /*!< Bufferable memory attribute */
 /**
   * @}
   */
@@ -281,31 +281,31 @@ typedef struct
 /* WARNING ! Only values in range [7;31] are allowed, as specified */
 /*           by Table B3-29 ("SIZE" field) in spec. [ARM DDI0419D] */
 /*           (at page 259).                                        */
-#define   MPU_REGION_SIZE_256B     ((uint8_t)0x07)
-#define   MPU_REGION_SIZE_512B     ((uint8_t)0x08)
-#define   MPU_REGION_SIZE_1KB      ((uint8_t)0x09)
-#define   MPU_REGION_SIZE_2KB      ((uint8_t)0x0A)
-#define   MPU_REGION_SIZE_4KB      ((uint8_t)0x0B)
-#define   MPU_REGION_SIZE_8KB      ((uint8_t)0x0C)
-#define   MPU_REGION_SIZE_16KB     ((uint8_t)0x0D)
-#define   MPU_REGION_SIZE_32KB     ((uint8_t)0x0E)
-#define   MPU_REGION_SIZE_64KB     ((uint8_t)0x0F)
-#define   MPU_REGION_SIZE_128KB    ((uint8_t)0x10)
-#define   MPU_REGION_SIZE_256KB    ((uint8_t)0x11)
-#define   MPU_REGION_SIZE_512KB    ((uint8_t)0x12)
-#define   MPU_REGION_SIZE_1MB      ((uint8_t)0x13)
-#define   MPU_REGION_SIZE_2MB      ((uint8_t)0x14)
-#define   MPU_REGION_SIZE_4MB      ((uint8_t)0x15)
-#define   MPU_REGION_SIZE_8MB      ((uint8_t)0x16)
-#define   MPU_REGION_SIZE_16MB     ((uint8_t)0x17)
-#define   MPU_REGION_SIZE_32MB     ((uint8_t)0x18)
-#define   MPU_REGION_SIZE_64MB     ((uint8_t)0x19)
-#define   MPU_REGION_SIZE_128MB    ((uint8_t)0x1A)
-#define   MPU_REGION_SIZE_256MB    ((uint8_t)0x1B)
-#define   MPU_REGION_SIZE_512MB    ((uint8_t)0x1C)
-#define   MPU_REGION_SIZE_1GB      ((uint8_t)0x1D)
-#define   MPU_REGION_SIZE_2GB      ((uint8_t)0x1E)
-#define   MPU_REGION_SIZE_4GB      ((uint8_t)0x1F)
+#define   MPU_REGION_SIZE_256B     ((uint8_t)0x07) /*!< 256B Size of the MPU protection region */
+#define   MPU_REGION_SIZE_512B     ((uint8_t)0x08) /*!< 512B Size of the MPU protection region */
+#define   MPU_REGION_SIZE_1KB      ((uint8_t)0x09) /*!< 1KB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_2KB      ((uint8_t)0x0A) /*!< 2KB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_4KB      ((uint8_t)0x0B) /*!< 4KB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_8KB      ((uint8_t)0x0C) /*!< 8KB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_16KB     ((uint8_t)0x0D) /*!< 16KB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_32KB     ((uint8_t)0x0E) /*!< 32KB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_64KB     ((uint8_t)0x0F) /*!< 64KB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_128KB    ((uint8_t)0x10) /*!< 128KB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_256KB    ((uint8_t)0x11) /*!< 256KB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_512KB    ((uint8_t)0x12) /*!< 512KB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_1MB      ((uint8_t)0x13) /*!< 1MB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_2MB      ((uint8_t)0x14) /*!< 2MB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_4MB      ((uint8_t)0x15) /*!< 4MB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_8MB      ((uint8_t)0x16) /*!< 8MB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_16MB     ((uint8_t)0x17) /*!< 16MB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_32MB     ((uint8_t)0x18) /*!< 32MB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_64MB     ((uint8_t)0x19) /*!< 64MB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_128MB    ((uint8_t)0x1A) /*!< 128MB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_256MB    ((uint8_t)0x1B) /*!< 256MB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_512MB    ((uint8_t)0x1C) /*!< 512MB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_1GB      ((uint8_t)0x1D) /*!< 1GB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_2GB      ((uint8_t)0x1E) /*!< 2GB Size of the MPU protection region */
+#define   MPU_REGION_SIZE_4GB      ((uint8_t)0x1F) /*!< 4GB Size of the MPU protection region */
 /**
   * @}
   */
@@ -313,12 +313,12 @@ typedef struct
 /** @defgroup CORTEX_MPU_Region_Permission_Attributes CORTEX MPU Region Permission Attributes
   * @{
   */
-#define  MPU_REGION_NO_ACCESS      ((uint8_t)0x00)
-#define  MPU_REGION_PRIV_RW        ((uint8_t)0x01)
-#define  MPU_REGION_PRIV_RW_URO    ((uint8_t)0x02)
-#define  MPU_REGION_FULL_ACCESS    ((uint8_t)0x03)
-#define  MPU_REGION_PRIV_RO        ((uint8_t)0x05)
-#define  MPU_REGION_PRIV_RO_URO    ((uint8_t)0x06)
+#define  MPU_REGION_NO_ACCESS      ((uint8_t)0x00) /*!< No access */
+#define  MPU_REGION_PRIV_RW        ((uint8_t)0x01) /*!< RW privileged (privileged access only) */
+#define  MPU_REGION_PRIV_RW_URO    ((uint8_t)0x02) /*!< RW privileged - RO user (Write in a user program generates a fault) */
+#define  MPU_REGION_FULL_ACCESS    ((uint8_t)0x03) /*!< RW privileged & user (Full access) */
+#define  MPU_REGION_PRIV_RO        ((uint8_t)0x05) /*!< RO privileged (privileged read only) */
+#define  MPU_REGION_PRIV_RO_URO    ((uint8_t)0x06) /*!< RO privileged & user (read only) */
 /**
   * @}
   */
@@ -328,9 +328,9 @@ typedef struct
 /** @defgroup CORTEX_MPU_Access_Shareable CORTEX MPU Instruction Access Shareable
   * @{
   */
-#define  MPU_ACCESS_NOT_SHAREABLE    ((uint8_t)0x00)
-#define  MPU_ACCESS_OUTER_SHAREABLE  ((uint8_t)0x02)
-#define  MPU_ACCESS_INNER_SHAREABLE  ((uint8_t)0x03)
+#define  MPU_ACCESS_NOT_SHAREABLE    ((uint8_t)0x00) /*!< Not shareable attribute */
+#define  MPU_ACCESS_OUTER_SHAREABLE  ((uint8_t)0x02) /*!< Outer shareable attribute */
+#define  MPU_ACCESS_INNER_SHAREABLE  ((uint8_t)0x03) /*!< Inner shareable attribute */
 /**
   * @}
   */
@@ -338,10 +338,10 @@ typedef struct
 /** @defgroup CORTEX_MPU_Region_Permission_Attributes CORTEX MPU Region Permission Attributes
   * @{
   */
-#define  MPU_REGION_PRIV_RW          ((uint8_t)0x00)
-#define  MPU_REGION_ALL_RW           ((uint8_t)0x01)
-#define  MPU_REGION_PRIV_RO          ((uint8_t)0x02)
-#define  MPU_REGION_ALL_RO           ((uint8_t)0x03)
+#define  MPU_REGION_PRIV_RW          ((uint8_t)0x00) /*!< Read/write privileged-only attribute */
+#define  MPU_REGION_ALL_RW           ((uint8_t)0x01) /*!< Read/write privileged/unprivileged attribute */
+#define  MPU_REGION_PRIV_RO          ((uint8_t)0x02) /*!< Read-only privileged-only attribute */
+#define  MPU_REGION_ALL_RO           ((uint8_t)0x03) /*!< Read-only privileged/unprivileged attribute */
 /**
   * @}
   */
@@ -349,14 +349,14 @@ typedef struct
 /** @defgroup CORTEX_MPU_Attributes_Number CORTEX MPU Memory Attributes Number
   * @{
   */
-#define  MPU_ATTRIBUTES_NUMBER0      ((uint8_t)0x00)
-#define  MPU_ATTRIBUTES_NUMBER1      ((uint8_t)0x01)
-#define  MPU_ATTRIBUTES_NUMBER2      ((uint8_t)0x02)
-#define  MPU_ATTRIBUTES_NUMBER3      ((uint8_t)0x03)
-#define  MPU_ATTRIBUTES_NUMBER4      ((uint8_t)0x04)
-#define  MPU_ATTRIBUTES_NUMBER5      ((uint8_t)0x05)
-#define  MPU_ATTRIBUTES_NUMBER6      ((uint8_t)0x06)
-#define  MPU_ATTRIBUTES_NUMBER7      ((uint8_t)0x07)
+#define  MPU_ATTRIBUTES_NUMBER0      ((uint8_t)0x00) /*!< Memory attributes index 0 */
+#define  MPU_ATTRIBUTES_NUMBER1      ((uint8_t)0x01) /*!< Memory attributes index 1 */
+#define  MPU_ATTRIBUTES_NUMBER2      ((uint8_t)0x02) /*!< Memory attributes index 2 */
+#define  MPU_ATTRIBUTES_NUMBER3      ((uint8_t)0x03) /*!< Memory attributes index 3 */
+#define  MPU_ATTRIBUTES_NUMBER4      ((uint8_t)0x04) /*!< Memory attributes index 4 */
+#define  MPU_ATTRIBUTES_NUMBER5      ((uint8_t)0x05) /*!< Memory attributes index 5 */
+#define  MPU_ATTRIBUTES_NUMBER6      ((uint8_t)0x06) /*!< Memory attributes index 6 */
+#define  MPU_ATTRIBUTES_NUMBER7      ((uint8_t)0x07) /*!< Memory attributes index 7 */
 /**
   * @}
   */
@@ -364,22 +364,32 @@ typedef struct
 /** @defgroup CORTEX_MPU_Attributes CORTEX MPU Attributes
   * @{
   */
-#define  MPU_DEVICE_NGNRNE          0x0U  /* Device, noGather, noReorder, noEarly acknowledge. */
-#define  MPU_DEVICE_NGNRE           0x4U  /* Device, noGather, noReorder, Early acknowledge.   */
-#define  MPU_DEVICE_NGRE            0x8U  /* Device, noGather, Reorder, Early acknowledge.     */
-#define  MPU_DEVICE_GRE             0xCU  /* Device, Gather, Reorder, Early acknowledge.       */
+/* Device memory attributes */
+#define  MPU_DEVICE_NGNRNE          0x0U  /*!< Device non-Gathering, non-Reordering, no Early write acknowledgement */
+#define  MPU_DEVICE_NGNRE           0x4U  /*!< Device non-Gathering, non-Reordering, Early write acknowledgement */
+#define  MPU_DEVICE_NGRE            0x8U  /*!< Device non-Gathering, Reordering, Early write acknowledgement */
+#define  MPU_DEVICE_GRE             0xCU  /*!< Device Gathering, Reordering, Early write acknowledgement */
 
-#define  MPU_WRITE_THROUGH          0x0U  /* Normal memory, write-through. */
-#define  MPU_NOT_CACHEABLE          0x4U  /* Normal memory, non-cacheable. */
-#define  MPU_WRITE_BACK             0x4U  /* Normal memory, write-back.    */
+/* Normal Memory attributes */
+/* To set with INNER_OUTER() macro for both inner/outer cache attributes */
 
-#define  MPU_TRANSIENT              0x0U  /* Normal memory, transient.     */
-#define  MPU_NON_TRANSIENT          0x8U  /* Normal memory, non-transient. */
+/* Non-cacheable memory attribute */
+#define  MPU_NOT_CACHEABLE          0x4U  /*!< Normal memory, non-cacheable. */
 
-#define  MPU_NO_ALLOCATE            0x0U  /* Normal memory, no allocate.         */
-#define  MPU_W_ALLOCATE             0x1U  /* Normal memory, write allocate.      */
-#define  MPU_R_ALLOCATE             0x2U  /* Normal memory, read allocate.       */
-#define  MPU_RW_ALLOCATE            0x3U  /* Normal memory, read/write allocate. */
+/* Cacheable memory attributes: combination of cache write policy, transient and allocation */
+/* - cache write policy */
+#define  MPU_WRITE_THROUGH          0x0U  /*!< Normal memory, write-through. */
+#define  MPU_WRITE_BACK             0x4U  /*!< Normal memory, write-back.    */
+
+/* - transient mode attribute */
+#define  MPU_TRANSIENT              0x0U  /*!< Normal memory, transient.     */
+#define  MPU_NON_TRANSIENT          0x8U  /*!< Normal memory, non-transient. */
+
+/* - allocation attribute */
+#define  MPU_NO_ALLOCATE            0x0U  /*!< Normal memory, no allocate.         */
+#define  MPU_W_ALLOCATE             0x1U  /*!< Normal memory, write allocate.      */
+#define  MPU_R_ALLOCATE             0x2U  /*!< Normal memory, read allocate.       */
+#define  MPU_RW_ALLOCATE            0x3U  /*!< Normal memory, read/write allocate. */
 
 /**
   * @}

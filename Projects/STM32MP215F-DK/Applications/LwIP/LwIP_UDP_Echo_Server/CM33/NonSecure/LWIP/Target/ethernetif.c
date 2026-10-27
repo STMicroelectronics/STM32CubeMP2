@@ -457,7 +457,6 @@ void ethernet_link_check_state(struct netif *netif)
       netif_set_link_up(netif);
     }
   }
-
 }
 
 void HAL_ETH_RxAllocateCallback(uint8_t **buff)

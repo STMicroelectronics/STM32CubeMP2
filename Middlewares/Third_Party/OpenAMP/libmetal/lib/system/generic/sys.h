@@ -17,6 +17,7 @@
 #define __METAL_GENERIC_SYS__H__
 
 #include <limits.h>
+#include <metal/cpu.h>
 #include <metal/errno.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -24,7 +25,6 @@
 #include <string.h>
 
 #include "./@PROJECT_MACHINE@/sys.h"
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -39,6 +39,8 @@ struct metal_state {
 	/** Common (system independent) data. */
 	struct metal_common_state common;
 };
+
+#define metal_yield() metal_cpu_yield()
 
 #ifdef METAL_INTERNAL
 

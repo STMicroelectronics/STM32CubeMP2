@@ -513,8 +513,8 @@ crash/recovery and/or stop/start messages).</li>
 </ul></li>
 <li><strong>Simulate a Linux crash and observe recovery</strong>
 <ul>
-<li>On the Linux console (as <code>root</code>), run:
-<code>bash  sync; sleep 2; sync; echo c &gt; /proc/sysrq-trigger</code></li>
+<li><p>On the Linux console (as <code>root</code>), run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">sync; sleep 2; sync; echo c &gt; /proc/sysrq-trigger</code></pre></div></li>
 <li>This forces a kernel crash on the A35 side. On the CM33 UART,
 RemoteProc should report crash detection and attempt recovery (for
 example: <code>Crash detected ... Attempting recovery...</code>, then a
@@ -522,7 +522,8 @@ stop/restart sequence).</li>
 </ul></li>
 <li><strong>Cold reset from Linux</strong>
 <ul>
-<li>On Linux, run: <code>bash  reboot</code></li>
+<li><p>On Linux, run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">reboot</code></pre></div></li>
 <li>A cold reset typically reboots the full platform; you should see
 TF-M/MCUboot banners again on the CM33 UART. Depending on timing, you
 may also see an SCMI notification such as
@@ -530,8 +531,9 @@ may also see an SCMI notification such as
 </ul></li>
 <li><strong>Warm reset from Linux</strong>
 <ul>
-<li>On Linux, run:
-<code>bash  echo warm &gt;&gt; /sys/kernel/reboot/mode  reboot</code></li>
+<li><p>On Linux, run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo warm &gt;&gt; /sys/kernel/reboot/mode
+reboot</code></pre></div></li>
 <li>A warm reset typically restarts the A35 while keeping CM33 running;
 on the CM33 UART you should see <code>SYS_POWER_WARM_RESET</code> and a
 RemoteProc stop/start sequence. When OpenAMP is enabled, you should also
@@ -550,35 +552,43 @@ below assume that node is <code>/dev/rpmsg2</code>.</li>
 </ul></li>
 <li><strong>Suspend policy test: STOP2</strong>
 <ul>
-<li>This command limits the firmware suspend policy to STOP2 before
-Linux enters suspend:
-<code>bash  echo "LIMIT_PM_STOP2" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li><p>This command limits the firmware suspend policy to STOP2 before
+Linux enters suspend:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo "LIMIT_PM_STOP2" &gt; /dev/rpmsg2
+echo deep &gt; /sys/power/mem_sleep
+rtcwake -m mem -s 10</code></pre></div></li>
 <li>Expected behavior: Linux requests suspend, the firmware keeps the
 low-power target at STOP2, and the system wakes up after the RTC
 timeout.</li>
 </ul></li>
 <li><strong>Suspend policy test: LP_STOP2</strong>
 <ul>
-<li>This command allows the low-power manager to enter LP_STOP2 instead
-of plain STOP2:
-<code>bash  echo "LIMIT_PM_LP_STOP2" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li><p>This command allows the low-power manager to enter LP_STOP2 instead
+of plain STOP2:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo "LIMIT_PM_LP_STOP2" &gt; /dev/rpmsg2
+echo deep &gt; /sys/power/mem_sleep
+rtcwake -m mem -s 10</code></pre></div></li>
 <li>Expected behavior: Linux suspend still uses the RTC wake-up, but the
 firmware low-power target is constrained to LP_STOP2.</li>
 </ul></li>
 <li><strong>Suspend policy test: LPLV_STOP2</strong>
 <ul>
-<li>This command allows the deepest STOP-class mode currently exposed
-over the low-power endpoint:
-<code>bash  echo "LIMIT_PM_LPLV_STOP2" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li><p>This command allows the deepest STOP-class mode currently exposed
+over the low-power endpoint:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo "LIMIT_PM_LPLV_STOP2" &gt; /dev/rpmsg2
+echo deep &gt; /sys/power/mem_sleep
+rtcwake -m mem -s 10</code></pre></div></li>
 <li>Expected behavior: the firmware low-power manager accepts the deeper
 STOP-class mode and the system resumes after the RTC wake-up.</li>
 </ul></li>
 <li><strong>RUN2 test with RTC wake-up</strong>
 <ul>
-<li><code>LIMIT_PM_DISABLED</code> disables low-power entry in the
+<li><p><code>LIMIT_PM_DISABLED</code> disables low-power entry in the
 firmware. Linux can still enter its suspend path, but the M33 side stays
-in RUN2 while waiting for the wake-up source:
-<code>bash  echo "LIMIT_PM_DISABLED" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+in RUN2 while waiting for the wake-up source:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo "LIMIT_PM_DISABLED" &gt; /dev/rpmsg2
+echo deep &gt; /sys/power/mem_sleep
+rtcwake -m mem -s 10</code></pre></div></li>
 <li>Expected behavior: the CM33 logs should show the low-power request
 was rejected locally while the system still exercises the RUN2/D1
 standby synchronization path.</li>

@@ -56,9 +56,6 @@ size_t size1 = LCD_WIDTH*LCD_HEIGHT*2;
 /* Private function prototypes -----------------------------------------------*/
 static void LTDC_Config(void);
 static void MX_IPCC_Init(void);
-#if defined(DATA_CACHE_ENABLE) && (DATA_CACHE_ENABLE == 1U)
-static void MX_DCACHE_Init(void);
-#endif
 
 void SystemClock_Config(void);
 void Display_DemoDescription(void);
@@ -604,9 +601,11 @@ void CoproSync_ShutdownCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPC
   /* Set the Immediate Reload type */
   LTDC_LAYER(&hLtdcHandler, LTDC_LAYER_3)->RCR = LTDC_LxRCR_IMR;
 
-#if defined(DATA_CACHE_ENABLE) && (DATA_CACHE_ENABLE == 1U)
-  HAL_DCACHE_Invalidate(&hdcache);
+#ifdef ICACHE_DCACHE_ENABLE
+  HAL_DCACHE_CleanInvalidByAddr(&hdcache, (const uint32_t *)0x80A00000U, 0x003FFC00U);
+  HAL_DCACHE_Disable(&hdcache);
   HAL_DCACHE_DeInit(&hdcache);
+  HAL_ICACHE_DeInit();
 #endif
 
   /* When ready, notify the remote processor that we can be shut down */

@@ -315,7 +315,7 @@ typedef struct
 {
   uint32_t         Address;     /*!< DMA destination address */
   uint32_t         DataLength;  /*!< Length of data to transfer in bytes */
-  FunctionalState  MsbOnly;     /*!< Transfer only the 16MSB of the acquistion data */
+  FunctionalState  MsbOnly;     /*!< Transfer only the 16MSB of the acquisition data */
 } MDF_DmaConfigTypeDef;
 
 /**

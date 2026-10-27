@@ -94,7 +94,7 @@ These are the baseline “Non‑Secure Application Manager” services and are e
 
 - **LoggerTask**: logging infrastructure.
 - **ScmiMgrTask**: SCMI notification/event handling.
-- **RemoteProcTask**: CA35 start/stop/monitor + crash recovery.
+- **RemoteProcTask**: CA35 start/stop/monitor + restart (warm reset, crash and resume-failure recovery, with OpenAMP reinitialization while the CA35 is offline).
 - **WdgMonitorTask**: watchdog supervision.
 
 ### Inter-processor communication (RPMsg)

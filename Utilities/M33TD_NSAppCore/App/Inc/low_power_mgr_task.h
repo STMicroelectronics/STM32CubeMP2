@@ -24,6 +24,7 @@
 #endif
 
 /* Includes ------------------------------------------------------------------*/
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -129,6 +130,12 @@ void LowPowerMgrTask_DeInit(void);
   * @retval HAL_OK if posted, HAL_ERROR otherwise.
   */
 HAL_StatusTypeDef LowPowerMgrTask_PostEvent(LowPowerMgrEvent_t event, uint32_t param);
+
+/**
+  * @brief  Check whether the rejected A35 suspend request is in RUN2/D1 Standby.
+  * @retval true if RUN2 is active and D1 remains in Standby, false otherwise.
+  */
+bool LowPowerMgrTask_IsRun2Active(void);
 
 /**
   * @brief  Register a runtime low power agent.

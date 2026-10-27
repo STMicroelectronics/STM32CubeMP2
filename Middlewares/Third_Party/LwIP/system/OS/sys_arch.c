@@ -36,6 +36,7 @@
 #include "lwip/sys.h"
 #include "lwip/mem.h"
 #include "lwip/stats.h"
+#include "lwip/tcpip.h"
 
 #if !NO_SYS
 
@@ -44,6 +45,42 @@
 #if (defined (__CC_ARM) || defined (__ARMCC_VERSION) || defined (__ICCARM__))
 int errno;
 #endif
+
+#if    (__ARM_ARCH_7A__      == 1U)
+/* CPSR mode bitmasks */
+#define CPSR_MODE_USER            0x10U
+#define CPSR_MODE_SYSTEM          0x1FU
+
+#define IS_IRQ_MODE()             ((__get_mode() != CPSR_MODE_USER) && (__get_mode() != CPSR_MODE_SYSTEM))
+#else
+#define IS_IRQ_MODE()             (__get_IPSR() != 0U)
+#endif
+
+/* Enables multithreading check functions in this port.
+
+   For this to work, in your lwipopts.h file, you need to set this flag to 1,
+   define LWIP_ASSERT_CORE_LOCKED() and LWIP_MARK_TCPIP_THREAD() macros,
+   point them to functions sys_check_core_locking() and sys_mark_tcpip_thread()
+   respectively and add the functions prototypes.
+
+   If you use LWIP_TCPIP_CORE_LOCKING, you also have to define LOCK_TCPIP_CORE()
+   and UNLOCK_TCPIP_CORE() macros, point them to functions sys_lock_tcpip_core()
+   and sys_unlock_tcpip_core() respectively and add the functions prototypes.
+*/
+#ifndef LWIP_CHECK_MULTITHREADING
+#define LWIP_CHECK_MULTITHREADING           0
+#endif /* LWIP_CHECK_MULTITHREADING */
+
+#if LWIP_CHECK_MULTITHREADING
+#if LWIP_TCPIP_CORE_LOCKING
+/* Flag the core lock held. A counter for recursive locks. */
+static u8_t lwip_core_lock_count;
+/* Mark the current core lock holder. */
+static osThreadId_t lwip_core_lock_holder_thread;
+#endif /* LWIP_TCPIP_CORE_LOCKING */
+/* Mark the tcpip thread. */
+static osThreadId_t lwip_tcpip_thread;
+#endif /* LWIP_CHECK_MULTITHREADING */
 
 /*-----------------------------------------------------------------------------------*/
 //  Creates an empty mailbox.
@@ -142,15 +179,16 @@ err_t sys_mbox_trypost_fromisr(sys_mbox_t *mbox, void *msg)
 */
 u32_t sys_arch_mbox_fetch(sys_mbox_t *mbox, void **msg, u32_t timeout)
 {
+  const uint32_t tick_duration_ms = 1000 / osKernelGetTickFreq();
+  const uint32_t starttime_ms = osKernelGetTickCount() * tick_duration_ms;
   osStatus_t status;
-  uint32_t starttime = osKernelGetTickCount();
 
-  if(timeout != 0)
+  if (timeout != 0)
   {
-    status = osMessageQueueGet(*mbox, msg, 0, timeout);
+    status = osMessageQueueGet(*mbox, msg, 0, timeout / tick_duration_ms);
     if (status == osOK)
     {
-      return (osKernelGetTickCount() - starttime);
+      return ((osKernelGetTickCount() * tick_duration_ms) - starttime_ms);
     }
     else
     {
@@ -160,7 +198,7 @@ u32_t sys_arch_mbox_fetch(sys_mbox_t *mbox, void **msg, u32_t timeout)
   else
   {
     osMessageQueueGet(*mbox, msg, 0, osWaitForever );
-    return (osKernelGetTickCount() - starttime);
+    return ((osKernelGetTickCount() * tick_duration_ms) - starttime_ms);
   }
 }
 
@@ -242,13 +280,14 @@ err_t sys_sem_new(sys_sem_t *sem, u8_t count)
 */
 u32_t sys_arch_sem_wait(sys_sem_t *sem, u32_t timeout)
 {
-  uint32_t starttime = osKernelGetTickCount();
+  const uint32_t tick_duration_ms = 1000 / osKernelGetTickFreq();
+  const uint32_t starttime_ms = osKernelGetTickCount() * tick_duration_ms;
 
-  if(timeout != 0)
+  if (timeout != 0)
   {
-    if(osSemaphoreAcquire(*sem, timeout) == osOK)
+    if(osSemaphoreAcquire(*sem, timeout / tick_duration_ms) == osOK)
     {
-        return (osKernelGetTickCount() - starttime);
+        return ((osKernelGetTickCount() * tick_duration_ms) - starttime_ms);
     }
     else
     {
@@ -258,7 +297,7 @@ u32_t sys_arch_sem_wait(sys_sem_t *sem, u32_t timeout)
   else
   {
     while(osSemaphoreAcquire(*sem, osWaitForever) != osOK);
-    return (osKernelGetTickCount() - starttime);
+    return ((osKernelGetTickCount() * tick_duration_ms) - starttime_ms);
   }
 }
 
@@ -295,12 +334,17 @@ void sys_sem_set_invalid(sys_sem_t *sem)
 }
 
 /*-----------------------------------------------------------------------------------*/
+/* Attributes to support recursive Mutex. */
+const osMutexAttr_t Mutex_attributes = {
+  .attr_bits = osMutexRecursive,
+};
+
 osMutexId_t lwip_sys_mutex;
 
 // Initialize sys arch
 void sys_init(void)
 {
-  lwip_sys_mutex = osMutexNew(NULL);
+  lwip_sys_mutex = osMutexNew(&Mutex_attributes);
 }
 /*-----------------------------------------------------------------------------------*/
                                       /* Mutexes*/
@@ -310,7 +354,7 @@ void sys_init(void)
 /* Create a new mutex*/
 err_t sys_mutex_new(sys_mutex_t *mutex) {
 
-  *mutex = osMutexNew(NULL);
+  *mutex = osMutexNew(&Mutex_attributes);
 
   if(*mutex == NULL)
   {
@@ -352,8 +396,7 @@ void sys_mutex_unlock(sys_mutex_t *mutex)
   osMutexRelease(*mutex);
 }
 #endif /*LWIP_COMPAT_MUTEX*/
-/*-----------------------------------------------------------------------------------*/
-// TODO
+
 /*-----------------------------------------------------------------------------------*/
 /*
   Starts a new thread with priority "prio" that will begin its execution in the
@@ -409,5 +452,63 @@ void sys_arch_unprotect(sys_prot_t pval)
   ( void ) pval;
   osMutexRelease(lwip_sys_mutex);
 }
+
+/*-----------------------------------------------------------------------------------*/
+#if LWIP_CHECK_MULTITHREADING
+#if LWIP_TCPIP_CORE_LOCKING
+/* Lock the lwip core, mark the current core lock holder and the lock count. */
+void sys_lock_tcpip_core(void)
+{
+   sys_mutex_lock(&lock_tcpip_core);
+   if (lwip_core_lock_count == 0) {
+     lwip_core_lock_holder_thread = osThreadGetId();
+   }
+   lwip_core_lock_count++;
+}
+
+/* Unlock the lwip core. */
+void sys_unlock_tcpip_core(void)
+{
+   lwip_core_lock_count--;
+   if (lwip_core_lock_count == 0) {
+       lwip_core_lock_holder_thread = 0;
+   }
+   sys_mutex_unlock(&lock_tcpip_core);
+}
+#endif /* LWIP_TCPIP_CORE_LOCKING */
+
+/* Mark the lwip tcpip thread ID. */
+void sys_mark_tcpip_thread(void)
+{
+  lwip_tcpip_thread = osThreadGetId();
+}
+
+/* Check if the function was accessed with core lock or not.
+   Note : This function cannot be called from Interrupt Service Routines.
+*/
+void sys_check_core_locking(void)
+{
+  osThreadId_t current_thread;
+
+  /* Check if this function is called from Interrupt Service Routines */
+  if (IS_IRQ_MODE())
+  {
+    LWIP_PLATFORM_ASSERT("This function cannot be called from Interrupt Service Routines");
+    while(1);
+  }
+
+  if (lwip_tcpip_thread != 0)
+  {
+    current_thread = osThreadGetId();
+
+#if LWIP_TCPIP_CORE_LOCKING
+    LWIP_ASSERT("Function called without core lock",
+                current_thread == lwip_core_lock_holder_thread && lwip_core_lock_count > 0);
+#else /* LWIP_TCPIP_CORE_LOCKING */
+    LWIP_ASSERT("Function called from wrong thread", current_thread == lwip_tcpip_thread);
+#endif /* LWIP_TCPIP_CORE_LOCKING */
+  }
+}
+#endif /* LWIP_CHECK_MULTITHREADING */
 
 #endif /* !NO_SYS */

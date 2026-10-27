@@ -29,6 +29,7 @@
 #include "main.h"
 #include "app_ethernet.h"
 #include "udp_echoserver.h"
+#include "copro_sync.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -68,12 +69,16 @@ static ICACHE_RegionConfigTypeDef region_config;
 DCACHE_HandleTypeDef hdcache;
 #endif
 
+IPCC_HandleTypeDef hipcc1;
+
 /* USER CODE END PV */
 /* Private function prototypes -----------------------------------------------*/
 static void Netif_Config(void);
 static void SystemClock_Config(void);
 void UART_Config(void);
 static void MX_ETH_Init(void);
+static void MX_IPCC_Init(void);
+static void MX_ETH_DeInit(void);
 
 #if defined(INSTRUCTION_CACHE_ENABLE) && (INSTRUCTION_CACHE_ENABLE == 1U)
 static void MX_ICACHE_Init(void);
@@ -193,6 +198,12 @@ int main(void)
 
   BSP_LED_Init(LED3);
 
+  if (!IS_DEVELOPER_BOOT_MODE())
+  {
+    MX_IPCC_Init();
+    CoproSync_Init();
+  }
+
   /* Initialize all configured peripherals */
   UART_Config();
   MX_ETH_Init();
@@ -218,12 +229,25 @@ int main(void)
 	/* Handle timeouts */
     sys_check_timeouts();
 
+#if LWIP_NETIF_LOOPBACK
+  /* Process datagrams looped back internally by lwIP (packets addressed
+     to this board's own IP address), required since NO_SYS == 1 */
+  netif_poll(&gnetif);
+#endif
+
 #if LWIP_NETIF_LINK_CALLBACK
     Ethernet_Link_Periodic_Handle(&gnetif);
 #endif
 
 #if LWIP_DHCP
     DHCP_Periodic_Handle(&gnetif);
+#endif
+#if LOOPBACK_TEST_ENABLE
+    /* Optional single-board loopback self-test: exercises the LwIP stack
+       on this single board (no second board or PC needed) once the
+       interface has a valid IP address. See LOOPBACK_TEST_ENABLE in
+       lwipopts.h. */
+    loopback_test_periodic_handle(&gnetif);
 #endif
   }
 }
@@ -436,6 +460,40 @@ void MX_ETH_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+static void MX_IPCC_Init(void)
+{
+  hipcc1.Instance = IPCC1;
+  if (HAL_IPCC_Init(&hipcc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  HAL_NVIC_SetPriority(IPCC1_RX_IRQn, DEFAULT_IRQ_PRIO, 0);
+  HAL_NVIC_EnableIRQ(IPCC1_RX_IRQn);
+}
+
+static void MX_ETH_DeInit(void)
+{
+  HAL_ETH_Stop_IT(&heth);
+  HAL_ETH_DeInit(&heth);
+}
+
+void CoproSync_ShutdownCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex,
+                          IPCC_CHANNELDirTypeDef ChannelDir)
+{
+  MX_ETH_DeInit();
+  BSP_LED_DeInit(LED3);
+#if defined(DATA_CACHE_ENABLE) && (DATA_CACHE_ENABLE == 1U)
+  HAL_DCACHE_CleanInvalidByAddr(&hdcache, (const uint32_t *)0x80A00000U, 0x003FFC00U);
+  HAL_DCACHE_Disable(&hdcache);
+  HAL_DCACHE_DeInit(&hdcache);
+#endif
+#if defined(INSTRUCTION_CACHE_ENABLE) && (INSTRUCTION_CACHE_ENABLE == 1U)
+  HAL_ICACHE_DeInit();
+#endif
+  HAL_IPCC_NotifyCPU(hipcc, ChannelIndex, IPCC_CHANNEL_DIR_RX);
+  while (1);
+}
 
 /* USER CODE END 4 */
 

@@ -66,7 +66,7 @@
 
       (#) Communication with an external PHY device:
          (##) HAL_ETH_ReadPHYRegister(): Read a register from an external PHY
-         (##) HAL_ETH_WritePHYRegister(): Write data to an external RHY register
+         (##) HAL_ETH_WritePHYRegister(): Write data to an external PHY register
 
       (#) Configure the Ethernet MAC after ETH peripheral initialization
           (##) HAL_ETH_GetMACConfig(): Get MAC actual configuration into ETH_MACConfigTypeDef
@@ -441,12 +441,15 @@ HAL_StatusTypeDef HAL_ETH_Init(ETH_HandleTypeDef *heth)
                              ((uint32_t)(heth->Init.MACAddr[1]) << 8) | (uint32_t)heth->Init.MACAddr[0]);
 
   /* Disable Rx MMC Interrupts */
-  SET_BIT(heth->Instance->MMC_RX_INTERRUPT_MASK, ETH_MMC_RX_INTERRUPT_MASK_RXLPITRCIM | ETH_MMC_RX_INTERRUPT_MASK_RXLPIUSCIM | \
-          ETH_MMC_RX_INTERRUPT_MASK_RXUCGPIM | ETH_MMC_RX_INTERRUPT_MASK_RXALGNERPIM | ETH_MMC_RX_INTERRUPT_MASK_RXCRCERPIM);
+  SET_BIT(heth->Instance->MMC_RX_INTERRUPT_MASK, ETH_MMC_RX_INTERRUPT_MASK_RXLPITRCIM | \
+          ETH_MMC_RX_INTERRUPT_MASK_RXLPIUSCIM | ETH_MMC_RX_INTERRUPT_MASK_RXUCGPIM | \
+          ETH_MMC_RX_INTERRUPT_MASK_RXALGNERPIM | ETH_MMC_RX_INTERRUPT_MASK_RXCRCERPIM);
 
   /* Disable Tx MMC Interrupts */
-  SET_BIT(heth->Instance->MMC_TX_INTERRUPT_MASK, ETH_MMC_TX_INTERRUPT_MASK_TXLPITRCIM | ETH_MMC_TX_INTERRUPT_MASK_TXLPIUSCIM | \
-          ETH_MMC_TX_INTERRUPT_MASK_TXGPKTIM | ETH_MMC_TX_INTERRUPT_MASK_TXMCOLGPIM | ETH_MMC_TX_INTERRUPT_MASK_TXSCOLGPIM);
+  SET_BIT(heth->Instance->MMC_TX_INTERRUPT_MASK, ETH_MMC_TX_INTERRUPT_MASK_TXLPITRCIM | \
+          ETH_MMC_TX_INTERRUPT_MASK_TXLPIUSCIM | ETH_MMC_TX_INTERRUPT_MASK_TXGPKTIM | \
+          ETH_MMC_TX_INTERRUPT_MASK_TXMCOLGPIM | ETH_MMC_TX_INTERRUPT_MASK_TXSCOLGPIM);
+
 
   heth->ErrorCode = HAL_ETH_ERROR_NONE;
   heth->gState = HAL_ETH_STATE_READY;
@@ -1502,7 +1505,7 @@ HAL_StatusTypeDef HAL_ETH_ReleaseTxPacket(ETH_HandleTypeDef *heth)
         /* Clear the entry in the in-use array.  */
         dmatxdesclist->PacketAddress[idx] = NULL;
 
-        /* Update the transmit relesae index and number of buffers in use.  */
+        /* Update the transmit release index and number of buffers in use.  */
         INCR_TX_DESC_INDEX(idx, 1U);
         dmatxdesclist->BuffersInUse = numOfBuf;
         dmatxdesclist->releaseIndex = idx;

@@ -31,6 +31,7 @@
 #include "string.h"
 #include "app_ethernet.h"
 #include "tcp_echoclient.h"
+#include "copro_sync.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -74,6 +75,8 @@ static ICACHE_RegionConfigTypeDef region_config;
 DCACHE_HandleTypeDef hdcache;
 #endif
 
+IPCC_HandleTypeDef hipcc1;
+
 /* USER CODE END PV */
 /* Private function prototypes -----------------------------------------------*/
 static void Netif_Config(void);
@@ -81,6 +84,8 @@ void SystemClock_Config(void);
 void UART_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_ETH_Init(void);
+static void MX_IPCC_Init(void);
+static void MX_ETH_DeInit(void);
 
 #if (INSTRUCTION_CACHE_ENABLE == 1U) && (DATA_CACHE_ENABLE == 1U)
 static void MPU_Config(void);
@@ -126,9 +131,9 @@ static void Netif_Config(void)
   IP4_ADDR(&netmask, NETMASK_ADDR0, NETMASK_ADDR1 , NETMASK_ADDR2, NETMASK_ADDR3);
   IP4_ADDR(&gw, GW_ADDR0, GW_ADDR1, GW_ADDR2, GW_ADDR3);
   printf("DHCP is not enabled. Using static IP settings:\r\n");
-  printf("IP Address: %s\n", ip4addr_ntoa(&ipaddr));
-  printf("Netmask: %s\n", ip4addr_ntoa(&netmask));
-  printf("Gateway: %s\n", ip4addr_ntoa(&gw));
+  printf("IP Address: %s\r\n", ip4addr_ntoa(&ipaddr));
+  printf("Netmask: %s\r\n", ip4addr_ntoa(&netmask));
+  printf("Gateway: %s\r\n", ip4addr_ntoa(&gw));
 #endif /* LWIP_DHCP */
 
   /* Add the network interface to the netif list */
@@ -202,6 +207,12 @@ int main(void)
   BSP_LED_Init(LED3);
   BSP_PB_Init(BUTTON_USER2, BUTTON_MODE_EXTI);
 
+  if (!IS_DEVELOPER_BOOT_MODE())
+  {
+    MX_IPCC_Init();
+    CoproSync_Init();
+  }
+
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
   UART_Config();
@@ -228,12 +239,25 @@ int main(void)
 	/* Handle timeouts */
     sys_check_timeouts();
 
+    #if LWIP_NETIF_LOOPBACK
+    /* Process datagrams looped back internally by lwIP (packets addressed
+       to this board's own IP address), required since NO_SYS == 1 */
+    netif_poll(&gnetif);
+#endif
+
 #if LWIP_NETIF_LINK_CALLBACK
     Ethernet_Link_Periodic_Handle(&gnetif);
 #endif
 
 #if LWIP_DHCP
     DHCP_Periodic_Handle(&gnetif);
+#endif
+#if LOOPBACK_TEST_ENABLE
+    /* Optional single-board loopback self-test: exercises the LwIP stack
+       on this single board (no second board or PC needed) once the
+       interface has a valid IP address. See LOOPBACK_TEST_ENABLE in
+       lwipopts.h. */
+    loopback_test_periodic_handle(&gnetif);
 #endif
   }
 }
@@ -454,6 +478,40 @@ void MX_ETH_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+static void MX_IPCC_Init(void)
+{
+  hipcc1.Instance = IPCC1;
+  if (HAL_IPCC_Init(&hipcc1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  HAL_NVIC_SetPriority(IPCC1_RX_IRQn, DEFAULT_IRQ_PRIO, 0);
+  HAL_NVIC_EnableIRQ(IPCC1_RX_IRQn);
+}
+
+static void MX_ETH_DeInit(void)
+{
+  HAL_ETH_Stop_IT(&heth);
+  HAL_ETH_DeInit(&heth);
+}
+
+void CoproSync_ShutdownCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex,
+                          IPCC_CHANNELDirTypeDef ChannelDir)
+{
+  MX_ETH_DeInit();
+  BSP_LED_DeInit(LED3);
+#if defined(DATA_CACHE_ENABLE) && (DATA_CACHE_ENABLE == 1U)
+  HAL_DCACHE_CleanInvalidByAddr(&hdcache, (const uint32_t *)0x80A00000U, 0x003FFC00U);
+  HAL_DCACHE_Disable(&hdcache);
+  HAL_DCACHE_DeInit(&hdcache);
+#endif
+#if defined(INSTRUCTION_CACHE_ENABLE) && (INSTRUCTION_CACHE_ENABLE == 1U)
+  HAL_ICACHE_DeInit();
+#endif
+  HAL_IPCC_NotifyCPU(hipcc, ChannelIndex, IPCC_CHANNEL_DIR_RX);
+  while (1);
+}
 
 /* USER CODE END 4 */
 #if defined(INSTRUCTION_CACHE_ENABLE) && (INSTRUCTION_CACHE_ENABLE == 1U)

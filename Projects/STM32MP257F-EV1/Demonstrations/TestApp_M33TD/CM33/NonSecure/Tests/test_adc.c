@@ -131,7 +131,7 @@ TEST_STATUS Test_ADC_Init(void)
     /* Configure the ADC channel */
     sConfig.Channel = ADC_CHANNEL_VREFINT;
     sConfig.Rank = ADC_REGULAR_RANK_1;
-    sConfig.SamplingTime = ADC_SAMPLETIME_1501CYCLES_5;
+    sConfig.SamplingTime = ADC_SAMPLETIME_1499CYCLES_5;
     sConfig.SingleDiff = ADC_SINGLE_ENDED;
     sConfig.OffsetNumber = ADC_OFFSET_NONE;
     sConfig.Offset = 0;

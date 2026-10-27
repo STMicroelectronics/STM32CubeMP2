@@ -1827,7 +1827,7 @@ static void MX_ADC_Init(void)
   /* Configure Regular Channel */
   sConfig.Channel                 = VSENSE_ADC_CHANNEL;
   sConfig.Rank                    = VSENSE_ADC_RANK;
-  sConfig.SamplingTime            = ADC_SAMPLETIME_247CYCLES_5;
+  sConfig.SamplingTime            = ADC_SAMPLETIME_246CYCLES_5;
   sConfig.SingleDiff              = ADC_SINGLE_ENDED;            /* Single-ended input channel */
   sConfig.OffsetNumber            = ADC_OFFSET_NONE;             /* No offset subtraction */
   sConfig.Offset                  = 0;                           /* Parameter discarded because offset correction is disabled */

@@ -64,17 +64,33 @@ static inline int __metal_mutex_try_acquire(metal_mutex_t *mutex)
 
 static inline void __metal_mutex_acquire(metal_mutex_t *mutex)
 {
+#if defined(CORE_CA35)
+   /* Simple, non-exclusive spinlock */
+	for (;;) {
+		int v = __atomic_load_n(&mutex->v, __ATOMIC_RELAXED);
+		if (v == METAL_MUTEX_UNLOCKED) {
+			__atomic_store_n(&mutex->v, METAL_MUTEX_LOCKED,
+					 __ATOMIC_RELAXED);
+			break;
+		}
+    }
+#else
 	int unlocked = METAL_MUTEX_UNLOCKED;
 
 	while (!atomic_compare_exchange_weak(&mutex->v, &unlocked,
 					     METAL_MUTEX_LOCKED)) {
 		;
 	}
+#endif
 }
 
 static inline void __metal_mutex_release(metal_mutex_t *mutex)
 {
+#if defined(CORE_CA35)
+	__atomic_store_n(&mutex->v, METAL_MUTEX_UNLOCKED, __ATOMIC_RELAXED);
+#else
 	atomic_store(&mutex->v, METAL_MUTEX_UNLOCKED);
+#endif
 }
 
 static inline int __metal_mutex_is_acquired(metal_mutex_t *mutex)

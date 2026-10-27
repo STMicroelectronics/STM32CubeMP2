@@ -28,60 +28,65 @@ extern "C" {
 #define RPMSG_ASSERT(_exp, _msg) metal_assert(_exp)
 #endif
 
-#define RPMSG_BUF_HELD (1U << 31) /* Flag to suggest to hold the buffer */
+/* Mask to get the rpmsg buffer held counter from rpmsg_hdr reserved field */
+#define RPMSG_BUF_HELD_SHIFT 16
+#define RPMSG_BUF_HELD_MASK  (0xFFFFU << RPMSG_BUF_HELD_SHIFT)
 
 #define RPMSG_LOCATE_HDR(p) \
 	((struct rpmsg_hdr *)((unsigned char *)(p) - sizeof(struct rpmsg_hdr)))
 #define RPMSG_LOCATE_DATA(p) ((unsigned char *)(p) + sizeof(struct rpmsg_hdr))
 
 /**
- * enum rpmsg_ns_flags - dynamic name service announcement flags
- *
- * @RPMSG_NS_CREATE: a new remote service was just created
- * @RPMSG_NS_DESTROY: a known remote service was just destroyed
- * @RPMSG_NS_CREATE_WITH_ACK: a new remote service was just created waiting
- *                            acknowledgment.
+ * @brief dynamic name service announcement flags
  */
 enum rpmsg_ns_flags {
+	/** A new remote service was just created */
 	RPMSG_NS_CREATE = 0,
+	/** A known remote service was just destroyed */
 	RPMSG_NS_DESTROY = 1,
 };
 
 /**
- * struct rpmsg_hdr - common header for all rpmsg messages
- * @src: source address
- * @dst: destination address
- * @reserved: reserved for future use
- * @len: length of payload (in bytes)
- * @flags: message flags
+ * @brief Common header for all RPMsg messages
  *
- * Every message sent(/received) on the rpmsg bus begins with this header.
+ * Every message sent(/received) on the RPMsg bus begins with this header.
  */
 METAL_PACKED_BEGIN
 struct rpmsg_hdr {
+	/** Source address */
 	uint32_t src;
+
+	/** Destination address */
 	uint32_t dst;
+
+	/** Reserved for future use */
 	uint32_t reserved;
+
+	/** Length of payload (in bytes) */
 	uint16_t len;
+
+	/** Message flags */
 	uint16_t flags;
 } METAL_PACKED_END;
 
 /**
- * struct rpmsg_ns_msg - dynamic name service announcement message
- * @name: name of remote service that is published
- * @addr: address of remote service that is published
- * @flags: indicates whether service is created or destroyed
+ * @brief Dynamic name service announcement message
  *
  * This message is sent across to publish a new service, or announce
  * about its removal. When we receive these messages, an appropriate
- * rpmsg channel (i.e device) is created/destroyed. In turn, the ->probe()
- * or ->remove() handler of the appropriate rpmsg driver will be invoked
+ * RPMsg channel (i.e device) is created/destroyed. In turn, the ->probe()
+ * or ->remove() handler of the appropriate RPMsg driver will be invoked
  * (if/as-soon-as one is registered).
  */
 METAL_PACKED_BEGIN
 struct rpmsg_ns_msg {
+	/** Name of the remote service that is being published */
 	char name[RPMSG_NAME_SIZE];
+
+	/** Endpoint address of the remote service that is being published */
 	uint32_t addr;
+
+	/** Indicates whether service is created or destroyed */
 	uint32_t flags;
 } METAL_PACKED_END;
 
@@ -95,13 +100,38 @@ void rpmsg_register_endpoint(struct rpmsg_device *rdev,
 			     const char *name,
 			     uint32_t src, uint32_t dest,
 			     rpmsg_ept_cb cb,
-			     rpmsg_ns_unbind_cb ns_unbind_cb);
+			     rpmsg_ns_unbind_cb ns_unbind_cb, void *priv);
 
 static inline struct rpmsg_endpoint *
 rpmsg_get_ept_from_addr(struct rpmsg_device *rdev, uint32_t addr)
 {
 	return rpmsg_get_endpoint(rdev, NULL, addr, RPMSG_ADDR_ANY);
 }
+
+/**
+ * @internal
+ *
+ * @brief Increase the endpoint reference count
+ *
+ * This function is used to avoid calling ept_cb after release lock causes race condition
+ * it should be called under lock protection.
+ *
+ * @param ept	pointer to rpmsg endpoint
+ *
+ */
+void rpmsg_ept_incref(struct rpmsg_endpoint *ept);
+
+/**
+ * @internal
+ *
+ * @brief Decrease the end point reference count
+ *
+ * This function is used to avoid calling ept_cb after release lock causes race condition
+ * it should be called under lock protection.
+ *
+ * @param ept	pointer to rpmsg endpoint
+ */
+void rpmsg_ept_decref(struct rpmsg_endpoint *ept);
 
 #if defined __cplusplus
 }

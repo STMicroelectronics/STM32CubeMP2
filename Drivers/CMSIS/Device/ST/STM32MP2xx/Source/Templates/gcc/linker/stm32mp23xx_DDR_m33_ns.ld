@@ -1,6 +1,7 @@
 /* Linker script to configure memory regions. */
 
-_virtio_shmem_size = 32K;  /* size of the virtio pool used fior rpmsg communication */
+IPC_SHM_VIRTIO_SIZE = 32K;
+IPC_SHM_RSC_TAB_SIZE = 4K;
 
 /* Memories definition */
 MEMORY
@@ -8,13 +9,14 @@ MEMORY
   NS_VECTOR_TBL (xrw)   : ORIGIN = 0x80100000,	LENGTH = 0x00000600
   FLASH         (rx)    : ORIGIN = 0x80100600,  LENGTH = 8M - LENGTH(NS_VECTOR_TBL)
   RAM           (rwx)   : ORIGIN = 0x80A00000,  LENGTH = 8M
-  IPC_SHMEM_1   (rw)    : ORIGIN = 0x81200000,  LENGTH = 1M - _virtio_shmem_size
-  VIRTIO_SHMEM  (rw)    : ORIGIN = ORIGIN(IPC_SHMEM_1) + LENGTH(IPC_SHMEM_1), LENGTH = _virtio_shmem_size
+	IPC_SHMEM     (rw)    : ORIGIN = 0x81200000,  LENGTH = 1M
 }
 
- /* Symbols needed for OpenAMP to enable rpmsg */
-__OPENAMP_region_start__  = ORIGIN(VIRTIO_SHMEM);
-__OPENAMP_region_end__ = ORIGIN(VIRTIO_SHMEM)+LENGTH(VIRTIO_SHMEM);
+/* Symbols needed for OpenAMP to enable rpmsg */
+__OPENAMP_region_end__      = ORIGIN(IPC_SHMEM) + LENGTH(IPC_SHMEM);
+__OPENAMP_region_start__    = __OPENAMP_region_end__ - IPC_SHM_VIRTIO_SIZE;
+__RSC_TABLE_region_end__    = __OPENAMP_region_start__;
+__RSC_TABLE_region_start__  = __RSC_TABLE_region_end__ - IPC_SHM_RSC_TAB_SIZE;
 
 /* Library configurations */
 GROUP(libgcc.a libc.a libm.a libnosys.a)
@@ -75,7 +77,7 @@ SECTIONS
 		. = ALIGN(4);
 		KEEP (*(.resource_table*))
 		. = ALIGN(4);
-	} >IPC_SHMEM_1
+	} >IPC_SHMEM
 
 	.text :
 	{
@@ -149,6 +151,36 @@ SECTIONS
 	} > FLASH
 	*/
 
+	/* preinit data */
+	.preinit_array (READONLY) :
+	{
+		. = ALIGN(4);
+		PROVIDE_HIDDEN (__preinit_array_start = .);
+		KEEP(*(.preinit_array))
+		PROVIDE_HIDDEN (__preinit_array_end = .);
+		. = ALIGN(4);
+	} > FLASH
+
+	/* init data */
+	.init_array (READONLY) :
+	{
+		PROVIDE_HIDDEN (__init_array_start = .);
+		KEEP(*(SORT(.init_array.*)))
+		KEEP(*(.init_array))
+		PROVIDE_HIDDEN (__init_array_end = .);
+		. = ALIGN(4);
+	} > FLASH
+
+	/* finit data */
+	.fini_array (READONLY) :
+	{
+		PROVIDE_HIDDEN (__fini_array_start = .);
+		KEEP(*(SORT(.fini_array.*)))
+		KEEP(*(.fini_array))
+		PROVIDE_HIDDEN (__fini_array_end = .);
+		. = ALIGN(4);
+	} > FLASH
+
 	__etext = .;
 
 	.data : AT (__etext)
@@ -156,28 +188,6 @@ SECTIONS
 		__data_start__ = .;
 		*(vtable)
 		*(.data*)
-
-		. = ALIGN(4);
-		/* preinit data */
-		PROVIDE_HIDDEN (__preinit_array_start = .);
-		KEEP(*(.preinit_array))
-		PROVIDE_HIDDEN (__preinit_array_end = .);
-
-		. = ALIGN(4);
-		/* init data */
-		PROVIDE_HIDDEN (__init_array_start = .);
-		KEEP(*(SORT(.init_array.*)))
-		KEEP(*(.init_array))
-		PROVIDE_HIDDEN (__init_array_end = .);
-
-
-		. = ALIGN(4);
-		/* finit data */
-		PROVIDE_HIDDEN (__fini_array_start = .);
-		KEEP(*(SORT(.fini_array.*)))
-		KEEP(*(.fini_array))
-		PROVIDE_HIDDEN (__fini_array_end = .);
-
 		KEEP(*(.jcr*))
 		. = ALIGN(4);
 		/* All data end */

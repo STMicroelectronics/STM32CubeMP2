@@ -117,4 +117,160 @@ void udp_receive_callback(void *arg, struct udp_pcb *upcb, struct pbuf *p, const
   pbuf_free(p);
 }
 
+#if LOOPBACK_TEST_ENABLE
+#define LOOPBACK_UDP_PORT   7
+
+static struct udp_pcb *loopback_server_pcb;
+static struct udp_pcb *loopback_client_pcb;
+static uint32_t loopback_last_tick;
+static uint32_t loopback_tx_seq;
+static uint32_t loopback_pass_count;
+static uint32_t loopback_fail_count;
+static char loopback_tx_buffer[64];
+
+static void loopback_server_receive_callback(void *arg, struct udp_pcb *upcb, struct pbuf *p, const ip_addr_t *addr, u16_t port);
+static void loopback_client_init(void);
+static void loopback_test_send(struct netif *netif);
+static void loopback_client_receive_callback(void *arg, struct udp_pcb *upcb, struct pbuf *p, const ip_addr_t *addr, u16_t port);
+
+static void loopback_server_receive_callback(void *arg, struct udp_pcb *upcb, struct pbuf *p, const ip_addr_t *addr, u16_t port)
+{
+  struct pbuf *p_tx;
+
+  p_tx = pbuf_alloc(PBUF_TRANSPORT, p->len, PBUF_RAM);
+
+  if (p_tx != NULL)
+  {
+    pbuf_take(p_tx, (char *)p->payload, p->len);
+    udp_connect(upcb, addr, port);
+    udp_send(upcb, p_tx);
+    udp_disconnect(upcb);
+    pbuf_free(p_tx);
+  }
+
+  pbuf_free(p);
+}
+
+static void loopback_client_init(void)
+{
+  loopback_server_pcb = udp_new();
+
+  if (loopback_server_pcb != NULL && udp_bind(loopback_server_pcb, IP_ADDR_ANY, LOOPBACK_UDP_PORT) == ERR_OK)
+  {
+    udp_recv(loopback_server_pcb, loopback_server_receive_callback, NULL);
+    loopback_client_pcb = udp_new();
+
+    if (loopback_client_pcb != NULL && udp_bind(loopback_client_pcb, IP_ADDR_ANY, 0) == ERR_OK)
+    {
+      udp_recv(loopback_client_pcb, loopback_client_receive_callback, NULL);
+      printf("Loopback test: client ready, local port %d\r\n", loopback_client_pcb->local_port);
+      return;
+    }
+  }
+
+  printf("Loopback test: failed to initialize local UDP sockets\r\n");
+
+  if (loopback_client_pcb != NULL)
+  {
+    udp_remove(loopback_client_pcb);
+    loopback_client_pcb = NULL;
+  }
+
+  if (loopback_server_pcb != NULL)
+  {
+    udp_remove(loopback_server_pcb);
+    loopback_server_pcb = NULL;
+  }
+}
+
+static void loopback_test_send(struct netif *netif)
+{
+  struct pbuf *p;
+  int len;
+
+  len = snprintf(loopback_tx_buffer, sizeof(loopback_tx_buffer), "%s #%lu", LOOPBACK_MSG, (unsigned long)loopback_tx_seq);
+  p = pbuf_alloc(PBUF_TRANSPORT, (u16_t)len, PBUF_RAM);
+
+  if (p != NULL)
+  {
+    pbuf_take(p, loopback_tx_buffer, (u16_t)len);
+
+    if (udp_sendto(loopback_client_pcb, p, netif_ip4_addr(netif), LOOPBACK_UDP_PORT) == ERR_OK)
+    {
+      printf("Loopback test: sent %s to %s:%d\r\n", loopback_tx_buffer, ip4addr_ntoa(netif_ip4_addr(netif)), LOOPBACK_UDP_PORT);
+      loopback_tx_seq++;
+    }
+    else
+    {
+      printf("Loopback test: failed to send datagram #%lu\r\n", (unsigned long)loopback_tx_seq);
+    }
+
+    pbuf_free(p);
+  }
+}
+
+static void loopback_client_receive_callback(void *arg, struct udp_pcb *upcb, struct pbuf *p, const ip_addr_t *addr, u16_t port)
+{
+  if ((p->len == strlen(loopback_tx_buffer)) && (memcmp(p->payload, loopback_tx_buffer, p->len) == 0))
+  {
+    loopback_pass_count++;
+    printf("Loopback test: PASSED - echoed data matches (pass=%lu, fail=%lu)\r\n", (unsigned long)loopback_pass_count, (unsigned long)loopback_fail_count);
+    BSP_LED_On(LED_GREEN);
+  }
+  else
+  {
+    loopback_fail_count++;
+    printf("Loopback test: FAILED - echoed data mismatch (pass=%lu, fail=%lu)\r\n", (unsigned long)loopback_pass_count, (unsigned long)loopback_fail_count);
+    BSP_LED_On(LED_RED);
+  }
+
+  pbuf_free(p);
+
+  if ((loopback_pass_count + loopback_fail_count) >= LOOPBACK_TEST_COUNT)
+  {
+    if (loopback_fail_count == 0U)
+    {
+      printf("\r\nLwIP loopback self-test PASSED (%lu/%lu packets)\r\n", (unsigned long)loopback_pass_count, (unsigned long)LOOPBACK_TEST_COUNT);
+    }
+    else
+    {
+      printf("\r\nLwIP loopback self-test completed with failures (%lu/%lu packets)\r\n", (unsigned long)loopback_pass_count, (unsigned long)LOOPBACK_TEST_COUNT);
+    }
+  }
+}
+
+void loopback_test_periodic_handle(struct netif *netif)
+{
+  static uint8_t waiting_msg_shown = 0;
+
+  if (!netif_is_link_up(netif) || ip4_addr_isany(netif_ip4_addr(netif)))
+  {
+    if (!waiting_msg_shown)
+    {
+      printf("Loopback test: waiting for the link and an IP address...\r\n");
+      waiting_msg_shown = 1;
+    }
+    return;
+  }
+
+  if (loopback_client_pcb == NULL)
+  {
+    loopback_client_init();
+    loopback_last_tick = HAL_GetTick();
+    return;
+  }
+
+  if (loopback_tx_seq >= LOOPBACK_TEST_COUNT)
+  {
+    return;
+  }
+
+  if ((HAL_GetTick() - loopback_last_tick) >= LOOPBACK_TEST_PERIOD_MS)
+  {
+    loopback_last_tick = HAL_GetTick();
+    loopback_test_send(netif);
+  }
+}
+#endif /* LOOPBACK_TEST_ENABLE */
+
 

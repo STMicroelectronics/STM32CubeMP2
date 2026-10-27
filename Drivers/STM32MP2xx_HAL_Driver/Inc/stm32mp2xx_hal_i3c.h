@@ -455,7 +455,7 @@ typedef struct __I3C_HandleTypeDef
   /*!< I3C Controller Dynamic Address Assignment completed callback                                */
 
   void (* TgtReqDynamicAddrCallback)(struct __I3C_HandleTypeDef *hi3c, uint64_t targetPayload);
-  /*!< I3C Controller request dynamic address callback during Dynamic Address Assignment processus */
+  /*!< I3C Controller request dynamic address callback during Dynamic Address Assignment process */
 
   void (* TgtTxCpltCallback)(struct __I3C_HandleTypeDef *hi3c);
   /*!< I3C Target private data Tx Transfer completed callback                                      */

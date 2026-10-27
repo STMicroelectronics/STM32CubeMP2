@@ -38,9 +38,6 @@
 #if ENABLE_LOW_POWER_MGR_TASK
 #include "low_power_mgr_task.h"
 #endif
-#if ENABLE_SCMI_MGR_TASK
-#include "scmi_mgr_task.h"
-#endif /* ENABLE_SCMI_MGR_TASK */
 #if ENABLE_BTN_MONITOR_TASK
 #include "btn_monitor_task.h"
 #endif /* ENABLE_BTN_MONITOR_TASK */
@@ -69,6 +66,14 @@
 #define OPENAMP_FWU_ENDPOINT_ADDR           (0x5BU)
 #endif
 
+#ifndef ENABLE_RPMSG_BM_ECHO_EPT
+#define ENABLE_RPMSG_BM_ECHO_EPT           0
+#endif
+#if ENABLE_RPMSG_BM_ECHO_EPT
+static int counter = 0;
+#define OPENAMP_BM_ECHO_ENDPOINT_ADDR      (0x5CU)
+#endif
+
 /* Private function prototypes ----------------------------------------------*/
 static void OpenampTask(void *argument);
 
@@ -83,8 +88,6 @@ static void OpenampTask_DisplayEndpointRegister(void);
 #if ENABLE_LOW_POWER_MGR_TASK
 static void OpenampTask_LowPowerEndpointRegister(void);
 #endif
-
-static void OpenampTask_ScmiPowerEventListener(ScmiPowerEvent_t event, void *context);
 
 #if ENABLE_BTN_MONITOR_TASK
 static void OpenAMP_RebootButtonHandler(ButtonEventType_t event, void *context);
@@ -115,7 +118,7 @@ static const osMessageQueueAttr_t OpenampTaskEventQueueAttr =
   .name = "OpenampTaskEventQueue",
 };
 
-static OpenampTaskState_t OpenampTaskState = OPENAMP_TASK_STATE_STOPPED;
+static volatile OpenampTaskState_t OpenampTaskState = OPENAMP_TASK_STATE_STOPPED;
 
 /**
   * @brief OpenAMP task thread attributes.
@@ -158,6 +161,16 @@ static LowPowerMgrAgentHandle_t openampLowPowerAgentHandle = LOW_POWER_MGR_AGENT
 static struct rpmsg_endpoint fwu_ept;
 #endif
 
+#if ENABLE_RPMSG_BM_ECHO_EPT
+/**
+  * @brief RPMsg BM echo endpoint handle.
+  */
+static struct rpmsg_endpoint bm_echo_ept;
+static int OpenampTask_BmEchoCallback(struct rpmsg_endpoint *ept, void *data, size_t len,
+                                      uint32_t src, void *priv);
+static void OpenampTask_BmEchoEndpointRegister(void);
+#endif
+
 /* Private functions ---------------------------------------------------------*/
 /**
   * @brief  Post a command to the OpenAMP task queue.
@@ -172,6 +185,26 @@ bool OpenampTask_PostCommand(const OpenampTaskCommand_t *cmd)
   }
 
   return (osMessageQueuePut(OpenampTaskEventQueue, cmd, 0U, 0U) == osOK);
+}
+
+/**
+  * @brief  Request OpenAMP reinitialization for a remote processor restart.
+  * @note   Called by RemoteProcTask once the remote processor is confirmed
+  *         offline.
+  * @param  cpu_id: Remote processor CPU identifier associated with the restart.
+  * @retval true if the reinit command was accepted, false otherwise.
+  */
+bool OpenampTask_RequestReinit(uint32_t cpu_id)
+{
+  OpenampTaskCommand_t cmd = { .type = OPENAMP_CMD_REINIT, .payload.param = cpu_id };
+
+  if (OpenampTaskState != OPENAMP_TASK_STATE_READY)
+  {
+    return false;
+  }
+
+  OpenampTaskState = OPENAMP_TASK_STATE_STOPPED;
+  return OpenampTask_PostCommand(&cmd);
 }
 
 /**
@@ -209,16 +242,12 @@ static void OpenampTask(void *argument)
             break;
           }
 
-          if (MX_OPENAMP_Init(RPMSG_REMOTE, NULL, &hipcc) != HAL_OK)
+          if (MX_OPENAMP_RPMsg_Init(RPMSG_REMOTE, NULL, &hipcc) != HAL_OK)
           {
             APP_LOG_ERR("OpenAMP", "OpenAMP init failed");
             OpenampTaskState = OPENAMP_TASK_STATE_STOPPED;
             break;
           }
-
-#if ENABLE_SCMI_MGR_TASK
-          ScmiMgrTask_RegisterListener(OpenampTask_ScmiPowerEventListener, NULL);
-#endif /* ENABLE_SCMI_MGR_TASK */
 
 #if ENABLE_BTN_MONITOR_TASK
           BtnMonitorTask_RegisterListener(BUTTON_EVENT_VERY_LONG_PRESS, OpenAMP_RebootButtonHandler, NULL);
@@ -234,6 +263,10 @@ static void OpenampTask(void *argument)
 
 #if ENABLE_FWU_MGR_TASK
           OpenampTask_FwuEndpointRegister();
+#endif
+
+#if ENABLE_RPMSG_BM_ECHO_EPT
+          OpenampTask_BmEchoEndpointRegister();
 #endif
 
           OpenampTaskState = OPENAMP_TASK_STATE_READY;
@@ -254,51 +287,60 @@ static void OpenampTask(void *argument)
 
         case OPENAMP_CMD_REINIT:
         {
-          APP_LOG_INF("OpenAMP", "OpenAMP reinit requested");
-
-          if (OpenampTaskState == OPENAMP_TASK_STATE_READY)
-          {
-#if ENABLE_SCMI_MGR_TASK
-            (void)ScmiMgrTask_UnregisterListener(OpenampTask_ScmiPowerEventListener);
-#endif /* ENABLE_SCMI_MGR_TASK */
+          APP_LOG_INF("OpenAMP", "OpenAMP reinit requested for cpu%lu", cmd.payload.param);
 
 #if ENABLE_BTN_MONITOR_TASK
-            BtnMonitorTask_UnregisterListener(BUTTON_EVENT_VERY_LONG_PRESS);
+          BtnMonitorTask_UnregisterListener(BUTTON_EVENT_VERY_LONG_PRESS);
 #endif /* ENABLE_BTN_MONITOR_TASK */
 
 #if ENABLE_DISPLAY_TASK
-            if (display_ept.addr == OPENAMP_DISPLAY_ENDPOINT_ADDR)
-            {
-              display_ept.addr = 0;
-            }
+          if (display_ept.addr == OPENAMP_DISPLAY_ENDPOINT_ADDR)
+          {
+            display_ept.addr = 0;
+          }
 #endif
 
 #if ENABLE_LOW_POWER_MGR_TASK
-            if (low_power_ept.addr == OPENAMP_LOW_POWER_ENDPOINT_ADDR)
-            {
-              low_power_ept.addr = 0;
-            }
+          if (low_power_ept.addr == OPENAMP_LOW_POWER_ENDPOINT_ADDR)
+          {
+            low_power_ept.addr = 0;
+          }
 #endif
 
 #if ENABLE_FWU_MGR_TASK
-            if (fwu_ept.addr == OPENAMP_FWU_ENDPOINT_ADDR)
-            {
-              fwu_ept.addr = 0;
-            }
+          if (fwu_ept.addr == OPENAMP_FWU_ENDPOINT_ADDR)
+          {
+            fwu_ept.addr = 0;
+          }
 #endif
 
-            if (power_ept.addr == OPENAMP_POWER_ENDPOINT_ADDR)
-            {
-              power_ept.addr = 0;
-            }
+#if ENABLE_RPMSG_BM_ECHO_EPT
+          if (bm_echo_ept.addr == OPENAMP_BM_ECHO_ENDPOINT_ADDR)
+          {
+            bm_echo_ept.addr = 0;
+          }
+#endif
 
-            OPENAMP_DeInit(&hipcc);
+          if (power_ept.addr == OPENAMP_POWER_ENDPOINT_ADDR)
+          {
+            power_ept.addr = 0;
+          }
+
+          OPENAMP_DeInit(&hipcc);
+
+          if (MX_OPENAMP_Init(RPMSG_REMOTE, &hipcc) != HAL_OK)
+          {
+            APP_LOG_ERR("OpenAMP", "OpenAMP platform reinit failed");
+            break;
           }
 
           OpenampTaskState = OPENAMP_TASK_STATE_STOPPED;
           osDelay(100U);
           OpenampTaskCommand_t init_cmd = { .type = OPENAMP_CMD_INIT, .payload.param = 0U };
-          (void)OpenampTask_PostCommand(&init_cmd);
+          if (!OpenampTask_PostCommand(&init_cmd))
+          {
+            APP_LOG_ERR("OpenAMP", "Failed to queue OpenAMP initialization");
+          }
           break;
         }
 
@@ -322,24 +364,21 @@ static void OpenampTask(void *argument)
 
         case OPENAMP_CMD_REBOOT:
         {
-          RemoteProcState remoteproc_state;
-
           if (OpenampTaskState != OPENAMP_TASK_STATE_READY)
           {
             APP_LOG_WARN("OpenAMP", "reboot requested while OpenAMP not ready");
             break;
           }
 
-          remoteproc_state = RemoteProcTask_GetState();
-
-          if (remoteproc_state == REMOTEPROC_STATE_SUSPENDED)
+#if ENABLE_LOW_POWER_MGR_TASK
+          if (LowPowerMgrTask_IsRun2Active())
           {
-            APP_LOG_INF("OpenAMP", "reboot requested while remote processor suspended, resume copro");
-            (void)RemoteProcTask_PostEvent(REMOTEPROC_EVENT_RESUME, 0U);
+            APP_LOG_INF("OpenAMP", "reboot request ignored while system is in RUN2");
             break;
           }
+#endif
 
-          if (remoteproc_state != REMOTEPROC_STATE_RUNNING)
+          if (RemoteProcTask_GetState() != REMOTEPROC_STATE_RUNNING)
           {
             APP_LOG_WARN("OpenAMP", "reboot requested while remote processor not running");
             break;
@@ -364,6 +403,7 @@ static void OpenampTask(void *argument)
 #endif
 
         default:
+          APP_LOG_INF("OpenAMP", "ERROR OpenAMP unknown command %d", cmd.type);
           break;
       }
     }
@@ -577,23 +617,6 @@ static int OpenampTask_PowerSendCommand(const char *cmd)
   return rpmsg_trysend(&power_ept, cmd, strlen(cmd) + 1U);
 }
 
-/**
-  * @brief  SCMI power event listener.
-  * @param  event: SCMI power event.
-  * @param  context: User context pointer (unused).
-  * @retval None
-  */
-static void OpenampTask_ScmiPowerEventListener(ScmiPowerEvent_t event, void *context)
-{
-  (void)context;
-
-  if (event == SCMI_POWER_EVENT_WARM_RESET)
-  {
-    OpenampTaskCommand_t cmd = { .type = OPENAMP_CMD_REINIT, .payload.param = 0U };
-    (void)OpenampTask_PostCommand(&cmd);
-  }
-}
-
 #if ENABLE_BTN_MONITOR_TASK
 /**
   * @brief  Button event handler used to trigger a reboot.
@@ -610,6 +633,61 @@ static void OpenAMP_RebootButtonHandler(ButtonEventType_t event, void *context)
   (void)OpenampTask_PostCommand(&cmd);
 }
 #endif /* ENABLE_BTN_MONITOR_TASK */
+
+#if ENABLE_RPMSG_BM_ECHO_EPT
+/**
+  * @brief  RPMsg callback for the BM echo endpoint.
+  * @note   Logs the received message, builds a reply and sends it back to the
+  *         A35 bare-metal peer.
+  * @param  ept: Local RPMsg endpoint.
+  * @param  data: Pointer to received message buffer.
+  * @param  len: Length of received message (unused).
+  * @param  src: Remote endpoint address.
+  * @param  priv: User private context (unused).
+  * @retval 0 on success, negative error code otherwise.
+  */
+static int OpenampTask_BmEchoCallback(struct rpmsg_endpoint *ept, void *data, size_t len,
+                                      uint32_t src, void *priv)
+{
+  (void)len;
+  (void)priv;
+
+  char msg[32];
+  APP_LOG_INF("OpenAMP", "BM echo RX from EPT 0x%lx: %s", src, (char *)data);
+  snprintf(msg, sizeof(msg), "Hello %d from M33", counter++);
+  APP_LOG_INF("OpenAMP", "BM echo TX to EPT 0x%lx: %s", src, msg);
+  OPENAMP_send(ept, msg, sizeof(msg));
+
+  return 0;
+}
+
+/**
+  * @brief  Register the BM echo RPMsg endpoint.
+  * @note   Safe to call multiple times.
+  * @retval None
+  */
+static void OpenampTask_BmEchoEndpointRegister(void)
+{
+  int status;
+
+  if (bm_echo_ept.addr == OPENAMP_BM_ECHO_ENDPOINT_ADDR)
+  {
+    return;
+  }
+
+  APP_LOG_DBG("OpenAMP", "Enable RPMSG for BM echo");
+  status = OPENAMP_create_fixed_endpoint(&bm_echo_ept,
+                                         "bm_echo",
+                                         OPENAMP_BM_ECHO_ENDPOINT_ADDR,
+                                         OPENAMP_BM_ECHO_ENDPOINT_ADDR,
+                                         OpenampTask_BmEchoCallback,
+                                         NULL);
+  if (status != 0)
+  {
+    APP_LOG_ERR("OpenAMP", "BM echo endpoint creation failed (%d)", status);
+  }
+}
+#endif /* ENABLE_RPMSG_BM_ECHO_EPT */
 
 /* Exported functions --------------------------------------------------------*/
 /**
@@ -638,6 +716,12 @@ void OpenampTask_Init(void)
   {
     APP_LOG_ERR("OpenAMP", "OpenAMP platform init failed");
     NSAppCore_ErrorHandler();
+  }
+
+  if (MX_OPENAMP_Init(RPMSG_REMOTE, &hipcc) != HAL_OK)
+  {
+    APP_LOG_ERR("OpenAMP", "OpenAMP init failed");
+    return;
   }
 
   OpenampTaskHandle = osThreadNew(OpenampTask, NULL, &OpenampTask_Attributes);
@@ -689,16 +773,19 @@ void OpenampTask_DeInit(void)
   }
 #endif
 
+#if ENABLE_RPMSG_BM_ECHO_EPT
+  if (bm_echo_ept.addr == OPENAMP_BM_ECHO_ENDPOINT_ADDR)
+  {
+    bm_echo_ept.addr = 0;
+  }
+#endif
+
   if (power_ept.addr == OPENAMP_POWER_ENDPOINT_ADDR)
   {
     power_ept.addr = 0;
   }
 
   OPENAMP_DeInit(&hipcc);
-
-#if ENABLE_SCMI_MGR_TASK
-  (void)ScmiMgrTask_UnregisterListener(OpenampTask_ScmiPowerEventListener);
-#endif /* ENABLE_SCMI_MGR_TASK */
 
 #if ENABLE_BTN_MONITOR_TASK
   BtnMonitorTask_UnregisterListener(BUTTON_EVENT_VERY_LONG_PRESS);
@@ -720,4 +807,3 @@ void OpenampTask_DeInit(void)
   */
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
-

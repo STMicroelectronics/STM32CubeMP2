@@ -116,6 +116,23 @@
 // #define ENABLE_FWU_MGR_TASK         1
 // #define ENABLE_LOW_POWER_MGR_TASK   1
 
+/* ---------------------------------------------------------------------------
+ * RPMsg BM Echo Endpoint
+ * ---------------------------------------------------------------------------
+ * Enables a fixed-address RPMsg endpoint dedicated to communication with an
+ * A35 bare-metal peer (e.g., the OpenAMP_TTY_Echo_BM demonstration).
+ *
+ * When enabled, the OpenAMP task registers an endpoint named "bm_echo" at
+ * address 0x5C and echoes any received payload verbatim back to the sender.
+ *
+ * Requirements:
+ *   - ENABLE_OPENAMP_TASK must be 1.
+ *
+ * Example (build flags):
+ *   -DENABLE_RPMSG_BM_ECHO_EPT=1
+ * ------------------------------------------------------------------------- */
+// #define ENABLE_RPMSG_BM_ECHO_EPT    1
+
 /* If the project enables a display panel, automatically enable Display Task.
  */
 #if defined(DISPLAY_PANEL_ENABLED)

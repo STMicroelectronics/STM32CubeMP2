@@ -71,6 +71,9 @@ static const osThreadAttr_t ThreadShutdown_attributes = {
   .priority = (osPriority_t) osPriorityAboveNormal,
   .stack_size = 2048
 };
+#ifdef ICACHE_DCACHE_USE
+extern DCACHE_HandleTypeDef hdcache;
+#endif
 static IPCC_HandleTypeDef const *hipcc_handle;
 static uint32_t ipcc_ch_id;
 
@@ -150,6 +153,12 @@ void Thread_Shutdown_Entry(void *argument)
 
   MX_FREERTOS_DeInit();
   /* When ready, notify the remote processor that we can be shut down */
+#ifdef ICACHE_DCACHE_USE
+  HAL_DCACHE_CleanInvalidByAddr(&hdcache, (const uint32_t *)0x80A00000U, 0x003FFC00U);
+  HAL_DCACHE_Disable(&hdcache);
+  HAL_DCACHE_DeInit(&hdcache);
+  HAL_ICACHE_DeInit();
+#endif
   HAL_IPCC_NotifyCPU(hipcc_handle, ipcc_ch_id, IPCC_CHANNEL_DIR_RX);
 
   while(1);

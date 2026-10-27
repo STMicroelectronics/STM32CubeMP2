@@ -172,7 +172,7 @@ typedef struct
                                            (rtcSecureFull == RTC_SECURE_FULL_NO).
                                            This parameter can be a combination of @ref RTCEx_RTC_Secure_Features. */
 
-  uint32_t tampSecureFull;            /*!< Specifies If the TAMP is fully secured or not execpt monotonic counters and
+  uint32_t tampSecureFull;            /*!< Specifies If the TAMP is fully secured or not except monotonic counters and
                                            BackUp registers.
                                            This parameter can be a value of @ref RTCEx_TAMP_Secure_Full */
 
@@ -213,7 +213,7 @@ typedef struct
                                              This parameter can be a combination of
                                              @ref RTCEx_RTC_Privilege_Features. */
 
-  uint32_t tampPrivilegeFull;           /*!< Specifies If the TAMP is fully privileged or not execpt monotonic counters
+  uint32_t tampPrivilegeFull;           /*!< Specifies If the TAMP is fully privileged or not except monotonic counters
                                              and BackUp registers.
                                              This parameter can be a value of @ref RTCEx_TAMP_Privilege_Full. */
 

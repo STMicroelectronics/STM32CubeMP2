@@ -931,7 +931,7 @@ __STATIC_INLINE uint32_t LL_RCC_HSI_IsReady(void)
   * @note When HSITRIM is written, HSICAL is updated with the sum of
   *       HSITRIM and the factory trim value
   * @rmtoll HSICFGR        HSICAL        LL_RCC_HSI_GetCalibration
-  * @retval Between Min_Data = 0x00 and Max_Data = 0xFFF
+  * @retval Between Min_Data = 0x00 and Max_Data = 0x1FF
   */
 __STATIC_INLINE uint32_t LL_RCC_HSI_GetCalibration(void)
 {
@@ -940,7 +940,7 @@ __STATIC_INLINE uint32_t LL_RCC_HSI_GetCalibration(void)
 
 /**
   * @brief  Set HSI Calibration trimming
-  * @note user-programmable trimming value that is added to the HSICAL
+  * @note user-programmable signed value added to the factory calibration to form HSICAL
   * @note Default value is 0
   * @rmtoll HSICFGR        HSITRIM       LL_RCC_HSI_SetCalibTrimming
   * @param  Value Between Min_Data = 0x0 and Max_Data = 0x7F
@@ -983,9 +983,8 @@ __STATIC_INLINE uint32_t LL_RCC_MSI_GetCalibration(void)
 
 /**
   * @brief  Set MSI Calibration trimming
-  * @note user-programmable trimming value that is added to the MSICAL
-  * @note Default value is 16 (0x10) which, when added to the MSICAL value,
-  *       should trim the MSI to 4 MHz
+  * @note user-programmable value added to the factory calibration to form MSICAL
+  * @note Default value is 16 (0x10), which should trim the MSI to 4 MHz
   * @rmtoll MSICFGR        MSITRIM       LL_RCC_MSI_SetCalibTrimming
   * @param  Value can be a value between 0 and 31
   * @retval None

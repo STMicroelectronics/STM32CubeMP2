@@ -3440,7 +3440,7 @@ __STATIC_INLINE uint32_t LL_I3C_IsActiveFlag_ASUPD(const I3C_TypeDef *I3Cx)
 /**
   * @brief  Indicates the status of Interrupt Update flag (target mode).
   *         RESET: Clear default value.
-  *         SET: One or more Interrupt autorized have been updated.
+  *         SET: One or more Interrupt authorized have been updated.
   * @rmtoll EVR          INTUPDF       LL_I3C_IsActiveFlag_INTUPD
   * @param  I3Cx I3C Instance.
   * @retval State of bit (1 or 0).

@@ -128,9 +128,8 @@ Template_StarterApp_M33TD
 	  -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts          # External DT file for sdcard_sdcard bootdevice mode
 	  -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts               # External DT file common for all bootdevice modes
 	  ```
-
 	**Note**: `-DDTS_EXT_DIR` points to `Utilities/dt-stm32mp`. Ensure this is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.
-2. Configure the TFM CMake project:
+	2. Configure the TFM CMake project:
 	- Right-click on `Template_StarterApp_M33TD_CM33_trusted-firmware-m` -> `CMake Configure`.
 3. Build the TFM CMake project:
 	- Right-click on `Template_StarterApp_M33TD_CM33_trusted-firmware-m` -> `Build Project`.
@@ -361,6 +360,7 @@ For the MP25-EV1 board, five TSV flavors are provided to flash under the M33TDCI
 -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts
 ```
 
+
 ---
 
 ### 2. FlashLayout_nor-emmc_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv (nor_emmc Boot Mode)
@@ -377,6 +377,7 @@ For the MP25-EV1 board, five TSV flavors are provided to flash under the M33TDCI
 -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-emmc-s.dts
 -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts
 ```
+
 
 ---
 
@@ -396,6 +397,7 @@ For the MP25-EV1 board, five TSV flavors are provided to flash under the M33TDCI
 -DTFM_PARTITION_PROTECTED_STORAGE=OFF
 ```
 
+
 ---
 
 ### 4. FlashLayout_nor-sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv (nor_sdcard Boot Mode)
@@ -413,6 +415,7 @@ For the MP25-EV1 board, five TSV flavors are provided to flash under the M33TDCI
 -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts
 ```
 
+
 ---
 
 ### 5. FlashLayout_sdcard_stm32mp257f-ev1-cm33tdcid-ostl-optee.tsv (sdcard_sdcard Boot Mode)
@@ -429,6 +432,7 @@ For the MP25-EV1 board, five TSV flavors are provided to flash under the M33TDCI
 -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts
 -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts
 ```
+
 
 ---
 

@@ -125,11 +125,11 @@ In the current STM32MP257F-EV1 VisualWatchdog profile, `NSCoreApp_Init()` starts
    cmake -G"Unix Makefiles" -B build -DTFM_BUILD_DIR=<TFM_BUILD_DIRECTORY>
    ```
    - If `TFM_BUILD_DIR` is not specified, the default path `Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default` is used.
-    - Current project CMake options:
-       - `-DREMOTE_PROC_AUTO_START=ON|OFF` (default: `ON`)
-       - `-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF` (default: `OFF`)
-       - `-DFAULT_EXCEPTION_ENABLE=ON|OFF` (default: `ON`)
-       - `-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF` (default: `ON`)
+      - Current project CMake options:
+         - `-DREMOTE_PROC_AUTO_START=ON|OFF` (default: `ON`)
+         - `-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF` (default: `OFF`)
+         - `-DFAULT_EXCEPTION_ENABLE=ON|OFF` (default: `ON`)
+         - `-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF` (default: `ON`)
 3. Build the project:
    ```bash
    make -C build all
@@ -168,7 +168,6 @@ VisualWatchdog_M33TD
      -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts          # External DT file for sdcard_sdcard bootdevice mode
      -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts               # External DT file common for all bootdevice modes
      ```
-
    **Note**: `-DDTS_EXT_DIR` points to `Utilities/dt-stm32mp`. Ensure this is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.
 2. Configure the TFM CMake project:
    - Right-click on `VisualWatchdog_M33TD_CM33_trusted-firmware-m` -> `CMake Configure`.

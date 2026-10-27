@@ -16,11 +16,17 @@
 #ifndef __METAL_ZEPHYR_SYS__H__
 #define __METAL_ZEPHYR_SYS__H__
 
+#include <metal/cpu.h>
 #include <stdlib.h>
+#include <zephyr/kernel.h>
+
+#include "log.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#define metal_yield() metal_cpu_yield()
 
 #define METAL_INIT_DEFAULTS				\
 {							\
@@ -38,6 +44,11 @@ struct metal_state {
 	/** Common (system independent) data. */
 	struct metal_common_state common;
 };
+
+static inline void metal_wait_usec(uint32_t usec_to_wait)
+{
+	k_busy_wait(usec_to_wait);
+}
 
 #ifdef __cplusplus
 }

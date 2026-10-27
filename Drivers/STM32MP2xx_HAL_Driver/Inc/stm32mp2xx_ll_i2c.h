@@ -390,7 +390,7 @@ typedef struct
 #define LL_I2C_TRIG_GRP2                   (0x20000000U)         /*!< Trigger Group for I2C3 */
 #endif /* I2C3 */
 
-#if defined(I2C_TRIG_GRP1)
+#if defined(LL_I2C_TRIG_GRP1)
 /* HW Trigger signal is EXTI4_TRG         */
 #define LL_I2C_GRP1_EXTI4_TRG                (uint32_t)(LL_I2C_TRIG_GRP1 | (0x4UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is EXTI5_TRG         */
@@ -415,7 +415,7 @@ typedef struct
 #define LL_I2C_GRP1_LPTIM2_CH1_TRG           (uint32_t)(LL_I2C_TRIG_GRP1 | (0xFUL << I2C_AUTOCR_TRIGSEL_Pos))
 #endif /*I2C1 || I2C2 */
 
-#if defined(I2C_TRIG_GRP2)
+#if defined(LL_I2C_TRIG_GRP2)
 /* HW Trigger signal is EXTI4_TRG         */
 #define LL_I2C_GRP2_EXTI4_TRG                (uint32_t)(LL_I2C_TRIG_GRP2 | (0x4UL << I2C_AUTOCR_TRIGSEL_Pos))
 /* HW Trigger signal is EXTI5_TRG         */
@@ -1222,7 +1222,7 @@ __STATIC_INLINE uint32_t LL_I2C_GetMode(const I2C_TypeDef *I2Cx)
   * @note   The macro IS_SMBUS_ALL_INSTANCE(I2Cx) can be used to check whether or not
   *         SMBus feature is supported by the I2Cx Instance.
   * @note   SMBus Device mode:
-  *         - SMBus Alert pin is drived low and
+  *         - SMBus Alert pin is driven low and
   *           Alert Response Address Header acknowledge is enabled.
   *         SMBus Host mode:
   *         - SMBus Alert pin management is supported.
@@ -1240,7 +1240,7 @@ __STATIC_INLINE void LL_I2C_EnableSMBusAlert(I2C_TypeDef *I2Cx)
   * @note   The macro IS_SMBUS_ALL_INSTANCE(I2Cx) can be used to check whether or not
   *         SMBus feature is supported by the I2Cx Instance.
   * @note   SMBus Device mode:
-  *         - SMBus Alert pin is not drived (can be used as a standard GPIO) and
+  *         - SMBus Alert pin is not driven (can be used as a standard GPIO) and
   *           Alert Response Address Header acknowledge is disabled.
   *         SMBus Host mode:
   *         - SMBus Alert pin management is not supported.

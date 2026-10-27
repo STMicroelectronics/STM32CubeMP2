@@ -47,6 +47,12 @@ enum {
 
 #define SPI3_TX_BUFFER_COUNT   (3U)
 #define SPI3_RX_BUFFER_COUNT   (SPI3_TX_BUFFER_COUNT)
+#define SPI3_CACHE_LINE_SIZE_BYTES (32U)
+#define SPI3_SIZE_ALIGN_UP(size_) \
+  (((uint32_t)(size_) + (SPI3_CACHE_LINE_SIZE_BYTES - 1U)) & ~(SPI3_CACHE_LINE_SIZE_BYTES - 1U))
+#define SPI3_TX_PATTERN        "0*****SPI3 LINKED LIST DMA multi-buffer *****0"
+#define SPI3_TX_PAYLOAD_SIZE   ((uint32_t)(sizeof(SPI3_TX_PATTERN) - 1U))
+#define SPI3_DMA_BUFFER_SIZE   SPI3_SIZE_ALIGN_UP(SPI3_TX_PAYLOAD_SIZE)
 /* Uncomment this line to build the Master board firmware.*/
 #define MASTER_BOARD
 
@@ -70,13 +76,10 @@ ALIGN_32BYTES(DMA_NodeTypeDef  SPI3_Tx_Nodes[SPI3_TX_BUFFER_COUNT]);
 ALIGN_32BYTES(DMA_QListTypeDef SPI3_Rx_Queue);
 ALIGN_32BYTES(DMA_NodeTypeDef  SPI3_Rx_Nodes[SPI3_RX_BUFFER_COUNT]);
 
-/* TX buffers (aligned). Size is deduced from the string initializer.*/
-ALIGN_32BYTES(static uint8_t aTxBuffer0[]) =
-  "0*****SPI3 LINKED LIST DMA multi-buffer *****0";
-ALIGN_32BYTES(static uint8_t aTxBuffer1[]) =
-  "0*****SPI3 LINKED LIST DMA multi-buffer *****0";
-ALIGN_32BYTES(static uint8_t aTxBuffer2[]) =
-  "0*****SPI3 LINKED LIST DMA multi-buffer *****0";
+/* TX buffers use full cache-line-sized slots. DMA transfers only payload bytes. */
+ALIGN_32BYTES(static uint8_t aTxBuffer0[SPI3_DMA_BUFFER_SIZE]) = SPI3_TX_PATTERN;
+ALIGN_32BYTES(static uint8_t aTxBuffer1[SPI3_DMA_BUFFER_SIZE]) = SPI3_TX_PATTERN;
+ALIGN_32BYTES(static uint8_t aTxBuffer2[SPI3_DMA_BUFFER_SIZE]) = SPI3_TX_PATTERN;
 
 static uint8_t *const aTxBuffers[SPI3_TX_BUFFER_COUNT] =
 {
@@ -87,15 +90,15 @@ static uint8_t *const aTxBuffers[SPI3_TX_BUFFER_COUNT] =
 
 static const uint32_t aTxBufferSizes[SPI3_TX_BUFFER_COUNT] =
 {
-  (uint32_t)(sizeof(aTxBuffer0) - 1u),
-  (uint32_t)(sizeof(aTxBuffer1) - 1u),
-  (uint32_t)(sizeof(aTxBuffer2) - 1u),
+  SPI3_TX_PAYLOAD_SIZE,
+  SPI3_TX_PAYLOAD_SIZE,
+  SPI3_TX_PAYLOAD_SIZE,
 };
 
-/* RX buffers (aligned). */
-ALIGN_32BYTES(static uint8_t aRxBuffer0[sizeof(aTxBuffer0) - 1u]);
-ALIGN_32BYTES(static uint8_t aRxBuffer1[sizeof(aTxBuffer1) - 1u]);
-ALIGN_32BYTES(static uint8_t aRxBuffer2[sizeof(aTxBuffer2) - 1u]);
+/* RX buffers use full cache-line-sized slots. DMA receives only payload bytes. */
+ALIGN_32BYTES(static uint8_t aRxBuffer0[SPI3_DMA_BUFFER_SIZE]);
+ALIGN_32BYTES(static uint8_t aRxBuffer1[SPI3_DMA_BUFFER_SIZE]);
+ALIGN_32BYTES(static uint8_t aRxBuffer2[SPI3_DMA_BUFFER_SIZE]);
 
 static uint8_t *const aRxBuffers[SPI3_RX_BUFFER_COUNT] =
 {
@@ -106,9 +109,9 @@ static uint8_t *const aRxBuffers[SPI3_RX_BUFFER_COUNT] =
 
 static const uint32_t aRxBufferSizes[SPI3_RX_BUFFER_COUNT] =
 {
-  (uint32_t)sizeof(aRxBuffer0),
-  (uint32_t)sizeof(aRxBuffer1),
-  (uint32_t)sizeof(aRxBuffer2),
+  SPI3_TX_PAYLOAD_SIZE,
+  SPI3_TX_PAYLOAD_SIZE,
+  SPI3_TX_PAYLOAD_SIZE,
 };
 
 /* transfer state */
@@ -132,9 +135,7 @@ static void MX_DCACHE_Init(void);
 static void MPU_Config(void);
 DCACHE_HandleTypeDef hdcache = {0};
 
-#define DCACHE_LINE_SIZE_BYTES (32U)
-#define DCACHE_SIZE_ALIGN_UP(size_) \
-  (((uint32_t)(size_) + (DCACHE_LINE_SIZE_BYTES - 1U)) & ~(DCACHE_LINE_SIZE_BYTES - 1U))
+#define DCACHE_SIZE_ALIGN_UP(size_) SPI3_SIZE_ALIGN_UP(size_)
 #endif /* ICACHE_DCACHE_ENABLE */
 static HAL_StatusTypeDef SPI3_Transmit_LinkedList_Config(void);
 static HAL_StatusTypeDef SPI3_Receive_LinkedList_Config(void);
@@ -679,7 +680,7 @@ static void MX_SPI3_Init(void)
   SpiHandle.Init.FifoThreshold     = SPI_FIFO_THRESHOLD_01DATA;
   SpiHandle.Init.CRCPolynomial     = 7;
   SpiHandle.Init.CRCLength         = SPI_CRC_LENGTH_8BIT;
-  SpiHandle.Init.NSS               = SPI_NSS_SOFT;  /* or HARD if printhead needs it */
+  SpiHandle.Init.NSS               = SPI_NSS_SOFT;
   SpiHandle.Init.NSSPMode          = SPI_NSS_PULSE_DISABLE;
   SpiHandle.Init.MasterKeepIOState = SPI_MASTER_KEEP_IO_STATE_ENABLE;
 
@@ -757,6 +758,13 @@ void CoproSync_ShutdownCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPC
 
   /* Deinitialize the LED3 */
   BSP_LED_DeInit(LED3);
+
+#ifdef ICACHE_DCACHE_ENABLE
+  HAL_DCACHE_CleanInvalidByAddr(&hdcache, (const uint32_t *)0x80A00000U, 0x003FFC00U);
+  HAL_DCACHE_Disable(&hdcache);
+  HAL_DCACHE_DeInit(&hdcache);
+  HAL_ICACHE_DeInit();
+#endif
 
   /* When ready, notify the remote processor that we can be shut down */
   HAL_IPCC_NotifyCPU(hipcc, ChannelIndex, IPCC_CHANNEL_DIR_RX);

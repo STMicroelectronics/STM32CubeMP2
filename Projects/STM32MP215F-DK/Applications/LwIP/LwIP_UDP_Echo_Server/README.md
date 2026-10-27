@@ -78,6 +78,28 @@ Connectivity, LwIP, Ethernet, TCP/IP, DHCP, echo server,
   - Remote PC Set-up
     - PC must share the same LAN network configuration with the dk board
 
+@par External Device Tree (A35TD) configuration
+
+On STM32MP215F-DK, the Ethernet peripheral (ETH1) and its pins are owned by the
+Cortex-A35 (Linux) by default. To let this Cortex-M33 example use Ethernet, the
+external device tree (A35TD) of the "m33_examples" variant must be updated to
+release ETH1 and its resources to the Cortex-M33 (CID2, non-secure):
+
+  - In stm32mp2/a35-td/linux/stm32mp215f-dk-ca35tdcid-ostl-m33-examples.dts,
+    disable the eth1 node on the Linux side:
+      &eth1 { status = "disabled"; };
+
+  - In stm32mp2/a35-td/optee/stm32mp215f-dk-ca35tdcid-ostl-m33-examples-rif.dtsi,
+    statically assign the following resources to CID2 (Cortex-M33), non-secure:
+      - ETH1 peripheral:     STM32MP21_RIFSC_ETH1_ID -> RIF_CID2
+      - ETH1 DMA master bus: RIMU_ID(6)              -> RIF_CID2
+      - ETH1 RMII GPIO pins  -> RIF_CID2:
+          gpiob: PB11, PB12, PB13, PB15
+          gpioc: PC1, PC2
+          gpiof: PF0, PF1, PF2, PF8
+          gpioh: PH11
+
+Rebuild and deploy the updated A35TD device tree before running this example.
 
 @par How to use it ?
 
@@ -92,5 +114,9 @@ In order to make the program work, you must do the following:
 	- cd /home/root/LwIP_UDP_Echo_Server
 	- ./fw_cortex_m33.sh start
 
+@par Optional single-board loopback self-test
+
+Set LOOPBACK_TEST_ENABLE to 1 in lwipopts.h to exercise the LwIP stack locally
+without requiring a second board or PC. The option is disabled by default.
 
  */

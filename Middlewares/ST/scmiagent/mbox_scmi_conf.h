@@ -30,8 +30,11 @@
 /* Private includes ----------------------------------------------------------*/
 
 /* Exported types ------------------------------------------------------------*/
+#if defined(CORE_CA35) & defined(__AARCH64__)
+typedef unsigned long int phys_addr_t;     /* Physical address type */
+#else
 typedef unsigned int phys_addr_t;     /* Physical address type */
-
+#endif
 /* Exported constants --------------------------------------------------------*/
 
 /* Exported macro ------------------------------------------------------------*/
@@ -43,7 +46,11 @@ typedef unsigned int phys_addr_t;     /* Physical address type */
 #define MBOX_SCMI_IPCC_TIMEOUT_CALLBACK_MS    1000
 
 #if defined(CORE_CA35)
+#if defined(__AARCH64__)
+#define MBOX_SCMI_IPCC_CHANNEL                IPCC_CHANNEL_16
+#else
 #define MBOX_SCMI_IPCC_CHANNEL                IPCC_CHANNEL_15
+#endif /* _AARCH64_ */
 #else
 #define MBOX_SCMI_IPCC_CHANNEL                IPCC_CHANNEL_16
 #endif
@@ -119,11 +126,25 @@ extern unsigned int Image$$__SCMI_SHMEM__$$ZI$$Length;
  * __SCMI_SHM_region_end__    = ORIGIN(SCMI_SHMEM)+LENGTH(SCMI_SHMEM);
  */
 
+#if defined(__AARCH64__)
+/* AArch64 (64-bit, LP64): the linker symbols hold a 64-bit address. Declaring them
+ * as arrays makes the symbol name decay to its full address (a pointer), so no part
+ * of the address is lost. Casting the address to the 32-bit phys_addr_t (as the
+ * 32-bit path below does) would truncate a 64-bit pointer and is therefore avoided. */
+extern uint8_t __SCMI_SHM_region_start__[];  /* defined by linker script */
+extern uint8_t __SCMI_SHM_region_end__[];    /* defined by linker script */
+
+#define SCMI_SHM_START_ADDRESS       (__SCMI_SHM_region_start__)
+#define SMT_SHARED_MEMORY_SIZE       (128)
+#else   /* __AARCH64__ */
+/* 32-bit Arm: a pointer and phys_addr_t are both 32-bit, so the original cast keeps
+ * the full address. Behaviour is identical to the AArch64 path above. */
 extern unsigned int __SCMI_SHM_region_start__;  /* defined by linker script */
 extern unsigned int __SCMI_SHM_region_end__;    /* defined by linker script */
 
 #define SCMI_SHM_START_ADDRESS       (phys_addr_t)(&__SCMI_SHM_region_start__)
 #define SMT_SHARED_MEMORY_SIZE       (128)
+#endif  /* __AARCH64__ */
 
 /* Actual size of memory reserved for SCMI_SHM is 4096 Bytes (refer to linker file)
  * But as of now only 128*2 Bytes are in use (128 for TX & 128 for RX)

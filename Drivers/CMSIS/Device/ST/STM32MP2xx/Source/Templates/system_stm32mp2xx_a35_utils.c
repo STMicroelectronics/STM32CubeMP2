@@ -221,7 +221,7 @@ void a35_clean_data_cache( void )
     "c_skip:                         \n\t"
     "  add    x10, x10, #2           \n\t" /* increment cache number */
     "  cmp    x3, x10                \n\t"
-    "  b.gt   ci_loop1               \n\t"
+    "  b.gt   c_loop1                \n\t"
     "c_finished:                     \n\t"
     "  mov    x10, #0                \n\t" /* switch back to cache level 0 */
     "  msr    csselr_el1, x10        \n\t" /* select current cache level in csselr */

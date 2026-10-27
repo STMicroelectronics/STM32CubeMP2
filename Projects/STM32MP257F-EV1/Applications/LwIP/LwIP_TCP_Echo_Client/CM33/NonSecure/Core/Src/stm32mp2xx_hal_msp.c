@@ -65,11 +65,6 @@
 void HAL_MspInit(void)
 {
   /* USER CODE BEGIN MspInit 0 */
-  /* Acquire TIM6 using Resource manager */
-  if (ResMgr_Request(RESMGR_RESOURCE_RIFSC, STM32MP25_RIFSC_TIM6_ID) != RESMGR_STATUS_ACCESS_OK)
-  {
-    Error_Handler();
-  }
   /* USER CODE END MspInit 0 */
 }
 
@@ -79,11 +74,6 @@ void HAL_MspInit(void)
 void HAL_MspDeInit(void)
 {
   /* USER CODE BEGIN MspInit 0 */
-  /* Release TIM6 using Resource manager */
-  if (ResMgr_Release(RESMGR_RESOURCE_RIFSC, STM32MP25_RIFSC_TIM6_ID) != RESMGR_STATUS_ACCESS_OK)
-  {
-    Error_Handler();
-  }
   /* USER CODE END MspInit 0 */
 }
 
@@ -104,7 +94,7 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
     Error_Handler();
   }
   /* Acquire GPIOA11 using Resource manager */
-  if (ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOA, RESMGR_GPIO_PIN(11))  != RESMGR_STATUS_ACCESS_OK)
+  if (ResMgr_Request(RESMGR_RESOURCE_RIF_GPIOA, RESMGR_GPIO_PIN(11)) != RESMGR_STATUS_ACCESS_OK)
   {
     Error_Handler();
   }
@@ -188,9 +178,11 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
   __HAL_RCC_ETH1MAC_CLK_ENABLE();
   __HAL_RCC_ETH1TX_CLK_ENABLE();
   __HAL_RCC_ETH1RX_CLK_ENABLE();
+
   /* Select Ethernet 125MHz internal clock from RCC */
   HAL_SYSCFG_ETH1ClockSelect(SYSCFG_ETH_RCC_CLK);
 
+#if defined(USE_DEVELOPMENT_MODE)
   /* Enable GPIOA clock */
   if (ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(90)) == RESMGR_STATUS_ACCESS_OK)
   {
@@ -216,12 +208,13 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
   {
     __HAL_RCC_GPIOJ_CLK_ENABLE();
   }
+#endif
 
   /* ETH_RGMII_RX_CTL, ETH_RGMII_TX_CTL, ETH_RGMII_RX_CLK, ETH_RGMII_TXD0 */
-  GPIO_InitStructure.Pin =  GPIO_PIN_11 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
+  GPIO_InitStructure.Pin = GPIO_PIN_11 | GPIO_PIN_13 | GPIO_PIN_14 | GPIO_PIN_15;
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
   GPIO_InitStructure.Mode = GPIO_MODE_AF_PP;
-  GPIO_InitStructure.Pull = GPIO_NOPULL ;
+  GPIO_InitStructure.Pull = GPIO_NOPULL;
   GPIO_InitStructure.Alternate = GPIO_AF10_ETH1;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
 
@@ -258,7 +251,7 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
   /* PHY Reset */
   GPIO_InitStructure.Speed = GPIO_SPEED_FREQ_HIGH;
   GPIO_InitStructure.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStructure.Pull = GPIO_NOPULL ;
+  GPIO_InitStructure.Pull = GPIO_NOPULL;
   GPIO_InitStructure.Pin = GPIO_PIN_9;
   HAL_GPIO_Init(GPIOJ, &GPIO_InitStructure);
   HAL_GPIO_WritePin(GPIOJ, GPIO_PIN_9, GPIO_PIN_RESET);
@@ -300,32 +293,6 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
  */
 void HAL_ETH_MspDeInit(ETH_HandleTypeDef *heth)
 {
-  /* Disable GPIOA clock */
-  if (ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(90)) == RESMGR_STATUS_ACCESS_OK)
-  {
-    __HAL_RCC_GPIOA_CLK_DISABLE();
-  }
-  /* Disable GPIOC clock */
-  if (ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(92)) == RESMGR_STATUS_ACCESS_OK)
-  {
-    __HAL_RCC_GPIOC_CLK_DISABLE();
-  }
-  /* Disable GPIOF clock */
-  if (ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(95)) == RESMGR_STATUS_ACCESS_OK)
-  {
-    __HAL_RCC_GPIOF_CLK_DISABLE();
-  }
-  /* Disable GPIOH clock */
-  if (ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(97)) == RESMGR_STATUS_ACCESS_OK)
-  {
-    __HAL_RCC_GPIOH_CLK_DISABLE();
-  }
-  /* Disable GPIOJ clock */
-  if (ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(99)) == RESMGR_STATUS_ACCESS_OK)
-  {
-    __HAL_RCC_GPIOJ_CLK_DISABLE();
-  }
-
   /* Disable Ethernet clocks */
   __HAL_RCC_ETH1_CLK_DISABLE();
   __HAL_RCC_ETH1MAC_CLK_DISABLE();
@@ -335,31 +302,34 @@ void HAL_ETH_MspDeInit(ETH_HandleTypeDef *heth)
   /* Disable IRQ */
   HAL_NVIC_DisableIRQ(ETH1_SBD_IRQn);
 
-  /* Release GPIOA clock */
-  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(90)) != RESMGR_STATUS_ACCESS_OK)
+#if defined(USE_DEVELOPMENT_MODE)
+  /* Disable GPIOA clock */
+  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(90)) == RESMGR_STATUS_ACCESS_OK)
   {
-    Error_Handler();
+    __HAL_RCC_GPIOA_CLK_DISABLE();
   }
-  /* Release GPIOC clock */
-  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(92)) != RESMGR_STATUS_ACCESS_OK)
+  /* Disable GPIOC clock */
+  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(92)) == RESMGR_STATUS_ACCESS_OK)
   {
-    Error_Handler();
+    __HAL_RCC_GPIOC_CLK_DISABLE();
   }
-  /* Release GPIOF clock */
-  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(95)) != RESMGR_STATUS_ACCESS_OK)
+  /* Disable GPIOF clock */
+  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(95)) == RESMGR_STATUS_ACCESS_OK)
   {
-    Error_Handler();
+    __HAL_RCC_GPIOF_CLK_DISABLE();
   }
-  /* Release GPIOH clock */
-  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(97)) != RESMGR_STATUS_ACCESS_OK)
+  /* Disable GPIOH clock */
+  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(97)) == RESMGR_STATUS_ACCESS_OK)
   {
-    Error_Handler();
+    __HAL_RCC_GPIOH_CLK_DISABLE();
   }
-  /* Release GPIOJ clock */
-  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(99)) != RESMGR_STATUS_ACCESS_OK)
+  /* Disable GPIOJ clock */
+  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(99)) == RESMGR_STATUS_ACCESS_OK)
   {
-    Error_Handler();
+    __HAL_RCC_GPIOJ_CLK_DISABLE();
   }
+#endif
+
   /* Release ETH1 using Resource manager */
   if (ResMgr_Release(RESMGR_RESOURCE_RIFSC, STM32MP25_RIFSC_ETH1_ID) != RESMGR_STATUS_ACCESS_OK)
   {

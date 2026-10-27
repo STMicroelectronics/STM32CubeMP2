@@ -1002,7 +1002,7 @@ __STATIC_INLINE void LL_IPCC_Config_C2_CID_Filtering(IPCC_TypeDef *const IPCCx, 
   * @param  IPCCx IPCC Instance.
   * @retval Number of supported channels.
   */
-__STATIC_INLINE uint32_t LL_IPCC_GetChannelNumber(IPCC_TypeDef *IPCCx)
+__STATIC_INLINE uint32_t LL_IPCC_GetChannelNumber(const IPCC_TypeDef *IPCCx)
 {
   return READ_BIT(IPCCx->HWCFGR, IPCC_HWCFGR_CHANNELS) >> IPCC_HWCFGR_CHANNELS_Pos;
 }

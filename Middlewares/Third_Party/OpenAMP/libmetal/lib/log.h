@@ -39,55 +39,74 @@ typedef void (*metal_log_handler)(enum metal_log_level level,
 /**
  * @brief	Set libmetal log handler.
  * @param[in]	handler	log message handler.
- * @return	0 on success, or -errno on failure.
  */
-extern void metal_set_log_handler(metal_log_handler handler);
+void metal_set_log_handler(metal_log_handler handler);
 
 /**
  * @brief	Get the current libmetal log handler.
  * @return	Current log handler.
  */
-extern metal_log_handler metal_get_log_handler(void);
+metal_log_handler metal_get_log_handler(void);
 
 /**
  * @brief	Set the level for libmetal logging.
  * @param[in]	level	log message level.
  */
-extern void metal_set_log_level(enum metal_log_level level);
+void metal_set_log_level(enum metal_log_level level);
 
 /**
  * @brief	Get the current level for libmetal logging.
  * @return	Current log level.
  */
-extern enum metal_log_level metal_get_log_level(void);
+enum metal_log_level metal_get_log_level(void);
 
 /**
  * @brief	Default libmetal log handler.  This handler prints libmetal log
  *		messages to stderr.
  * @param[in]	level	log message level.
  * @param[in]	format	log message format string.
- * @return	0 on success, or -errno on failure.
  */
-extern void metal_default_log_handler(enum metal_log_level level,
-				      const char *format, ...);
+void metal_default_log_handler(enum metal_log_level level,
+			       const char *format, ...);
 
 /**
- * Emit a log message if the log level permits.
+ * @internal
+ *
+ * @brief	used by the metal_log() macro to update the format string
+ *
+ * If ML_FUNC_LINE is defined this macro generates a unified format
+ * string for metal_log() and its convenience metal_*() macros, i.e. it
+ * adds function-name:line-number prefix to all log messages.
+ *
+ * @param[in]	fmt	format string passed from the metal_log() macro
+ */
+#if defined(ML_FUNC_LINE)
+#define metal_fmt(fmt) "%s:%u " fmt, __func__, __LINE__
+#else	/* ML_FUNC_LINE */
+#define metal_fmt(fmt) fmt
+#endif	/* ML_FUNC_LINE */
+
+/**
+ * @brief	Emit a log message if the log level permits.
  *
  * @param	level	Log level.
- * @param	...	Format string and arguments.
+ * @param	fmt	Format string.
+ * @param	... Variable number of arguments.
  */
-#define metal_log(level, ...)						       \
-	((level <= _metal.common.log_level && _metal.common.log_handler) \
-	       ? (void)_metal.common.log_handler(level, __VA_ARGS__)	       \
-	       : (void)0)
+#define metal_log(level, fmt, ...) ({				   \
+	if (_metal.common.log_handler && level <= _metal.common.log_level) \
+		_metal.common.log_handler(level, metal_fmt(fmt), ## __VA_ARGS__);  \
+})
+
+#define metal_err(fmt, args...) metal_log(METAL_LOG_ERROR, fmt, ##args)
+#define metal_warn(fmt, args...) metal_log(METAL_LOG_WARNING, fmt, ##args)
+#define metal_info(fmt, args...) metal_log(METAL_LOG_INFO, fmt, ##args)
+#define metal_dbg(fmt, args...) metal_log(METAL_LOG_DEBUG, fmt, ##args)
 
 /** @} */
 
 #ifdef __cplusplus
 }
 #endif
-
-#include <metal/system/@PROJECT_SYSTEM@/log.h>
 
 #endif /* __METAL_METAL_LOG__H__ */

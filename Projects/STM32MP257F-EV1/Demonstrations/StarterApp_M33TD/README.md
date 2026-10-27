@@ -153,22 +153,17 @@ Deploy into OSTL image tree
 1. Navigate to `Firmware/Projects/STM32MP257F-EV1/Demonstrations/StarterApp_M33TD`.
 2. Run the following command:
    ```bash
-         cmake -G"Unix Makefiles" -B build \
-            -DTFM_BUILD_DIR=<TFM_BUILD_DIRECTORY> \
-            -DREMOTE_PROC_AUTO_START=ON
+   cmake -G"Unix Makefiles" -B build -DTFM_BUILD_DIR=<TFM_BUILD_DIRECTORY>
    ```
-         - If `TFM_BUILD_DIR` is not specified, the default path `Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default` will be used (assuming the TF-M secure build step is completed).
-         - Common build options (see `CMakeLists.txt`):
-            - `-DBUILD_CONFIG=FULL|MINIMUM` (default: `FULL`)
-               - `FULL`: enables display pipeline (adds display panel files and HAL LTDC/LVDS dependencies)
-               - `MINIMUM`: disables display pipeline
-            - `-DBOOT_SPLASHSCREEN=DYNAMIC|STATIC` (default: `DYNAMIC`, only meaningful when `BUILD_CONFIG=FULL`)
-            - `-DREMOTE_PROC_AUTO_START=ON|OFF` (default: `ON`)
-            - `-DLOW_POWER_DEFAULT_POLICY_ENABLE=ON|OFF` (default: `OFF`)
-            - `-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF` (default: `OFF`)
-            - `-DFAULT_EXCEPTION_ENABLE=ON|OFF` (default: `ON`)
-            - `-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF` (default: `ON`)
-
+   - If `TFM_BUILD_DIR` is not specified, the default path `Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default` is used.
+   - Project CMake options:
+     - `-DBUILD_CONFIG=FULL|MINIMUM` (default: `FULL`)
+     - `-DBOOT_SPLASHSCREEN=DYNAMIC|STATIC` (default: `DYNAMIC`, meaningful with `BUILD_CONFIG=FULL`)
+     - `-DREMOTE_PROC_AUTO_START=ON|OFF` (default: `ON`)
+     - `-DLOW_POWER_DEFAULT_POLICY_ENABLE=ON|OFF` (default: `OFF`)
+     - `-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF` (default: `OFF`)
+     - `-DFAULT_EXCEPTION_ENABLE=ON|OFF` (default: `ON`)
+     - `-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF` (default: `ON`)
 3. Build the project:
    ```bash
    make -C build all
@@ -208,7 +203,8 @@ StarterApp_M33TD
       -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts               # External DT file common for all bootdevice modes
       ```
 
-    **Note**: `-DDTS_EXT_DIR` points to `Utilities/dt-stm32mp`. Ensure this is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.
+      
+   **Note**: `-DDTS_EXT_DIR` points to `Utilities/dt-stm32mp`. Ensure this is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.
 
 2. Configure the TFM CMake project:
     - Right-click on `StarterApp_M33TD_CM33_trusted-firmware-m` -> `CMake Configure`.
@@ -521,7 +517,7 @@ For the MP25-EV1 board, five TSV flavors are provided to flash under the M33TDCI
 
 `STM32_FWU_STORAGE_ACCESS` enables the TF-M storage-write support used to stage and install firmware updates through the StarterApp FWU manager.
 
-This option is applicable only to the dual-storage boot modes `nor_emmc`, `nor_nor_sdcard`, and `nor_sdcard`. In these modes, enable it only for a runtime FWU use case in which TF-M writes the M33 firmware-update slots.
+This option is applicable only to the dual-storage boot modes `nor_emmc` and `nor_sdcard`. In these modes, enable it only for a runtime FWU use case in which TF-M writes the M33 firmware-update slots.
 
 For an offline M33 firmware-update scenario in a dual-storage boot mode, leave the option disabled. Keep it disabled for the single-storage modes `emmc_emmc` and `sdcard_sdcard`.
 
@@ -543,6 +539,7 @@ For an offline M33 firmware-update scenario in a dual-storage boot mode, leave t
 -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-emmc-s.dts
 -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts
 ```
+
 
 ---
 
@@ -577,7 +574,6 @@ For an offline M33 firmware-update scenario in a dual-storage boot mode, leave t
 -DDTS_BOARD_BL2=stm32mp2/m33-td/mcuboot/stm32mp257f-ev1-cm33tdcid-ostl-snor-bl2.dts
 -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-snor-s.dts
 -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts
--DSTM32_FWU_STORAGE_ACCESS=ON  # Enables the StarterApp runtime FWU reference flow
 -DTFM_PARTITION_PROTECTED_STORAGE=OFF     #For this dev mode , Protected Storage feature needs to be disabled 
 ```
 

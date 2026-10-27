@@ -1022,7 +1022,7 @@ void ddrphy_phyinit_progcsrskiptrain(void)
 {
   uint16_t txdqsdly[NB_PS] = { };
 
-  VERBOSE("%s Start\n", __func__);
+  DDR_VERBOSE("%s Start\n", __func__);
 
   set_timings();
 
@@ -1081,5 +1081,5 @@ void ddrphy_phyinit_progcsrskiptrain(void)
    */
   mmio_write_16((uintptr_t)(DDRPHYC_BASE + (4U * (TINITENG | CSR_PHYINLP3_ADDR))), 0x0U);
 
-  VERBOSE("%s End\n", __func__);
+  DDR_VERBOSE("%s End\n", __func__);
 }

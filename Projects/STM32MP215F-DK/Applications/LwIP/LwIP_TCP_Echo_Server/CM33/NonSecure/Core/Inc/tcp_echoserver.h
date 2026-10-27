@@ -30,6 +30,25 @@
 #ifndef __TCP_ECHOSERVER_H__
 #define __TCP_ECHOSERVER_H__
 
+#include "lwip/netif.h"
+
 void tcp_echoserver_init(void);
+
+#if LOOPBACK_TEST_ENABLE
+/* Period, in milliseconds, between two loopback test connections */
+#define LOOPBACK_TEST_PERIOD_MS   2000U
+
+/* Total number of loopback test connections attempted before the test completes */
+#define LOOPBACK_TEST_COUNT       4U
+
+/* Payload used for the loopback test messages */
+#define LOOPBACK_MSG              "LwIP Loopback Test"
+
+/* Optional single-board loopback self-test: connects to the TCP echo
+   server above using this board's own IP address, sends a test message
+   and checks that it is echoed back correctly. See LOOPBACK_TEST_ENABLE
+   in lwipopts.h. */
+void loopback_test_periodic_handle(struct netif *netif);
+#endif /* LOOPBACK_TEST_ENABLE */
 
 #endif /* __TCP_ECHOSERVER */

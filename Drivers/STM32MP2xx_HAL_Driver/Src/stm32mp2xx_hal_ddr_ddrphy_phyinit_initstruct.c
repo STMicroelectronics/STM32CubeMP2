@@ -16,6 +16,8 @@
 
 #include "stm32mp2xx_hal_ddr_ddrphy_phyinit.h"
 
+static user_input_mode_register_t userinputmoderegister;
+
 void *ddrphy_get_ui_basic_base(void)
 {
   return (void *)&userinputbasic;
@@ -34,11 +36,6 @@ void *ddrphy_get_ui_advanced_base(void)
 void *ddrphy_get_ui_mode_register_base(void)
 {
   return (void *)&userinputmoderegister;
-}
-
-void *ddrphy_get_ui_swizzle_base(void)
-{
-  return (void *)&userinputswizzle;
 }
 
 /*
@@ -203,31 +200,23 @@ void ddrphy_phyinit_initstruct(void)
    */
 
 #if STM32MP_DDR4_TYPE
-  uint16_t alt_cas_l[NB_PS]; /* Need to set if using RDDBI */
-  uint16_t alt_wcas_l[NB_PS]; /* Need to set if using 2tck Write Preambles */
-  uint16_t rtt_nom_wr_park0[NB_PS];
-  uint16_t rtt_nom_wr_park1[NB_PS];
-  uint16_t rtt_nom_wr_park2[NB_PS];
-  uint16_t rtt_nom_wr_park3[NB_PS];
-  uint16_t rtt_nom_wr_park4[NB_PS];
-  uint16_t rtt_nom_wr_park5[NB_PS];
-  uint16_t rtt_nom_wr_park6[NB_PS];
-  uint16_t rtt_nom_wr_park7[NB_PS];
-#endif /* STM32MP_DDR4_TYPE */
-
-  VERBOSE("%s Start\n", __func__);
-
-#if STM32MP_DDR4_TYPE
-  for (myps = 0; myps < NB_PS; myps++)
-  {
 #ifdef USE_STM32MP257CXX_EMU
-    alt_cas_l[myps] = 0x0001U;
+  uint16_t alt_cas_l[NB_PS] = { 0x0001U }; /* Need to set if using RDDBI */
 #else
-    alt_cas_l[myps] = 0x0000U;
+  uint16_t alt_cas_l[NB_PS] = { 0x0000U }; /* Need to set if using RDDBI */
 #endif /* USE_STM32MP257CXX_EMU */
-    alt_wcas_l[myps] = 0x0000U;
-  }
+  uint16_t alt_wcas_l[NB_PS] = { 0x0000U }; /* Need to set if using 2tck Write Preambles */
+  uint16_t rtt_nom_wr_park0[NB_PS] = { 0x0U };
+  uint16_t rtt_nom_wr_park1[NB_PS] = { 0x0U };
+  uint16_t rtt_nom_wr_park2[NB_PS] = { 0x0U };
+  uint16_t rtt_nom_wr_park3[NB_PS] = { 0x0U };
+  uint16_t rtt_nom_wr_park4[NB_PS] = { 0x0U };
+  uint16_t rtt_nom_wr_park5[NB_PS] = { 0x0U };
+  uint16_t rtt_nom_wr_park6[NB_PS] = { 0x0U };
+  uint16_t rtt_nom_wr_park7[NB_PS] = { 0x0U };
 #endif /* STM32MP_DDR4_TYPE */
+
+  DDR_VERBOSE("%s Start\n", __func__);
 
   /*
    * ##############################################################
@@ -241,24 +230,6 @@ void ddrphy_phyinit_initstruct(void)
    * 95% of users will not need to edit below
    * ##############################################################
    */
-
-#if STM32MP_DDR4_TYPE
-  /*
-   * Per Rank MR seeting for RTT_NOM, RTT_WR, RTT_PARK per rank. Options unlikely need to be
-   * used. See MB details on how to program if required.
-   */
-  for (myps = 0; myps < NB_PS; myps++)
-  {
-    rtt_nom_wr_park0[myps] = 0x0U;
-    rtt_nom_wr_park1[myps] = 0x0U;
-    rtt_nom_wr_park2[myps] = 0x0U;
-    rtt_nom_wr_park3[myps] = 0x0U;
-    rtt_nom_wr_park4[myps] = 0x0U;
-    rtt_nom_wr_park5[myps] = 0x0U;
-    rtt_nom_wr_park6[myps] = 0x0U;
-    rtt_nom_wr_park7[myps] = 0x0U;
-  }
-#endif /* STM32MP_DDR4_TYPE */
 
   /* 1D message block defaults */
   for (myps = 0; myps < NB_PS; myps++)
@@ -490,9 +461,9 @@ void ddrphy_phyinit_initstruct(void)
     if (memset((void *)&shdw_ddr_1d[myps], 0, sizeof(pmu_smb_ddr_1d_t)) !=
         (void *)&shdw_ddr_1d[myps])
     {
-      ERROR("%s memset error\n", __func__);
+      DDR_ERROR("%s memset error\n", __func__);
     }
   } /* myps */
 
-  VERBOSE("%s End\n", __func__);
+  DDR_VERBOSE("%s End\n", __func__);
 }

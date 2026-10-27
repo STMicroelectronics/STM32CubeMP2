@@ -18,6 +18,20 @@
   ******************************************************************************
   @endverbatim
 
+### V1.0.9/4-April-2026 ###
+================================
+   + Update template for the A35 support ( VIRTIO driver Role)
+      - app_if/openamp_conf_template.h
+      - app_if/openamp_template.c
+      - app_if/openamp_template.h
+      - platform_if/mbox_ipcc_template.h
+      - platform_if/mbox_ipcc_template_mp2.c
+      - platform_if/rsc_table_template.c
+      - platform_if/rsc_table_template.h
+
+   + Add integration documentation
+     - README.mdk
+
 ### V1.0.8/3-November-2025 ###
 ================================
    + openamp_template.c, openamp_template.h

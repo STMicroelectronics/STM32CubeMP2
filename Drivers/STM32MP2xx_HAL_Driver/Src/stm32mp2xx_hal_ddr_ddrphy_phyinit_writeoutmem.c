@@ -20,13 +20,13 @@
  * This function issued APB writes commands to SRAM address based on values
  * stored in a local PhyInit array that contains consolidated IMEM and DMEM
  * data.
- * @param[in] mem[] Local memory array.
+ * @param[in] mem_addr base address of local firmware image memory.
  * @param[in] mem_offset offset index. if provided, skips to the offset index
  * from the local array and issues APB commands from mem_offset to mem_size.
  * @param[in] mem_size size of the memroy (in mem array index)
  * @returns void
  */
-void ddrphy_phyinit_writeoutmem(const uint32_t *mem, uint32_t mem_offset, int32_t mem_size)
+void ddrphy_phyinit_writeoutmem(uintptr_t mem_addr, uint32_t mem_offset, int32_t mem_size)
 {
   uint32_t index;
 
@@ -38,7 +38,7 @@ void ddrphy_phyinit_writeoutmem(const uint32_t *mem, uint32_t mem_offset, int32_
 
   for (index = 0; index < ((uint32_t)mem_size / sizeof(uint32_t)); index++)
   {
-    uint32_t data = mem[index];
+    uint32_t data = mmio_read_32(mem_addr + (index * sizeof(uint32_t)));
 
 #ifdef USE_STM32MP257CXX_EMU
     mmio_write_16((uintptr_t)(DDRPHYC_BASE + (4U * ((index * 2U) + mem_offset))),
@@ -63,7 +63,7 @@ void ddrphy_phyinit_writeoutmem(const uint32_t *mem, uint32_t mem_offset, int32_
 /*
  * Similar function for message block
  */
-void ddrphy_phyinit_writeoutmsgblk(uint16_t *mem, uint32_t mem_offset, int32_t mem_size)
+void ddrphy_phyinit_writeoutmsgblk(uintptr_t mem_addr, uint32_t mem_offset, int32_t mem_size)
 {
   uint32_t index;
 
@@ -76,7 +76,8 @@ void ddrphy_phyinit_writeoutmsgblk(uint16_t *mem, uint32_t mem_offset, int32_t m
 
   for (index = 0; index < ((uint32_t)mem_size / sizeof(uint16_t)); index++)
   {
-    mmio_write_16((uintptr_t)(DDRPHYC_BASE + (4U * (index + mem_offset))), mem[index]);
+    mmio_write_16((uintptr_t)(DDRPHYC_BASE + (4U * (index + mem_offset))),
+                  mmio_read_16(mem_addr + (index * sizeof(uint16_t))));
   }
 
   /*

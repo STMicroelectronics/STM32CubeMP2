@@ -110,22 +110,6 @@ static void ScmiMgrTask_NotifyListeners(ScmiPowerEvent_t event)
   }
 }
 
-/**
-  * @brief  Callback for remoteproc state changes, used to sequence STOP/START.
-  *         Posts a START event when the remoteproc reaches OFFLINE, then unregisters itself.
-  * @param  state: The new state of the remote processor.
-  * @param  context: Unused.
-  * @retval None
-  */
-static void SCMIMgr_RemoteProcOfflineCallback(RemoteProcState state, void *context)
-{
-  if (state == REMOTEPROC_STATE_OFFLINE) {
-    RemoteProcTask_PostEvent(REMOTEPROC_EVENT_START, 0);
-    /* Unregister this callback */
-    RemoteProcTask_UnregisterCallback(SCMIMgr_RemoteProcOfflineCallback);
-  }
-}
-
 /* Exported functions --------------------------------------------------------*/
 
 /**
@@ -237,9 +221,9 @@ static void ScmiMgr_HandleSysPowerStateNotif(uint32_t agent_id, bool graceful, e
         break;
     case SYS_POWER_WARM_RESET:
         APP_LOG_INF("ScmiMgr", "agent %s %s SYS_POWER_WARM_RESET", name, graceful_str);
-        /* Register callback to be notified when remoteproc is OFFLINE */
-        RemoteProcTask_RegisterCallback(SCMIMgr_RemoteProcOfflineCallback, NULL);
-        RemoteProcTask_PostEvent(REMOTEPROC_EVENT_STOP, 0);
+        if (RemoteProcTask_PostEvent(REMOTEPROC_EVENT_REBOOT, 0U) != HAL_OK) {
+            APP_LOG_ERR("ScmiMgr", "Failed to queue RemoteProc warm reboot");
+        }
         notify_event = SCMI_POWER_EVENT_WARM_RESET;
         break;
     case SYS_POWER_SUSPEND:

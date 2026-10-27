@@ -20,7 +20,12 @@
 #ifndef MBOX_IPCC_H_
 #define MBOX_IPCC_H_
 
-#include "openamp/virtio.h"
+#include "openamp/open_amp.h"
+#if defined(STM32MP157Cxx)
+#include "stm32mp1xx_hal.h"
+#elif defined(STM32MP25xxxx) || defined(STM32MP21xxxx) || defined(STM32MP23xxxx) || defined(STM32MP2)
+#include "stm32mp2xx_hal.h"
+#endif
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -29,6 +34,9 @@
 
 
 /* Exported types ------------------------------------------------------------*/
+typedef void (*MAILBOX_ChannelCallback_t)(IPCC_HandleTypeDef *hipcc,
+                                          uint32_t ChannelIndex,
+                                          IPCC_CHANNELDirTypeDef ChannelDir);
 /* USER CODE BEGIN ET */
 
 /* USER CODE END ET */
@@ -54,8 +62,8 @@
 /* USER CODE END EFP */
 
 int MAILBOX_Notify(void *priv, uint32_t id);
-int MAILBOX_Init(void);
-void MAILBOX_DeInit(void);
+int MAILBOX_Init(IPCC_HandleTypeDef *hipcc, MAILBOX_ChannelCallback_t cb);
+void MAILBOX_DeInit(IPCC_HandleTypeDef *hipcc);
 int MAILBOX_Poll(struct virtio_device *vdev);
 
 #endif /* MBOX_IPCC_H_ */

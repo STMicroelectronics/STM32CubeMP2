@@ -41,7 +41,8 @@ _estack = ORIGIN(RAM) + LENGTH(RAM);	/* end of "RAM" Ram type memory */
 _Min_Heap_Size = 0x200;	/* required amount of heap  */
 _Min_Stack_Size = 0x400;	/* required amount of stack */
 
-_virtio_shmem_size = 32K;  /* size of the virtio pool used for RPMsg communication */
+IPC_SHM_VIRTIO_SIZE = 32K;
+IPC_SHM_RSC_TAB_SIZE = 4K;
 
 /* Memories definition */
 MEMORY
@@ -49,14 +50,15 @@ MEMORY
   NS_VECTOR_TBL (xrw)   : ORIGIN = 0x80100000,	LENGTH = 0x00000600
   FLASH         (rx)    : ORIGIN = 0x80100600,  LENGTH = 8M - LENGTH(NS_VECTOR_TBL)
   RAM           (rx)    : ORIGIN = 0x80A00000,  LENGTH = 4M
-  IPC_SHMEM_1   (rw)    : ORIGIN = 0x81200000,	LENGTH = 1M - _virtio_shmem_size
-  VIRTIO_SHMEM  (rw)    : ORIGIN = ORIGIN(IPC_SHMEM_1)+LENGTH(IPC_SHMEM_1),	LENGTH = _virtio_shmem_size
+  IPC_SHMEM     (rw)    : ORIGIN = 0x81200000,	LENGTH = 1M
   SCMI_SHMEM    (rw)    : ORIGIN = 0x0A042000,	LENGTH = 0x1000
 }
 
- /* Symbols needed for OpenAMP to enable rpmsg */
-__OPENAMP_region_start__  = ORIGIN(VIRTIO_SHMEM);
-__OPENAMP_region_end__ = ORIGIN(VIRTIO_SHMEM)+LENGTH(VIRTIO_SHMEM);
+/* Symbols needed for OpenAMP to enable rpmsg */
+__OPENAMP_region_end__      = ORIGIN(IPC_SHMEM) + LENGTH(IPC_SHMEM);
+__OPENAMP_region_start__    = __OPENAMP_region_end__ - IPC_SHM_VIRTIO_SIZE;
+__RSC_TABLE_region_end__    = __OPENAMP_region_start__;
+__RSC_TABLE_region_start__  = __RSC_TABLE_region_end__ - IPC_SHM_RSC_TAB_SIZE;
 
 /* Symbols needed for scmiagent to enable mailbox communication */
 __SCMI_SHM_region_start__  = ORIGIN(SCMI_SHMEM);
@@ -65,7 +67,7 @@ __SCMI_SHM_region_end__    = ORIGIN(SCMI_SHMEM)+LENGTH(SCMI_SHMEM);
 /* Library configurations */
 GROUP(libgcc.a libc.a libm.a libnosys.a)
 
-LINKER_DEFAULT_ALIGNMENT = 16;
+LINKER_DEFAULT_ALIGNMENT = 32;
 
 SECTIONS
 {
@@ -96,7 +98,7 @@ SECTIONS
     {
         KEEP (*(.resource_table*))
         . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
-    } >IPC_SHMEM_1
+    } >IPC_SHMEM
 
   /* The program code and other data into "RAM" Ram type memory */
   .text : ALIGN(LINKER_DEFAULT_ALIGNMENT)
@@ -135,32 +137,32 @@ SECTIONS
     . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
   } >FLASH
 
-  .preinit_array : ALIGN(LINKER_DEFAULT_ALIGNMENT)
+  .preinit_array (READONLY) : ALIGN(LINKER_DEFAULT_ALIGNMENT)
   {
     . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
     PROVIDE_HIDDEN (__preinit_array_start = .);
     KEEP (*(.preinit_array*))
     PROVIDE_HIDDEN (__preinit_array_end = .);
     . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
-  } >RAM
+  } >FLASH
 
-  .init_array : ALIGN(LINKER_DEFAULT_ALIGNMENT)
+  .init_array (READONLY) : ALIGN(LINKER_DEFAULT_ALIGNMENT)
   {
     PROVIDE_HIDDEN (__init_array_start = .);
     KEEP (*(SORT(.init_array.*)))
     KEEP (*(.init_array*))
     PROVIDE_HIDDEN (__init_array_end = .);
     . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
-  } >RAM
+  } >FLASH
 
-  .fini_array : ALIGN(LINKER_DEFAULT_ALIGNMENT)
+  .fini_array (READONLY) : ALIGN(LINKER_DEFAULT_ALIGNMENT)
   {
     PROVIDE_HIDDEN (__fini_array_start = .);
     KEEP (*(SORT(.fini_array.*)))
     KEEP (*(.fini_array*))
     PROVIDE_HIDDEN (__fini_array_end = .);
     . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
-  } >RAM
+  } >FLASH
 
   /* Used by the startup to initialize data */
   _sidata = LOADADDR(.data);
@@ -174,7 +176,7 @@ SECTIONS
 
     _edata = .;        /* define a global symbol at data end */
     . = ALIGN(LINKER_DEFAULT_ALIGNMENT);
-  } >RAM
+  } >RAM AT>FLASH
 
   /* Uninitialized data section into "RAM" Ram type memory */
   .bss : ALIGN(LINKER_DEFAULT_ALIGNMENT)

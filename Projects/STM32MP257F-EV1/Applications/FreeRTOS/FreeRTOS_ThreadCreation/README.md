@@ -4,29 +4,26 @@ CMSIS-RTOS2 / FreeRTOS thread creation example for STM32MP257F-EV1, with a CA35 
 
 ## Overview
 
-This application demonstrates thread creation, suspend/resume sequencing, and inter-processor shutdown handling on STM32MP257F-EV1. Both core variants create the same three RTOS objects:
+This application demonstrates thread creation and suspend/resume sequencing on STM32MP257F-EV1. The CA35 secure image currently creates two worker threads, while the CM33 non-secure image keeps an additional shutdown thread for inter-processor shutdown handling.
 
-- one shutdown thread
-- Thread One
-- Thread Two
-
-The two worker threads share a single status LED and execute a repeating 15-second pattern. The CA35 implementation additionally shows A35-specific bring-up details including UART logs, CA35 clock source selection through PLL1, HAL tick generation through TIM7, and FreeRTOS scheduler tick generation through the A35 generic timer.
+The worker threads share a single status LED and execute a repeating 15-second pattern. The CA35 implementation additionally shows A35-specific bring-up details including UART logs, CA35 clock source selection through PLL1, HAL tick generation through TIM7, and FreeRTOS scheduler tick generation through the A35 generic timer physical timer path.
 
 ## Main Capabilities
 
 - CMSIS-RTOS2 thread creation on top of FreeRTOS
 - suspend/resume coordination between two equal-priority worker threads
 - LED activity pattern that makes task scheduling visible on hardware
-- shutdown synchronization with the peer core through IPCC / CoproSync
+- CM33 shutdown synchronization with the peer core through IPCC / CoproSync
 - CA35 secure AArch32 bring-up with UART console and clock banner
 - separate HAL time base and FreeRTOS scheduler tick on CA35
+- CA35 FreeRTOS tick routed through the A35 secure physical timer callback
 
 ## Architecture And Key Files
 
 | File | Role |
 |------|------|
 | `CA35/Secure/Core/Src/main.c` | CA35 secure AArch32 startup, UART logs, boot-mode handling, CA35 clock selection, scheduler start, and A35 tick/IRQ integration. |
-| `CA35/Secure/FREERTOS/App/app_freertos.c` | CA35 shutdown thread, Thread One, Thread Two, and IPCC shutdown callback handling. |
+| `CA35/Secure/FREERTOS/App/app_freertos.c` | CA35 Thread One and Thread Two worker-thread implementation. |
 | `CA35/Secure/FREERTOS/App/FreeRTOSConfig.h` | CA35 FreeRTOS kernel configuration, GIC settings, and scheduler tick hook selection. |
 | `CA35/Secure/Core/Src/stm32mp2xx_hal_timebase_tim.c` | CA35 HAL time base implementation using TIM7. |
 | `CM33/NonSecure/Core/Src/main.c` | CM33 non-secure startup, cache setup, boot-mode handling, LED init, IPCC sync, and scheduler start. |
@@ -50,9 +47,6 @@ main()
             -> print CA35 frequency and active source
   -> if !IS_DEVELOPER_BOOT_MODE()
        -> SystemCoreClockUpdate
-       -> MX_IPCC_Init
-       -> CoproSync_Init
-       -> MAILBOX_SCMI_Init
      else
        -> BSP_PMIC_Init
        -> BSP_PMIC_Power_Mode_Init
@@ -92,11 +86,16 @@ Implemented in:
 - `CA35/Secure/FREERTOS/App/app_freertos.c`
 - `CM33/NonSecure/FREERTOS/App/app_freertos.c`
 
-Common scheduling behavior:
+CA35 RTOS objects:
 
 - `Thread One`: normal priority, 512-byte stack
 - `Thread Two`: normal priority, 512-byte stack
+
+CM33 RTOS objects:
+
 - `ShutDown Thread`: above-normal priority, 2 KB stack
+- `Thread One`: normal priority, 512-byte stack
+- `Thread Two`: normal priority, 512-byte stack
 
 15-second repeating sequence:
 
@@ -116,7 +115,7 @@ LED used by each image:
 - CA35: `LED_GREEN`
 - CM33: `LED3`
 
-Shutdown handling:
+CM33 shutdown handling:
 
 - a shutdown semaphore is released from `CoproSync_ShutdownCb()`
 - the shutdown thread deinitializes the local FreeRTOS resources
@@ -131,6 +130,8 @@ Shutdown handling:
 - FreeRTOS scheduler tick is provided by the A35 generic timer through `vConfigureTickInterrupt()`
 - `SystemA35_SYSTICK_TimerSourceConfig(A35_SYSTICK_PHYSICALTIMERSOURCE)` selects the timer source
 - `SystemA35_SYSTICK_Config(configMAX_API_CALL_INTERRUPT_PRIORITY)` programs the scheduler tick priority
+- the project overrides `SecurePhysicalTimer_IRQHandler_CallBack()` in `CA35/Secure/Core/Src/main.c`
+- the project does not override `VirtualTimer_IRQHandler_CallBack()` in its local sources
 - `vApplicationFPUSafeIRQHandler()` dispatches active GIC interrupts into the CMSIS interrupt dispatcher
 
 This split keeps HAL delays independent from the FreeRTOS scheduler tick.
@@ -187,8 +188,8 @@ Notes:
 Behavior differs between developer boot and non-developer boot:
 
 - developer boot performs local clock and power initialization directly on the running core
-- non-developer boot enables inter-processor synchronization through IPCC / CoproSync
-- CA35 non-developer boot additionally initializes the SCMI mailbox
+- CA35 non-developer boot refreshes the core clock state through `SystemCoreClockUpdate()`
+- CM33 non-developer boot enables inter-processor synchronization through IPCC / CoproSync
 
 Make sure the selected CA35 / CM33 image, signing flow, and platform boot policy are aligned.
 
@@ -229,7 +230,7 @@ Make sure the selected CA35 / CM33 image, signing flow, and platform boot policy
 - verify that the HAL time base remains at 1 ms
 - on CA35, confirm TIM7 initialization and interrupt enable in `HAL_InitTick()`
 
-### Shutdown handshake does not complete
+### CM33 shutdown handshake does not complete
 
 - verify that IPCC is initialized on the active boot path
 - check that `CoproSync_ShutdownCb()` releases the shutdown semaphore

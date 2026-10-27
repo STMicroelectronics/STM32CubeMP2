@@ -322,55 +322,31 @@ EXTI_TypeDef *getUsedExti(const GPIO_TypeDef  *GPIOx, uint32_t pinPosition)
 {
 #define EXTI_INSTANCE_NB 2U
   uint32_t extiIndex;
-  uint32_t portIndex;
-  uint32_t GPIOx_index = 0xFF;
-  EXTI_TypeDef  *instanceEXTI;
-  EXTI_TypeDef *instanceTab[]  = {EXTI1, EXTI2};
+  uint32_t GPIOx_index;
   uint32_t temp;
-#if defined(GPIOJ) && defined(GPIOK)
-  GPIO_TypeDef *port[] = {GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH, GPIOI, GPIOJ, GPIOK, GPIOZ};
-#else   /* defined(GPIOJ) && defined(GPIOK) */
-  GPIO_TypeDef *port[] = {GPIOA, GPIOB, GPIOC, GPIOD, GPIOE, GPIOF, GPIOG, GPIOH, GPIOI, GPIOZ};
-#endif  /* defined(GPIOJ) && defined(GPIOK) */
   const EXTI_Core_TypeDef *EXTI_CurrentCPU;
 
-
-#if defined(CORE_CM33)
-  EXTI_Core_TypeDef *EXTI_CPU[]  = {EXTI1_C2, EXTI2_C2};
-#endif  /* CORE_CM33 */
-#if defined(CORE_CA35)
-  EXTI_Core_TypeDef *EXTI_CPU[]  = {EXTI1_C1, EXTI2_C1};
-#endif  /* CORE_CA35 */
-
-  /* find port index */
-  for (portIndex = 0; portIndex < (sizeof(port) / sizeof(GPIO_TypeDef *)); portIndex++)
-  {
-    if (GPIOx == port[portIndex])
-    {
-      GPIOx_index = portIndex;
-      break;
-    }
-  }
+  /* get port index, using same bank-index encoding as EXTICR registers */
+  GPIOx_index = GPIO_GET_INDEX(GPIOx);
 
   /*parse all EXTI instance*/
   for (extiIndex = 0; extiIndex < EXTI_INSTANCE_NB; extiIndex++)
   {
-    EXTI_CurrentCPU = EXTI_CPU[extiIndex];
+    EXTI_CurrentCPU = EXTI_GET_CPU_INSTANCE(extiIndex);
 
     /*check if parsed EXTI instance is configured for a connection with input param GPIO bank*/
-    instanceEXTI = instanceTab[extiIndex];
-    temp = instanceEXTI->EXTICR[pinPosition >> 2u];
+    temp = EXTI_GET_INSTANCE(extiIndex)->EXTICR[pinPosition >> 2u];
     if (((temp >> ((pinPosition % 4U) * EXTI_EXTICR1_EXTI1_Pos)) & EXTI_EXTICR1_EXTI0) == GPIOx_index)
     {
       /*check if interruption mode is selected for input pin*/
       if ((((EXTI_CurrentCPU->IMR1) >> pinPosition) & 0x1U) != 0U)
       {
-        return instanceEXTI;  /* both GPIO bank and interruption mode are OK */
+        return EXTI_GET_INSTANCE(extiIndex);  /* both GPIO bank and interruption mode are OK */
       }
       /*check if event mode is selected for input pin*/
       if ((((EXTI_CurrentCPU->EMR1) >> pinPosition) & 0x1U) != 0U)
       {
-        return instanceEXTI;  /* both GPIO bank and event mode are OK */
+        return EXTI_GET_INSTANCE(extiIndex);  /* both GPIO bank and event mode are OK */
       }
     }
   }
@@ -940,7 +916,6 @@ HAL_StatusTypeDef HAL_GPIO_ReleasePinSemaphore(GPIO_TypeDef *GPIOx, uint16_t GPI
 {
   uint32_t position = 0x00;
   uint32_t iocurrent;
-  __IO uint32_t *regaddr;
 
   /* Check the parameters */
   assert_param(IS_GPIO_ALL_INSTANCE(GPIOx));
@@ -954,8 +929,7 @@ HAL_StatusTypeDef HAL_GPIO_ReleasePinSemaphore(GPIO_TypeDef *GPIOx, uint16_t GPI
     if (iocurrent != 0U)
     {
       /* Release Semaphore*/
-      regaddr = &GPIOx->SEMCR0 + (GPIO_SEMCFGR_OFFSET * position);
-      *regaddr = ~GPIO_SEMCR0_SEM_MUTEX;
+      *(&GPIOx->SEMCR0 + (GPIO_SEMCFGR_OFFSET * position)) = ~GPIO_SEMCR0_SEM_MUTEX;
     }
     position++;
   }

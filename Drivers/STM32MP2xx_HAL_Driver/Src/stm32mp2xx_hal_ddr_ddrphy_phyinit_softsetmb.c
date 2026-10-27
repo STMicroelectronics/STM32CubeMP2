@@ -142,7 +142,7 @@ int32_t ddrphy_phyinit_softsetmb(int32_t ps, softsetmb_field field, int32_t valu
       break;
 #endif /* STM32MP_LPDDR4_TYPE */
     default:
-      ERROR("%s unknown message block field name '%s'\n", __func__, field);
+      DDR_ERROR("%s unknown message block field name '%s'\n", __func__, field);
       ret = -1;
       break;
   }

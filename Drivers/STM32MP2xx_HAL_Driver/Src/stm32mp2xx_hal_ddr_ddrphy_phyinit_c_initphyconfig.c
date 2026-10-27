@@ -640,36 +640,14 @@ static int32_t atximpedance_program(void)
  */
 static void dfimode_program(void)
 {
-  uint16_t dfimode;
+  uint16_t dfimode = 0x5U;
 
-  if (userinputbasic.dfi1exists == 1)
-  {
 #if STM32MP_DDR3_TYPE || STM32MP_DDR4_TYPE
-    dfimode = 0x5U; /* DFI1 exists but disabled; DFI0 controls entire PHY */
-#elif STM32MP_LPDDR4_TYPE
-    if (userinputbasic.numactivedbytedfi1 > 0)
-    {
-      dfimode = 0x3U; /* Both DFI0 and DFI1 active */
-    }
-    else if ((userinputbasic.numactivedbytedfi0 > (userinputbasic.numdbyte / 2)) &&
-             (userinputbasic.numdbyte == 4))
-    {
-      dfimode = 0x5U; /* DFI1 exists but disabled; DFI0 controls entire PHY */
-    }
-    else
-    {
-      dfimode = 0x1U; /* DFI1 exists but disabled; DFI0 controls 1/2 PHY */
-    }
-#endif /* STM32MP_LPDDR4_TYPE */
-  }
-  else
+  if (userinputbasic.dfi1exists == 0)
   {
     dfimode = 0x1U; /* DFI1 does not physically exists */
   }
-
-#if STM32MP_LPDDR4_TYPE
-  dfimode = 0x5U;
-#endif /* STM32MP_LPDDR4_TYPE */
+#endif /* STM32MP_DDR3_TYPE || STM32MP_DDR4_TYPE */
 
   mmio_write_16((uintptr_t)(DDRPHYC_BASE + 4 * (TMASTER | CSR_DFIMODE_ADDR)), dfimode);
 }
@@ -1351,7 +1329,7 @@ int32_t ddrphy_phyinit_c_initphyconfig(void)
    * configuration.
    */
 
-  VERBOSE("%s Start\n", __func__);
+  DDR_VERBOSE("%s Start\n", __func__);
 
   txslewrate_program();
 
@@ -1434,7 +1412,7 @@ int32_t ddrphy_phyinit_c_initphyconfig(void)
 
   aforcetricont_acx4anibdis_program();
 
-  VERBOSE("%s End\n", __func__);
+  DDR_VERBOSE("%s End\n", __func__);
 
   return 0;
 }

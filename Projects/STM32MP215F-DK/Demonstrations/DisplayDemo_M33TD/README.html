@@ -215,11 +215,11 @@ through the I3C2 pins listed below:</p>
 <pre><code>┌───────────────┐                      ┌────────────┐
 │               │  GND            GND  │            │
 │               │ -------------------  │            │
-│               │  CN5.2          VDD  │            │
+│               │  CN12.2         VDD  │            │
 │               │ -------------------  │   SSD1306  │
-│     MPU       │  CN5.27        SDA   │    OLED    │
+│     MPU       │  CN12.27       SDA   │    OLED    │
 │   DK Board    │ -------------------  │   Display  │
-│               │  CN5.28        SCL   │            │
+│               │  CN12.28       SCL   │            │
 │               │ -------------------  │            │
 │               │                      └------------┘
 └───────────────┘</code></pre>
@@ -446,33 +446,39 @@ runtime sequence:</p>
 [NS] [RemoteProc] [INF] stopping copro cpu@0...
 [NS] [RemoteProc] [INF] starting copro cpu@0... **done**
 [NS] [RemoteProc] [INF] Crash recovery sequence completed.</code></pre>
-<h3 id="understanding-testapp-logs">Understanding TestApp Logs</h3>
+<h3 id="understanding-displaydemo-logs">Understanding DisplayDemo Logs</h3>
 <p>This log demonstrates the full boot process, provisioning status,
 image loading, and remote processor management, including crash
-detection and recovery.<br />
-&gt; <strong>Note:</strong> The
+detection and recovery.</p>
+<blockquote>
+<p><strong>Note:</strong> The
 <code>[RemoteProc] starting copro cpu@0... **done**</code> message
 confirms that the A35 coprocessor was started. In this demonstration,
 the coprocessor is started by pressing <strong>User Button 2</strong>,
-as described in <a href="#purpose">2. RemoteProc Task</a>.<br />
-To trigger a crash and observe the recovery sequence as shown in the
+as described in <a href="#purpose">2. RemoteProc Task</a>.</p>
+</blockquote>
+<p>To trigger a crash and observe the recovery sequence as shown in the
 log, you can run the following command on the Linux console (as
 root):</p>
 <div class="sourceCode" id="cb14"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sync</span><span class="kw">;</span> <span class="fu">sleep</span> 2<span class="kw">;</span> <span class="fu">sync</span><span class="kw">;</span> <span class="bu">echo</span> c <span class="op">&gt;</span> /proc/sysrq-trigger</span></code></pre></div>
 <p>This command forces a kernel crash, allowing you to verify the crash
-handling and recovery features implemented in the StarterApp_M33TD
+handling and recovery features implemented in the DisplayDemo_M33TD
 application.</p>
 <p>The log also reflects the specific firmware and configuration used
-for the device boot: - <strong>CubeFW Version</strong>: The STM32Cube
-firmware version is shown (e.g.,
-<code>STM32Cube FW version: v1.2.0-rc0</code>). - <strong>TFM
-Version</strong>: The Trusted Firmware-M version is indicated (e.g.,
-<code>welcome to TF-M: v2.1.0-stm32mp-r1-rc7</code>). - <strong>Device
-Tree Files</strong>: The log lists the external device tree files used
-for the build and boot (e.g.,
+for the device boot:</p>
+<ul>
+<li><strong>CubeFW Version</strong>: The STM32Cube firmware version is
+shown (e.g.,
+<code>STM32Cube FW version: v1.2.0-rc0</code>).</li>
+<li><strong>TFM Version</strong>: The Trusted Firmware-M version is
+indicated (e.g.,
+<code>welcome to TF-M: v2.1.0-stm32mp-r1-rc7</code>).</li>
+<li><strong>Device Tree Files</strong>: The log lists the external
+device tree files used for the build and boot (e.g.,
 <code>dts: stm32mp215f-dk-cm33tdcid-ostl-sdcard-bl2.dts</code> and
-<code>dts: stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts</code>).</p>
+<code>dts: stm32mp215f-dk-cm33tdcid-ostl-sdcard-s.dts</code>).</li>
+</ul>
 <p>To verify that the correct configuration is reflected, compare the
 device tree filenames and firmware versions in the log with the CMake
 options and external DTS files specified during the TFM secure build

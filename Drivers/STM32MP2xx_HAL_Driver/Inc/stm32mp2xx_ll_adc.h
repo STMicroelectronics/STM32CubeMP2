@@ -1149,14 +1149,14 @@ typedef struct
 /** @defgroup ADC_LL_EC_CHANNEL_SAMPLINGTIME  Channel - Sampling time
   * @{
   */
-#define LL_ADC_SAMPLINGTIME_2CYCLES_5      (0x00000000UL)                                              /*!< Sampling time 2.5 ADC clock cycles */
-#define LL_ADC_SAMPLINGTIME_3CYCLES_5      (                                        ADC_SMPR2_SMP10_0) /*!< Sampling time 3.5 ADC clock cycles */
-#define LL_ADC_SAMPLINGTIME_7CYCLES_5      (                    ADC_SMPR2_SMP10_1                    ) /*!< Sampling time 7.5 ADC clock cycles */
-#define LL_ADC_SAMPLINGTIME_12CYCLES_5     (                    ADC_SMPR2_SMP10_1 | ADC_SMPR2_SMP10_0) /*!< Sampling time 12.5 ADC clock cycles */
-#define LL_ADC_SAMPLINGTIME_24CYCLES_5     (ADC_SMPR2_SMP10_2                                        ) /*!< Sampling time 24.5 ADC clock cycles */
-#define LL_ADC_SAMPLINGTIME_47CYCLES_5     (ADC_SMPR2_SMP10_2                     | ADC_SMPR2_SMP10_0) /*!< Sampling time 47.5 ADC clock cycles */
-#define LL_ADC_SAMPLINGTIME_247CYCLES_5    (ADC_SMPR2_SMP10_2 | ADC_SMPR2_SMP10_1                    ) /*!< Sampling time 247.5 ADC clock cycles */
-#define LL_ADC_SAMPLINGTIME_1501CYCLES_5   (ADC_SMPR2_SMP10_2 | ADC_SMPR2_SMP10_1 | ADC_SMPR2_SMP10_0) /*!< Sampling time 1501.5 ADC clock cycles */
+#define LL_ADC_SAMPLINGTIME_1CYCLES_5     (0x00000000UL)                                            /*!< Sampling time 1.5 ADC clock cycles    */
+#define LL_ADC_SAMPLINGTIME_2CYCLES_5     (                                      ADC_SMPR1_SMP0_0)  /*!< Sampling time 2.5 ADC clock cycles    */
+#define LL_ADC_SAMPLINGTIME_6CYCLES_5     (                   ADC_SMPR1_SMP0_1                   )  /*!< Sampling time 6.5 ADC clock cycles    */
+#define LL_ADC_SAMPLINGTIME_11CYCLES_5    (                   ADC_SMPR1_SMP0_1 | ADC_SMPR1_SMP0_0)  /*!< Sampling time 11.5 ADC clock cycles   */
+#define LL_ADC_SAMPLINGTIME_23CYCLES_5    (ADC_SMPR1_SMP0_2                                      )  /*!< Sampling time 23.5 ADC clock cycles   */
+#define LL_ADC_SAMPLINGTIME_46CYCLES_5    (ADC_SMPR1_SMP0_2                    | ADC_SMPR1_SMP0_0)  /*!< Sampling time 46.5 ADC clock cycles   */
+#define LL_ADC_SAMPLINGTIME_246CYCLES_5   (ADC_SMPR1_SMP0_2 | ADC_SMPR1_SMP0_1                   )  /*!< Sampling time 246.5 ADC clock cycles  */
+#define LL_ADC_SAMPLINGTIME_1499CYCLES_5  (ADC_SMPR1_SMP0_2 | ADC_SMPR1_SMP0_1 | ADC_SMPR1_SMP0_0)  /*!< Sampling time 1499.5 ADC clock cycles */
 /**
   * @}
   */
@@ -1331,14 +1331,14 @@ typedef struct
   */
 
 /** @defgroup ADC_LL_EC_HW_DELAYS  Definitions of ADC hardware constraints delays
-  * @note   Only ADC peripheral HW delays are defined in ADC LL driver driver,
+  * @note   Only ADC peripheral HW delays are defined in ADC LL driver,
   *         not timeout values.
   *         For details on delays values, refer to descriptions in source code
   *         above each literal definition.
   * @{
   */
 
-/* Note: Only ADC peripheral HW delays are defined in ADC LL driver driver,   */
+/* Note: Only ADC peripheral HW delays are defined in ADC LL driver,          */
 /*       not timeout values.                                                  */
 /*       Timeout values for ADC operations are dependent to device clock      */
 /*       configuration (system clock versus ADC clock),                       */
@@ -3702,7 +3702,7 @@ __STATIC_INLINE void LL_ADC_SetChannelPreselection(ADC_TypeDef *ADCx, uint32_t C
   * @rmtoll PCSEL   PCSEL          LL_ADC_GetChannelPreselection
   * @param  ADCx ADC instance.
   *
-  * @retval Returned decimal value that can correspend to one or multiple channels:
+  * @retval Returned decimal value that can correspond to one or multiple channels:
   */
 __STATIC_INLINE uint32_t LL_ADC_GetChannelPreselection(const ADC_TypeDef *ADCx)
 {
@@ -4323,11 +4323,14 @@ __STATIC_INLINE uint32_t LL_ADC_INJ_GetTrigAuto(const ADC_TypeDef *ADCx)
   *         (1) On STM32MP2, parameter available only on ADC instance: ADC2, ADC3.\n
   *         (3) On STM32MP2, fast channel (allows higher input impedance, refer to reference manual).
   * @param  SamplingTime This parameter can be one of the following values:
+  *         @arg @ref LL_ADC_SAMPLINGTIME_1CYCLES_5
   *         @arg @ref LL_ADC_SAMPLINGTIME_2CYCLES_5
-  *         @arg @ref LL_ADC_SAMPLINGTIME_12CYCLES_5
-  *         @arg @ref LL_ADC_SAMPLINGTIME_24CYCLES_5
-  *         @arg @ref LL_ADC_SAMPLINGTIME_47CYCLES_5
-  *         @arg @ref LL_ADC_SAMPLINGTIME_247CYCLES_5
+  *         @arg @ref LL_ADC_SAMPLINGTIME_6CYCLES_5
+  *         @arg @ref LL_ADC_SAMPLINGTIME_11CYCLES_5
+  *         @arg @ref LL_ADC_SAMPLINGTIME_23CYCLES_5
+  *         @arg @ref LL_ADC_SAMPLINGTIME_46CYCLES_5
+  *         @arg @ref LL_ADC_SAMPLINGTIME_246CYCLES_5
+  *         @arg @ref LL_ADC_SAMPLINGTIME_1499CYCLES_5
   * @retval None
   */
 __STATIC_INLINE void LL_ADC_SetChannelSamplingTime(ADC_TypeDef *ADCx, uint32_t Channel, uint32_t SamplingTime)
@@ -4408,11 +4411,14 @@ __STATIC_INLINE void LL_ADC_SetChannelSamplingTime(ADC_TypeDef *ADCx, uint32_t C
   *             comparison with internal channel parameter to be done
   *             using helper macro @ref __LL_ADC_CHANNEL_INTERNAL_TO_EXTERNAL().
   * @retval Returned value can be one of the following values:
+  *         @arg @ref LL_ADC_SAMPLINGTIME_1CYCLES_5
   *         @arg @ref LL_ADC_SAMPLINGTIME_2CYCLES_5
-  *         @arg @ref LL_ADC_SAMPLINGTIME_12CYCLES_5
-  *         @arg @ref LL_ADC_SAMPLINGTIME_24CYCLES_5
-  *         @arg @ref LL_ADC_SAMPLINGTIME_47CYCLES_5
-  *         @arg @ref LL_ADC_SAMPLINGTIME_247CYCLES_5
+  *         @arg @ref LL_ADC_SAMPLINGTIME_6CYCLES_5
+  *         @arg @ref LL_ADC_SAMPLINGTIME_11CYCLES_5
+  *         @arg @ref LL_ADC_SAMPLINGTIME_23CYCLES_5
+  *         @arg @ref LL_ADC_SAMPLINGTIME_46CYCLES_5
+  *         @arg @ref LL_ADC_SAMPLINGTIME_246CYCLES_5
+  *         @arg @ref LL_ADC_SAMPLINGTIME_1499CYCLES_5
   */
 __STATIC_INLINE uint32_t LL_ADC_GetChannelSamplingTime(const ADC_TypeDef *ADCx, uint32_t Channel)
 {

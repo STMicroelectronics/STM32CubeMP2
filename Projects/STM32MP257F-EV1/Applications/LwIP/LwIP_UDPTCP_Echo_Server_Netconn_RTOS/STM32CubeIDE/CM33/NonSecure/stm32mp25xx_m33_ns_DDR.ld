@@ -210,9 +210,9 @@ SECTIONS
 	.eth_desc (NOLOAD) :
 	{
 		. = ALIGN(4);
-		*(.RxDecripSection)
+		*(.RxDescripSection)
 		. = ALIGN(4);
-		*(.TxDecripSection)
+		*(.TxDescripSection)
 	} > SRAM
 
 	.tcp_sec (NOLOAD) :

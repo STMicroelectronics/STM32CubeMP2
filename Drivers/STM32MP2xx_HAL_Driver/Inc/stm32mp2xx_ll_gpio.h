@@ -56,11 +56,11 @@ extern "C" {
   *         a register from a register basis from which an offset
   *         is applied.
   * @param  __REG__ Register basis from which the offset is applied.
-  * @param  __REG_OFFFSET__ Offset to be applied (unit: number of registers).
+  * @param  __REG_OFFSET__ Offset to be applied (unit: number of registers).
   * @retval Pointer to register address
   */
-#define __GPIO_PTR_REG_OFFSET(__REG__, __REG_OFFFSET__)                         \
-  ((__IO uint32_t *)((uint32_t) ((uint32_t)(&(__REG__)) + ((__REG_OFFFSET__) << 2UL))))
+#define __GPIO_PTR_REG_OFFSET(__REG__, __REG_OFFSET__)                         \
+  ((__IO uint32_t *)((uint32_t) ((uint32_t)(&(__REG__)) + ((__REG_OFFSET__) << 2UL))))
 
 
 #if defined(USE_FULL_LL_DRIVER)
@@ -1362,10 +1362,7 @@ __STATIC_INLINE void LL_GPIO_TogglePin(GPIO_TypeDef *GPIOx, uint32_t PinMask)
   */
 __STATIC_INLINE void LL_GPIO_EnablePinCidFiltering(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  __IO uint32_t *regaddr;
-
-  regaddr = &GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U);
-  SET_BIT(*regaddr, GPIO_CIDCFGR0_CFEN);
+  SET_BIT(*(&GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U)), GPIO_CIDCFGR0_CFEN);
 }
 
 /**
@@ -1392,10 +1389,7 @@ __STATIC_INLINE void LL_GPIO_EnablePinCidFiltering(GPIO_TypeDef *GPIOx, uint32_t
   */
 __STATIC_INLINE void LL_GPIO_DisablePinCidFiltering(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  __IO uint32_t *regaddr;
-
-  regaddr = &GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U);
-  CLEAR_BIT(*regaddr, GPIO_CIDCFGR0_CFEN);
+  CLEAR_BIT(*(&GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U)), GPIO_CIDCFGR0_CFEN);
 }
 
 /**
@@ -1452,10 +1446,7 @@ __STATIC_INLINE uint32_t LL_GPIO_IsEnabledPinCidFiltering(const GPIO_TypeDef *GP
   */
 __STATIC_INLINE void LL_GPIO_EnablePinSemaphore(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  __IO uint32_t *regaddr;
-
-  regaddr = &GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U);
-  SET_BIT(*regaddr, GPIO_CIDCFGR0_SEM_EN);
+  SET_BIT(*(&GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U)), GPIO_CIDCFGR0_SEM_EN);
 }
 
 /**
@@ -1482,10 +1473,7 @@ __STATIC_INLINE void LL_GPIO_EnablePinSemaphore(GPIO_TypeDef *GPIOx, uint32_t Pi
   */
 __STATIC_INLINE void LL_GPIO_DisablePinSemaphore(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  __IO uint32_t *regaddr;
-
-  regaddr = &GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U);
-  CLEAR_BIT(*regaddr, GPIO_CIDCFGR0_SEM_EN);
+  CLEAR_BIT(*(&GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U)), GPIO_CIDCFGR0_SEM_EN);
 }
 
 /**
@@ -1543,11 +1531,7 @@ __STATIC_INLINE uint32_t LL_GPIO_IsEnabledPinSemaphore(const GPIO_TypeDef *GPIOx
   */
 __STATIC_INLINE void LL_GPIO_SetPinCid(GPIO_TypeDef *GPIOx, uint32_t Pin, uint32_t cid)
 {
-  __IO uint32_t *regaddr;
-
-  regaddr = &GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U);
-
-  MODIFY_REG(*regaddr, GPIO_CIDCFGR0_SCID, cid << GPIO_CIDCFGR0_SCID_Pos);
+  MODIFY_REG(*(&GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U)), GPIO_CIDCFGR0_SCID, cid << GPIO_CIDCFGR0_SCID_Pos);
 }
 
 /**
@@ -1605,10 +1589,7 @@ __STATIC_INLINE uint32_t LL_GPIO_GetPinCid(const GPIO_TypeDef *GPIOx, uint32_t P
   */
 __STATIC_INLINE void LL_GPIO_EnablePinSemaphoreWhitelistCompartment0(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  __IO uint32_t *regaddr;
-
-  regaddr = &GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U);
-  SET_BIT(*regaddr, GPIO_CIDCFGR0_SEMWLC0);
+  SET_BIT(*(&GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U)), GPIO_CIDCFGR0_SEMWLC0);
 }
 
 /**
@@ -1635,10 +1616,7 @@ __STATIC_INLINE void LL_GPIO_EnablePinSemaphoreWhitelistCompartment0(GPIO_TypeDe
   */
 __STATIC_INLINE void LL_GPIO_DisablePinSemaphoreWhitelistCompartment0(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  __IO uint32_t *regaddr;
-
-  regaddr = &GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U);
-  CLEAR_BIT(*regaddr, GPIO_CIDCFGR0_SEMWLC0);
+  CLEAR_BIT(*(&GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U)), GPIO_CIDCFGR0_SEMWLC0);
 }
 
 /**
@@ -1696,10 +1674,7 @@ __STATIC_INLINE uint32_t LL_GPIO_IsEnabledPinSemaphoreWhitelistCompartment0(cons
   */
 __STATIC_INLINE void LL_GPIO_EnablePinSemaphoreWhitelistCompartment1(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  __IO uint32_t *regaddr;
-
-  regaddr = &GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U);
-  SET_BIT(*regaddr, GPIO_CIDCFGR0_SEMWLC1);
+  SET_BIT(*(&GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U)), GPIO_CIDCFGR0_SEMWLC1);
 }
 
 /**
@@ -1726,10 +1701,7 @@ __STATIC_INLINE void LL_GPIO_EnablePinSemaphoreWhitelistCompartment1(GPIO_TypeDe
   */
 __STATIC_INLINE void LL_GPIO_DisablePinSemaphoreWhitelistCompartment1(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  __IO uint32_t *regaddr;
-
-  regaddr = &GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U);
-  CLEAR_BIT(*regaddr, GPIO_CIDCFGR0_SEMWLC1);
+  CLEAR_BIT(*(&GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U)), GPIO_CIDCFGR0_SEMWLC1);
 }
 
 /**
@@ -1786,10 +1758,7 @@ __STATIC_INLINE uint32_t LL_GPIO_IsEnabledPinSemaphoreWhitelistCompartment1(cons
   */
 __STATIC_INLINE void LL_GPIO_EnablePinSemaphoreWhitelistCompartment2(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  __IO uint32_t *regaddr;
-
-  regaddr = &GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U);
-  SET_BIT(*regaddr, GPIO_CIDCFGR0_SEMWLC2);
+  SET_BIT(*(&GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U)), GPIO_CIDCFGR0_SEMWLC2);
 }
 
 /**
@@ -1816,10 +1785,7 @@ __STATIC_INLINE void LL_GPIO_EnablePinSemaphoreWhitelistCompartment2(GPIO_TypeDe
   */
 __STATIC_INLINE void LL_GPIO_DisablePinSemaphoreWhitelistCompartment2(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  __IO uint32_t *regaddr;
-
-  regaddr = &GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U);
-  CLEAR_BIT(*regaddr, GPIO_CIDCFGR0_SEMWLC2);
+  CLEAR_BIT(*(&GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U)), GPIO_CIDCFGR0_SEMWLC2);
 }
 
 /**
@@ -1876,10 +1842,7 @@ __STATIC_INLINE uint32_t LL_GPIO_IsEnabledPinSemaphoreWhitelistCompartment2(cons
   */
 __STATIC_INLINE void LL_GPIO_EnablePinSemaphoreWhitelistCompartment3(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  __IO uint32_t *regaddr;
-
-  regaddr = &GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U);
-  SET_BIT(*regaddr, GPIO_CIDCFGR0_SEMWLC3);
+  SET_BIT(*(&GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U)), GPIO_CIDCFGR0_SEMWLC3);
 }
 
 /**
@@ -1906,10 +1869,7 @@ __STATIC_INLINE void LL_GPIO_EnablePinSemaphoreWhitelistCompartment3(GPIO_TypeDe
   */
 __STATIC_INLINE void LL_GPIO_DisablePinSemaphoreWhitelistCompartment3(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  __IO uint32_t *regaddr;
-
-  regaddr = &GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U);
-  CLEAR_BIT(*regaddr, GPIO_CIDCFGR0_SEMWLC3);
+  CLEAR_BIT(*(&GPIOx->CIDCFGR0 + (POSITION_VAL(Pin) * 2U)), GPIO_CIDCFGR0_SEMWLC3);
 }
 
 /**
@@ -1967,12 +1927,10 @@ __STATIC_INLINE uint32_t LL_GPIO_IsEnabledPinSemaphoreWhitelistCompartment3(cons
   */
 __STATIC_INLINE uint32_t LL_GPIO_TakePinSemaphore(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  __IO uint32_t *regaddr;
+  SET_BIT(*(&GPIOx->SEMCR0 + (POSITION_VAL(Pin) * 2U)), GPIO_SEMCR0_SEM_MUTEX);
 
-  regaddr = &GPIOx->SEMCR0 + (POSITION_VAL(Pin) * 2U);
-  SET_BIT(*regaddr, GPIO_SEMCR0_SEM_MUTEX);
-
-  return ((READ_BIT(*regaddr, GPIO_SEMCR0_SEM_MUTEX) == GPIO_SEMCR0_SEM_MUTEX) ? 1UL : 0UL);
+  return ((READ_BIT(*(&GPIOx->SEMCR0 + (POSITION_VAL(Pin) * 2U)), GPIO_SEMCR0_SEM_MUTEX) == GPIO_SEMCR0_SEM_MUTEX) ? \
+          1UL : 0UL);
 }
 
 /**
@@ -1999,12 +1957,10 @@ __STATIC_INLINE uint32_t LL_GPIO_TakePinSemaphore(GPIO_TypeDef *GPIOx, uint32_t 
   */
 __STATIC_INLINE uint32_t LL_GPIO_ReleasePinSemaphore(GPIO_TypeDef *GPIOx, uint32_t Pin)
 {
-  __IO uint32_t *regaddr;
+  CLEAR_BIT(*(&GPIOx->SEMCR0 + (POSITION_VAL(Pin) * 2U)), GPIO_SEMCR0_SEM_MUTEX);
 
-  regaddr = &GPIOx->SEMCR0 + (POSITION_VAL(Pin) * 2U);
-  CLEAR_BIT(*regaddr, GPIO_SEMCR0_SEM_MUTEX);
-
-  return ((READ_BIT(*regaddr, GPIO_SEMCR0_SEM_MUTEX) != GPIO_SEMCR0_SEM_MUTEX) ? 1UL : 0UL);
+  return ((READ_BIT(*(&GPIOx->SEMCR0 + (POSITION_VAL(Pin) * 2U)), GPIO_SEMCR0_SEM_MUTEX) != GPIO_SEMCR0_SEM_MUTEX) ? \
+          1UL : 0UL);
 }
 
 /**

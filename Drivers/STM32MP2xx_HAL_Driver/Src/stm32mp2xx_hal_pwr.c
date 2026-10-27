@@ -784,7 +784,7 @@ void HAL_PWR_EnterSLEEPMode(__attribute__((unused))uint32_t Regulator, uint8_t S
   /*check  request to system standby not set*/
   ClearStandbyRequest();
 
-  /* ARM recommand DSB after programming in System Control Space (SCS) */
+  /* ARM recommend DSB after programming in System Control Space (SCS) */
   __DSB();
 
   /* Select SLEEP mode entry -------------------------------------------------*/
@@ -838,7 +838,7 @@ void HAL_PWR_EnterSTOPMode(uint32_t Regulator, uint8_t STOPEntry)
   /* Ensure core enters in  CSTOP mode on sleep (core and core-subsystem  clock are gated) */
   GateCortexSubsystemClockOnSleepEntry();
 
-  /* ARM recommand DSB after programming in System Control Space (SCS) */
+  /* ARM recommend DSB after programming in System Control Space (SCS) */
   __DSB();
 
   /* Select Stop mode entry --------------------------------------------------*/
@@ -885,7 +885,7 @@ void HAL_PWR_EnterSTANDBYMode(uint8_t STANDBYType)
   /*set request to allow system standby*/
   SetStandbyRequest(STANDBYType);
 
-  /* ARM recommand DSB after programming in System Control Space (SCS) */
+  /* ARM recommend DSB after programming in System Control Space (SCS) */
   __DSB();
 
   /* This option is used to ensure that store operations are completed */

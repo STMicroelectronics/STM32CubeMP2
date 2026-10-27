@@ -1544,7 +1544,7 @@ HAL_StatusTypeDef HAL_RTCEx_PollForAlarmBEvent(RTC_HandleTypeDef *hrtc, uint32_t
   [..]
    (+) Before calling any tamper or internal tamper function, you have to call first
        HAL_RTC_Init() function.
-   (+) In that ine you can select to output tamper event on RTC pin.
+   (+) In that case you can select to output tamper event on RTC pin.
   [..]
    (+) Enable the Tamper and configure the Tamper filter count, trigger Edge
        or Level according to the Tamper filter (if equal to 0 Edge else Level)
@@ -3206,7 +3206,7 @@ __weak void HAL_RTCEx_InternalTamper16EventCallback(RTC_HandleTypeDef *hrtc)
   [..]
    (+) Before calling any tamper or internal tamper function, you have to call first
        HAL_RTC_Init() function.
-   (+) In that ine you can select to output tamper event on RTC pin.
+   (+) In that case you can select to output tamper event on RTC pin.
   [..]
    This subsection provides functions allowing to
    (+) Write a data in a specified RTC Backup data register

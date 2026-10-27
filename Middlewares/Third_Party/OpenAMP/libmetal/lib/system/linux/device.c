@@ -14,6 +14,8 @@
 #include <metal/utilities.h>
 #include <metal/irq.h>
 
+#include "irq.h"
+
 #define MAX_DRIVERS	64
 
 struct linux_bus;
@@ -438,12 +440,6 @@ static int metal_linux_dev_open(struct metal_bus *bus,
 		if (!ldrv->sdrv || !ldrv->dev_open)
 			continue;
 
-		/* Allocate a linux device if we haven't already. */
-		if (!ldev)
-			ldev = malloc(sizeof(*ldev));
-		if (!ldev)
-			return -ENOMEM;
-
 		/* Reset device data. */
 		memset(ldev, 0, sizeof(*ldev));
 		strncpy(ldev->dev_name, dev_name, sizeof(ldev->dev_name) - 1);
@@ -465,8 +461,7 @@ static int metal_linux_dev_open(struct metal_bus *bus,
 		return 0;
 	}
 
-	if (ldev)
-		free(ldev);
+	free(ldev);
 
 	return -ENODEV;
 }
@@ -591,8 +586,6 @@ static int metal_linux_probe_driver(struct linux_bus *lbus,
 	/* If all else fails... */
 	return ldrv->sdrv ? 0 : -ENODEV;
 }
-
-static void metal_linux_bus_close(struct metal_bus *bus);
 
 static int metal_linux_probe_bus(struct linux_bus *lbus)
 {

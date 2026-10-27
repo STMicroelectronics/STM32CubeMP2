@@ -28,13 +28,13 @@ int32_t ddrphy_phyinit_restore_sequence(void)
 
   if (!retention_enable)
   {
-    ERROR("%s retention restore sequence function is called but register save\n",
+    DDR_ERROR("%s retention restore sequence function is called but register save\n",
           __func__);
-    ERROR("process was not executed during initialzation sequence\n");
-    ERROR("(retention_enable != 0)\n");
+    DDR_ERROR("process was not executed during initialzation sequence\n");
+    DDR_ERROR("(retention_enable != 0)\n");
   }
 
-  VERBOSE("%s Start\n", __func__);
+  DDR_VERBOSE("%s Start\n", __func__);
 
   /*
    * Before you call this functions perform the following:
@@ -96,7 +96,7 @@ int32_t ddrphy_phyinit_restore_sequence(void)
    *    ddrphy_phyinit_usercustom_j_entermissionmode()
    */
 
-  VERBOSE("%s End\n", __func__);
+  DDR_VERBOSE("%s End\n", __func__);
 
   return 0;
 }

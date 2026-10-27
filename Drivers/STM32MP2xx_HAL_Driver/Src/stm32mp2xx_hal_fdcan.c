@@ -181,7 +181,7 @@ static const uint8_t DLCtoBytes[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 12, 16, 20, 24, 
 /** @addtogroup FDCAN_Private_Functions_Prototypes
   * @{
   */
-static HAL_StatusTypeDef FDCAN_CalcultateRamBlockAddresses(FDCAN_HandleTypeDef *hfdcan);
+static HAL_StatusTypeDef FDCAN_CalculateRamBlockAddresses(FDCAN_HandleTypeDef *hfdcan);
 static void FDCAN_CopyMessageToRAM(FDCAN_HandleTypeDef *hfdcan, const FDCAN_TxHeaderTypeDef *pTxHeader,
                                    uint8_t *pTxData, uint32_t BufferIndex);
 /**
@@ -478,7 +478,7 @@ HAL_StatusTypeDef HAL_FDCAN_Init(FDCAN_HandleTypeDef *hfdcan)
   hfdcan->State = HAL_FDCAN_STATE_READY;
 
   /* Calculate each RAM block address */
-  status = FDCAN_CalcultateRamBlockAddresses(hfdcan);
+  status = FDCAN_CalculateRamBlockAddresses(hfdcan);
 
   /* Return function status */
   return status;
@@ -4968,7 +4968,7 @@ uint32_t HAL_FDCAN_GetError(const FDCAN_HandleTypeDef *hfdcan)
   *         the configuration information for the specified FDCAN.
   * @retval HAL status
  */
-static HAL_StatusTypeDef FDCAN_CalcultateRamBlockAddresses(FDCAN_HandleTypeDef *hfdcan)
+static HAL_StatusTypeDef FDCAN_CalculateRamBlockAddresses(FDCAN_HandleTypeDef *hfdcan)
 {
   uint32_t RAMcounter;
   uint32_t StartAddress;

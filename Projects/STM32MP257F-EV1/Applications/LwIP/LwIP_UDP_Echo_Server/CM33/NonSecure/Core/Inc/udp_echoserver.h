@@ -30,7 +30,25 @@
 #ifndef __ECHO_H__
 #define __ECHO_H__
 
+#include "lwip/netif.h"
 
 void udp_echoserver_init(void);
+
+#if LOOPBACK_TEST_ENABLE
+/* Period, in milliseconds, between two loopback test datagrams */
+#define LOOPBACK_TEST_PERIOD_MS   2000U
+
+/* Total number of loopback test datagrams sent before the test completes */
+#define LOOPBACK_TEST_COUNT       4U
+
+/* Payload used for the loopback test datagrams */
+#define LOOPBACK_MSG              "LwIP Loopback Test"
+
+/* Optional single-board loopback self-test: reuses the UDP echo server
+   above by sending it datagrams addressed to this board's own IP, and
+   checking that they are echoed back correctly. See LOOPBACK_TEST_ENABLE
+   in lwipopts.h. */
+void loopback_test_periodic_handle(struct netif *netif);
+#endif /* LOOPBACK_TEST_ENABLE */
 
 #endif /* __MINIMAL_ECHO_H */

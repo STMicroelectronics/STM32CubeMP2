@@ -105,10 +105,10 @@
         HAL_I3C_Ctrl_DynAddrAssign_IT() in interrupt mode.
         This procedure is named Enter Dynamic Address Assignment (ENTDAA CCC command).
         For the initiation of ENTDAA procedure from the controller, each target connected and powered on the I3C bus
-        must repond to this particular Command Common Code by sending its proper Payload (a amount of 48bits which
+        must respond to this particular Command Common Code by sending its proper Payload (an amount of 48bits which
         contain the target characteristics)
         Each time a target responds to ENTDAA sequence, the application is informed through
-        HAL_I3C_TgtReqDynamicAddrCallback() of the reception of the target paylaod.
+        HAL_I3C_TgtReqDynamicAddrCallback() of the reception of the target payload.
         And then application must send a associated dynamic address through HAL_I3C_Ctrl_SetDynAddr().
         This procedure in loop automatically in hardware side until a target respond to repeated ENTDAA sequence.
         The application is informed of the end of the procedure at reception of HAL_I3C_CtrlDAACpltCallback().
@@ -2489,8 +2489,8 @@ HAL_StatusTypeDef HAL_I3C_GetConfigFifo(I3C_HandleTypeDef *hi3c, I3C_FifoConfTyp
              command in polling mode.
          (+) Call the function HAL_I3C_Ctrl_DynAddrAssign_IT() to send a broadcast ENTDAA CCC
              command in interrupt mode.
-         (+) Call the function HAL_I3C_Ctrl_SetDynAddr() to set, asscociate the target dynamic address
-             during the Dynamic Address Assignment processus.
+         (+) Call the function HAL_I3C_Ctrl_SetDynAddr() to set, associate the target dynamic address
+             during the Dynamic Address Assignment process.
          (+) Call the function HAL_I3C_Ctrl_IsDeviceI3C_Ready() to check if I3C target device is ready.
          (+) Call the function HAL_I3C_Ctrl_IsDeviceI2C_Ready() to check if I2C target device is ready.
 
@@ -8524,8 +8524,8 @@ static HAL_StatusTypeDef I3C_Abort_ISR(struct __I3C_HandleTypeDef *hi3c, uint32_
     }
 
     /* I3C Abort frame complete event Check */
-    /* Evenif abort is called, the Frame completion can arrive if abort is requested at the end of the processus */
-    /* Evenif completion occurs, treat this end of processus as abort completion process */
+    /* Even if abort is called, the Frame completion can arrive if abort is requested at the end of the process */
+    /* Even if completion occurs, treat this end of process as abort completion process */
 #if defined(I3C_MISR_CFNFMIS)
     if (I3C_CHECK_FLAG(it_masks, HAL_I3C_IT_MASKS_FCMIS) != RESET)
 #else

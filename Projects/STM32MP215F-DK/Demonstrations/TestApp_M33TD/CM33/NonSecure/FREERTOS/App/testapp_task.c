@@ -136,7 +136,7 @@ typedef struct {
 
 static const TestAppTestEntry testList[] = {
 #ifdef ENABLE_TIMERS_TEST
-    { "TIMERS", Test_TIMER_ResourceAcquire, Test_TIMER_Init, Test_TIMER_Run, Test_TIMER_DeInit, Test_TIMER_ResourceAcquire, TEST_TYPE_AUTO, "Press button to run TIMERS test" },
+    { "TIMERS", Test_TIMER_ResourceAcquire, Test_TIMER_Init, Test_TIMER_Run, Test_TIMER_DeInit, Test_TIMER_ResourceRelease, TEST_TYPE_AUTO, "Press button to run TIMERS test" },
 #endif
 #ifdef ENABLE_I2C_TEST
     { "I2C", Test_I2C_ResourceAcquire, Test_I2C_Init, Test_I2C_Run, Test_I2C_DeInit, Test_I2C_ResourceRelease, TEST_TYPE_MANUAL, "Press button to run I2C test" },

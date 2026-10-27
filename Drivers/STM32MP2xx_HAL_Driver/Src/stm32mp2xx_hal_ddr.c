@@ -79,6 +79,14 @@
 #endif /* USE_STM32MP257CXX_EMU */
 #endif /* (STM32MP_DDR4_TYPE && (DDR_SIZE_Gb == 32)) && defined(STM32MP_DDR_16_BIT_INTERFACE) */
 
+#if (STM32MP_DDR4_TYPE && (DDR_SIZE_Gb == 16)) && !defined(STM32MP_DDR_16_BIT_INTERFACE)
+#ifndef USE_STM32MP257CXX_EMU
+#if (DDR_FREQ == 1200)
+#include "stm32mp2xx-ddr4-2x8Gbits-2x16bits-1200MHz.h"
+#endif /* (DDR_FREQ == 1200) */
+#endif /* !USE_STM32MP257CXX_EMU */
+#endif /* (STM32MP_DDR4_TYPE && (DDR_SIZE_Gb == 16)) && !defined(STM32MP_DDR_16_BIT_INTERFACE) */
+
 #if (STM32MP_DDR4_TYPE && (DDR_SIZE_Gb == 32)) && !defined(STM32MP_DDR_16_BIT_INTERFACE)
 #ifdef USE_STM32MP257CXX_EMU
 #if (DDR_FREQ == 1200)
@@ -107,6 +115,14 @@
 #endif /* (DDR_FREQ == 1200) */
 #endif /* !USE_STM32MP257CXX_EMU */
 #endif /* (STM32MP_LPDDR4_TYPE && (DDR_SIZE_Gb == 16)) && defined(STM32MP_DDR_16_BIT_INTERFACE) */
+
+#if (STM32MP_LPDDR4_TYPE && (DDR_SIZE_Gb == 16)) && !defined(STM32MP_DDR_16_BIT_INTERFACE)
+#ifndef USE_STM32MP257CXX_EMU
+#if (DDR_FREQ == 1200)
+#include "stm32mp2xx-lpddr4-1x16Gbits-1x32bits-1200MHz.h"
+#endif /* (DDR_FREQ == 1200) */
+#endif /* !USE_STM32MP257CXX_EMU */
+#endif /* (STM32MP_LPDDR4_TYPE && (DDR_SIZE_Gb == 16)) && !defined(STM32MP_DDR_16_BIT_INTERFACE) */
 
 #if (STM32MP_LPDDR4_TYPE && (DDR_SIZE_Gb == 32)) && !defined(STM32MP_DDR_16_BIT_INTERFACE)
 #ifdef USE_STM32MP257CXX_EMU
@@ -2661,8 +2677,8 @@ HAL_StatusTypeDef HAL_DDR_Init(DDR_InitTypeDef *iddr)
     CLEAR_BIT(RCC->DDRPHYCAPBCFGR, RCC_DDRPHYCAPBCFGR_DDRPHYCAPBRST);
     WRITE_REG(RCC->DDRCFGR, RCC_DDRCFGR_DDRCFGEN | RCC_DDRCFGR_DDRCFGLPEN);
 
-    /* Initialize DDR by skipping training and disabling result saving */
-    iret = ddrphy_phyinit_sequence(true, false);
+    /* Initialize DDR by skipping training */
+    iret = ddrphy_phyinit_sequence(true);
 
     if (iret == 0)
     {
@@ -2677,17 +2693,8 @@ HAL_StatusTypeDef HAL_DDR_Init(DDR_InitTypeDef *iddr)
   }
   else
   {
-#ifdef STM32MP_DISABLE_SAVE_RETENTION_REGISTERS
-    /*
-     * Initialize DDR including training but without result saving.
-     * In a M33 DDR_Starter context executed in RETRAM, this is mandatory
-     * to ensure a good execution without conflict with log buffer.
-     */
-    iret = ddrphy_phyinit_sequence(false, false);
-#else /* STM32MP_DISABLE_SAVE_RETENTION_REGISTERS */
-    /* Initialize DDR including training and result saving */
-    iret = ddrphy_phyinit_sequence(false, true);
-#endif /* STM32MP_DISABLE_SAVE_RETENTION_REGISTERS */
+    /* Initialize DDR including training  */
+    iret = ddrphy_phyinit_sequence(false);
   }
 
   if (iret != 0)

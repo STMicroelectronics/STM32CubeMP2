@@ -176,6 +176,7 @@ set(APPLICATION_SRC
 	${BASE_DIR}/CM33/NonSecure/Core/Src/stm32mp2xx_hal_msp.c
 	${BASE_DIR}/CM33/NonSecure/Core/Src/stm32mp2xx_hal_timebase_tim.c
 	${BASE_DIR}/CM33/NonSecure/Core/Src/stm32mp2xx_it.c
+	${BASE_DIR}/CM33/NonSecure/OpenAMP/Src/mbox_ipcc.c
 	${BASE_DIR}/CM33/NonSecure/OpenAMP/Src/openamp.c
 	${BASE_DIR}/CM33/NonSecure/OpenAMP/Src/rsc_table.c
 	${BASE_DIR}/CM33/NonSecure/TFM/App/tfm_ns_interface_freertos.c
@@ -216,7 +217,6 @@ set(SOURCE_FILES ${APPLICATION_SRC} ${LINKER_SCRIPT} ${S_VEENER_OBJECT_FILE})
 
 # Add executable
 add_executable(${PROJECT_NAME}.elf ${SOURCE_FILES} ${LINKER_SCRIPT})
-target_compile_definitions(${PROJECT_NAME}.elf PRIVATE LINUX_RPROC_MASTER)
 target_compile_definitions(${PROJECT_NAME}.elf PRIVATE ${OPENAMP_DEFINITIONS})
 
 # Link libraries

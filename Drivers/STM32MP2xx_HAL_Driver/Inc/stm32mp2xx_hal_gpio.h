@@ -262,7 +262,7 @@ typedef enum
 #define __HAL_GPIO_EXTI_GET_FALLING_IT(__EXTI_LINE__) (EXTI2->FPR1 & (__EXTI_LINE__))
 
 /**
-  * @brief  Clears the EXTI's line pending bits for Risng edge.
+  * @brief  Clears the EXTI's line pending bits for Rising edge.
   * @param  __EXTI_LINE__: specifies the EXTI lines to clear.
   *          This parameter can be any combination of GPIO_PIN_x where x can be (0..15)
   * @retval None

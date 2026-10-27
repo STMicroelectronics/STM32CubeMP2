@@ -161,6 +161,11 @@
 			<locationURI>PARENT-3-PROJECT_LOC/CM33/NonSecure/OpenAMP/Src/rsc_table.c</locationURI>
 		</link>
 		<link>
+			<name>Application/User/OPENAMP/mbox_ipcc.c</name>
+			<type>1</type>
+			<locationURI>PARENT-3-PROJECT_LOC/CM33/NonSecure/OpenAMP/Src/mbox_ipcc.c</locationURI>
+		</link>
+		<link>
 			<name>Application/User/TFM/App</name>
 			<type>2</type>
 			<locationURI>virtual:/virtual</locationURI>
@@ -389,6 +394,11 @@
 			<name>Middlewares/OpenAMP/openamp/virtio/virtqueue.c</name>
 			<type>1</type>
 			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/OpenAMP/open-amp/lib/virtio/virtqueue.c</locationURI>
+		</link>
+		<link>
+			<name>Middlewares/OpenAMP/openamp/utils/utilities.c</name>
+			<type>1</type>
+			<locationURI>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/OpenAMP/open-amp/lib/utils/utilities.c</locationURI>
 		</link>
 		<link>
 			<name>Utilities/M33TD_NSAppCore/App/Src/btn_monitor_task.c</name>

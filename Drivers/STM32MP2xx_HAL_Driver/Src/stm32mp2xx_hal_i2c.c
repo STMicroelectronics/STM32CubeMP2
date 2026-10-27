@@ -363,35 +363,35 @@
 /*!< Default Value */
 #define I2C_STATE_MASTER_BUSY_TX  ((uint32_t)(((uint32_t)HAL_I2C_STATE_BUSY_TX & I2C_STATE_MSK) | \
                                               (uint32_t)HAL_I2C_MODE_MASTER))
-/*!< Master Busy TX, combinaison of State LSB and Mode enum */
+/*!< Master Busy TX, combination of State LSB and Mode enum */
 #define I2C_STATE_MASTER_BUSY_RX  ((uint32_t)(((uint32_t)HAL_I2C_STATE_BUSY_RX & I2C_STATE_MSK) | \
                                               (uint32_t)HAL_I2C_MODE_MASTER))
-/*!< Master Busy RX, combinaison of State LSB and Mode enum */
+/*!< Master Busy RX, combination of State LSB and Mode enum */
 #define I2C_STATE_SLAVE_BUSY_TX   ((uint32_t)(((uint32_t)HAL_I2C_STATE_BUSY_TX & I2C_STATE_MSK) | \
                                               (uint32_t)HAL_I2C_MODE_SLAVE))
-/*!< Slave Busy TX, combinaison of State LSB and Mode enum */
+/*!< Slave Busy TX, combination of State LSB and Mode enum */
 #define I2C_STATE_SLAVE_BUSY_RX   ((uint32_t)(((uint32_t)HAL_I2C_STATE_BUSY_RX & I2C_STATE_MSK) | \
                                               (uint32_t)HAL_I2C_MODE_SLAVE))
-/*!< Slave Busy RX, combinaison of State LSB and Mode enum  */
+/*!< Slave Busy RX, combination of State LSB and Mode enum  */
 #define I2C_STATE_MEM_BUSY_TX     ((uint32_t)(((uint32_t)HAL_I2C_STATE_BUSY_TX & I2C_STATE_MSK) | \
                                               (uint32_t)HAL_I2C_MODE_MEM))
-/*!< Memory Busy TX, combinaison of State LSB and Mode enum */
+/*!< Memory Busy TX, combination of State LSB and Mode enum */
 #define I2C_STATE_MEM_BUSY_RX     ((uint32_t)(((uint32_t)HAL_I2C_STATE_BUSY_RX & I2C_STATE_MSK) | \
                                               (uint32_t)HAL_I2C_MODE_MEM))
-/*!< Memory Busy RX, combinaison of State LSB and Mode enum */
+/*!< Memory Busy RX, combination of State LSB and Mode enum */
 
 
 /* Private define to centralize the enable/disable of Interrupts */
-#define I2C_XFER_TX_IT          (uint16_t)(0x0001U)   /*!< Bit field can be combinated with
+#define I2C_XFER_TX_IT          (uint16_t)(0x0001U)   /*!< Bit field can be combined with
                                                          @ref I2C_XFER_LISTEN_IT */
-#define I2C_XFER_RX_IT          (uint16_t)(0x0002U)   /*!< Bit field can be combinated with
+#define I2C_XFER_RX_IT          (uint16_t)(0x0002U)   /*!< Bit field can be combined with
                                                          @ref I2C_XFER_LISTEN_IT */
-#define I2C_XFER_LISTEN_IT      (uint16_t)(0x8000U)   /*!< Bit field can be combinated with @ref I2C_XFER_TX_IT
+#define I2C_XFER_LISTEN_IT      (uint16_t)(0x8000U)   /*!< Bit field can be combined with @ref I2C_XFER_TX_IT
                                                          and @ref I2C_XFER_RX_IT */
 
 #define I2C_XFER_ERROR_IT       (uint16_t)(0x0010U)   /*!< Bit definition to manage addition of global Error
                                                          and NACK treatment */
-#define I2C_XFER_CPLT_IT        (uint16_t)(0x0020U)   /*!< Bit definition to manage only STOP evenement */
+#define I2C_XFER_CPLT_IT        (uint16_t)(0x0020U)   /*!< Bit definition to manage only STOP event */
 #define I2C_XFER_RELOAD_IT      (uint16_t)(0x0040U)   /*!< Bit definition to manage only Reload of NBYTE */
 
 /* Private define Sequential Transfer Options default/reset value */
@@ -4229,7 +4229,7 @@ HAL_StatusTypeDef HAL_I2C_Slave_Seq_Transmit_IT(I2C_HandleTypeDef *hi2c, uint8_t
     /* Note : The I2C interrupts must be enabled after unlocking current process
     to avoid the risk of I2C interrupt handle execution before current
     process unlock */
-    /* REnable ADDR interrupt */
+    /* Re-enable ADDR interrupt */
     I2C_Enable_IRQ(hi2c, I2C_XFER_TX_IT | I2C_XFER_LISTEN_IT);
 
     return HAL_OK;
@@ -4551,7 +4551,7 @@ HAL_StatusTypeDef HAL_I2C_Slave_Seq_Receive_IT(I2C_HandleTypeDef *hi2c, uint8_t 
     /* Note : The I2C interrupts must be enabled after unlocking current process
     to avoid the risk of I2C interrupt handle execution before current
     process unlock */
-    /* REnable ADDR interrupt */
+    /* Re-enable ADDR interrupt */
     I2C_Enable_IRQ(hi2c, I2C_XFER_RX_IT | I2C_XFER_LISTEN_IT);
 
     return HAL_OK;
@@ -4770,7 +4770,7 @@ HAL_StatusTypeDef HAL_I2C_Slave_Seq_Receive_DMA(I2C_HandleTypeDef *hi2c, uint8_t
     /* Note : The I2C interrupts must be enabled after unlocking current process
     to avoid the risk of I2C interrupt handle execution before current
     process unlock */
-    /* REnable ADDR interrupt */
+    /* Re-enable ADDR interrupt */
     I2C_Enable_IRQ(hi2c, I2C_XFER_RX_IT | I2C_XFER_LISTEN_IT);
 
     return HAL_OK;

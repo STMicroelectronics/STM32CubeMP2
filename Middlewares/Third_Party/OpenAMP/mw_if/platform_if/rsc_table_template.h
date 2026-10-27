@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019 STMicroelectronics.
+ * Copyright (c) 2019-2026 STMicroelectronics.
  * All rights reserved.
  *
  * This software component is licensed by ST under BSD 3-Clause license,

@@ -416,7 +416,7 @@ static void MX_ADC3_Init(void)
   /* ### - 2 - Channel configuration ######################################## */
   sConfig.Channel                = ADC_CHANNEL_6;              /* Sampled channel number */
   sConfig.Rank                   = ADC_REGULAR_RANK_1;         /* Rank of sampled channel number ADCx_CHANNEL */
-  sConfig.SamplingTime           = ADC_SAMPLETIME_7CYCLES_5;   /* Sampling time (number of clock cycles unit) */
+  sConfig.SamplingTime           = ADC_SAMPLETIME_6CYCLES_5;   /* Sampling time (number of clock cycles unit) */
   sConfig.SingleDiff             = ADC_DIFFERENTIAL_ENDED;     /* Differential input channel */
   sConfig.OffsetNumber           = ADC_OFFSET_NONE;            /* No offset subtraction */
   sConfig.Offset                 = 0;                          /* Parameter discarded because offset correction is disabled */
@@ -600,6 +600,13 @@ static void Shutdown_Routine(void)
 
   /* Deinitialize the LED3 */
   (void)BSP_LED_DeInit(LED3);
+
+#ifdef ICACHE_DCACHE_ENABLE
+  HAL_DCACHE_CleanInvalidByAddr(&hdcache, (const uint32_t *)0x80A00000U, 0x003FFC00U);
+  HAL_DCACHE_Disable(&hdcache);
+  HAL_DCACHE_DeInit(&hdcache);
+  HAL_ICACHE_DeInit();
+#endif
 
   /* When ready, notify the remote processor that we can be shut down */
   (void)HAL_IPCC_NotifyCPU(hipcc_handle, ipcc_ch_id, IPCC_CHANNEL_DIR_RX);

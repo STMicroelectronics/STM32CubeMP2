@@ -58,6 +58,7 @@
 /* External variables --------------------------------------------------------*/
 extern ETH_HandleTypeDef heth;
 extern TIM_HandleTypeDef htim6;
+extern IPCC_HandleTypeDef hipcc1;
 
 /* USER CODE BEGIN EV */
 
@@ -191,5 +192,13 @@ void TIM6_IRQHandler(void)
   /* USER CODE BEGIN TIM6_IRQn 1 */
 
   /* USER CODE END TIM6_IRQn 1 */
+}
+
+/**
+  * @brief  This function handles IPCC1 RX interrupt.
+  */
+void IPCC1_RX_IRQHandler(void)
+{
+   HAL_IPCC_RX_IRQHandler(&hipcc1);
 }
 

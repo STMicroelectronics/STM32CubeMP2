@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: BSD-3-Clause
  */
 
+#include <stddef.h>
 #include <metal/cache.h>
 #include <metal/io.h>
 #include <nuttx/arch.h>
@@ -14,6 +15,7 @@ static uint64_t metal_io_read_(struct metal_io_region *io,
 			       int width)
 {
 	uint64_t value = 0;
+	metal_unused(order);
 
 	metal_io_block_read(io, offset, &value, width);
 	return value;
@@ -25,6 +27,8 @@ static void metal_io_write_(struct metal_io_region *io,
 			    memory_order order,
 			    int width)
 {
+	metal_unused(order);
+
 	metal_io_block_write(io, offset, &value, width);
 }
 
@@ -35,9 +39,20 @@ static int metal_io_block_read_(struct metal_io_region *io,
 				int len)
 {
 	void *va = metal_io_virt(io, offset);
+	metal_unused(order);
 
 	metal_cache_invalidate(va, len);
-	memcpy(dst, va, len);
+	if (len == 1)
+		*(uint8_t *)dst = *(uint8_t *)va;
+	else if (len == 2)
+		*(uint16_t *)dst = *(uint16_t *)va;
+	else if (len == 4)
+		*(uint32_t *)dst = *(uint32_t *)va;
+	else if (len == 8) {
+		*(uint32_t *)dst = *(uint32_t *)va;
+		*((uint32_t *)dst + 1) = *((uint32_t *)va + 1);
+	} else
+		memcpy(dst, va, len);
 
 	return len;
 }
@@ -49,8 +64,20 @@ static int metal_io_block_write_(struct metal_io_region *io,
 				 int len)
 {
 	void *va = metal_io_virt(io, offset);
+	metal_unused(order);
 
-	memcpy(va, src, len);
+	if (len == 1)
+		*(uint8_t *)va = *(uint8_t *)src;
+	else if (len == 2)
+		*(uint16_t *)va = *(uint16_t *)src;
+	else if (len == 4)
+		*(uint32_t *)va = *(uint32_t *)src;
+	else if (len == 8) {
+		*(uint32_t *)va = *(uint32_t *)src;
+		*((uint32_t *)va + 1) = *((uint32_t *)src + 1);
+	} else
+		memcpy(va, src, len);
+
 	metal_cache_flush(va, len);
 
 	return len;
@@ -63,6 +90,7 @@ static void metal_io_block_set_(struct metal_io_region *io,
 				int len)
 {
 	void *va = metal_io_virt(io, offset);
+	metal_unused(order);
 
 	memset(va, value, len);
 	metal_cache_flush(va, len);
@@ -70,6 +98,7 @@ static void metal_io_block_set_(struct metal_io_region *io,
 
 static void metal_io_close_(struct metal_io_region *io)
 {
+	metal_unused(io);
 }
 
 static metal_phys_addr_t metal_io_offset_to_phys_(struct metal_io_region *io,

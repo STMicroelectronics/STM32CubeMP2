@@ -31,11 +31,17 @@
 #define OPENAMP_send  rpmsg_send
 #define OPENAMP_destroy_ept rpmsg_destroy_ept
 
+typedef void (*OPENAMP_MBOX_RxCallback_t)(uint32_t vring_id);
+void OPENAMP_RegisterMBOXRxCallback(OPENAMP_MBOX_RxCallback_t cb);
+
 /* Initialize the openamp framework*/
-int MX_OPENAMP_Init(int RPMsgRole, rpmsg_ns_bind_cb ns_bind_cb);
+int MX_OPENAMP_Init(int RPMsgRole, IPCC_HandleTypeDef *hipcc);
+
+/* Initialize the rpmsg framework*/
+int MX_OPENAMP_RPMsg_Init(int RPMsgRole, rpmsg_ns_bind_cb ns_bind_cb, IPCC_HandleTypeDef *hipcc);
 
 /* Deinitialize the openamp framework*/
-void OPENAMP_DeInit(void);
+void OPENAMP_DeInit(IPCC_HandleTypeDef *hipcc);
 
 /* Initialize the endpoint struct*/
 void OPENAMP_init_ept(struct rpmsg_endpoint *ept);

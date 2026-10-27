@@ -23,13 +23,13 @@
 extern "C" {
 #endif
 
-#if (CONFIG_HEAP_MEM_POOL_SIZE > 0)
-static inline void *metal_allocate_memory(unsigned int size)
+#if (K_HEAP_MEM_POOL_SIZE > 0)
+static inline void *__metal_allocate_memory(unsigned int size)
 {
 	return k_malloc(size);
 }
 
-static inline void metal_free_memory(void *ptr)
+static inline void __metal_free_memory(void *ptr)
 {
 	k_free(ptr);
 }
@@ -38,16 +38,16 @@ static inline void metal_free_memory(void *ptr)
 void *metal_zephyr_allocate_memory(unsigned int size);
 void metal_zephyr_free_memory(void *ptr);
 
-static inline void *metal_allocate_memory(unsigned int size)
+static inline void *__metal_allocate_memory(unsigned int size)
 {
 	return metal_zephyr_allocate_memory(size);
 }
 
-static inline void metal_free_memory(void *ptr)
+static inline void __metal_free_memory(void *ptr)
 {
 	metal_zephyr_free_memory(ptr);
 }
-#endif /* CONFIG_HEAP_MEM_POOL_SIZE */
+#endif /* K_HEAP_MEM_POOL_SIZE */
 
 
 #ifdef __cplusplus

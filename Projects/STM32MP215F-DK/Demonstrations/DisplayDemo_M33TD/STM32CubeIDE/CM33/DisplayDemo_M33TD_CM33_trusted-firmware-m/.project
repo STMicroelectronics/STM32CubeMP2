@@ -33,7 +33,7 @@
 		<link>
 			<name>trusted-firmware-m</name>
 			<type>2</type>
-			<location>PARENT-8-PROJECT_LOC/Firmware/Middlewares/Third_Party/trusted-firmware-m</location>
+			<location>PARENT-7-PROJECT_LOC/Middlewares/Third_Party/trusted-firmware-m</location>
 		</link>
 	</linkedResources>
 </projectDescription>

@@ -57,6 +57,10 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef* htim_pwm)
 
   /* USER CODE END TIM8_MspDeInit 0 */
 
+    /* Reset TIM8 to clear any configuration left by a previously loaded firmware */
+    __HAL_RCC_TIM8_FORCE_RESET();
+    __HAL_RCC_TIM8_RELEASE_RESET();
+
     /* TIM8 clock enable */
 	__HAL_RCC_TIM8_CLK_ENABLE();
 
@@ -133,6 +137,10 @@ void HAL_TIM_PWM_MspDeInit(TIM_HandleTypeDef* htim_pwm)
   /* USER CODE END TIM8_MspDeInit 0 */
     /* TIM1 DMA DeInit */
     HAL_DMA_DeInit(htim_pwm->hdma[TIM_DMA_ID_UPDATE]);
+
+    /* Reset TIM8 so that no configuration (DIER.UDE, DCR...) is left for the next firmware */
+    __HAL_RCC_TIM8_FORCE_RESET();
+    __HAL_RCC_TIM8_RELEASE_RESET();
 
     /* Peripheral clock disable */
     __HAL_RCC_TIM8_CLK_DISABLE();

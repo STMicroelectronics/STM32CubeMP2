@@ -65,6 +65,10 @@ if (WITH_DEFAULT_LOGGER)
   add_definitions (-DDEFAULT_LOGGER_ON)
 endif (WITH_DEFAULT_LOGGER)
 
+if (WITH_FUNC_LINE_LOG)
+  add_definitions (-DML_FUNC_LINE)
+endif (WITH_FUNC_LINE_LOG)
+
 get_property (_ec_flgs GLOBAL PROPERTY "PROJECT_EC_FLAGS")
 
 if (WITH_ZEPHYR)
@@ -85,6 +89,7 @@ else (WITH_ZEPHYR)
       VERSION           "${PROJECT_VERSION}"
       SOVERSION         "${PROJECT_VERSION_MAJOR}"
     )
+    target_include_directories (${_lib} PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/include)
   endif (WITH_SHARED_LIB)
 
   # Build a static library if so configured.
@@ -96,7 +101,7 @@ else (WITH_ZEPHYR)
     set_target_properties (${_lib} PROPERTIES
       OUTPUT_NAME       "${PROJECT_NAME}"
     )
+    target_include_directories (${_lib} PUBLIC ${CMAKE_CURRENT_BINARY_DIR}/include)
   endif (WITH_STATIC_LIB)
 endif (WITH_ZEPHYR)
 
-# vim: expandtab:ts=2:sw=2:smartindent

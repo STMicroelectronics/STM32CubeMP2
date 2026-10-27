@@ -23,17 +23,10 @@
 
 How to configure external interrupt lines.
 
-In this example, one EXTI line (EXTI2_11) is configured to generate
-an interrupt on each falling edge.
-In the interrupt routine a led connected to a specific GPIO pin is toggled.
-
-In this example:
-    - EXTI2_11 is connected to PC11 pin
-      - when falling edge is detected on EXTI2_11 by pressing USER2 push-button, LED3 toggles once
-      - LED3 is ON in case of error in initialization
-
-On STM32MP215F-DK:
-    - EXTI2_11 is connected to USER2 push-button
+In this example, EXTI2 line 7 (EXTI2_7) is configured to generate an
+interrupt on each falling edge. On STM32MP215F-DK, EXTI2_7 is connected to
+PF7, which is the USER2 push-button. Each button press toggles LED3 once.
+LED3 is turned on if an initialization error occurs.
 
 At the beginning of the main program the HAL_Init() function is called to reset 
 all the peripherals, initialize the systick.

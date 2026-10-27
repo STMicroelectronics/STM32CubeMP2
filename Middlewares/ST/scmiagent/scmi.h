@@ -157,10 +157,26 @@ int scmi_voltage_domain_name(struct scmi_channel *channel, unsigned int domain_i
 int scmi_clock_set_rate(struct scmi_channel *channel, unsigned int clock_id, unsigned int rate_khz);
 int scmi_clock_get_rate(struct scmi_channel *channel, unsigned int clock_id, unsigned int *rate_khz);
 int scmi_clock_gate(struct scmi_channel *channel, unsigned int clock_id, int enable);
+
 int scmi_clock_get_config(struct scmi_channel *channel, unsigned int clock_id,uint32_t *flags, uint32_t *attributes, uint32_t *config);
+#if defined(SCMI_CLOCK_ATTRIBUTES_NO_ENABLE_DELAY)
 int scmi_clock_get_attributes(struct scmi_channel *channel, unsigned int clock_id, char *name, int len, uint32_t *attributes);
+#else
+int scmi_clock_get_attributes(struct scmi_channel *channel, unsigned int clock_id, char *name, int len, uint32_t *attributes,
+                                  uint32_t *clock_enable_delay);
+#endif /* SCMI_CLOCK_ATTRIBUTES_NO_ENABLE_DELAY */
+
 int scmi_clock_enable(struct scmi_channel *channel, unsigned int clock_id);
 int scmi_clock_disable(struct scmi_channel *channel, unsigned int clock_id);
 int scmi_clock_protocol_version(struct scmi_channel *channel, uint32_t *version);
+
+/* System Power Management Protocol (0x12) */
+#define SCMI_SYS_STATE_SHUTDOWN     0U
+#define SCMI_SYS_STATE_COLD_RESET   1U
+#define SCMI_SYS_STATE_WARM_RESET   2U
+#define SCMI_SYS_STATE_SUSPEND      4U
+
+int scmi_sys_power_state_set(struct scmi_channel *channel, uint32_t system_state, int graceful);
+
 #endif /* SCMI_H */
 

@@ -21,7 +21,7 @@
  *
  * \returns 0 on completion of the sequence, EXIT_FAILURE on error.
  */
-int32_t ddrphy_phyinit_sequence(bool skip_training, bool reten)
+int32_t ddrphy_phyinit_sequence(bool skip_training)
 {
   int32_t ret;
   bool skip_train = skip_training;
@@ -32,7 +32,7 @@ int32_t ddrphy_phyinit_sequence(bool skip_training, bool reten)
     return -1;
   }
 
-  VERBOSE("%s Start\n", __func__);
+  DDR_VERBOSE("%s Start\n", __func__);
 
   /* Initialize structures */
   ddrphy_phyinit_initstruct();
@@ -134,26 +134,10 @@ int32_t ddrphy_phyinit_sequence(bool skip_training, bool reten)
    */
   ddrphy_phyinit_usercustom_posttrain();
 
-  if (reten)
-  {
-    /* Save value of tracked registers for retention restore sequence. */
-    /*
-     * Following call has been dissociated from PHY init sequence.
-     * A dedicated HAL_DDR_SaveRetentionData() is now exposed in HAL driver API.
-     */
-    /* ret = ddrphy_phyinit_usercustom_saveretregs(); */
-    if (ret != 0)
-    {
-      return ret;
-    }
-
-    retention_enable = reten;
-  }
-
   /* (J) Initialize the PHY to Mission Mode through DFI Initialization */
-  /* call ddrphy_phyinit_usercustom_j_entermissionmode();= if needed */
+  /* call ddrphy_phyinit_usercustom_j_entermissionmode() if needed */
 
-  VERBOSE("%s End\n", __func__);
+  DDR_VERBOSE("%s End\n", __func__);
 
   return 0;
 }

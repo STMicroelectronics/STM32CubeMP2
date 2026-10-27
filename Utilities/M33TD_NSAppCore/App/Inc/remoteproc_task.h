@@ -49,7 +49,8 @@ typedef enum {
     REMOTEPROC_EVENT_RESUME,                /*!< Request to resume the remote processor */
     REMOTEPROC_EVENT_CRASH,                 /*!< Crash detected */
     REMOTEPROC_EVENT_ERROR,                 /*!< Error occurred */
-    REMOTEPROC_EVENT_CHECK_STATUS           /*!< Internal: poll CPU state for async command completion */
+    REMOTEPROC_EVENT_CHECK_STATUS,          /*!< Internal: poll CPU state for async command completion */
+    REMOTEPROC_EVENT_REBOOT                 /*!< Request a planned remote processor reboot */
 } RemoteProcEvent;
 
 /**

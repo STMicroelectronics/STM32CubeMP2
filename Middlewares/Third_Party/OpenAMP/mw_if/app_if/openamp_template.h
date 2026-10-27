@@ -1,38 +1,35 @@
 /**
-  ******************************************************************************
-  * @file   openamp.h
-  * @brief  Header for openamp applications
-  * @author  MCD Application Team
-  ******************************************************************************
-  * @attention
-  *
-  * <h2><center>&copy; Copyright (c) 2019 STMicroelectronics. 
-  * All rights reserved.</center></h2>
-  *
-  * This software component is licensed by ST under BSD 3-Clause license,
-  * the "License"; You may not use this file except in compliance with the 
-  * License. You may obtain a copy of the License at:
-  *                       opensource.org/licenses/BSD-3-Clause
-  *
-  ******************************************************************************
-  */
+ ******************************************************************************
+ * @file    openamp.h
+ * @brief   Header for OpenAMP applications
+ * @author  MCD Application Team
+ ******************************************************************************
+ * @attention
+ *
+ * Copyright (c) 2019-2026 STMicroelectronics.
+ * All rights reserved.
+ *
+ * This software is licensed under terms that can be found in the LICENSE file
+ * in the root directory of this software component.
+ * If no LICENSE file comes with this software, it is provided AS-IS.
+ *
+ ******************************************************************************
+ */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __openamp_H
-#define __openamp_H
-
-#include "openamp/open_amp.h"
-#include "openamp_conf.h"
+#ifndef OPENAMP_H
+#define OPENAMP_H
 
 #ifdef __cplusplus
  extern "C" {
 #endif
 
 /* Private includes ----------------------------------------------------------*/
+#include "openamp/open_amp.h"
+#include "openamp_conf.h"
 /* USER CODE BEGIN Includes */
 
 /* USER CODE END Includes */
-
 
 /* Exported types ------------------------------------------------------------*/
 /* USER CODE BEGIN ET */
@@ -45,14 +42,15 @@
 /* USER CODE END EC */
 
 /* Private defines -----------------------------------------------------------*/
-/* USER CODE BEGIN Private defines */
 
+/* USER CODE BEGIN Private defines */
+typedef void (*OPENAMP_MBOX_RxCallback_t)(uint32_t vring_id);
+void OPENAMP_RegisterMBOXRxCallback(OPENAMP_MBOX_RxCallback_t cb);
 /* USER CODE END  Private defines */
 
-#define OPENAMP_send  rpmsg_send
-#define OPENAMP_destroy_ept rpmsg_destroy_ept
-
 /* Exported macro ------------------------------------------------------------*/
+#define OPENAMP_send           rpmsg_send
+#define OPENAMP_destroy_ept    rpmsg_destroy_ept
 /* USER CODE BEGIN EM */
 
 /* USER CODE END EM */
@@ -62,28 +60,77 @@
 
 /* USER CODE END EFP */
 
+/**
+ * @brief  Initialize the OpenAMP framework.
+ * @param  RPMsgRole: Role of the RPMsg (master or remote)
+ * @param  hipcc: Pointer to IPCC handle
+ * @retval 0 on success, negative value on error
+ */
+int MX_OPENAMP_Init(int RPMsgRole, IPCC_HandleTypeDef *hipcc);
 
-/* Initialize the openamp framework*/
-int MX_OPENAMP_Init(int RPMsgRole, rpmsg_ns_bind_cb ns_bind_cb,  IPCC_HandleTypeDef * hipcc);
+/**
+ * @brief  Initialize the RPMSG framework.
+ * @param  RPMsgRole: Role of the RPMsg (master or remote)
+ * @param  ns_bind_cb: Name service bind callback
+ * @param  hipcc: Pointer to IPCC handle
+ * @retval 0 on success, negative value on error
+ */
+int MX_OPENAMP_RPMsg_Init(int RPMsgRole, rpmsg_ns_bind_cb ns_bind_cb, IPCC_HandleTypeDef *hipcc);
 
-/* Deinitialize the openamp framework*/
-void OPENAMP_DeInit(void);
+/**
+ * @brief  Deinitialize the OpenAMP framework.
+ * @param  hipcc: Pointer to IPCC handle
+ */
+void OPENAMP_DeInit(IPCC_HandleTypeDef *hipcc);
 
-/* Create and register the endpoint */
+/**
+ * @brief  Initialize the endpoint struct.
+ * @param  ept: Pointer to rpmsg_endpoint structure
+ */
+void OPENAMP_init_ept(struct rpmsg_endpoint *ept);
+
+/**
+ * @brief  Create and register the endpoint.
+ * @param  ept: Pointer to rpmsg_endpoint structure
+ * @param  name: Endpoint name
+ * @param  dest: Destination address
+ * @param  cb: Endpoint callback
+ * @param  unbind_cb: Unbind callback
+ * @retval 0 on success, negative value on error
+ */
 int OPENAMP_create_endpoint(struct rpmsg_endpoint *ept, const char *name,
                             uint32_t dest, rpmsg_ept_cb cb,
                             rpmsg_ns_unbind_cb unbind_cb);
 
-/* Create and register the endpoint with a fixed address */
+/**
+ * @brief  Create and register the endpoint with a fixed address.
+ * @param  ept: Pointer to rpmsg_endpoint structure
+ * @param  name: Endpoint name
+ * @param  src: Source address
+ * @param  dest: Destination address
+ * @param  cb: Endpoint callback
+ * @param  unbind_cb: Unbind callback
+ * @retval 0 on success, negative value on error
+ */
 int OPENAMP_create_fixed_endpoint(struct rpmsg_endpoint *ept, const char *name,
                                   uint32_t src, uint32_t dest, rpmsg_ept_cb cb,
                                   rpmsg_ns_unbind_cb unbind_cb);
 
-/* Check for new rpmsg reception */
-void OPENAMP_check_for_message(void);
+/**
+ * @brief  Check for new RPMsg reception.
+ * @retval 0 if no message, 1 if message received
+ */
+int OPENAMP_check_for_message(void);
 
-/* Wait loop on endpoint ready ( message dest address is know)*/
+/**
+ * @brief  Wait loop on endpoint ready (message destination address is known).
+ * @param  rp_ept: Pointer to rpmsg_endpoint structure
+ */
 void OPENAMP_Wait_EndPointready(struct rpmsg_endpoint *rp_ept);
+
+/* USER CODE BEGIN EFP */
+
+/* USER CODE END EFP */
 
 #ifdef __cplusplus
 }

@@ -26,7 +26,6 @@ enable development of software applications for Asymmetric Multiprocessing
 |  |- proxy/      # implement one processor access device on the
 |  |              # other processor with file operations
 |- apps/        # demonstration/testing applications
-|  |- examples/ # Application samples using the OpenAMP framework.
 |  |- machine/  # common files for machine can be shared by applications
 |  |            # It is up to each app to decide whether to use these files.
 |  |- system/   # common files for system can be shared by applications
@@ -80,12 +79,14 @@ flow easier.
 Some Cmake options are available to allow user to customize to the OpenAMP
 library for it project:
 * **WITH_PROXY** (default OFF): Include proxy support in the library.
-* **WITH APPS** (default OFF): Build with sample applications.
 * **WITH_PROXY_APPS** (default OFF):Build with proxy sample applications.
 * **WITH_VIRTIO_DRIVER** (default ON): Build with virtio driver enabled.
   This option can be set to OFF if the only the remote mode is implemented.
 * **WITH_VIRTIO_DEVICE** (default ON): Build with virtio device enabled.
   This option can be set to OFF if the only the driver mode is implemented.
+* **WITH_VQ_RX_EMPTY_NOTIFY** (default OFF): Choose notify mode. When set to
+  ON, only notify when there are no more Message in the RX queue. When set to
+  OFF, notify for each RX buffer released.
 * **WITH_STATIC_LIB** (default ON): Build with a static library.
 * **WITH_SHARED_LIB** (default ON): Build with a shared library.
 * **WITH_ZEPHYR** (default OFF): Build open-amp as a zephyr library. This option
@@ -94,6 +95,11 @@ library for it project:
   enabled on vrings.
 * **WITH_DCACHE_BUFFERS** (default OFF): Build with data cache operations
   enabled on buffers.
+* **WITH_DCACHE_RSC_TABLE** (default OFF): Build with data cache operations
+  enabled on resource table.
+* **WITH_DCACHE** (default OFF): Build with all cache operations
+  enabled. When set to ON, cache operations for vrings, buffers and resource
+  table are enabled.
 * **RPMSG_BUFFER_SIZE** (default 512): adjust the size of the RPMsg buffers.
   The default value of the RPMsg size is compatible with the Linux Kernel hard
   coded value. If you AMP configuration is Linux kernel host/ OpenAMP remote,
@@ -112,199 +118,86 @@ process.
 ### Example to compile OpenAMP for communication between Linux processes:
 * Install libsysfs devel and libhugetlbfs devel packages on your Linux host.
 * build libmetal library on your host as follows:
-
-    ```
-        $ mkdir -p build-libmetal
-        $ cd build-libmetal
-        $ cmake <libmetal_source>
-        $ make VERBOSE=1 DESTDIR=<libmetal_install> install
-    ```
+  ```
+  $ mkdir -p build-libmetal
+  $ cd build-libmetal
+  $ cmake <libmetal_source>
+  $ make VERBOSE=1 DESTDIR=<libmetal_install> install
+  ```
 
 * build OpenAMP library on your host as follows:
-
-        $ mkdir -p build-openamp
-        $ cd build-openamp
-        $ cmake <openamp_source> -DCMAKE_INCLUDE_PATH=<libmetal_built_include_dir> \
-              -DCMAKE_LIBRARY_PATH=<libmetal_built_lib_dir> [-DWITH_APPS=ON]
-        $ make VERBOSE=1 DESTDIR=$(pwd) install
-
+   ```
+  $ mkdir -p build-openamp
+  $ cd build-openamp
+  $ cmake <openamp_source> -DCMAKE_INCLUDE_PATH=<libmetal_built_include_dir> \
+              -DCMAKE_LIBRARY_PATH=<libmetal_built_lib_dir>
+  $ make VERBOSE=1 DESTDIR=$(pwd) install
+  ```
 The OpenAMP library will be generated to `build/usr/local/lib` directory,
 headers will be generated to `build/usr/local/include` directory, and the
 applications executable will be generated to `build/usr/local/bin`
 directory.
 
-* cmake option `-DWITH_APPS=ON` is to build the demonstration applications.
-* If you have used `-DWITH_APPS=ON` to build the demos, you can try them on
-  your Linux host as follows:
+## Example apps and tests
+* The openamp-system-reference is a new repository for the OpenAMP demos:
+  https://github.com/OpenAMP/openamp-system-reference
 
-  * rpmsg echo demo:
-    ```
-    # Start echo test server to wait for message to echo
-    $ sudo LD_LIBRARY_PATH=<openamp_built>/usr/local/lib:<libmetal_built>/usr/local/lib \
-       build/usr/local/bin/rpmsg-echo-shared
-    # Run echo test to send message to echo test server
-    $ sudo LD_LIBRARY_PATH=<openamp_built>/usr/local/lib:<libmetal_built>/usr/local/lib \
-       build/usr/local/bin/rpmsg-echo-ping-shared 1
-    ```
-
-  * rpmsg echo demo with the nocopy API:
-    ```
-    # Start echo test server to wait for message to echo
-    $ sudo LD_LIBRARY_PATH=<openamp_built>/usr/local/lib:<libmetal_built>/usr/local/lib \
-       build/usr/local/bin/rpmsg-nocopy-echo-shared
-    # Run echo test to send message to echo test server
-    $ sudo LD_LIBRARY_PATH=<openamp_built>/usr/local/lib:<libmetal_built>/usr/local/lib \
-       build/usr/local/bin/rpmsg-nocopy-ping-shared 1
-    ```
-
-###  Example to compile Zynq UltraScale+ MPSoC R5 generic(baremetal) remote:
-* build libmetal library on your host as follows:
-  * Create your on cmake toolchain file to compile libmetal for your generic
-    (baremetal) platform. Here is the example of the toolchain file:
-
-    ```
-        set (CMAKE_SYSTEM_PROCESSOR "arm"              CACHE STRING "")
-        set (MACHINE "zynqmp_r5" CACHE STRING "")
-
-        set (CROSS_PREFIX           "armr5-none-eabi-" CACHE STRING "")
-        set (CMAKE_C_FLAGS          "-mfloat-abi=soft -mcpu=cortex-r5 -Wall -Werror -Wextra \
-           -flto -Os -I/ws/xsdk/r5_0_bsp/psu_cortexr5_0/include" CACHE STRING "")
-
-        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -flto")
-        SET(CMAKE_AR  "gcc-ar" CACHE STRING "")
-        SET(CMAKE_C_ARCHIVE_CREATE "<CMAKE_AR> qcs <TARGET> <LINK_FLAGS> <OBJECTS>")
-        SET(CMAKE_C_ARCHIVE_FINISH   true)
-
-        include (cross-generic-gcc)
-    ```
-
-  * Compile libmetal library:
-
-    ```
-        $ mkdir -p build-libmetal
-        $ cd build-libmetal
-        $ cmake <libmetal_source> -DCMAKE_TOOLCHAIN_FILE=<toolchain_file>
-        $ make VERBOSE=1 DESTDIR=<libmetal_install> install
-    ```
-
-* build OpenAMP library on your host as follows:
-  * Create your on cmake toolchain file to compile openamp for your generic
-    (baremetal) platform. Here is the example of the toolchain file:
-    ```
-        set (CMAKE_SYSTEM_PROCESSOR "arm" CACHE STRING "")
-        set (MACHINE                "zynqmp_r5" CACHE STRING "")
-        set (CROSS_PREFIX           "armr5-none-eabi-" CACHE STRING "")
-        set (CMAKE_C_FLAGS          "-mfloat-abi=soft -mcpu=cortex-r5 -Os -flto \
-          -I/ws/libmetal-r5-generic/usr/local/include \
-          -I/ws/xsdk/r5_0_bsp/psu_cortexr5_0/include" CACHE STRING "")
-        set (CMAKE_ASM_FLAGS        "-mfloat-abi=soft -mcpu=cortex-r5" CACHE STRING "")
-        set (PLATFORM_LIB_DEPS      "-lxil -lc -lm" CACHE STRING "")
-        SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -flto")
-        SET(CMAKE_AR  "gcc-ar" CACHE STRING "")
-        SET(CMAKE_C_ARCHIVE_CREATE "<CMAKE_AR> qcs <TARGET> <LINK_FLAGS> <OBJECTS>")
-        SET(CMAKE_C_ARCHIVE_FINISH   true)
-        set (CMAKE_FIND_ROOT_PATH /ws/libmetal-r5-generic/usr/local/lib \
-            /ws/xsdk/r5_bsp/psu_cortexr5_0/lib )
-
-        include (cross_generic_gcc)
-    ```
-
-  * We use cmake `find_path` and `find_library` to check if libmetal includes
-    and libmetal library is in the includes and library search paths. However,
-    for non-linux system, it doesn't work with `CMAKE_INCLUDE_PATH` and
-    `CMAKE_LIBRARY_PATH` variables, and thus, we need to specify those paths
-    in the toolchain file with `CMAKE_C_FLAGS` and `CMAKE_FIND_ROOT_PATH`.
-* Compile the OpenAMP library:
-
-    ```
-    $ mkdir -p build-openamp
-    $ cd build-openamp
-    $ cmake <openamp_source> -DCMAKE_TOOLCHAIN_FILE=<toolchain_file>
-    $ make VERBOSE=1 DESTDIR=$(pwd) install
-    ```
-
-The OpenAMP library will be generated to `build/usr/local/lib` directory,
-headers will be generated to `build/usr/local/include` directory, and the
-applications executable will be generated to `build/usr/local/bin`
-directory.
-
-
-### Example to compile OpenAMP Linux Userspace for Zynq UltraScale+ MPSoC
-We can use yocto to build the OpenAMP Linux userspace library and application.
-open-amp and libmetal recipes are in this yocto layer:
-https://github.com/OpenAMP/meta-openamp
-* Add the `meta-openamp` layer to your layers in your yocto build project's `bblayers.conf` file.
-* Add `libmetal` and `open-amp` to your packages list. E.g. add `libmetal` and `open-amp` to the
-  `IMAGE_INSTALL_append` in the `local.conf` file.
-* You can also add OpenAMP demos Linux applications packages to your yocto packages list. OpenAMP
-  demo examples recipes are also in `meta-openamp`:
-  https://github.com/OpenAMP/meta-openamp/tree/master/recipes-openamp/rpmsg-examples
-
-In order to user OpenAMP(RPMsg) in Linux userspace, you will need to have put the IPI device,
-  vring memory and shared buffer memory to your Linux kernel device tree. The device tree example
-  can be found here:
-  https://github.com/OpenAMP/open-amp/blob/main/apps/machine/zynqmp/openamp-linux-userspace.dtsi
-
-## Version
-The OpenAMP version follows the set of rule proposed in [Semantic Versioning specification](https://semver.org/).
-
-## Supported System and Machines
-For now, it supports:
-* Zynq generic remote
-* Zynq UltraScale+ MPSoC R5 generic remote
-* Linux host OpenAMP between Linux userspace processes
-* Linux userspace OpenAMP RPMsg host
-* Linux userspace OpenAMP RPMsg remote
-* Linux userspace OpenAMP RPMsg and MicroBlaze bare metal remote
-
-## Known Limitations:
-1. In case of OpenAMP on Linux userspace for inter processors communication,
-   it only supports static vrings and shared buffers.
-2. `sudo` is required to run the OpenAMP demos between Linux processes, as
-   it doesn't work on some systems if you are normal users.
+## Documentation
+OpenAMP project documentation is available at:
+https://openamp.readthedocs.io/en/latest/
 
 ## How to contribute:
-As an open-source project, we welcome and encourage the community to submit patches directly to the project. As a contributor you  should be familiar with common developer tools such as Git and CMake, and platforms such as GitHub.
+As an open-source project, we welcome and encourage the community to submit patches directly to the
+project. As a contributor you  should be familiar with common developer tools such as Git and CMake,
+and platforms such as GitHub.
 Then following points should be rescpected to facilitate the review process.
 
 ### Licencing
-Code is contributed to the Linux kernel under a number of licenses, but all code must be compatible with version the [BSD License](https://github.com/OpenAMP/open-amp/blob/main/LICENSE.md), which is the license covering the OpenAMP distribution as a whole. In practice, use the following tag instead of the full license text in the individual files:
-
-    ```
-    SPDX-License-Identifier:    BSD-3-Clause
-    SPDX-License-Identifier:    BSD-2-Clause
-    ```
+Code is contributed to the Linux kernel under a number of licenses, but all code must be compatible
+with version the [BSD License](https://github.com/OpenAMP/open-amp/blob/main/LICENSE.md), which is
+the license covering the OpenAMP distribution as a whole. In practice, use the following tag
+instead of the full license text in the individual files:
+  ```
+  SPDX-License-Identifier:    BSD-3-Clause
+  SPDX-License-Identifier:    BSD-2-Clause
+  ```
 ### Signed-off-by
-Commit message must contain Signed-off-by: line and your email must match the change authorship information. Make sure your .gitconfig is set up correctly:
-
-    ```
-    git config --global user.name "first-name Last-Namer"
-    git config --global user.email "yourmail@company.com"
-    ```
+Commit message must contain Signed-off-by: line and your email must match the change authorship
+information. Make sure your .gitconfig is set up correctly:
+  ```
+  git config --global user.name "first-name Last-Namer"
+  git config --global user.email "yourmail@company.com"
+  ```
 ### gitlint
-Before you submit a pull request to the project, verify your commit messages meet the requirements. The check can be  performed locally using the the gitlint command.
+Before you submit a pull request to the project, verify your commit messages meet the requirements.
+The check can be  performed locally using the the gitlint command.
 
 Run gitlint locally in your tree and branch where your patches have been committed:
-
-      ```gitlint```
-Note, gitlint only checks HEAD (the most recent commit), so you should run it after each commit, or use the --commits option to specify a commit range covering all the development patches to be submitted.
+  ```
+  gitlint
+  ```
+Note, gitlint only checks HEAD (the most recent commit), so you should run it after each commit, or
+use the --commits option to specify a commit range covering all the development patches to be
+submitted.
 
 ### Code style
 In general, follow the Linux kernel coding style, with the following exceptions:
 
 * Use /**  */ for doxygen comments that need to appear in the documentation.
 
-The Linux kernel GPL-licensed tool checkpatch is used to check coding style conformity.Checkpatch is available in the scripts directory.
+The Linux kernel GPL-licensed tool checkpatch is used to check coding style conformity.Checkpatch is
+available in the scripts directory.
 
 To check your \<n\> commits in your git branch:
-   ```
-   ./scripts/checkpatch.pl --strict  -g HEAD-<n>
-
-   ```
+  ```
+  ./scripts/checkpatch.pl --strict  -g HEAD-<n>
+  ```
 ### Send a pull request
 We use standard github mechanism for pull request. Please refer to github documentation for help.
 
 ## Communication and Collaboration
-[Subscribe](https://lists.openampproject.org/mailman/listinfo/openamp-rp) to the OpenAMP mailing list(openamp-rp@lists.openampproject.org).
+[Subscribe](https://lists.openampproject.org/mailman3/lists/openamp-rp.lists.openampproject.org/) to
+the OpenAMP mailing list(openamp-rp@lists.openampproject.org).
 
-For more details on the framework please refer to the the [OpenAMP wiki](https://github.com/OpenAMP/open-amp/wiki).
+For more details on the framework please refer to the
+[OpenAMP Docs](https://openamp.readthedocs.io/en/latest/).

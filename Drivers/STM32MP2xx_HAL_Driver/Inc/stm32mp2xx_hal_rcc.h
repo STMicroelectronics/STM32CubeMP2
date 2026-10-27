@@ -59,8 +59,7 @@ typedef struct
                                       This parameter can be a value of @ref RCC_HSI_Config                        */
 
   uint32_t HSICalibrationValue;  /*!< The calibration trimming value (default is RCC_HSICALIBRATION_DEFAULT).
-                                      This parameter must be a number between Min_Data = 0x00 and Max_Data = 0x7F
-                                      on the other devices */
+                                      This parameter must be a number between Min_Data = 0x00 and Max_Data = 0x7F */
 
   uint32_t LSIState;             /*!< The new state of the LSI.
                                       This parameter can be a value of @ref RCC_LSI_Config                        */
@@ -69,7 +68,7 @@ typedef struct
                                       This parameter can be a value of @ref RCC_MSI_Config                        */
 
   uint32_t MSICalibrationValue;  /*!< The calibration trimming value (default is RCC_MSICALIBRATION_DEFAULT).
-                                      This parameter must be a number between Min_Data = 0x00 and Max_Data = 0xFF */
+                                      This parameter must be a number between Min_Data = 0x00 and Max_Data = 0x1F */
 
   uint32_t MSIFrequency;         /*!< The MSI frequency can be 4 or 16 MHz. */
 
@@ -908,7 +907,7 @@ typedef struct
 #endif /* RCC_HPDMA3CFGR_HPDMA3EN */
 
 #if defined(RCC_LPDMACFGR_LPDMAEN)
-#define __HAL_RCC_LPDMA_CLK_ENABLE()              SET_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMAEN)
+#define __HAL_RCC_LPDMA1_CLK_ENABLE()             SET_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMAEN)
 #endif /* RCC_LPDMACFGR_LPDMAEN */
 
 #if defined(RCC_HSEMCFGR_HSEMEN)
@@ -1331,7 +1330,7 @@ typedef struct
 #define __HAL_RCC_HPDMA3_CLK_DISABLE()            CLEAR_BIT(RCC->HPDMA3CFGR, RCC_HPDMA3CFGR_HPDMA3EN)
 
 #if defined(RCC_LPDMACFGR_LPDMAEN)
-#define __HAL_RCC_LPDMA_CLK_DISABLE()             CLEAR_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMAEN)
+#define __HAL_RCC_LPDMA1_CLK_DISABLE()            CLEAR_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMAEN)
 #endif /* RCC_LPDMACFGR_LPDMAEN */
 
 #if defined(RCC_HSEMCFGR_HSEMEN)
@@ -1683,7 +1682,7 @@ typedef struct
 #define __HAL_RCC_HPDMA3_CLK_SLEEP_ENABLE()       SET_BIT(RCC->HPDMA3CFGR, RCC_HPDMA3CFGR_HPDMA3LPEN)
 
 #if defined(RCC_LPDMACFGR_LPDMALPEN)
-#define __HAL_RCC_LPDMA_CLK_SLEEP_ENABLE()        SET_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMALPEN)
+#define __HAL_RCC_LPDMA1_CLK_SLEEP_ENABLE()       SET_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMALPEN)
 #endif /* RCC_LPDMACFGR_LPDMALPEN */
 
 #if defined(RCC_HSEMCFGR_HSEMLPEN)
@@ -2026,7 +2025,7 @@ typedef struct
 #define __HAL_RCC_HPDMA3_CLK_SLEEP_DISABLE()      CLEAR_BIT(RCC->HPDMA3CFGR, RCC_HPDMA3CFGR_HPDMA3LPEN)
 
 #if defined(RCC_LPDMACFGR_LPDMALPEN)
-#define __HAL_RCC_LPDMA_CLK_SLEEP_DISABLE()       CLEAR_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMALPEN)
+#define __HAL_RCC_LPDMA1_CLK_SLEEP_DISABLE()      CLEAR_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMALPEN)
 #endif /* RCC_LPDMACFGR_LPDMALPEN */
 
 #if defined(RCC_HSEMCFGR_HSEMLPEN)
@@ -2311,7 +2310,7 @@ typedef struct
 #endif /* RCC_GPIOZCFGR_GPIOZAMEN */
 
 #if defined(RCC_LPDMACFGR_LPDMAAMEN)
-#define __HAL_RCC_LPDMA_CLKAM_ENABLE()            SET_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMAAMEN)
+#define __HAL_RCC_LPDMA1_CLKAM_ENABLE()           SET_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMAAMEN)
 #endif /* RCC_LPDMACFGR_LPDMAAMEN */
 
 #if defined(RCC_HSEMCFGR_HSEMAMEN)
@@ -2388,7 +2387,7 @@ typedef struct
 #endif /* RCC_GPIOZCFGR_GPIOZAMEN */
 
 #if defined(RCC_LPDMACFGR_LPDMAAMEN)
-#define __HAL_RCC_LPDMA_CLKAM_DISABLE()           CLEAR_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMAAMEN)
+#define __HAL_RCC_LPDMA1_CLKAM_DISABLE()          CLEAR_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMAAMEN)
 #endif /* RCC_LPDMACFGR_LPDMAAMEN */
 
 #if defined(RCC_HSEMCFGR_HSEMAMEN)
@@ -2517,7 +2516,7 @@ typedef struct
 #define __HAL_RCC_HPDMA3_IS_CLK_ENABLED()         (READ_BIT(RCC->HPDMA3CFGR, RCC_HPDMA3CFGR_HPDMA3EN) != 0U)
 
 #if defined(RCC_LPDMACFGR_LPDMAEN)
-#define __HAL_RCC_LPDMA_IS_CLK_ENABLED()          (READ_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMAEN) != 0U)
+#define __HAL_RCC_LPDMA1_IS_CLK_ENABLED()         (READ_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMAEN) != 0U)
 #endif /* RCC_LPDMACFGR_LPDMAEN */
 
 #if defined(RCC_HSEMCFGR_HSEMEN)
@@ -2828,7 +2827,7 @@ typedef struct
 #define __HAL_RCC_HPDMA3_FORCE_RESET()            SET_BIT(RCC->HPDMA3CFGR, RCC_HPDMA3CFGR_HPDMA3RST)
 
 #if defined(RCC_LPDMACFGR_LPDMARST)
-#define __HAL_RCC_LPDMA_FORCE_RESET()             SET_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMARST)
+#define __HAL_RCC_LPDMA1_FORCE_RESET()            SET_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMARST)
 #endif /* RCC_LPDMACFGR_LPDMARST */
 
 #if defined(RCC_HSEMCFGR_HSEMRST)
@@ -3095,7 +3094,7 @@ typedef struct
 #define __HAL_RCC_HPDMA3_RELEASE_RESET()          CLEAR_BIT(RCC->HPDMA3CFGR, RCC_HPDMA3CFGR_HPDMA3RST)
 
 #if defined(RCC_LPDMACFGR_LPDMARST)
-#define __HAL_RCC_LPDMA_RELEASE_RESET()           CLEAR_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMARST)
+#define __HAL_RCC_LPDMA1_RELEASE_RESET()          CLEAR_BIT(RCC->LPDMACFGR, RCC_LPDMACFGR_LPDMARST)
 #endif /* RCC_LPDMACFGR_LPDMARST */
 
 #if defined(RCC_HSEMCFGR_HSEMRST)
@@ -3350,7 +3349,7 @@ typedef struct
 #define __HAL_RCC_I2C8_C3_ALLOCATE()              SET_BIT(RCC->C3CFGR, RCC_C3CFGR_I2C8C3EN)
 #define __HAL_RCC_ADF1_C3_ALLOCATE()              SET_BIT(RCC->C3CFGR, RCC_C3CFGR_ADF1C3EN)
 #define __HAL_RCC_GPIOZ_C3_ALLOCATE()             SET_BIT(RCC->C3CFGR, RCC_C3CFGR_GPIOZC3EN)
-#define __HAL_RCC_LPDMA_C3_ALLOCATE()             SET_BIT(RCC->C3CFGR, RCC_C3CFGR_LPDMAC3EN)
+#define __HAL_RCC_LPDMA1_C3_ALLOCATE()            SET_BIT(RCC->C3CFGR, RCC_C3CFGR_LPDMAC3EN)
 #define __HAL_RCC_RTC_C3_ALLOCATE()               SET_BIT(RCC->C3CFGR, RCC_C3CFGR_RTCC3EN)
 #define __HAL_RCC_I3C4_C3_ALLOCATE()              SET_BIT(RCC->C3CFGR, RCC_C3CFGR_I3C4C3EN)
 
@@ -3363,7 +3362,7 @@ typedef struct
 #define __HAL_RCC_I2C8_C3_DEALLOCATE()            CLEAR_BIT(RCC->C3CFGR, RCC_C3CFGR_I2C8C3EN)
 #define __HAL_RCC_ADF1_C3_DEALLOCATE()            CLEAR_BIT(RCC->C3CFGR, RCC_C3CFGR_ADF1C3EN)
 #define __HAL_RCC_GPIOZ_C3_DEALLOCATE()           CLEAR_BIT(RCC->C3CFGR, RCC_C3CFGR_GPIOZC3EN)
-#define __HAL_RCC_LPDMA_C3_DEALLOCATE()           CLEAR_BIT(RCC->C3CFGR, RCC_C3CFGR_LPDMAC3EN)
+#define __HAL_RCC_LPDMA1_C3_DEALLOCATE()          CLEAR_BIT(RCC->C3CFGR, RCC_C3CFGR_LPDMAC3EN)
 #define __HAL_RCC_RTC_C3_DEALLOCATE()             CLEAR_BIT(RCC->C3CFGR, RCC_C3CFGR_RTCC3EN)
 #define __HAL_RCC_I3C4_C3_DEALLOCATE()            CLEAR_BIT(RCC->C3CFGR, RCC_C3CFGR_I3C4C3EN)
 #endif /* RCC_C3CFGR_C3EN */
@@ -4133,9 +4132,9 @@ typedef struct
 #endif /* CORE_CA35 */
 
 
-/* RCC_Calibration limits */
-#define IS_RCC_HSICALIBRATION_VALUE(VALUE) ((VALUE) <= 0x1FFU)
-#define IS_RCC_MSICALIBRATION_VALUE(VALUE) ((VALUE) <= 0xFFU)
+/* RCC_Calibration limits (HSITRIM is 7-bit wide bit-field and MSITRIM is 5-bit wide bit-field) */
+#define IS_RCC_HSICALIBRATION_VALUE(VALUE) ((VALUE) <= 0x7FU)
+#define IS_RCC_MSICALIBRATION_VALUE(VALUE) ((VALUE) <= 0x1FU)
 
 /* MCO1 clock output control */
 #define __HAL_RCC_MCO1_ENABLE()   SET_BIT(RCC->MCO1CFGR, RCC_MCO1CFGR_MCO1ON)

@@ -15,7 +15,7 @@
 #ifndef DDRPHY_PHYINIT_CSR_ALL_DEFINES_H
 #define DDRPHY_PHYINIT_CSR_ALL_DEFINES_H
 
-#define BIT(x) (1U << (x))
+#define DDR_BIT(x) (1U << (x))
 #define GENMASK_32(x,y) \
         (((0xFFFFFFFFU) << (y)) & (0xFFFFFFFFU >> (32U - 1U - (x))))
 
@@ -1055,77 +1055,77 @@
 /* DBYTEx register bit fields */
 /* CSR_DBYTEMISCMODE */
 #define CSR_DBYTEMISCMODE_LSB                           2
-#define CSR_DBYTEMISCMODE_MASK                          BIT(2)
+#define CSR_DBYTEMISCMODE_MASK                          DDR_BIT(2)
 #define CSR_DBYTEDISABLE_LSB                            2
-#define CSR_DBYTEDISABLE_MASK                           BIT(2)
+#define CSR_DBYTEDISABLE_MASK                           DDR_BIT(2)
 /* CSR_TSMBYTE0 */
 #define CSR_TSMBYTE0_LSB                                0
 #define CSR_TSMBYTE0_MASK                               GENMASK_32(15, 0)
 #define CSR_PERPHTRAINEN_LSB                            0
-#define CSR_PERPHTRAINEN_MASK                           BIT(0)
+#define CSR_PERPHTRAINEN_MASK                           DDR_BIT(0)
 #define CSR_EYEINC_LSB                                  1
-#define CSR_EYEINC_MASK                                 BIT(1)
+#define CSR_EYEINC_MASK                                 DDR_BIT(1)
 #define CSR_EDGEINC_LSB                                 2
-#define CSR_EDGEINC_MASK                                BIT(2)
+#define CSR_EDGEINC_MASK                                DDR_BIT(2)
 #define CSR_EDGEEYEMXSEL_LSB                            3
-#define CSR_EDGEEYEMXSEL_MASK                           BIT(3)
+#define CSR_EDGEEYEMXSEL_MASK                           DDR_BIT(3)
 #define CSR_TSMBYTE0RSVD_LSB                            4
 #define CSR_TSMBYTE0RSVD_MASK                           GENMASK_32(5, 4)
 #define CSR_DIMMBROADINC_LSB                            6
-#define CSR_DIMMBROADINC_MASK                           BIT(6)
+#define CSR_DIMMBROADINC_MASK                           DDR_BIT(6)
 #define CSR_DIMMINC_LSB                                 7
 #define CSR_DIMMINC_MASK                                GENMASK_32(8, 7)
 #define CSR_COARSEINC_LSB                               9
-#define CSR_COARSEINC_MASK                              BIT(9)
+#define CSR_COARSEINC_MASK                              DDR_BIT(9)
 #define CSR_DELAYINC_LSB                                10
-#define CSR_DELAYINC_MASK                               BIT(10)
+#define CSR_DELAYINC_MASK                               DDR_BIT(10)
 #define CSR_RXINC_LSB                                   11
-#define CSR_RXINC_MASK                                  BIT(11)
+#define CSR_RXINC_MASK                                  DDR_BIT(11)
 #define CSR_RXPERTRAIN_LSB                              12
-#define CSR_RXPERTRAIN_MASK                             BIT(12)
+#define CSR_RXPERTRAIN_MASK                             DDR_BIT(12)
 #define CSR_TXPERTRAIN_LSB                              13
-#define CSR_TXPERTRAIN_MASK                             BIT(13)
+#define CSR_TXPERTRAIN_MASK                             DDR_BIT(13)
 #define CSR_DMTRAIN_LSB                                 14
-#define CSR_DMTRAIN_MASK                                BIT(14)
+#define CSR_DMTRAIN_MASK                                DDR_BIT(14)
 #define CSR_WRLEVTRAIN_LSB                              15
-#define CSR_WRLEVTRAIN_MASK                             BIT(15)
+#define CSR_WRLEVTRAIN_MASK                             DDR_BIT(15)
 /* CSR_TRAININGPARAM */
 #define CSR_TRAININGPARAM_LSB                           0
 #define CSR_TRAININGPARAM_MASK                          GENMASK_32(15, 0)
 #define CSR_ENDYNRATEREDUCTION_LSB                      0
-#define CSR_ENDYNRATEREDUCTION_MASK                     BIT(0)
+#define CSR_ENDYNRATEREDUCTION_MASK                     DDR_BIT(0)
 #define CSR_TRAININGPARAM01RSVD_LSB                     1
-#define CSR_TRAININGPARAM01RSVD_MASK                    BIT(1)
+#define CSR_TRAININGPARAM01RSVD_MASK                    DDR_BIT(1)
 #define CSR_TRAINENRXCLK_LSB                            2
-#define CSR_TRAINENRXCLK_MASK                           BIT(2)
+#define CSR_TRAINENRXCLK_MASK                           DDR_BIT(2)
 #define CSR_TRAINENRXEN_LSB                             3
-#define CSR_TRAINENRXEN_MASK                            BIT(3)
+#define CSR_TRAINENRXEN_MASK                            DDR_BIT(3)
 #define CSR_TRAINENTXDQS_LSB                            4
-#define CSR_TRAINENTXDQS_MASK                           BIT(4)
+#define CSR_TRAINENTXDQS_MASK                           DDR_BIT(4)
 #define CSR_TRAINENTXDQ_LSB                             5
-#define CSR_TRAINENTXDQ_MASK                            BIT(5)
+#define CSR_TRAINENTXDQ_MASK                            DDR_BIT(5)
 #define CSR_TRAINENVREFDAC1_LSB                         6
-#define CSR_TRAINENVREFDAC1_MASK                        BIT(6)
+#define CSR_TRAINENVREFDAC1_MASK                        DDR_BIT(6)
 #define CSR_TRAINENVREFDAC0_LSB                         7
-#define CSR_TRAINENVREFDAC0_MASK                        BIT(7)
+#define CSR_TRAINENVREFDAC0_MASK                        DDR_BIT(7)
 #define CSR_TRAINENRXPBD_LSB                            8
-#define CSR_TRAINENRXPBD_MASK                           BIT(8)
+#define CSR_TRAINENRXPBD_MASK                           DDR_BIT(8)
 #define CSR_ROLLINTOCOARSE_LSB                          9
-#define CSR_ROLLINTOCOARSE_MASK                         BIT(9)
+#define CSR_ROLLINTOCOARSE_MASK                         DDR_BIT(9)
 #define CSR_TRAINUSINGNATIVEDDLCNTL_LSB                 10
-#define CSR_TRAINUSINGNATIVEDDLCNTL_MASK                BIT(10)
+#define CSR_TRAINUSINGNATIVEDDLCNTL_MASK                DDR_BIT(10)
 #define CSR_TRAININGPARAM11RSVD_LSB                     11
-#define CSR_TRAININGPARAM11RSVD_MASK                    BIT(11)
+#define CSR_TRAININGPARAM11RSVD_MASK                    DDR_BIT(11)
 #define CSR_TRAININGPARAM12RSVD_LSB                     12
-#define CSR_TRAININGPARAM12RSVD_MASK                    BIT(12)
+#define CSR_TRAININGPARAM12RSVD_MASK                    DDR_BIT(12)
 #define CSR_INCDECRATE_LSB                              13
 #define CSR_INCDECRATE_MASK                             GENMASK_32(15, 13)
 /* CSR_USEDQSENREPLICA */
 #define CSR_USEDQSENREPLICA_LSB                         0
-#define CSR_USEDQSENREPLICA_MASK                        BIT(0)
+#define CSR_USEDQSENREPLICA_MASK                        DDR_BIT(0)
 /* CSR_RXTRAINPATTERNENABLE */
 #define CSR_RXTRAINPATTERNENABLE_LSB                    0
-#define CSR_RXTRAINPATTERNENABLE_MASK                   BIT(0)
+#define CSR_RXTRAINPATTERNENABLE_MASK                   DDR_BIT(0)
 /* CSR_TSMBYTE1 */
 #define CSR_TSMBYTE1_LSB                                0
 #define CSR_TSMBYTE1_MASK                               GENMASK_32(15, 0)
@@ -1142,23 +1142,23 @@
 #define CSR_TSMBYTE3_LSB                                0
 #define CSR_TSMBYTE3_MASK                               GENMASK_32(8, 0)
 #define CSR_DTSMINCDECMODE_LSB                          0
-#define CSR_DTSMINCDECMODE_MASK                         BIT(0)
+#define CSR_DTSMINCDECMODE_MASK                         DDR_BIT(0)
 #define CSR_DTSMINCDECCTRL_LSB                          1
-#define CSR_DTSMINCDECCTRL_MASK                         BIT(1)
+#define CSR_DTSMINCDECCTRL_MASK                         DDR_BIT(1)
 #define CSR_ENBLRXSAMPFLOPS_LSB                         2
-#define CSR_ENBLRXSAMPFLOPS_MASK                        BIT(2)
+#define CSR_ENBLRXSAMPFLOPS_MASK                        DDR_BIT(2)
 #define CSR_SELRXSAMPFLOPS_LSB                          3
-#define CSR_SELRXSAMPFLOPS_MASK                         BIT(3)
+#define CSR_SELRXSAMPFLOPS_MASK                         DDR_BIT(3)
 #define CSR_SELRXBYBASS_LSB                             4
-#define CSR_SELRXBYBASS_MASK                            BIT(4)
+#define CSR_SELRXBYBASS_MASK                            DDR_BIT(4)
 #define CSR_DTSMIGNUPDATEACK_LSB                        5
-#define CSR_DTSMIGNUPDATEACK_MASK                       BIT(5)
+#define CSR_DTSMIGNUPDATEACK_MASK                       DDR_BIT(5)
 #define CSR_ENABLERXDQASYNC_LSB                         6
-#define CSR_ENABLERXDQASYNC_MASK                        BIT(6)
+#define CSR_ENABLERXDQASYNC_MASK                        DDR_BIT(6)
 #define CSR_DTSMSTATICCMPR_LSB                          7
-#define CSR_DTSMSTATICCMPR_MASK                         BIT(7)
+#define CSR_DTSMSTATICCMPR_MASK                         DDR_BIT(7)
 #define CSR_DTSMSTATICCMPRVAL_LSB                       8
-#define CSR_DTSMSTATICCMPRVAL_MASK                      BIT(8)
+#define CSR_DTSMSTATICCMPRVAL_MASK                      DDR_BIT(8)
 /* CSR_TSMBYTE4 */
 #define CSR_TSMBYTE4_LSB                                0
 #define CSR_TSMBYTE4_MASK                               GENMASK_32(3, 0)
@@ -1168,17 +1168,17 @@
 #define CSR_TESTMODECONFIG_LSB                          0
 #define CSR_TESTMODECONFIG_MASK                         GENMASK_32(9, 0)
 #define CSR_LOOPBACKEN_LSB                              0
-#define CSR_LOOPBACKEN_MASK                             BIT(0)
+#define CSR_LOOPBACKEN_MASK                             DDR_BIT(0)
 #define CSR_RSVDTESTDLLEN_LSB                           1
-#define CSR_RSVDTESTDLLEN_MASK                          BIT(1)
+#define CSR_RSVDTESTDLLEN_MASK                          DDR_BIT(1)
 #define CSR_RSVDTWOTCKTXDQSPRE_LSB                      2
-#define CSR_RSVDTWOTCKTXDQSPRE_MASK                     BIT(2)
+#define CSR_RSVDTWOTCKTXDQSPRE_MASK                     DDR_BIT(2)
 #define CSR_TESTMODERSVD_LSB                            3
 #define CSR_TESTMODERSVD_MASK                           GENMASK_32(7, 3)
 #define CSR_LOOPBACKDISDQSTRI_LSB                       8
-#define CSR_LOOPBACKDISDQSTRI_MASK                      BIT(8)
+#define CSR_LOOPBACKDISDQSTRI_MASK                      DDR_BIT(8)
 #define CSR_RSVDDISTXDQEQPREAMBLE_LSB                   9
-#define CSR_RSVDDISTXDQEQPREAMBLE_MASK                  BIT(9)
+#define CSR_RSVDDISTXDQEQPREAMBLE_MASK                  DDR_BIT(9)
 /* CSR_TSMBYTE5 */
 #define CSR_TSMBYTE5_LSB                                0
 #define CSR_TSMBYTE5_MASK                               GENMASK_32(15, 0)
@@ -1191,9 +1191,9 @@
 #define CSR_DTSMSOELANEMODE_LSB                         0
 #define CSR_DTSMSOELANEMODE_MASK                        GENMASK_32(1, 0)
 #define CSR_DTSMBYTEERRANDMODE_LSB                      2
-#define CSR_DTSMBYTEERRANDMODE_MASK                     BIT(2)
+#define CSR_DTSMBYTEERRANDMODE_MASK                     DDR_BIT(2)
 #define CSR_DTSMNIBERRMODE_LSB                          3
-#define CSR_DTSMNIBERRMODE_MASK                         BIT(3)
+#define CSR_DTSMNIBERRMODE_MASK                         DDR_BIT(3)
 /* CSR_DFIMRL */
 #define CSR_DFIMRL_LSB                                  0
 #define CSR_DFIMRL_MASK                                 GENMASK_32(4, 0)
@@ -1233,9 +1233,9 @@
 #define CSR_DQDQSRCVCNTRL_LSB                           0
 #define CSR_DQDQSRCVCNTRL_MASK                          GENMASK_32(15, 0)
 #define CSR_SELANALOGVREF_LSB                           0
-#define CSR_SELANALOGVREF_MASK                          BIT(0)
+#define CSR_SELANALOGVREF_MASK                          DDR_BIT(0)
 #define CSR_EXTVREFRANGE_LSB                            1
-#define CSR_EXTVREFRANGE_MASK                           BIT(1)
+#define CSR_EXTVREFRANGE_MASK                           DDR_BIT(1)
 #define CSR_DFECTRL_LSB                                 2
 #define CSR_DFECTRL_MASK                                GENMASK_32(3, 2)
 #define CSR_MAJORMODEDBYTE_LSB                          4
@@ -1262,11 +1262,11 @@
 #define CSR_POWERDOWNRCVR_LSB                           0
 #define CSR_POWERDOWNRCVR_MASK                          GENMASK_32(8, 0)
 #define CSR_POWERDOWNRCVRDQS_LSB                        9
-#define CSR_POWERDOWNRCVRDQS_MASK                       BIT(9)
+#define CSR_POWERDOWNRCVRDQS_MASK                       DDR_BIT(9)
 #define CSR_RXPADSTANDBYEN_LSB                          10
-#define CSR_RXPADSTANDBYEN_MASK                         BIT(10)
+#define CSR_RXPADSTANDBYEN_MASK                         DDR_BIT(10)
 #define CSR_ENLPREQPDR_LSB                              11
-#define CSR_ENLPREQPDR_MASK                             BIT(11)
+#define CSR_ENLPREQPDR_MASK                             DDR_BIT(11)
 /* CSR_TXIMPEDANCECTRL2 */
 #define CSR_TXIMPEDANCECTRL2_LSB                        0
 #define CSR_TXIMPEDANCECTRL2_MASK                       GENMASK_32(11, 0)
@@ -1276,9 +1276,9 @@
 #define CSR_DRVSTRENEQLODQN_MASK                        GENMASK_32(11, 6)
 /* CSR_DQDQSRCVCNTRL2 */
 #define CSR_DQDQSRCVCNTRL2_LSB                          0
-#define CSR_DQDQSRCVCNTRL2_MASK                         BIT(0)
+#define CSR_DQDQSRCVCNTRL2_MASK                         DDR_BIT(0)
 #define CSR_ENRXAGRESSIVEPDR_LSB                        0
-#define CSR_ENRXAGRESSIVEPDR_MASK                       BIT(0)
+#define CSR_ENRXAGRESSIVEPDR_MASK                       DDR_BIT(0)
 /* CSR_TXODTDRVSTREN */
 #define CSR_TXODTDRVSTREN_LSB                           0
 #define CSR_TXODTDRVSTREN_MASK                          GENMASK_32(11, 0)
@@ -1290,9 +1290,9 @@
 #define CSR_RXFIFOCHECKSTATUS_LSB                       0
 #define CSR_RXFIFOCHECKSTATUS_MASK                      GENMASK_32(1, 0)
 #define CSR_RXFIFOLOCERR_LSB                            0
-#define CSR_RXFIFOLOCERR_MASK                           BIT(0)
+#define CSR_RXFIFOLOCERR_MASK                           DDR_BIT(0)
 #define CSR_RXFIFOLOCUERR_LSB                           1
-#define CSR_RXFIFOLOCUERR_MASK                          BIT(1)
+#define CSR_RXFIFOLOCUERR_MASK                          DDR_BIT(1)
 /* CSR_RXFIFOCHECKERRVALUES */
 #define CSR_RXFIFOCHECKERRVALUES_LSB                    0
 #define CSR_RXFIFOCHECKERRVALUES_MASK                   GENMASK_32(15, 0)
@@ -1321,9 +1321,9 @@
 #define CSR_RXFIFORDPTR_LSB                             0
 #define CSR_RXFIFORDPTR_MASK                            GENMASK_32(2, 0)
 #define CSR_RXFIFORDPTROVR_LSB                          3
-#define CSR_RXFIFORDPTROVR_MASK                         BIT(3)
+#define CSR_RXFIFORDPTROVR_MASK                         DDR_BIT(3)
 #define CSR_RXFIFORDEN_LSB                              4
-#define CSR_RXFIFORDEN_MASK                             BIT(4)
+#define CSR_RXFIFORDEN_MASK                             DDR_BIT(4)
 /* CSR_RXFIFOCONTENTSDQ3210 */
 #define CSR_RXFIFOCONTENTSDQ3210_LSB                    0
 #define CSR_RXFIFOCONTENTSDQ3210_MASK                   GENMASK_32(15, 0)
@@ -1421,28 +1421,28 @@
 #define CSR_PPTCTLSTATIC_LSB                            0
 #define CSR_PPTCTLSTATIC_MASK                           GENMASK_32(11, 0)
 #define CSR_PPTENDQS2DQTG0_LSB                          0
-#define CSR_PPTENDQS2DQTG0_MASK                         BIT(0)
+#define CSR_PPTENDQS2DQTG0_MASK                         DDR_BIT(0)
 #define CSR_PPTENDQS2DQTG1_LSB                          1
-#define CSR_PPTENDQS2DQTG1_MASK                         BIT(1)
+#define CSR_PPTENDQS2DQTG1_MASK                         DDR_BIT(1)
 #define CSR_DOCBYTESELTG0_LSB                           2
-#define CSR_DOCBYTESELTG0_MASK                          BIT(2)
+#define CSR_DOCBYTESELTG0_MASK                          DDR_BIT(2)
 #define CSR_DOCBYTESELTG1_LSB                           3
-#define CSR_DOCBYTESELTG1_MASK                          BIT(3)
+#define CSR_DOCBYTESELTG1_MASK                          DDR_BIT(3)
 #define CSR_PPTINFOSEL_LSB                              4
 #define CSR_PPTINFOSEL_MASK                             GENMASK_32(7, 4)
 #define CSR_PPTENRXENDLYTG0_LSB                         8
-#define CSR_PPTENRXENDLYTG0_MASK                        BIT(8)
+#define CSR_PPTENRXENDLYTG0_MASK                        DDR_BIT(8)
 #define CSR_PPTENRXENDLYTG1_LSB                         9
-#define CSR_PPTENRXENDLYTG1_MASK                        BIT(9)
+#define CSR_PPTENRXENDLYTG1_MASK                        DDR_BIT(9)
 #define CSR_PPTENRXENBACKOFF_LSB                        10
 #define CSR_PPTENRXENBACKOFF_MASK                       GENMASK_32(11, 10)
 /* CSR_PPTCTLDYN */
 #define CSR_PPTCTLDYN_LSB                               0
 #define CSR_PPTCTLDYN_MASK                              GENMASK_32(1, 0)
 #define CSR_PPTDQS2DQACTIVE_LSB                         0
-#define CSR_PPTDQS2DQACTIVE_MASK                        BIT(0)
+#define CSR_PPTDQS2DQACTIVE_MASK                        DDR_BIT(0)
 #define CSR_PPTENRXENUSEDQSSAMPVAL_LSB                  1
-#define CSR_PPTENRXENUSEDQSSAMPVAL_MASK                 BIT(1)
+#define CSR_PPTENRXENUSEDQSSAMPVAL_MASK                 DDR_BIT(1)
 /* CSR_PPTINFO */
 #define CSR_PPTINFO_LSB                                 0
 #define CSR_PPTINFO_MASK                                GENMASK_32(15, 0)
@@ -1450,9 +1450,9 @@
 #define CSR_PPTRXENEVNT_LSB                             0
 #define CSR_PPTRXENEVNT_MASK                            GENMASK_32(1, 0)
 #define CSR_PPTRXENINIT_LSB                             0
-#define CSR_PPTRXENINIT_MASK                            BIT(0)
+#define CSR_PPTRXENINIT_MASK                            DDR_BIT(0)
 #define CSR_PPTRXENMHUI_LSB                             1
-#define CSR_PPTRXENMHUI_MASK                            BIT(1)
+#define CSR_PPTRXENMHUI_MASK                            DDR_BIT(1)
 /* CSR_PPTDQSCNTINVTRNTG0 */
 #define CSR_PPTDQSCNTINVTRNTG0_LSB                      0
 #define CSR_PPTDQSCNTINVTRNTG0_MASK                     GENMASK_32(15, 0)
@@ -1468,19 +1468,19 @@
 #define CSR_TSM0_LSB                                    0
 #define CSR_TSM0_MASK                                   GENMASK_32(13, 0)
 #define CSR_DTSMENB_LSB                                 0
-#define CSR_DTSMENB_MASK                                BIT(0)
+#define CSR_DTSMENB_MASK                                DDR_BIT(0)
 #define CSR_DTSMDIR_LSB                                 1
-#define CSR_DTSMDIR_MASK                                BIT(1)
+#define CSR_DTSMDIR_MASK                                DDR_BIT(1)
 #define CSR_DTSMIGNFRST_LSB                             2
-#define CSR_DTSMIGNFRST_MASK                            BIT(2)
+#define CSR_DTSMIGNFRST_MASK                            DDR_BIT(2)
 #define CSR_DTSMODDPHASE_LSB                            3
-#define CSR_DTSMODDPHASE_MASK                           BIT(3)
+#define CSR_DTSMODDPHASE_MASK                           DDR_BIT(3)
 #define CSR_DTSMFLTPRE_LSB                              4
-#define CSR_DTSMFLTPRE_MASK                             BIT(4)
+#define CSR_DTSMFLTPRE_MASK                             DDR_BIT(4)
 #define CSR_DTSMFLTCUR_LSB                              5
-#define CSR_DTSMFLTCUR_MASK                             BIT(5)
+#define CSR_DTSMFLTCUR_MASK                             DDR_BIT(5)
 #define CSR_DTSMFLTNXT_LSB                              6
-#define CSR_DTSMFLTNXT_MASK                             BIT(6)
+#define CSR_DTSMFLTNXT_MASK                             DDR_BIT(6)
 #define CSR_DTSMFLTVAL_LSB                              7
 #define CSR_DTSMFLTVAL_MASK                             GENMASK_32(9, 7)
 #define CSR_DTSMMSKBIT_LSB                              10
@@ -1492,23 +1492,23 @@
 #define CSR_DTSMERRCNT_MASK                             GENMASK_32(15, 0)
 /* CSR_TSM2 */
 #define CSR_TSM2_LSB                                    0
-#define CSR_TSM2_MASK                                   BIT(0)
+#define CSR_TSM2_MASK                                   DDR_BIT(0)
 #define CSR_DTSMDISERRCHK_LSB                           0
-#define CSR_DTSMDISERRCHK_MASK                          BIT(0)
+#define CSR_DTSMDISERRCHK_MASK                          DDR_BIT(0)
 /* CSR_TSM3 */
 #define CSR_TSM3_LSB                                    0
 #define CSR_TSM3_MASK                                   GENMASK_32(9, 0)
 #define CSR_DTSMCLRERRCNTMSK_LSB                        0
 #define CSR_DTSMCLRERRCNTMSK_MASK                       GENMASK_32(8, 0)
 #define CSR_DTSMCLRERRCNT_LSB                           9
-#define CSR_DTSMCLRERRCNT_MASK                          BIT(9)
+#define CSR_DTSMCLRERRCNT_MASK                          DDR_BIT(9)
 /* CSR_TXCHKDATASELECTS */
 #define CSR_TXCHKDATASELECTS_LSB                        0
 #define CSR_TXCHKDATASELECTS_MASK                       GENMASK_32(1, 0)
 #define CSR_SELCHKTOTX_LSB                              0
-#define CSR_SELCHKTOTX_MASK                             BIT(0)
+#define CSR_SELCHKTOTX_MASK                             DDR_BIT(0)
 #define CSR_SELTXTOCHK_LSB                              1
-#define CSR_SELTXTOCHK_MASK                             BIT(1)
+#define CSR_SELTXTOCHK_MASK                             DDR_BIT(1)
 /* CSR_DTSMUPTHLDXINGIND */
 #define CSR_DTSMUPTHLDXINGIND_LSB                       0
 #define CSR_DTSMUPTHLDXINGIND_MASK                      GENMASK_32(8, 0)
@@ -1560,22 +1560,22 @@
 #define CSR_DXLCDLFINESNAPVAL_LSB                       0
 #define CSR_DXLCDLFINESNAPVAL_MASK                      GENMASK_32(9, 0)
 #define CSR_DXLCDLPHDSNAPVAL_LSB                        10
-#define CSR_DXLCDLPHDSNAPVAL_MASK                       BIT(10)
+#define CSR_DXLCDLPHDSNAPVAL_MASK                       DDR_BIT(10)
 #define CSR_DXLCDLSTICKYLOCK_LSB                        11
-#define CSR_DXLCDLSTICKYLOCK_MASK                       BIT(11)
+#define CSR_DXLCDLSTICKYLOCK_MASK                       DDR_BIT(11)
 #define CSR_DXLCDLSTICKYUNLOCK_LSB                      12
-#define CSR_DXLCDLSTICKYUNLOCK_MASK                     BIT(12)
+#define CSR_DXLCDLSTICKYUNLOCK_MASK                     DDR_BIT(12)
 #define CSR_DXLCDLLIVELOCK_LSB                          13
-#define CSR_DXLCDLLIVELOCK_MASK                         BIT(13)
+#define CSR_DXLCDLLIVELOCK_MASK                         DDR_BIT(13)
 
 /* MASTER0 register offsets */
 /* CSR_RXFIFOINIT */
 #define CSR_RXFIFOINIT_LSB                              0
 #define CSR_RXFIFOINIT_MASK                             GENMASK_32(1, 0)
 #define CSR_RXFIFOINITPTR_LSB                           0
-#define CSR_RXFIFOINITPTR_MASK                          BIT(0)
+#define CSR_RXFIFOINITPTR_MASK                          DDR_BIT(0)
 #define CSR_INHIBITRXFIFORD_LSB                         1
-#define CSR_INHIBITRXFIFORD_MASK                        BIT(1)
+#define CSR_INHIBITRXFIFORD_MASK                        DDR_BIT(1)
 /* CSR_FORCECLKDISABLE */
 #define CSR_FORCECLKDISABLE_LSB                         0
 #define CSR_FORCECLKDISABLE_MASK                        GENMASK_32(3, 0)
@@ -1583,12 +1583,12 @@
 #define CSR_CLOCKINGCTRL_LSB                            0
 #define CSR_CLOCKINGCTRL_MASK                           GENMASK_32(1, 0)
 #define CSR_PCLKENASYNCCTRL_LSB                         0
-#define CSR_PCLKENASYNCCTRL_MASK                        BIT(0)
+#define CSR_PCLKENASYNCCTRL_MASK                        DDR_BIT(0)
 #define CSR_DLLTRACKENCTRL_LSB                          1
-#define CSR_DLLTRACKENCTRL_MASK                         BIT(1)
+#define CSR_DLLTRACKENCTRL_MASK                         DDR_BIT(1)
 /* CSR_FORCEINTERNALUPDATE */
 #define CSR_FORCEINTERNALUPDATE_LSB                     0
-#define CSR_FORCEINTERNALUPDATE_MASK                    BIT(0)
+#define CSR_FORCEINTERNALUPDATE_MASK                    DDR_BIT(0)
 /* CSR_PHYCONFIG */
 #define CSR_PHYCONFIG_LSB                               0
 #define CSR_PHYCONFIG_MASK                              GENMASK_32(9, 0)
@@ -1600,26 +1600,26 @@
 #define CSR_PHYCONFIGDFI_MASK                           GENMASK_32(9, 8)
 /* CSR_PGCR */
 #define CSR_PGCR_LSB                                    0
-#define CSR_PGCR_MASK                                   BIT(0)
+#define CSR_PGCR_MASK                                   DDR_BIT(0)
 #define CSR_RXCLKRISEFALLMODE_LSB                       0
-#define CSR_RXCLKRISEFALLMODE_MASK                      BIT(0)
+#define CSR_RXCLKRISEFALLMODE_MASK                      DDR_BIT(0)
 /* CSR_TESTBUMPCNTRL1 */
 #define CSR_TESTBUMPCNTRL1_LSB                          0
 #define CSR_TESTBUMPCNTRL1_MASK                         GENMASK_32(15, 0)
 #define CSR_TESTMAJORMODE_LSB                           0
 #define CSR_TESTMAJORMODE_MASK                          GENMASK_32(2, 0)
 #define CSR_TESTBIASBYPASSEN_LSB                        3
-#define CSR_TESTBIASBYPASSEN_MASK                       BIT(3)
+#define CSR_TESTBIASBYPASSEN_MASK                       DDR_BIT(3)
 #define CSR_TESTANALOGOUTCTRL_LSB                       4
 #define CSR_TESTANALOGOUTCTRL_MASK                      GENMASK_32(7, 4)
 #define CSR_TESTGAINCURRADJ_LSB                         8
 #define CSR_TESTGAINCURRADJ_MASK                        GENMASK_32(12, 8)
 #define CSR_TESTSELEXTERNALVREF_LSB                     13
-#define CSR_TESTSELEXTERNALVREF_MASK                    BIT(13)
+#define CSR_TESTSELEXTERNALVREF_MASK                    DDR_BIT(13)
 #define CSR_TESTEXTVREFRANGE_LSB                        14
-#define CSR_TESTEXTVREFRANGE_MASK                       BIT(14)
+#define CSR_TESTEXTVREFRANGE_MASK                       DDR_BIT(14)
 #define CSR_TESTPOWERGATEEN_LSB                         15
-#define CSR_TESTPOWERGATEEN_MASK                        BIT(15)
+#define CSR_TESTPOWERGATEEN_MASK                        DDR_BIT(15)
 /* CSR_CALUCLKINFO */
 #define CSR_CALUCLKINFO_LSB                             0
 #define CSR_CALUCLKINFO_MASK                            GENMASK_32(10, 0)
@@ -1631,11 +1631,11 @@
 #define CSR_TESTBUMPEN_LSB                              0
 #define CSR_TESTBUMPEN_MASK                             GENMASK_32(1, 0)
 #define CSR_TESTBUMPTOGGLE_LSB                          2
-#define CSR_TESTBUMPTOGGLE_MASK                         BIT(2)
+#define CSR_TESTBUMPTOGGLE_MASK                         DDR_BIT(2)
 #define CSR_TESTBUMPDATASEL_LSB                         3
 #define CSR_TESTBUMPDATASEL_MASK                        GENMASK_32(8, 3)
 #define CSR_FORCEMTESTONALERT_LSB                       9
-#define CSR_FORCEMTESTONALERT_MASK                      BIT(9)
+#define CSR_FORCEMTESTONALERT_MASK                      DDR_BIT(9)
 /* CSR_SEQ0BDLY0 */
 #define CSR_SEQ0BDLY0_LSB                               0
 #define CSR_SEQ0BDLY0_MASK                              GENMASK_32(15, 0)
@@ -1650,9 +1650,9 @@
 #define CSR_SEQ0BDLY3_MASK                              GENMASK_32(15, 0)
 /* CSR_PHYALERTSTATUS */
 #define CSR_PHYALERTSTATUS_LSB                          0
-#define CSR_PHYALERTSTATUS_MASK                         BIT(0)
+#define CSR_PHYALERTSTATUS_MASK                         DDR_BIT(0)
 #define CSR_PHYALERT_LSB                                0
-#define CSR_PHYALERT_MASK                               BIT(0)
+#define CSR_PHYALERT_MASK                               DDR_BIT(0)
 /* CSR_PPTTRAINSETUP */
 #define CSR_PPTTRAINSETUP_LSB                           0
 #define CSR_PPTTRAINSETUP_MASK                          GENMASK_32(6, 0)
@@ -1669,9 +1669,9 @@
 #define CSR_ATESTMODE_LSB                               0
 #define CSR_ATESTMODE_MASK                              GENMASK_32(4, 0)
 #define CSR_ATESTPRBSEN_LSB                             0
-#define CSR_ATESTPRBSEN_MASK                            BIT(0)
+#define CSR_ATESTPRBSEN_MASK                            DDR_BIT(0)
 #define CSR_ATESTCLKEN_LSB                              1
-#define CSR_ATESTCLKEN_MASK                             BIT(1)
+#define CSR_ATESTCLKEN_MASK                             DDR_BIT(1)
 #define CSR_ATESTMODESEL_LSB                            2
 #define CSR_ATESTMODESEL_MASK                           GENMASK_32(4, 2)
 /* CSR_TXCALBINP */
@@ -1686,44 +1686,44 @@
 #define CSR_TXCALBINPOVRVAL_LSB                         0
 #define CSR_TXCALBINPOVRVAL_MASK                        GENMASK_32(4, 0)
 #define CSR_TXCALBINPOVREN_LSB                          5
-#define CSR_TXCALBINPOVREN_MASK                         BIT(5)
+#define CSR_TXCALBINPOVREN_MASK                         DDR_BIT(5)
 /* CSR_TXCALNOVR */
 #define CSR_TXCALNOVR_LSB                               0
 #define CSR_TXCALNOVR_MASK                              GENMASK_32(5, 0)
 #define CSR_TXCALBINNOVRVAL_LSB                         0
 #define CSR_TXCALBINNOVRVAL_MASK                        GENMASK_32(4, 0)
 #define CSR_TXCALBINNOVREN_LSB                          5
-#define CSR_TXCALBINNOVREN_MASK                         BIT(5)
+#define CSR_TXCALBINNOVREN_MASK                         DDR_BIT(5)
 /* CSR_DFIMODE */
 #define CSR_DFIMODE_LSB                                 0
 #define CSR_DFIMODE_MASK                                GENMASK_32(2, 0)
 #define CSR_DFI0ENABLE_LSB                              0
-#define CSR_DFI0ENABLE_MASK                             BIT(0)
+#define CSR_DFI0ENABLE_MASK                             DDR_BIT(0)
 #define CSR_DFI1ENABLE_LSB                              1
-#define CSR_DFI1ENABLE_MASK                             BIT(1)
+#define CSR_DFI1ENABLE_MASK                             DDR_BIT(1)
 #define CSR_DFI1OVERRIDE_LSB                            2
-#define CSR_DFI1OVERRIDE_MASK                           BIT(2)
+#define CSR_DFI1OVERRIDE_MASK                           DDR_BIT(2)
 /* CSR_TRISTATEMODECA */
 #define CSR_TRISTATEMODECA_LSB                          0
 #define CSR_TRISTATEMODECA_MASK                         GENMASK_32(3, 0)
 #define CSR_DISDYNADRTRI_LSB                            0
-#define CSR_DISDYNADRTRI_MASK                           BIT(0)
+#define CSR_DISDYNADRTRI_MASK                           DDR_BIT(0)
 #define CSR_DDR2TMODE_LSB                               1
-#define CSR_DDR2TMODE_MASK                              BIT(1)
+#define CSR_DDR2TMODE_MASK                              DDR_BIT(1)
 #define CSR_CKDISVAL_LSB                                2
 #define CSR_CKDISVAL_MASK                               GENMASK_32(3, 2)
 /* MTESTMUXSEL already defined in ANIBx section */
 /* CSR_MTESTPGMINFO */
 #define CSR_MTESTPGMINFO_LSB                            0
-#define CSR_MTESTPGMINFO_MASK                           BIT(0)
+#define CSR_MTESTPGMINFO_MASK                           DDR_BIT(0)
 /* CSR_DYNPWRDNUP */
 #define CSR_DYNPWRDNUP_LSB                              0
-#define CSR_DYNPWRDNUP_MASK                             BIT(0)
+#define CSR_DYNPWRDNUP_MASK                             DDR_BIT(0)
 #define CSR_DYNPOWERDOWN_LSB                            0
-#define CSR_DYNPOWERDOWN_MASK                           BIT(0)
+#define CSR_DYNPOWERDOWN_MASK                           DDR_BIT(0)
 /* CSR_PMIENABLE */
 #define CSR_PMIENABLE_LSB                               0
-#define CSR_PMIENABLE_MASK                              BIT(0)
+#define CSR_PMIENABLE_MASK                              DDR_BIT(0)
 /* CSR_PHYTID */
 #define CSR_PHYTID_LSB                                  0
 #define CSR_PHYTID_MASK                                 GENMASK_32(15, 0)
@@ -1738,14 +1738,14 @@
 #define CSR_DFIPHYUPDRESP_LSB                           4
 #define CSR_DFIPHYUPDRESP_MASK                          GENMASK_32(6, 4)
 #define CSR_DFIPHYUPDMODE_LSB                           7
-#define CSR_DFIPHYUPDMODE_MASK                          BIT(7)
+#define CSR_DFIPHYUPDMODE_MASK                          DDR_BIT(7)
 #define CSR_DFIPHYUPDTHRESHOLD_LSB                      8
 #define CSR_DFIPHYUPDTHRESHOLD_MASK                     GENMASK_32(11, 8)
 #define CSR_DFIPHYUPDINTTHRESHOLD_LSB                   12
 #define CSR_DFIPHYUPDINTTHRESHOLD_MASK                  GENMASK_32(15, 12)
 /* CSR_PDAMRSWRITEMODE */
 #define CSR_PDAMRSWRITEMODE_LSB                         0
-#define CSR_PDAMRSWRITEMODE_MASK                        BIT(0)
+#define CSR_PDAMRSWRITEMODE_MASK                        DDR_BIT(0)
 /* CSR_DFIGEARDOWNCTL */
 #define CSR_DFIGEARDOWNCTL_LSB                          0
 #define CSR_DFIGEARDOWNCTL_MASK                         GENMASK_32(1, 0)
@@ -1753,19 +1753,19 @@
 #define CSR_DQSPREAMBLECONTROL_LSB                      0
 #define CSR_DQSPREAMBLECONTROL_MASK                     GENMASK_32(8, 0)
 #define CSR_TWOTCKRXDQSPRE_LSB                          0
-#define CSR_TWOTCKRXDQSPRE_MASK                         BIT(0)
+#define CSR_TWOTCKRXDQSPRE_MASK                         DDR_BIT(0)
 #define CSR_TWOTCKTXDQSPRE_LSB                          1
-#define CSR_TWOTCKTXDQSPRE_MASK                         BIT(1)
+#define CSR_TWOTCKTXDQSPRE_MASK                         DDR_BIT(1)
 #define CSR_POSITIONDFEINIT_LSB                         2
 #define CSR_POSITIONDFEINIT_MASK                        GENMASK_32(4, 2)
 #define CSR_LP4TGLTWOTCKTXDQSPRE_LSB                    5
-#define CSR_LP4TGLTWOTCKTXDQSPRE_MASK                   BIT(5)
+#define CSR_LP4TGLTWOTCKTXDQSPRE_MASK                   DDR_BIT(5)
 #define CSR_LP4POSTAMBLEEXT_LSB                         6
-#define CSR_LP4POSTAMBLEEXT_MASK                        BIT(6)
+#define CSR_LP4POSTAMBLEEXT_MASK                        DDR_BIT(6)
 #define CSR_LP4STTCPREBRIDGERXEN_LSB                    7
-#define CSR_LP4STTCPREBRIDGERXEN_MASK                   BIT(7)
+#define CSR_LP4STTCPREBRIDGERXEN_MASK                   DDR_BIT(7)
 #define CSR_WDQSEXTENSION_LSB                           8
-#define CSR_WDQSEXTENSION_MASK                          BIT(8)
+#define CSR_WDQSEXTENSION_MASK                          DDR_BIT(8)
 /* CSR_MASTERX4CONFIG */
 #define CSR_MASTERX4CONFIG_LSB                          0
 #define CSR_MASTERX4CONFIG_MASK                         GENMASK_32(3, 0)
@@ -1780,18 +1780,18 @@
 #define CSR_WRLEVFORDQSU_MASK                           GENMASK_32(7, 4)
 /* CSR_ENABLECSMULTICAST */
 #define CSR_ENABLECSMULTICAST_LSB                       0
-#define CSR_ENABLECSMULTICAST_MASK                      BIT(0)
+#define CSR_ENABLECSMULTICAST_MASK                      DDR_BIT(0)
 /* CSR_HWTLPCSMULTICAST */
 #define CSR_HWTLPCSMULTICAST_LSB                        0
-#define CSR_HWTLPCSMULTICAST_MASK                       BIT(0)
+#define CSR_HWTLPCSMULTICAST_MASK                       DDR_BIT(0)
 /* CSR_ACX4ANIBDIS */
 #define CSR_ACX4ANIBDIS_LSB                             0
 #define CSR_ACX4ANIBDIS_MASK                            GENMASK_32(11, 0)
 /* CSR_DMIPINPRESENT */
 #define CSR_DMIPINPRESENT_LSB                           0
-#define CSR_DMIPINPRESENT_MASK                          BIT(0)
+#define CSR_DMIPINPRESENT_MASK                          DDR_BIT(0)
 #define CSR_RDDBIENABLED_LSB                            0
-#define CSR_RDDBIENABLED_MASK                           BIT(0)
+#define CSR_RDDBIENABLED_MASK                           DDR_BIT(0)
 /* CSR_ARDPTRINITVAL */
 #define CSR_ARDPTRINITVAL_LSB                           0
 #define CSR_ARDPTRINITVAL_MASK                          GENMASK_32(3, 0)
@@ -1827,14 +1827,14 @@
 #define CSR_DB9LCDLCALPHDETOUT_MASK                     GENMASK_32(15, 0)
 /* CSR_DBYTEDLLMODECNTRL */
 #define CSR_DBYTEDLLMODECNTRL_LSB                       1
-#define CSR_DBYTEDLLMODECNTRL_MASK                      BIT(1)
+#define CSR_DBYTEDLLMODECNTRL_MASK                      DDR_BIT(1)
 #define CSR_DLLRXPREAMBLEMODE_LSB                       1
-#define CSR_DLLRXPREAMBLEMODE_MASK                      BIT(1)
+#define CSR_DLLRXPREAMBLEMODE_MASK                      DDR_BIT(1)
 /* CSR_DBYTERXENTRAIN */
 #define CSR_DBYTERXENTRAIN_LSB                          0
-#define CSR_DBYTERXENTRAIN_MASK                         BIT(0)
+#define CSR_DBYTERXENTRAIN_MASK                         DDR_BIT(0)
 #define CSR_RXENTRAIN_LSB                               0
-#define CSR_RXENTRAIN_MASK                              BIT(0)
+#define CSR_RXENTRAIN_MASK                              DDR_BIT(0)
 /* CSR_ANLCDLCALPHDETOUT */
 #define CSR_ANLCDLCALPHDETOUT_LSB                       0
 #define CSR_ANLCDLCALPHDETOUT_MASK                      GENMASK_32(11, 0)
@@ -1876,9 +1876,9 @@
 #define CSR_PROCODTCTL_LSB                              0
 #define CSR_PROCODTCTL_MASK                             GENMASK_32(1, 0)
 #define CSR_PROCODTALWAYSOFF_LSB                        0
-#define CSR_PROCODTALWAYSOFF_MASK                       BIT(0)
+#define CSR_PROCODTALWAYSOFF_MASK                       DDR_BIT(0)
 #define CSR_PROCODTALWAYSON_LSB                         1
-#define CSR_PROCODTALWAYSON_MASK                        BIT(1)
+#define CSR_PROCODTALWAYSON_MASK                        DDR_BIT(1)
 /* CSR_PROCODTTIMECTL */
 #define CSR_PROCODTTIMECTL_LSB                          0
 #define CSR_PROCODTTIMECTL_MASK                         GENMASK_32(5, 0)
@@ -1894,44 +1894,44 @@
 #define CSR_MALERTVREFLEVEL_LSB                         0
 #define CSR_MALERTVREFLEVEL_MASK                        GENMASK_32(6, 0)
 #define CSR_MALERTVREFEXTEN_LSB                         7
-#define CSR_MALERTVREFEXTEN_MASK                        BIT(7)
+#define CSR_MALERTVREFEXTEN_MASK                        DDR_BIT(7)
 #define CSR_MALERTPUSTREN_LSB                           8
 #define CSR_MALERTPUSTREN_MASK                          GENMASK_32(11, 8)
 #define CSR_MALERTPUEN_LSB                              12
-#define CSR_MALERTPUEN_MASK                             BIT(12)
+#define CSR_MALERTPUEN_MASK                             DDR_BIT(12)
 #define CSR_MALERTRXEN_LSB                              13
-#define CSR_MALERTRXEN_MASK                             BIT(13)
+#define CSR_MALERTRXEN_MASK                             DDR_BIT(13)
 #define CSR_MALERTDISABLEVAL_LSB                        14
-#define CSR_MALERTDISABLEVAL_MASK                       BIT(14)
+#define CSR_MALERTDISABLEVAL_MASK                       DDR_BIT(14)
 #define CSR_MALERTFORCEERROR_LSB                        15
-#define CSR_MALERTFORCEERROR_MASK                       BIT(15)
+#define CSR_MALERTFORCEERROR_MASK                       DDR_BIT(15)
 /* CSR_MEMALERTCONTROL2 */
 #define CSR_MEMALERTCONTROL2_LSB                        0
-#define CSR_MEMALERTCONTROL2_MASK                       BIT(0)
+#define CSR_MEMALERTCONTROL2_MASK                       DDR_BIT(0)
 #define CSR_MALERTSYNCBYPASS_LSB                        0
-#define CSR_MALERTSYNCBYPASS_MASK                       BIT(0)
+#define CSR_MALERTSYNCBYPASS_MASK                       DDR_BIT(0)
 /* CSR_MEMRESETL */
 #define CSR_MEMRESETL_LSB                               0
 #define CSR_MEMRESETL_MASK                              GENMASK_32(1, 0)
 #define CSR_MEMRESETLVALUE_LSB                          0
-#define CSR_MEMRESETLVALUE_MASK                         BIT(0)
+#define CSR_MEMRESETLVALUE_MASK                         DDR_BIT(0)
 #define CSR_PROTECTMEMRESET_LSB                         1
-#define CSR_PROTECTMEMRESET_MASK                        BIT(1)
+#define CSR_PROTECTMEMRESET_MASK                        DDR_BIT(1)
 /* CSR_PUBMODE */
 #define CSR_PUBMODE_LSB                                 0
-#define CSR_PUBMODE_MASK                                BIT(0)
+#define CSR_PUBMODE_MASK                                DDR_BIT(0)
 #define CSR_HWTMEMSRC_LSB                               0
-#define CSR_HWTMEMSRC_MASK                              BIT(0)
+#define CSR_HWTMEMSRC_MASK                              DDR_BIT(0)
 /* CSR_MISCPHYSTATUS */
 #define CSR_MISCPHYSTATUS_LSB                           0
 #define CSR_MISCPHYSTATUS_MASK                          GENMASK_32(1, 0)
 #define CSR_DCTSANE_LSB                                 0
-#define CSR_DCTSANE_MASK                                BIT(0)
+#define CSR_DCTSANE_MASK                                DDR_BIT(0)
 #define CSR_PORMEMRESET_LSB                             1
-#define CSR_PORMEMRESET_MASK                            BIT(1)
+#define CSR_PORMEMRESET_MASK                            DDR_BIT(1)
 /* CSR_CORELOOPBACKSEL */
 #define CSR_CORELOOPBACKSEL_LSB                         0
-#define CSR_CORELOOPBACKSEL_MASK                        BIT(0)
+#define CSR_CORELOOPBACKSEL_MASK                        DDR_BIT(0)
 /* CSR_DLLTRAINPARAM */
 #define CSR_DLLTRAINPARAM_LSB                           0
 #define CSR_DLLTRAINPARAM_MASK                          GENMASK_32(1, 0)
@@ -1945,120 +1945,120 @@
 #define CSR_HWTLPCSENB_MASK                             GENMASK_32(1, 0)
 /* CSR_HWTLPCSENBYPASS */
 #define CSR_HWTLPCSENBYPASS_LSB                         0
-#define CSR_HWTLPCSENBYPASS_MASK                        BIT(0)
+#define CSR_HWTLPCSENBYPASS_MASK                        DDR_BIT(0)
 /* CSR_DFICAMODE */
 #define CSR_DFICAMODE_LSB                               0
 #define CSR_DFICAMODE_MASK                              GENMASK_32(3, 0)
 #define CSR_DFILP3CAMODE_LSB                            0
-#define CSR_DFILP3CAMODE_MASK                           BIT(0)
+#define CSR_DFILP3CAMODE_MASK                           DDR_BIT(0)
 #define CSR_DFID4CAMODE_LSB                             1
-#define CSR_DFID4CAMODE_MASK                            BIT(1)
+#define CSR_DFID4CAMODE_MASK                            DDR_BIT(1)
 #define CSR_DFILP4CAMODE_LSB                            2
-#define CSR_DFILP4CAMODE_MASK                           BIT(2)
+#define CSR_DFILP4CAMODE_MASK                           DDR_BIT(2)
 #define CSR_DFID4ALTCAMODE_LSB                          3
-#define CSR_DFID4ALTCAMODE_MASK                         BIT(3)
+#define CSR_DFID4ALTCAMODE_MASK                         DDR_BIT(3)
 /* CSR_HWTCACTL */
 #define CSR_HWTCACTL_LSB                                0
-#define CSR_HWTCACTL_MASK                               BIT(0)
+#define CSR_HWTCACTL_MASK                               DDR_BIT(0)
 #define CSR_HWTDISDYNADRTRI_LSB                         0
-#define CSR_HWTDISDYNADRTRI_MASK                        BIT(0)
+#define CSR_HWTDISDYNADRTRI_MASK                        DDR_BIT(0)
 /* CSR_HWTCAMODE */
 #define CSR_HWTCAMODE_LSB                               0
 #define CSR_HWTCAMODE_MASK                              GENMASK_32(5, 0)
 #define CSR_HWTLP3CAMODE_LSB                            0
-#define CSR_HWTLP3CAMODE_MASK                           BIT(0)
+#define CSR_HWTLP3CAMODE_MASK                           DDR_BIT(0)
 #define CSR_HWTD4CAMODE_LSB                             1
-#define CSR_HWTD4CAMODE_MASK                            BIT(1)
+#define CSR_HWTD4CAMODE_MASK                            DDR_BIT(1)
 #define CSR_HWTLP4CAMODE_LSB                            2
-#define CSR_HWTLP4CAMODE_MASK                           BIT(2)
+#define CSR_HWTLP4CAMODE_MASK                           DDR_BIT(2)
 #define CSR_HWTD4ALTCAMODE_LSB                          3
-#define CSR_HWTD4ALTCAMODE_MASK                         BIT(3)
+#define CSR_HWTD4ALTCAMODE_MASK                         DDR_BIT(3)
 #define CSR_HWTCSINVERT_LSB                             4
-#define CSR_HWTCSINVERT_MASK                            BIT(4)
+#define CSR_HWTCSINVERT_MASK                            DDR_BIT(4)
 #define CSR_HWTDBIINVERT_LSB                            5
-#define CSR_HWTDBIINVERT_MASK                           BIT(5)
+#define CSR_HWTDBIINVERT_MASK                           DDR_BIT(5)
 /* CSR_DLLCONTROL */
 #define CSR_DLLCONTROL_LSB                              0
 #define CSR_DLLCONTROL_MASK                             GENMASK_32(2, 0)
 #define CSR_DLLRESETRELOCK_LSB                          0
-#define CSR_DLLRESETRELOCK_MASK                         BIT(0)
+#define CSR_DLLRESETRELOCK_MASK                         DDR_BIT(0)
 #define CSR_DLLRESETSLAVE_LSB                           1
-#define CSR_DLLRESETSLAVE_MASK                          BIT(1)
+#define CSR_DLLRESETSLAVE_MASK                          DDR_BIT(1)
 #define CSR_DLLRESETRSVD_LSB                            2
-#define CSR_DLLRESETRSVD_MASK                           BIT(2)
+#define CSR_DLLRESETRSVD_MASK                           DDR_BIT(2)
 /* CSR_PULSEDLLUPDATEPHASE */
 #define CSR_PULSEDLLUPDATEPHASE_LSB                     0
 #define CSR_PULSEDLLUPDATEPHASE_MASK                    GENMASK_32(7, 0)
 #define CSR_PULSEDBYTEDLLUPDATEPHASE_LSB                0
-#define CSR_PULSEDBYTEDLLUPDATEPHASE_MASK               BIT(0)
+#define CSR_PULSEDBYTEDLLUPDATEPHASE_MASK               DDR_BIT(0)
 #define CSR_PULSEACKDLLUPDATEPHASE_LSB                  1
-#define CSR_PULSEACKDLLUPDATEPHASE_MASK                 BIT(1)
+#define CSR_PULSEACKDLLUPDATEPHASE_MASK                 DDR_BIT(1)
 #define CSR_PULSEACADLLUPDATEPHASE_LSB                  2
-#define CSR_PULSEACADLLUPDATEPHASE_MASK                 BIT(2)
+#define CSR_PULSEACADLLUPDATEPHASE_MASK                 DDR_BIT(2)
 #define CSR_UPDATEPHASEDESTRESERVED_LSB                 3
 #define CSR_UPDATEPHASEDESTRESERVED_MASK                GENMASK_32(5, 3)
 #define CSR_TRAINUPDATEPHASEONLONGBUBBLE_LSB            6
-#define CSR_TRAINUPDATEPHASEONLONGBUBBLE_MASK           BIT(6)
+#define CSR_TRAINUPDATEPHASEONLONGBUBBLE_MASK           DDR_BIT(6)
 #define CSR_ALWAYSUPDATELCDLPHASE_LSB                   7
-#define CSR_ALWAYSUPDATELCDLPHASE_MASK                  BIT(7)
+#define CSR_ALWAYSUPDATELCDLPHASE_MASK                  DDR_BIT(7)
 /* CSR_HWTCONTROLOVR0 */
 #define CSR_HWTCONTROLOVR0_LSB                          0
 #define CSR_HWTCONTROLOVR0_MASK                         GENMASK_32(12, 0)
 #define CSR_HWTCS0OVR0_LSB                              0
-#define CSR_HWTCS0OVR0_MASK                             BIT(0)
+#define CSR_HWTCS0OVR0_MASK                             DDR_BIT(0)
 #define CSR_HWTCS1OVR0_LSB                              1
-#define CSR_HWTCS1OVR0_MASK                             BIT(1)
+#define CSR_HWTCS1OVR0_MASK                             DDR_BIT(1)
 #define CSR_HWTCS2OVR0_LSB                              2
-#define CSR_HWTCS2OVR0_MASK                             BIT(2)
+#define CSR_HWTCS2OVR0_MASK                             DDR_BIT(2)
 #define CSR_HWTCS3OVR0_LSB                              3
-#define CSR_HWTCS3OVR0_MASK                             BIT(3)
+#define CSR_HWTCS3OVR0_MASK                             DDR_BIT(3)
 #define CSR_HWTCKE0OVR0_LSB                             4
-#define CSR_HWTCKE0OVR0_MASK                            BIT(4)
+#define CSR_HWTCKE0OVR0_MASK                            DDR_BIT(4)
 #define CSR_HWTCKE1OVR0_LSB                             5
-#define CSR_HWTCKE1OVR0_MASK                            BIT(5)
+#define CSR_HWTCKE1OVR0_MASK                            DDR_BIT(5)
 #define CSR_HWTCKE2OVR0_LSB                             6
-#define CSR_HWTCKE2OVR0_MASK                            BIT(6)
+#define CSR_HWTCKE2OVR0_MASK                            DDR_BIT(6)
 #define CSR_HWTCKE3OVR0_LSB                             7
-#define CSR_HWTCKE3OVR0_MASK                            BIT(7)
+#define CSR_HWTCKE3OVR0_MASK                            DDR_BIT(7)
 #define CSR_HWTODT0OVR0_LSB                             8
-#define CSR_HWTODT0OVR0_MASK                            BIT(8)
+#define CSR_HWTODT0OVR0_MASK                            DDR_BIT(8)
 #define CSR_HWTODT1OVR0_LSB                             9
-#define CSR_HWTODT1OVR0_MASK                            BIT(9)
+#define CSR_HWTODT1OVR0_MASK                            DDR_BIT(9)
 #define CSR_HWTODT2OVR0_LSB                             10
-#define CSR_HWTODT2OVR0_MASK                            BIT(10)
+#define CSR_HWTODT2OVR0_MASK                            DDR_BIT(10)
 #define CSR_HWTODT3OVR0_LSB                             11
-#define CSR_HWTODT3OVR0_MASK                            BIT(11)
+#define CSR_HWTODT3OVR0_MASK                            DDR_BIT(11)
 #define CSR_HWTPARITYOVR0_LSB                           12
-#define CSR_HWTPARITYOVR0_MASK                          BIT(12)
+#define CSR_HWTPARITYOVR0_MASK                          DDR_BIT(12)
 /* CSR_HWTCONTROLOVR1 */
 #define CSR_HWTCONTROLOVR1_LSB                          0
 #define CSR_HWTCONTROLOVR1_MASK                         GENMASK_32(12, 0)
 #define CSR_HWTCS0OVR1_LSB                              0
-#define CSR_HWTCS0OVR1_MASK                             BIT(0)
+#define CSR_HWTCS0OVR1_MASK                             DDR_BIT(0)
 #define CSR_HWTCS1OVR1_LSB                              1
-#define CSR_HWTCS1OVR1_MASK                             BIT(1)
+#define CSR_HWTCS1OVR1_MASK                             DDR_BIT(1)
 #define CSR_HWTCS2OVR1_LSB                              2
-#define CSR_HWTCS2OVR1_MASK                             BIT(2)
+#define CSR_HWTCS2OVR1_MASK                             DDR_BIT(2)
 #define CSR_HWTCS3OVR1_LSB                              3
-#define CSR_HWTCS3OVR1_MASK                             BIT(3)
+#define CSR_HWTCS3OVR1_MASK                             DDR_BIT(3)
 #define CSR_HWTCKE0OVR1_LSB                             4
-#define CSR_HWTCKE0OVR1_MASK                            BIT(4)
+#define CSR_HWTCKE0OVR1_MASK                            DDR_BIT(4)
 #define CSR_HWTCKE1OVR1_LSB                             5
-#define CSR_HWTCKE1OVR1_MASK                            BIT(5)
+#define CSR_HWTCKE1OVR1_MASK                            DDR_BIT(5)
 #define CSR_HWTCKE2OVR1_LSB                             6
-#define CSR_HWTCKE2OVR1_MASK                            BIT(6)
+#define CSR_HWTCKE2OVR1_MASK                            DDR_BIT(6)
 #define CSR_HWTCKE3OVR1_LSB                             7
-#define CSR_HWTCKE3OVR1_MASK                            BIT(7)
+#define CSR_HWTCKE3OVR1_MASK                            DDR_BIT(7)
 #define CSR_HWTODT0OVR1_LSB                             8
-#define CSR_HWTODT0OVR1_MASK                            BIT(8)
+#define CSR_HWTODT0OVR1_MASK                            DDR_BIT(8)
 #define CSR_HWTODT1OVR1_LSB                             9
-#define CSR_HWTODT1OVR1_MASK                            BIT(9)
+#define CSR_HWTODT1OVR1_MASK                            DDR_BIT(9)
 #define CSR_HWTODT2OVR1_LSB                             10
-#define CSR_HWTODT2OVR1_MASK                            BIT(10)
+#define CSR_HWTODT2OVR1_MASK                            DDR_BIT(10)
 #define CSR_HWTODT3OVR1_LSB                             11
-#define CSR_HWTODT3OVR1_MASK                            BIT(11)
+#define CSR_HWTODT3OVR1_MASK                            DDR_BIT(11)
 #define CSR_HWTPARITYOVR1_LSB                           12
-#define CSR_HWTPARITYOVR1_MASK                          BIT(12)
+#define CSR_HWTPARITYOVR1_MASK                          DDR_BIT(12)
 /* CSR_DLLGAINCTL */
 #define CSR_DLLGAINCTL_LSB                              0
 #define CSR_DLLGAINCTL_MASK                             GENMASK_32(11, 0)
@@ -2072,9 +2072,9 @@
 #define CSR_DLLLOCKPARAM_LSB                            0
 #define CSR_DLLLOCKPARAM_MASK                           GENMASK_32(12, 0)
 #define CSR_DISDLLSEEDSEL_LSB                           0
-#define CSR_DISDLLSEEDSEL_MASK                          BIT(0)
+#define CSR_DISDLLSEEDSEL_MASK                          DDR_BIT(0)
 #define CSR_DISDLLGAINIVSEED_LSB                        1
-#define CSR_DISDLLGAINIVSEED_MASK                       BIT(1)
+#define CSR_DISDLLGAINIVSEED_MASK                       DDR_BIT(1)
 #define CSR_DLLLOCKPARAMSPARE_LSB                       2
 #define CSR_DLLLOCKPARAMSPARE_MASK                      GENMASK_32(3, 2)
 #define CSR_LCDLSEED0_LSB                               4
@@ -2083,70 +2083,70 @@
 #define CSR_HWTCONTROLVAL0_LSB                          0
 #define CSR_HWTCONTROLVAL0_MASK                         GENMASK_32(12, 0)
 #define CSR_HWTCS0VAL0_LSB                              0
-#define CSR_HWTCS0VAL0_MASK                             BIT(0)
+#define CSR_HWTCS0VAL0_MASK                             DDR_BIT(0)
 #define CSR_HWTCS1VAL0_LSB                              1
-#define CSR_HWTCS1VAL0_MASK                             BIT(1)
+#define CSR_HWTCS1VAL0_MASK                             DDR_BIT(1)
 #define CSR_HWTCS2VAL0_LSB                              2
-#define CSR_HWTCS2VAL0_MASK                             BIT(2)
+#define CSR_HWTCS2VAL0_MASK                             DDR_BIT(2)
 #define CSR_HWTCS3VAL0_LSB                              3
-#define CSR_HWTCS3VAL0_MASK                             BIT(3)
+#define CSR_HWTCS3VAL0_MASK                             DDR_BIT(3)
 #define CSR_HWTCKE0VAL0_LSB                             4
-#define CSR_HWTCKE0VAL0_MASK                            BIT(4)
+#define CSR_HWTCKE0VAL0_MASK                            DDR_BIT(4)
 #define CSR_HWTCKE1VAL0_LSB                             5
-#define CSR_HWTCKE1VAL0_MASK                            BIT(5)
+#define CSR_HWTCKE1VAL0_MASK                            DDR_BIT(5)
 #define CSR_HWTCKE2VAL0_LSB                             6
-#define CSR_HWTCKE2VAL0_MASK                            BIT(6)
+#define CSR_HWTCKE2VAL0_MASK                            DDR_BIT(6)
 #define CSR_HWTCKE3VAL0_LSB                             7
-#define CSR_HWTCKE3VAL0_MASK                            BIT(7)
+#define CSR_HWTCKE3VAL0_MASK                            DDR_BIT(7)
 #define CSR_HWTODT0VAL0_LSB                             8
-#define CSR_HWTODT0VAL0_MASK                            BIT(8)
+#define CSR_HWTODT0VAL0_MASK                            DDR_BIT(8)
 #define CSR_HWTODT1VAL0_LSB                             9
-#define CSR_HWTODT1VAL0_MASK                            BIT(9)
+#define CSR_HWTODT1VAL0_MASK                            DDR_BIT(9)
 #define CSR_HWTODT2VAL0_LSB                             10
-#define CSR_HWTODT2VAL0_MASK                            BIT(10)
+#define CSR_HWTODT2VAL0_MASK                            DDR_BIT(10)
 #define CSR_HWTODT3VAL0_LSB                             11
-#define CSR_HWTODT3VAL0_MASK                            BIT(11)
+#define CSR_HWTODT3VAL0_MASK                            DDR_BIT(11)
 #define CSR_HWTPARITYVAL0_LSB                           12
-#define CSR_HWTPARITYVAL0_MASK                          BIT(12)
+#define CSR_HWTPARITYVAL0_MASK                          DDR_BIT(12)
 /* CSR_HWTCONTROLVAL1 */
 #define CSR_HWTCONTROLVAL1_LSB                          0
 #define CSR_HWTCONTROLVAL1_MASK                         GENMASK_32(12, 0)
 #define CSR_HWTCS0VAL1_LSB                              0
-#define CSR_HWTCS0VAL1_MASK                             BIT(0)
+#define CSR_HWTCS0VAL1_MASK                             DDR_BIT(0)
 #define CSR_HWTCS1VAL1_LSB                              1
-#define CSR_HWTCS1VAL1_MASK                             BIT(1)
+#define CSR_HWTCS1VAL1_MASK                             DDR_BIT(1)
 #define CSR_HWTCS2VAL1_LSB                              2
-#define CSR_HWTCS2VAL1_MASK                             BIT(2)
+#define CSR_HWTCS2VAL1_MASK                             DDR_BIT(2)
 #define CSR_HWTCS3VAL1_LSB                              3
-#define CSR_HWTCS3VAL1_MASK                             BIT(3)
+#define CSR_HWTCS3VAL1_MASK                             DDR_BIT(3)
 #define CSR_HWTCKE0VAL1_LSB                             4
-#define CSR_HWTCKE0VAL1_MASK                            BIT(4)
+#define CSR_HWTCKE0VAL1_MASK                            DDR_BIT(4)
 #define CSR_HWTCKE1VAL1_LSB                             5
-#define CSR_HWTCKE1VAL1_MASK                            BIT(5)
+#define CSR_HWTCKE1VAL1_MASK                            DDR_BIT(5)
 #define CSR_HWTCKE2VAL1_LSB                             6
-#define CSR_HWTCKE2VAL1_MASK                            BIT(6)
+#define CSR_HWTCKE2VAL1_MASK                            DDR_BIT(6)
 #define CSR_HWTCKE3VAL1_LSB                             7
-#define CSR_HWTCKE3VAL1_MASK                            BIT(7)
+#define CSR_HWTCKE3VAL1_MASK                            DDR_BIT(7)
 #define CSR_HWTODT0VAL1_LSB                             8
-#define CSR_HWTODT0VAL1_MASK                            BIT(8)
+#define CSR_HWTODT0VAL1_MASK                            DDR_BIT(8)
 #define CSR_HWTODT1VAL1_LSB                             9
-#define CSR_HWTODT1VAL1_MASK                            BIT(9)
+#define CSR_HWTODT1VAL1_MASK                            DDR_BIT(9)
 #define CSR_HWTODT2VAL1_LSB                             10
-#define CSR_HWTODT2VAL1_MASK                            BIT(10)
+#define CSR_HWTODT2VAL1_MASK                            DDR_BIT(10)
 #define CSR_HWTODT3VAL1_LSB                             11
-#define CSR_HWTODT3VAL1_MASK                            BIT(11)
+#define CSR_HWTODT3VAL1_MASK                            DDR_BIT(11)
 #define CSR_HWTPARITYVAL1_LSB                           12
-#define CSR_HWTPARITYVAL1_MASK                          BIT(12)
+#define CSR_HWTPARITYVAL1_MASK                          DDR_BIT(12)
 /* CSR_ACSMGLBLSTART */
 #define CSR_ACSMGLBLSTART_LSB                           0
-#define CSR_ACSMGLBLSTART_MASK                          BIT(0)
+#define CSR_ACSMGLBLSTART_MASK                          DDR_BIT(0)
 /* CSR_ACSMGLBLSGLSTPCTRL */
 #define CSR_ACSMGLBLSGLSTPCTRL_LSB                      0
 #define CSR_ACSMGLBLSGLSTPCTRL_MASK                     GENMASK_32(1, 0)
 #define CSR_ACSMSGLSTPMODE_LSB                          0
-#define CSR_ACSMSGLSTPMODE_MASK                         BIT(0)
+#define CSR_ACSMSGLSTPMODE_MASK                         DDR_BIT(0)
 #define CSR_ACSMSGLSTP_LSB                              1
-#define CSR_ACSMSGLSTP_MASK                             BIT(1)
+#define CSR_ACSMSGLSTP_MASK                             DDR_BIT(1)
 /* CSR_LCDLCALPHASE */
 #define CSR_LCDLCALPHASE_LSB                            0
 #define CSR_LCDLCALPHASE_MASK                           GENMASK_32(8, 0)
@@ -2154,33 +2154,33 @@
 #define CSR_LCDLCALCTRL_LSB                             0
 #define CSR_LCDLCALCTRL_MASK                            GENMASK_32(6, 0)
 #define CSR_LCDLCALMODE_LSB                             0
-#define CSR_LCDLCALMODE_MASK                            BIT(0)
+#define CSR_LCDLCALMODE_MASK                            DDR_BIT(0)
 #define CSR_LCDLCALSLOWCLKSEL_LSB                       1
-#define CSR_LCDLCALSLOWCLKSEL_MASK                      BIT(1)
+#define CSR_LCDLCALSLOWCLKSEL_MASK                      DDR_BIT(1)
 #define CSR_LCDLCALEN_LSB                               2
-#define CSR_LCDLCALEN_MASK                              BIT(2)
+#define CSR_LCDLCALEN_MASK                              DDR_BIT(2)
 #define CSR_LCDLCALPHASEUPDATE_LSB                      3
-#define CSR_LCDLCALPHASEUPDATE_MASK                     BIT(3)
+#define CSR_LCDLCALPHASEUPDATE_MASK                     DDR_BIT(3)
 #define CSR_LCDLCALCLKEN_LSB                            4
-#define CSR_LCDLCALCLKEN_MASK                           BIT(4)
+#define CSR_LCDLCALCLKEN_MASK                           DDR_BIT(4)
 #define CSR_LCDLCALSAMPEN_LSB                           5
-#define CSR_LCDLCALSAMPEN_MASK                          BIT(5)
+#define CSR_LCDLCALSAMPEN_MASK                          DDR_BIT(5)
 #define CSR_LCDLCALSLOWCLKEN_LSB                        6
-#define CSR_LCDLCALSLOWCLKEN_MASK                       BIT(6)
+#define CSR_LCDLCALSLOWCLKEN_MASK                       DDR_BIT(6)
 /* CSR_CALRATE */
 #define CSR_CALRATE_LSB                                 0
 #define CSR_CALRATE_MASK                                GENMASK_32(6, 0)
 #define CSR_CALINTERVAL_LSB                             0
 #define CSR_CALINTERVAL_MASK                            GENMASK_32(3, 0)
 #define CSR_CALRUN_LSB                                  4
-#define CSR_CALRUN_MASK                                 BIT(4)
+#define CSR_CALRUN_MASK                                 DDR_BIT(4)
 #define CSR_CALONCE_LSB                                 5
-#define CSR_CALONCE_MASK                                BIT(5)
+#define CSR_CALONCE_MASK                                DDR_BIT(5)
 #define CSR_DISABLEBACKGROUNDZQUPDATES_LSB              6
-#define CSR_DISABLEBACKGROUNDZQUPDATES_MASK             BIT(6)
+#define CSR_DISABLEBACKGROUNDZQUPDATES_MASK             DDR_BIT(6)
 /* CSR_CALZAP */
 #define CSR_CALZAP_LSB                                  0
-#define CSR_CALZAP_MASK                                 BIT(0)
+#define CSR_CALZAP_MASK                                 DDR_BIT(0)
 /* CSR_PSTATE */
 #define CSR_PSTATE_LSB                                  0
 #define CSR_PSTATE_MASK                                 GENMASK_32(3, 0)
@@ -2195,22 +2195,22 @@
 #define CSR_PLLOUTGATECONTROL_LSB                       0
 #define CSR_PLLOUTGATECONTROL_MASK                      GENMASK_32(1, 0)
 #define CSR_PCLKGATEEN_LSB                              0
-#define CSR_PCLKGATEEN_MASK                             BIT(0)
+#define CSR_PCLKGATEEN_MASK                             DDR_BIT(0)
 #define CSR_RESERVED2X1_LSB                             1
-#define CSR_RESERVED2X1_MASK                            BIT(1)
+#define CSR_RESERVED2X1_MASK                            DDR_BIT(1)
 /* CSR_UCMEMRESETCONTROL */
 #define CSR_UCMEMRESETCONTROL_LSB                       0
-#define CSR_UCMEMRESETCONTROL_MASK                      BIT(0)
+#define CSR_UCMEMRESETCONTROL_MASK                      DDR_BIT(0)
 #define CSR_UCDCTSANE_LSB                               0
-#define CSR_UCDCTSANE_MASK                              BIT(0)
+#define CSR_UCDCTSANE_MASK                              DDR_BIT(0)
 /* CSR_PORCONTROL */
 #define CSR_PORCONTROL_LSB                              0
-#define CSR_PORCONTROL_MASK                             BIT(0)
+#define CSR_PORCONTROL_MASK                             DDR_BIT(0)
 #define CSR_PLLDLLLOCKDONE_LSB                          0
-#define CSR_PLLDLLLOCKDONE_MASK                         BIT(0)
+#define CSR_PLLDLLLOCKDONE_MASK                         DDR_BIT(0)
 /* CSR_CALBUSY */
 #define CSR_CALBUSY_LSB                                 0
-#define CSR_CALBUSY_MASK                                BIT(0)
+#define CSR_CALBUSY_MASK                                DDR_BIT(0)
 /* CSR_CALMISC2 */
 #define CSR_CALMISC2_LSB                                0
 #define CSR_CALMISC2_MASK                               GENMASK_32(15, 0)
@@ -2219,24 +2219,24 @@
 #define CSR_RESERVED10X3_LSB                            3
 #define CSR_RESERVED10X3_MASK                           GENMASK_32(10, 3)
 #define CSR_RESERVED11_LSB                              11
-#define CSR_RESERVED11_MASK                             BIT(11)
+#define CSR_RESERVED11_MASK                             DDR_BIT(11)
 #define CSR_CALCMPTRRESTRIM_LSB                         12
-#define CSR_CALCMPTRRESTRIM_MASK                        BIT(12)
+#define CSR_CALCMPTRRESTRIM_MASK                        DDR_BIT(12)
 #define CSR_CALCANCELROUNDERRDIS_LSB                    13
-#define CSR_CALCANCELROUNDERRDIS_MASK                   BIT(13)
+#define CSR_CALCANCELROUNDERRDIS_MASK                   DDR_BIT(13)
 #define CSR_CALSLOWCMPANA_LSB                           14
-#define CSR_CALSLOWCMPANA_MASK                          BIT(14)
+#define CSR_CALSLOWCMPANA_MASK                          DDR_BIT(14)
 #define CSR_RESERVED15_LSB                              15
-#define CSR_RESERVED15_MASK                             BIT(15)
+#define CSR_RESERVED15_MASK                             DDR_BIT(15)
 /* CSR_CALMISC */
 #define CSR_CALMISC_LSB                                 0
 #define CSR_CALMISC_MASK                                GENMASK_32(2, 0)
 #define CSR_CALCMPR5DIS_LSB                             0
-#define CSR_CALCMPR5DIS_MASK                            BIT(0)
+#define CSR_CALCMPR5DIS_MASK                            DDR_BIT(0)
 #define CSR_CALNINTDIS_LSB                              1
-#define CSR_CALNINTDIS_MASK                             BIT(1)
+#define CSR_CALNINTDIS_MASK                             DDR_BIT(1)
 #define CSR_CALPEXTDIS_LSB                              2
-#define CSR_CALPEXTDIS_MASK                             BIT(2)
+#define CSR_CALPEXTDIS_MASK                             DDR_BIT(2)
 /* CSR_CALVREFS */
 #define CSR_CALVREFS_LSB                                0
 #define CSR_CALVREFS_MASK                               GENMASK_32(1, 0)
@@ -2257,24 +2257,24 @@
 #define CSR_CALCMPINVERT_LSB                            0
 #define CSR_CALCMPINVERT_MASK                           GENMASK_32(4, 0)
 #define CSR_CMPINVERTCALDAC50_LSB                       0
-#define CSR_CMPINVERTCALDAC50_MASK                      BIT(0)
+#define CSR_CMPINVERTCALDAC50_MASK                      DDR_BIT(0)
 #define CSR_CMPINVERTCALDRVPD50_LSB                     1
-#define CSR_CMPINVERTCALDRVPD50_MASK                    BIT(1)
+#define CSR_CMPINVERTCALDRVPD50_MASK                    DDR_BIT(1)
 #define CSR_CMPINVERTCALDRVPU50_LSB                     2
-#define CSR_CMPINVERTCALDRVPU50_MASK                    BIT(2)
+#define CSR_CMPINVERTCALDRVPU50_MASK                    DDR_BIT(2)
 #define CSR_CMPINVERTCALODTPD_LSB                       3
-#define CSR_CMPINVERTCALODTPD_MASK                      BIT(3)
+#define CSR_CMPINVERTCALODTPD_MASK                      DDR_BIT(3)
 #define CSR_CMPINVERTCALODTPU_LSB                       4
-#define CSR_CMPINVERTCALODTPU_MASK                      BIT(4)
+#define CSR_CMPINVERTCALODTPU_MASK                      DDR_BIT(4)
 /* CSR_CALCMPANACNTRL */
 #define CSR_CALCMPANACNTRL_LSB                          0
 #define CSR_CALCMPANACNTRL_MASK                         GENMASK_32(9, 0)
 #define CSR_CMPRGAINCURRADJ_LSB                         0
 #define CSR_CMPRGAINCURRADJ_MASK                        GENMASK_32(7, 0)
 #define CSR_CMPRGAINRESADJ_LSB                          8
-#define CSR_CMPRGAINRESADJ_MASK                         BIT(8)
+#define CSR_CMPRGAINRESADJ_MASK                         DDR_BIT(8)
 #define CSR_CMPRBIASBYPASSEN_LSB                        9
-#define CSR_CMPRBIASBYPASSEN_MASK                       BIT(9)
+#define CSR_CMPRBIASBYPASSEN_MASK                       DDR_BIT(9)
 /* CSR_DFIRDDATACSDESTMAP */
 #define CSR_DFIRDDATACSDESTMAP_LSB                      0
 #define CSR_DFIRDDATACSDESTMAP_MASK                     GENMASK_32(7, 0)
@@ -2296,7 +2296,7 @@
 #define CSR_GLOBALVREFINTRIM_LSB                        10
 #define CSR_GLOBALVREFINTRIM_MASK                       GENMASK_32(13, 10)
 #define CSR_GLOBALVREFINMODE_LSB                        14
-#define CSR_GLOBALVREFINMODE_MASK                       BIT(14)
+#define CSR_GLOBALVREFINMODE_MASK                       DDR_BIT(14)
 /* CSR_DFIWRDATACSDESTMAP */
 #define CSR_DFIWRDATACSDESTMAP_LSB                      0
 #define CSR_DFIWRDATACSDESTMAP_MASK                     GENMASK_32(7, 0)
@@ -2336,34 +2336,34 @@
 #define CSR_PHYPERFCTRENABLE_LSB                        0
 #define CSR_PHYPERFCTRENABLE_MASK                       GENMASK_32(7, 0)
 #define CSR_MASUPDGOODCTL_LSB                           0
-#define CSR_MASUPDGOODCTL_MASK                          BIT(0)
+#define CSR_MASUPDGOODCTL_MASK                          DDR_BIT(0)
 #define CSR_PHYUPD0GOODCTL_LSB                          1
-#define CSR_PHYUPD0GOODCTL_MASK                         BIT(1)
+#define CSR_PHYUPD0GOODCTL_MASK                         DDR_BIT(1)
 #define CSR_PHYUPD1GOODCTL_LSB                          2
-#define CSR_PHYUPD1GOODCTL_MASK                         BIT(2)
+#define CSR_PHYUPD1GOODCTL_MASK                         DDR_BIT(2)
 #define CSR_CTLUPD0GOODCTL_LSB                          3
-#define CSR_CTLUPD0GOODCTL_MASK                         BIT(3)
+#define CSR_CTLUPD0GOODCTL_MASK                         DDR_BIT(3)
 #define CSR_CTLUPD1GOODCTL_LSB                          4
-#define CSR_CTLUPD1GOODCTL_MASK                         BIT(4)
+#define CSR_CTLUPD1GOODCTL_MASK                         DDR_BIT(4)
 #define CSR_MASUPDFAILCTL_LSB                           5
-#define CSR_MASUPDFAILCTL_MASK                          BIT(5)
+#define CSR_MASUPDFAILCTL_MASK                          DDR_BIT(5)
 #define CSR_PHYUPD0FAILCTL_LSB                          6
-#define CSR_PHYUPD0FAILCTL_MASK                         BIT(6)
+#define CSR_PHYUPD0FAILCTL_MASK                         DDR_BIT(6)
 #define CSR_PHYUPD1FAILCTL_LSB                          7
-#define CSR_PHYUPD1FAILCTL_MASK                         BIT(7)
+#define CSR_PHYUPD1FAILCTL_MASK                         DDR_BIT(7)
 /* CSR_DFIWRRDDATACSCONFIG */
 #define CSR_DFIWRRDDATACSCONFIG_LSB                     0
 #define CSR_DFIWRRDDATACSCONFIG_MASK                    GENMASK_32(1, 0)
 #define CSR_DFIWRDATACSPOLARITY_LSB                     0
-#define CSR_DFIWRDATACSPOLARITY_MASK                    BIT(0)
+#define CSR_DFIWRDATACSPOLARITY_MASK                    DDR_BIT(0)
 #define CSR_DFIRDDATACSPOLARITY_LSB                     1
-#define CSR_DFIRDDATACSPOLARITY_MASK                    BIT(1)
+#define CSR_DFIRDDATACSPOLARITY_MASK                    DDR_BIT(1)
 /* CSR_PLLPWRDN */
 #define CSR_PLLPWRDN_LSB                                0
-#define CSR_PLLPWRDN_MASK                               BIT(0)
+#define CSR_PLLPWRDN_MASK                               DDR_BIT(0)
 /* CSR_PLLRESET */
 #define CSR_PLLRESET_LSB                                0
-#define CSR_PLLRESET_MASK                               BIT(0)
+#define CSR_PLLRESET_MASK                               DDR_BIT(0)
 /* CSR_PLLCTRL2 */
 #define CSR_PLLCTRL2_LSB                                0
 #define CSR_PLLCTRL2_MASK                               GENMASK_32(4, 0)
@@ -2373,33 +2373,33 @@
 #define CSR_PLLCTRL0_LSB                                0
 #define CSR_PLLCTRL0_MASK                               GENMASK_32(15, 0)
 #define CSR_PLLSTANDBY_LSB                              0
-#define CSR_PLLSTANDBY_MASK                             BIT(0)
+#define CSR_PLLSTANDBY_MASK                             DDR_BIT(0)
 #define CSR_PLLBYPSEL_LSB                               1
-#define CSR_PLLBYPSEL_MASK                              BIT(1)
+#define CSR_PLLBYPSEL_MASK                              DDR_BIT(1)
 #define CSR_PLLX2MODE_LSB                               2
-#define CSR_PLLX2MODE_MASK                              BIT(2)
+#define CSR_PLLX2MODE_MASK                              DDR_BIT(2)
 #define CSR_PLLOUTBYPEN_LSB                             3
-#define CSR_PLLOUTBYPEN_MASK                            BIT(3)
+#define CSR_PLLOUTBYPEN_MASK                            DDR_BIT(3)
 #define CSR_PLLPRESET_LSB                               4
-#define CSR_PLLPRESET_MASK                              BIT(4)
+#define CSR_PLLPRESET_MASK                              DDR_BIT(4)
 #define CSR_PLLBYPASSMODE_LSB                           5
-#define CSR_PLLBYPASSMODE_MASK                          BIT(5)
+#define CSR_PLLBYPASSMODE_MASK                          DDR_BIT(5)
 #define CSR_PLLSELDFIFREQRATIO_LSB                      6
-#define CSR_PLLSELDFIFREQRATIO_MASK                     BIT(6)
+#define CSR_PLLSELDFIFREQRATIO_MASK                     DDR_BIT(6)
 #define CSR_PLLSYNCBUSFLUSH_LSB                         7
-#define CSR_PLLSYNCBUSFLUSH_MASK                        BIT(7)
+#define CSR_PLLSYNCBUSFLUSH_MASK                        DDR_BIT(7)
 #define CSR_PLLSYNCBUSBYP_LSB                           8
-#define CSR_PLLSYNCBUSBYP_MASK                          BIT(8)
+#define CSR_PLLSYNCBUSBYP_MASK                          DDR_BIT(8)
 #define CSR_PLLRESERVED10X9_LSB                         9
 #define CSR_PLLRESERVED10X9_MASK                        GENMASK_32(10, 9)
 #define CSR_PLLGEARSHIFT_LSB                            11
-#define CSR_PLLGEARSHIFT_MASK                           BIT(11)
+#define CSR_PLLGEARSHIFT_MASK                           DDR_BIT(11)
 #define CSR_PLLLOCKCNTSEL_LSB                           12
-#define CSR_PLLLOCKCNTSEL_MASK                          BIT(12)
+#define CSR_PLLLOCKCNTSEL_MASK                          DDR_BIT(12)
 #define CSR_PLLLOCKPHSEL_LSB                            13
 #define CSR_PLLLOCKPHSEL_MASK                           GENMASK_32(14, 13)
 #define CSR_PLLSPARECTRL0_LSB                           15
-#define CSR_PLLSPARECTRL0_MASK                          BIT(15)
+#define CSR_PLLSPARECTRL0_MASK                          DDR_BIT(15)
 /* CSR_PLLCTRL1 */
 #define CSR_PLLCTRL1_LSB                                0
 #define CSR_PLLCTRL1_MASK                               GENMASK_32(8, 0)
@@ -2411,14 +2411,14 @@
 #define CSR_PLLTST_LSB                                  0
 #define CSR_PLLTST_MASK                                 GENMASK_32(8, 0)
 #define CSR_PLLANATSTEN_LSB                             0
-#define CSR_PLLANATSTEN_MASK                            BIT(0)
+#define CSR_PLLANATSTEN_MASK                            DDR_BIT(0)
 #define CSR_PLLANATSTSEL_LSB                            1
 #define CSR_PLLANATSTSEL_MASK                           GENMASK_32(4, 1)
 #define CSR_PLLDIGTSTSEL_LSB                            5
 #define CSR_PLLDIGTSTSEL_MASK                           GENMASK_32(8, 5)
 /* CSR_PLLLOCKSTATUS */
 #define CSR_PLLLOCKSTATUS_LSB                           0
-#define CSR_PLLLOCKSTATUS_MASK                          BIT(0)
+#define CSR_PLLLOCKSTATUS_MASK                          DDR_BIT(0)
 /* CSR_PLLTESTMODE */
 #define CSR_PLLTESTMODE_LSB                             0
 #define CSR_PLLTESTMODE_MASK                            GENMASK_32(15, 0)
@@ -2432,9 +2432,9 @@
 #define CSR_PLLDACVALIN_LSB                             9
 #define CSR_PLLDACVALIN_MASK                            GENMASK_32(13, 9)
 #define CSR_PLLFORCECAL_LSB                             14
-#define CSR_PLLFORCECAL_MASK                            BIT(14)
+#define CSR_PLLFORCECAL_MASK                            DDR_BIT(14)
 #define CSR_PLLENCAL_LSB                                15
-#define CSR_PLLENCAL_MASK                               BIT(15)
+#define CSR_PLLENCAL_MASK                               DDR_BIT(15)
 /* CSR_PLLCTRL4 */
 #define CSR_PLLCTRL4_LSB                                0
 #define CSR_PLLCTRL4_MASK                               GENMASK_32(8, 0)
@@ -2444,10 +2444,10 @@
 #define CSR_PLLCPPROPGSCTRL_MASK                        GENMASK_32(8, 5)
 /* CSR_PLLENDOFCAL */
 #define CSR_PLLENDOFCAL_LSB                             0
-#define CSR_PLLENDOFCAL_MASK                            BIT(0)
+#define CSR_PLLENDOFCAL_MASK                            DDR_BIT(0)
 /* CSR_PLLSTANDBYEFF */
 #define CSR_PLLSTANDBYEFF_LSB                           0
-#define CSR_PLLSTANDBYEFF_MASK                          BIT(0)
+#define CSR_PLLSTANDBYEFF_MASK                          DDR_BIT(0)
 /* CSR_PLLDACVALOUT */
 #define CSR_PLLDACVALOUT_LSB                            0
 #define CSR_PLLDACVALOUT_MASK                           GENMASK_32(4, 0)
@@ -2455,13 +2455,13 @@
 #define CSR_DLYTESTSEQ_LSB                              0
 #define CSR_DLYTESTSEQ_MASK                             GENMASK_32(5, 0)
 #define CSR_DLYTESTEN_LSB                               0
-#define CSR_DLYTESTEN_MASK                              BIT(0)
+#define CSR_DLYTESTEN_MASK                              DDR_BIT(0)
 #define CSR_DLYTESTCNTINIT_LSB                          1
-#define CSR_DLYTESTCNTINIT_MASK                         BIT(1)
+#define CSR_DLYTESTCNTINIT_MASK                         DDR_BIT(1)
 #define CSR_DLYTESTENOVERRIDE1_LSB                      2
-#define CSR_DLYTESTENOVERRIDE1_MASK                     BIT(2)
+#define CSR_DLYTESTENOVERRIDE1_MASK                     DDR_BIT(2)
 #define CSR_DLYTESTENOVERRIDE2_LSB                      3
-#define CSR_DLYTESTENOVERRIDE2_MASK                     BIT(3)
+#define CSR_DLYTESTENOVERRIDE2_MASK                     DDR_BIT(3)
 #define CSR_SYNCDLYMULTIPLIER_LSB                       4
 #define CSR_SYNCDLYMULTIPLIER_MASK                      GENMASK_32(5, 4)
 /* CSR_DLYTESTRINGSELDB */
@@ -2519,48 +2519,48 @@
 #define CSR_MSTLCDLFINEOVRVAL_LSB                       0
 #define CSR_MSTLCDLFINEOVRVAL_MASK                      GENMASK_32(8, 0)
 #define CSR_MSTLCDLFINEOVR_LSB                          9
-#define CSR_MSTLCDLFINEOVR_MASK                         BIT(9)
+#define CSR_MSTLCDLFINEOVR_MASK                         DDR_BIT(9)
 #define CSR_MSTLCDLFINESNAP_LSB                         10
-#define CSR_MSTLCDLFINESNAP_MASK                        BIT(10)
+#define CSR_MSTLCDLFINESNAP_MASK                        DDR_BIT(10)
 #define CSR_MSTLCDLTSTENABLE_LSB                        11
-#define CSR_MSTLCDLTSTENABLE_MASK                       BIT(11)
+#define CSR_MSTLCDLTSTENABLE_MASK                       DDR_BIT(11)
 /* CSR_MSTLCDL0DBGRES */
 #define CSR_MSTLCDL0DBGRES_LSB                          0
 #define CSR_MSTLCDL0DBGRES_MASK                         GENMASK_32(12, 0)
 #define CSR_MSTLCDL0FINESNAPVAL_LSB                     0
 #define CSR_MSTLCDL0FINESNAPVAL_MASK                    GENMASK_32(8, 0)
 #define CSR_MSTLCDL0PHDSNAPVAL_LSB                      9
-#define CSR_MSTLCDL0PHDSNAPVAL_MASK                     BIT(9)
+#define CSR_MSTLCDL0PHDSNAPVAL_MASK                     DDR_BIT(9)
 #define CSR_MSTLCDL0STICKYLOCK_LSB                      10
-#define CSR_MSTLCDL0STICKYLOCK_MASK                     BIT(10)
+#define CSR_MSTLCDL0STICKYLOCK_MASK                     DDR_BIT(10)
 #define CSR_MSTLCDL0STICKYUNLOCK_LSB                    11
-#define CSR_MSTLCDL0STICKYUNLOCK_MASK                   BIT(11)
+#define CSR_MSTLCDL0STICKYUNLOCK_MASK                   DDR_BIT(11)
 #define CSR_MSTLCDL0LIVELOCK_LSB                        12
-#define CSR_MSTLCDL0LIVELOCK_MASK                       BIT(12)
+#define CSR_MSTLCDL0LIVELOCK_MASK                       DDR_BIT(12)
 /* CSR_MSTLCDL1DBGRES */
 #define CSR_MSTLCDL1DBGRES_LSB                          0
 #define CSR_MSTLCDL1DBGRES_MASK                         GENMASK_32(12, 0)
 #define CSR_MSTLCDL1FINESNAPVAL_LSB                     0
 #define CSR_MSTLCDL1FINESNAPVAL_MASK                    GENMASK_32(8, 0)
 #define CSR_MSTLCDL1PHDSNAPVAL_LSB                      9
-#define CSR_MSTLCDL1PHDSNAPVAL_MASK                     BIT(9)
+#define CSR_MSTLCDL1PHDSNAPVAL_MASK                     DDR_BIT(9)
 #define CSR_MSTLCDL1STICKYLOCK_LSB                      10
-#define CSR_MSTLCDL1STICKYLOCK_MASK                     BIT(10)
+#define CSR_MSTLCDL1STICKYLOCK_MASK                     DDR_BIT(10)
 #define CSR_MSTLCDL1STICKYUNLOCK_LSB                    11
-#define CSR_MSTLCDL1STICKYUNLOCK_MASK                   BIT(11)
+#define CSR_MSTLCDL1STICKYUNLOCK_MASK                   DDR_BIT(11)
 #define CSR_MSTLCDL1LIVELOCK_LSB                        12
-#define CSR_MSTLCDL1LIVELOCK_MASK                       BIT(12)
+#define CSR_MSTLCDL1LIVELOCK_MASK                       DDR_BIT(12)
 /* CSR_LCDLDBGCNTL */
 #define CSR_LCDLDBGCNTL_LSB                             0
 #define CSR_LCDLDBGCNTL_MASK                            GENMASK_32(15, 0)
 #define CSR_LCDLFINEOVRVAL_LSB                          0
 #define CSR_LCDLFINEOVRVAL_MASK                         GENMASK_32(8, 0)
 #define CSR_LCDLFINEOVR_LSB                             9
-#define CSR_LCDLFINEOVR_MASK                            BIT(9)
+#define CSR_LCDLFINEOVR_MASK                            DDR_BIT(9)
 #define CSR_LCDLFINESNAP_LSB                            10
-#define CSR_LCDLFINESNAP_MASK                           BIT(10)
+#define CSR_LCDLFINESNAP_MASK                           DDR_BIT(10)
 #define CSR_LCDLTSTENABLE_LSB                           11
-#define CSR_LCDLTSTENABLE_MASK                          BIT(11)
+#define CSR_LCDLTSTENABLE_MASK                          DDR_BIT(11)
 #define CSR_LCDLSTATUSSEL_LSB                           12
 #define CSR_LCDLSTATUSSEL_MASK                          GENMASK_32(15, 12)
 /* CSR_ACLCDLSTATUS */
@@ -2569,13 +2569,13 @@
 #define CSR_ACLCDLFINESNAPVAL_LSB                       0
 #define CSR_ACLCDLFINESNAPVAL_MASK                      GENMASK_32(9, 0)
 #define CSR_ACLCDLPHDSNAPVAL_LSB                        10
-#define CSR_ACLCDLPHDSNAPVAL_MASK                       BIT(10)
+#define CSR_ACLCDLPHDSNAPVAL_MASK                       DDR_BIT(10)
 #define CSR_ACLCDLSTICKYLOCK_LSB                        11
-#define CSR_ACLCDLSTICKYLOCK_MASK                       BIT(11)
+#define CSR_ACLCDLSTICKYLOCK_MASK                       DDR_BIT(11)
 #define CSR_ACLCDLSTICKYUNLOCK_LSB                      12
-#define CSR_ACLCDLSTICKYUNLOCK_MASK                     BIT(12)
+#define CSR_ACLCDLSTICKYUNLOCK_MASK                     DDR_BIT(12)
 #define CSR_ACLCDLLIVELOCK_LSB                          13
-#define CSR_ACLCDLLIVELOCK_MASK                         BIT(13)
+#define CSR_ACLCDLLIVELOCK_MASK                         DDR_BIT(13)
 /* CSR_CUSTPHYREV */
 #define CSR_CUSTPHYREV_LSB                              0
 #define CSR_CUSTPHYREV_MASK                             GENMASK_32(5, 0)
@@ -2685,23 +2685,23 @@
 #define CSR_DFIFREQXLATVAL31_MASK                       GENMASK_32(15, 12)
 /* CSR_TXRDPTRINIT */
 #define CSR_TXRDPTRINIT_LSB                             0
-#define CSR_TXRDPTRINIT_MASK                            BIT(0)
+#define CSR_TXRDPTRINIT_MASK                            DDR_BIT(0)
 /* CSR_DFIINITCOMPLETE */
 #define CSR_DFIINITCOMPLETE_LSB                         0
-#define CSR_DFIINITCOMPLETE_MASK                        BIT(0)
+#define CSR_DFIINITCOMPLETE_MASK                        DDR_BIT(0)
 /* CSR_DFIFREQRATIO */
 #define CSR_DFIFREQRATIO_LSB                            0
 #define CSR_DFIFREQRATIO_MASK                           GENMASK_32(1, 0)
 /* CSR_RXFIFOCHECKS */
 #define CSR_RXFIFOCHECKS_LSB                            0
-#define CSR_RXFIFOCHECKS_MASK                           BIT(0)
+#define CSR_RXFIFOCHECKS_MASK                           DDR_BIT(0)
 #define CSR_DOFREQUENTRXFIFOCHECKS_LSB                  0
-#define CSR_DOFREQUENTRXFIFOCHECKS_MASK                 BIT(0)
+#define CSR_DOFREQUENTRXFIFOCHECKS_MASK                 DDR_BIT(0)
 /* CSR_MTESTDTOCTRL */
 #define CSR_MTESTDTOCTRL_LSB                            0
-#define CSR_MTESTDTOCTRL_MASK                           BIT(0)
+#define CSR_MTESTDTOCTRL_MASK                           DDR_BIT(0)
 #define CSR_MTESTDTOEN_LSB                              0
-#define CSR_MTESTDTOEN_MASK                             BIT(0)
+#define CSR_MTESTDTOEN_MASK                             DDR_BIT(0)
 /* CSR_MAPCAA0TODFI */
 #define CSR_MAPCAA0TODFI_LSB                            0
 #define CSR_MAPCAA0TODFI_MASK                           GENMASK_32(3, 0)
@@ -2766,79 +2766,79 @@
 #define CSR_PHYINTERRUPTENABLE_LSB                      0
 #define CSR_PHYINTERRUPTENABLE_MASK                     GENMASK_32(15, 0)
 #define CSR_PHYTRNGCMPLTEN_LSB                          0
-#define CSR_PHYTRNGCMPLTEN_MASK                         BIT(0)
+#define CSR_PHYTRNGCMPLTEN_MASK                         DDR_BIT(0)
 #define CSR_PHYINITCMPLTEN_LSB                          1
-#define CSR_PHYINITCMPLTEN_MASK                         BIT(1)
+#define CSR_PHYINITCMPLTEN_MASK                         DDR_BIT(1)
 #define CSR_PHYTRNGFAILEN_LSB                           2
-#define CSR_PHYTRNGFAILEN_MASK                          BIT(2)
+#define CSR_PHYTRNGFAILEN_MASK                          DDR_BIT(2)
 #define CSR_PHYFWRESERVEDEN_LSB                         3
 #define CSR_PHYFWRESERVEDEN_MASK                        GENMASK_32(7, 3)
 #define CSR_PHYVTDRIFTALARMEN_LSB                       8
 #define CSR_PHYVTDRIFTALARMEN_MASK                      GENMASK_32(9, 8)
 #define CSR_PHYRXFIFOCHECKEN_LSB                        10
-#define CSR_PHYRXFIFOCHECKEN_MASK                       BIT(10)
+#define CSR_PHYRXFIFOCHECKEN_MASK                       DDR_BIT(10)
 #define CSR_PHYHWRESERVEDEN_LSB                         11
 #define CSR_PHYHWRESERVEDEN_MASK                        GENMASK_32(15, 11)
 /* CSR_PHYINTERRUPTFWCONTROL */
 #define CSR_PHYINTERRUPTFWCONTROL_LSB                   0
 #define CSR_PHYINTERRUPTFWCONTROL_MASK                  GENMASK_32(7, 0)
 #define CSR_PHYTRNGCMPLTFW_LSB                          0
-#define CSR_PHYTRNGCMPLTFW_MASK                         BIT(0)
+#define CSR_PHYTRNGCMPLTFW_MASK                         DDR_BIT(0)
 #define CSR_PHYINITCMPLTFW_LSB                          1
-#define CSR_PHYINITCMPLTFW_MASK                         BIT(1)
+#define CSR_PHYINITCMPLTFW_MASK                         DDR_BIT(1)
 #define CSR_PHYTRNGFAILFW_LSB                           2
-#define CSR_PHYTRNGFAILFW_MASK                          BIT(2)
+#define CSR_PHYTRNGFAILFW_MASK                          DDR_BIT(2)
 #define CSR_PHYFWRESERVEDFW_LSB                         3
 #define CSR_PHYFWRESERVEDFW_MASK                        GENMASK_32(7, 3)
 /* CSR_PHYINTERRUPTMASK */
 #define CSR_PHYINTERRUPTMASK_LSB                        0
 #define CSR_PHYINTERRUPTMASK_MASK                       GENMASK_32(15, 0)
 #define CSR_PHYTRNGCMPLTMSK_LSB                         0
-#define CSR_PHYTRNGCMPLTMSK_MASK                        BIT(0)
+#define CSR_PHYTRNGCMPLTMSK_MASK                        DDR_BIT(0)
 #define CSR_PHYINITCMPLTMSK_LSB                         1
-#define CSR_PHYINITCMPLTMSK_MASK                        BIT(1)
+#define CSR_PHYINITCMPLTMSK_MASK                        DDR_BIT(1)
 #define CSR_PHYTRNGFAILMSK_LSB                          2
-#define CSR_PHYTRNGFAILMSK_MASK                         BIT(2)
+#define CSR_PHYTRNGFAILMSK_MASK                         DDR_BIT(2)
 #define CSR_PHYFWRESERVEDMSK_LSB                        3
 #define CSR_PHYFWRESERVEDMSK_MASK                       GENMASK_32(7, 3)
 #define CSR_PHYVTDRIFTALARMMSK_LSB                      8
 #define CSR_PHYVTDRIFTALARMMSK_MASK                     GENMASK_32(9, 8)
 #define CSR_PHYRXFIFOCHECKMSK_LSB                       10
-#define CSR_PHYRXFIFOCHECKMSK_MASK                      BIT(10)
+#define CSR_PHYRXFIFOCHECKMSK_MASK                      DDR_BIT(10)
 #define CSR_PHYHWRESERVEDMSK_LSB                        11
 #define CSR_PHYHWRESERVEDMSK_MASK                       GENMASK_32(15, 11)
 /* CSR_PHYINTERRUPTCLEAR */
 #define CSR_PHYINTERRUPTCLEAR_LSB                       0
 #define CSR_PHYINTERRUPTCLEAR_MASK                      GENMASK_32(15, 0)
 #define CSR_PHYTRNGCMPLTCLR_LSB                         0
-#define CSR_PHYTRNGCMPLTCLR_MASK                        BIT(0)
+#define CSR_PHYTRNGCMPLTCLR_MASK                        DDR_BIT(0)
 #define CSR_PHYINITCMPLTCLR_LSB                         1
-#define CSR_PHYINITCMPLTCLR_MASK                        BIT(1)
+#define CSR_PHYINITCMPLTCLR_MASK                        DDR_BIT(1)
 #define CSR_PHYTRNGFAILCLR_LSB                          2
-#define CSR_PHYTRNGFAILCLR_MASK                         BIT(2)
+#define CSR_PHYTRNGFAILCLR_MASK                         DDR_BIT(2)
 #define CSR_PHYFWRESERVEDCLR_LSB                        3
 #define CSR_PHYFWRESERVEDCLR_MASK                       GENMASK_32(7, 3)
 #define CSR_PHYVTDRIFTALARMCLR_LSB                      8
 #define CSR_PHYVTDRIFTALARMCLR_MASK                     GENMASK_32(9, 8)
 #define CSR_PHYRXFIFOCHECKCLR_LSB                       10
-#define CSR_PHYRXFIFOCHECKCLR_MASK                      BIT(10)
+#define CSR_PHYRXFIFOCHECKCLR_MASK                      DDR_BIT(10)
 #define CSR_PHYHWRESERVEDCLR_LSB                        11
 #define CSR_PHYHWRESERVEDCLR_MASK                       GENMASK_32(15, 11)
 /* CSR_PHYINTERRUPTSTATUS */
 #define CSR_PHYINTERRUPTSTATUS_LSB                      0
 #define CSR_PHYINTERRUPTSTATUS_MASK                     GENMASK_32(15, 0)
 #define CSR_PHYTRNGCMPLT_LSB                            0
-#define CSR_PHYTRNGCMPLT_MASK                           BIT(0)
+#define CSR_PHYTRNGCMPLT_MASK                           DDR_BIT(0)
 #define CSR_PHYINITCMPLT_LSB                            1
-#define CSR_PHYINITCMPLT_MASK                           BIT(1)
+#define CSR_PHYINITCMPLT_MASK                           DDR_BIT(1)
 #define CSR_PHYTRNGFAIL_LSB                             2
-#define CSR_PHYTRNGFAIL_MASK                            BIT(2)
+#define CSR_PHYTRNGFAIL_MASK                            DDR_BIT(2)
 #define CSR_PHYFWRESERVED_LSB                           3
 #define CSR_PHYFWRESERVED_MASK                          GENMASK_32(7, 3)
 #define CSR_VTDRIFTALARM_LSB                            8
 #define CSR_VTDRIFTALARM_MASK                           GENMASK_32(9, 8)
 #define CSR_PHYRXFIFOCHECK_LSB                          10
-#define CSR_PHYRXFIFOCHECK_MASK                         BIT(10)
+#define CSR_PHYRXFIFOCHECK_MASK                         DDR_BIT(10)
 #define CSR_PHYHWRESERVED_LSB                           11
 #define CSR_PHYHWRESERVED_MASK                          GENMASK_32(15, 11)
 /* CSR_HWTSWIZZLEHWTADDRESS0 */
@@ -2948,16 +2948,16 @@
 #define CSR_REMOTEIMPCAL_LSB                            0
 #define CSR_REMOTEIMPCAL_MASK                           GENMASK_32(1, 0)
 #define CSR_CALIBSLAVE_LSB                              0
-#define CSR_CALIBSLAVE_MASK                             BIT(0)
+#define CSR_CALIBSLAVE_MASK                             DDR_BIT(0)
 #define CSR_SLAVECODEUPDATED_LSB                        1
-#define CSR_SLAVECODEUPDATED_MASK                       BIT(1)
+#define CSR_SLAVECODEUPDATED_MASK                       DDR_BIT(1)
 /* CSR_ACLOOPBACKCTL */
 #define CSR_ACLOOPBACKCTL_LSB                           0
 #define CSR_ACLOOPBACKCTL_MASK                          GENMASK_32(1, 0)
 #define CSR_TERMINATION_LSB                             0
-#define CSR_TERMINATION_MASK                            BIT(0)
+#define CSR_TERMINATION_MASK                            DDR_BIT(0)
 #define CSR_NOISECANCEL_LSB                             1
-#define CSR_NOISECANCEL_MASK                            BIT(1)
+#define CSR_NOISECANCEL_MASK                            DDR_BIT(1)
 
 /* ACSM0 register offsets */
 /* CSR_ACSMSEQ0X0 */
@@ -2966,685 +2966,685 @@
 #define CSR_ACSMMCLKDLY0_LSB                            0
 #define CSR_ACSMMCLKDLY0_MASK                           GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE0_LSB                              8
-#define CSR_ACSMDDRWE0_MASK                             BIT(8)
+#define CSR_ACSMDDRWE0_MASK                             DDR_BIT(8)
 #define CSR_ACSMDDRCAS0_LSB                             9
-#define CSR_ACSMDDRCAS0_MASK                            BIT(9)
+#define CSR_ACSMDDRCAS0_MASK                            DDR_BIT(9)
 #define CSR_ACSMDDRRAS0_LSB                             10
-#define CSR_ACSMDDRRAS0_MASK                            BIT(10)
+#define CSR_ACSMDDRRAS0_MASK                            DDR_BIT(10)
 #define CSR_ACSMDDRCKESET0_LSB                          11
-#define CSR_ACSMDDRCKESET0_MASK                         BIT(11)
+#define CSR_ACSMDDRCKESET0_MASK                         DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR0_LSB                          12
-#define CSR_ACSMDDRCKECLR0_MASK                         BIT(12)
+#define CSR_ACSMDDRCKECLR0_MASK                         DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD0_LSB                         13
-#define CSR_ACSMSEQGATECMD0_MASK                        BIT(13)
+#define CSR_ACSMSEQGATECMD0_MASK                        DDR_BIT(13)
 #define CSR_ACSMSEQTERM0_LSB                            14
-#define CSR_ACSMSEQTERM0_MASK                           BIT(14)
+#define CSR_ACSMSEQTERM0_MASK                           DDR_BIT(14)
 #define CSR_ACSMLP3CA30_LSB                             15
-#define CSR_ACSMLP3CA30_MASK                            BIT(15)
+#define CSR_ACSMLP3CA30_MASK                            DDR_BIT(15)
 /* CSR_ACSMSEQ0X1 */
 #define CSR_ACSMSEQ0X1_LSB                              0
 #define CSR_ACSMSEQ0X1_MASK                             GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY1_LSB                            0
 #define CSR_ACSMMCLKDLY1_MASK                           GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE1_LSB                              8
-#define CSR_ACSMDDRWE1_MASK                             BIT(8)
+#define CSR_ACSMDDRWE1_MASK                             DDR_BIT(8)
 #define CSR_ACSMDDRCAS1_LSB                             9
-#define CSR_ACSMDDRCAS1_MASK                            BIT(9)
+#define CSR_ACSMDDRCAS1_MASK                            DDR_BIT(9)
 #define CSR_ACSMDDRRAS1_LSB                             10
-#define CSR_ACSMDDRRAS1_MASK                            BIT(10)
+#define CSR_ACSMDDRRAS1_MASK                            DDR_BIT(10)
 #define CSR_ACSMDDRCKESET1_LSB                          11
-#define CSR_ACSMDDRCKESET1_MASK                         BIT(11)
+#define CSR_ACSMDDRCKESET1_MASK                         DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR1_LSB                          12
-#define CSR_ACSMDDRCKECLR1_MASK                         BIT(12)
+#define CSR_ACSMDDRCKECLR1_MASK                         DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD1_LSB                         13
-#define CSR_ACSMSEQGATECMD1_MASK                        BIT(13)
+#define CSR_ACSMSEQGATECMD1_MASK                        DDR_BIT(13)
 #define CSR_ACSMSEQTERM1_LSB                            14
-#define CSR_ACSMSEQTERM1_MASK                           BIT(14)
+#define CSR_ACSMSEQTERM1_MASK                           DDR_BIT(14)
 #define CSR_ACSMLP3CA31_LSB                             15
-#define CSR_ACSMLP3CA31_MASK                            BIT(15)
+#define CSR_ACSMLP3CA31_MASK                            DDR_BIT(15)
 /* CSR_ACSMSEQ0X2 */
 #define CSR_ACSMSEQ0X2_LSB                              0
 #define CSR_ACSMSEQ0X2_MASK                             GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY2_LSB                            0
 #define CSR_ACSMMCLKDLY2_MASK                           GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE2_LSB                              8
-#define CSR_ACSMDDRWE2_MASK                             BIT(8)
+#define CSR_ACSMDDRWE2_MASK                             DDR_BIT(8)
 #define CSR_ACSMDDRCAS2_LSB                             9
-#define CSR_ACSMDDRCAS2_MASK                            BIT(9)
+#define CSR_ACSMDDRCAS2_MASK                            DDR_BIT(9)
 #define CSR_ACSMDDRRAS2_LSB                             10
-#define CSR_ACSMDDRRAS2_MASK                            BIT(10)
+#define CSR_ACSMDDRRAS2_MASK                            DDR_BIT(10)
 #define CSR_ACSMDDRCKESET2_LSB                          11
-#define CSR_ACSMDDRCKESET2_MASK                         BIT(11)
+#define CSR_ACSMDDRCKESET2_MASK                         DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR2_LSB                          12
-#define CSR_ACSMDDRCKECLR2_MASK                         BIT(12)
+#define CSR_ACSMDDRCKECLR2_MASK                         DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD2_LSB                         13
-#define CSR_ACSMSEQGATECMD2_MASK                        BIT(13)
+#define CSR_ACSMSEQGATECMD2_MASK                        DDR_BIT(13)
 #define CSR_ACSMSEQTERM2_LSB                            14
-#define CSR_ACSMSEQTERM2_MASK                           BIT(14)
+#define CSR_ACSMSEQTERM2_MASK                           DDR_BIT(14)
 #define CSR_ACSMLP3CA32_LSB                             15
-#define CSR_ACSMLP3CA32_MASK                            BIT(15)
+#define CSR_ACSMLP3CA32_MASK                            DDR_BIT(15)
 /* CSR_ACSMSEQ0X3 */
 #define CSR_ACSMSEQ0X3_LSB                              0
 #define CSR_ACSMSEQ0X3_MASK                             GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY3_LSB                            0
 #define CSR_ACSMMCLKDLY3_MASK                           GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE3_LSB                              8
-#define CSR_ACSMDDRWE3_MASK                             BIT(8)
+#define CSR_ACSMDDRWE3_MASK                             DDR_BIT(8)
 #define CSR_ACSMDDRCAS3_LSB                             9
-#define CSR_ACSMDDRCAS3_MASK                            BIT(9)
+#define CSR_ACSMDDRCAS3_MASK                            DDR_BIT(9)
 #define CSR_ACSMDDRRAS3_LSB                             10
-#define CSR_ACSMDDRRAS3_MASK                            BIT(10)
+#define CSR_ACSMDDRRAS3_MASK                            DDR_BIT(10)
 #define CSR_ACSMDDRCKESET3_LSB                          11
-#define CSR_ACSMDDRCKESET3_MASK                         BIT(11)
+#define CSR_ACSMDDRCKESET3_MASK                         DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR3_LSB                          12
-#define CSR_ACSMDDRCKECLR3_MASK                         BIT(12)
+#define CSR_ACSMDDRCKECLR3_MASK                         DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD3_LSB                         13
-#define CSR_ACSMSEQGATECMD3_MASK                        BIT(13)
+#define CSR_ACSMSEQGATECMD3_MASK                        DDR_BIT(13)
 #define CSR_ACSMSEQTERM3_LSB                            14
-#define CSR_ACSMSEQTERM3_MASK                           BIT(14)
+#define CSR_ACSMSEQTERM3_MASK                           DDR_BIT(14)
 #define CSR_ACSMLP3CA33_LSB                             15
-#define CSR_ACSMLP3CA33_MASK                            BIT(15)
+#define CSR_ACSMLP3CA33_MASK                            DDR_BIT(15)
 /* CSR_ACSMSEQ0X4 */
 #define CSR_ACSMSEQ0X4_LSB                              0
 #define CSR_ACSMSEQ0X4_MASK                             GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY4_LSB                            0
 #define CSR_ACSMMCLKDLY4_MASK                           GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE4_LSB                              8
-#define CSR_ACSMDDRWE4_MASK                             BIT(8)
+#define CSR_ACSMDDRWE4_MASK                             DDR_BIT(8)
 #define CSR_ACSMDDRCAS4_LSB                             9
-#define CSR_ACSMDDRCAS4_MASK                            BIT(9)
+#define CSR_ACSMDDRCAS4_MASK                            DDR_BIT(9)
 #define CSR_ACSMDDRRAS4_LSB                             10
-#define CSR_ACSMDDRRAS4_MASK                            BIT(10)
+#define CSR_ACSMDDRRAS4_MASK                            DDR_BIT(10)
 #define CSR_ACSMDDRCKESET4_LSB                          11
-#define CSR_ACSMDDRCKESET4_MASK                         BIT(11)
+#define CSR_ACSMDDRCKESET4_MASK                         DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR4_LSB                          12
-#define CSR_ACSMDDRCKECLR4_MASK                         BIT(12)
+#define CSR_ACSMDDRCKECLR4_MASK                         DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD4_LSB                         13
-#define CSR_ACSMSEQGATECMD4_MASK                        BIT(13)
+#define CSR_ACSMSEQGATECMD4_MASK                        DDR_BIT(13)
 #define CSR_ACSMSEQTERM4_LSB                            14
-#define CSR_ACSMSEQTERM4_MASK                           BIT(14)
+#define CSR_ACSMSEQTERM4_MASK                           DDR_BIT(14)
 #define CSR_ACSMLP3CA34_LSB                             15
-#define CSR_ACSMLP3CA34_MASK                            BIT(15)
+#define CSR_ACSMLP3CA34_MASK                            DDR_BIT(15)
 /* CSR_ACSMSEQ0X5 */
 #define CSR_ACSMSEQ0X5_LSB                              0
 #define CSR_ACSMSEQ0X5_MASK                             GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY5_LSB                            0
 #define CSR_ACSMMCLKDLY5_MASK                           GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE5_LSB                              8
-#define CSR_ACSMDDRWE5_MASK                             BIT(8)
+#define CSR_ACSMDDRWE5_MASK                             DDR_BIT(8)
 #define CSR_ACSMDDRCAS5_LSB                             9
-#define CSR_ACSMDDRCAS5_MASK                            BIT(9)
+#define CSR_ACSMDDRCAS5_MASK                            DDR_BIT(9)
 #define CSR_ACSMDDRRAS5_LSB                             10
-#define CSR_ACSMDDRRAS5_MASK                            BIT(10)
+#define CSR_ACSMDDRRAS5_MASK                            DDR_BIT(10)
 #define CSR_ACSMDDRCKESET5_LSB                          11
-#define CSR_ACSMDDRCKESET5_MASK                         BIT(11)
+#define CSR_ACSMDDRCKESET5_MASK                         DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR5_LSB                          12
-#define CSR_ACSMDDRCKECLR5_MASK                         BIT(12)
+#define CSR_ACSMDDRCKECLR5_MASK                         DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD5_LSB                         13
-#define CSR_ACSMSEQGATECMD5_MASK                        BIT(13)
+#define CSR_ACSMSEQGATECMD5_MASK                        DDR_BIT(13)
 #define CSR_ACSMSEQTERM5_LSB                            14
-#define CSR_ACSMSEQTERM5_MASK                           BIT(14)
+#define CSR_ACSMSEQTERM5_MASK                           DDR_BIT(14)
 #define CSR_ACSMLP3CA35_LSB                             15
-#define CSR_ACSMLP3CA35_MASK                            BIT(15)
+#define CSR_ACSMLP3CA35_MASK                            DDR_BIT(15)
 /* CSR_ACSMSEQ0X6 */
 #define CSR_ACSMSEQ0X6_LSB                              0
 #define CSR_ACSMSEQ0X6_MASK                             GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY6_LSB                            0
 #define CSR_ACSMMCLKDLY6_MASK                           GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE6_LSB                              8
-#define CSR_ACSMDDRWE6_MASK                             BIT(8)
+#define CSR_ACSMDDRWE6_MASK                             DDR_BIT(8)
 #define CSR_ACSMDDRCAS6_LSB                             9
-#define CSR_ACSMDDRCAS6_MASK                            BIT(9)
+#define CSR_ACSMDDRCAS6_MASK                            DDR_BIT(9)
 #define CSR_ACSMDDRRAS6_LSB                             10
-#define CSR_ACSMDDRRAS6_MASK                            BIT(10)
+#define CSR_ACSMDDRRAS6_MASK                            DDR_BIT(10)
 #define CSR_ACSMDDRCKESET6_LSB                          11
-#define CSR_ACSMDDRCKESET6_MASK                         BIT(11)
+#define CSR_ACSMDDRCKESET6_MASK                         DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR6_LSB                          12
-#define CSR_ACSMDDRCKECLR6_MASK                         BIT(12)
+#define CSR_ACSMDDRCKECLR6_MASK                         DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD6_LSB                         13
-#define CSR_ACSMSEQGATECMD6_MASK                        BIT(13)
+#define CSR_ACSMSEQGATECMD6_MASK                        DDR_BIT(13)
 #define CSR_ACSMSEQTERM6_LSB                            14
-#define CSR_ACSMSEQTERM6_MASK                           BIT(14)
+#define CSR_ACSMSEQTERM6_MASK                           DDR_BIT(14)
 #define CSR_ACSMLP3CA36_LSB                             15
-#define CSR_ACSMLP3CA36_MASK                            BIT(15)
+#define CSR_ACSMLP3CA36_MASK                            DDR_BIT(15)
 /* CSR_ACSMSEQ0X7 */
 #define CSR_ACSMSEQ0X7_LSB                              0
 #define CSR_ACSMSEQ0X7_MASK                             GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY7_LSB                            0
 #define CSR_ACSMMCLKDLY7_MASK                           GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE7_LSB                              8
-#define CSR_ACSMDDRWE7_MASK                             BIT(8)
+#define CSR_ACSMDDRWE7_MASK                             DDR_BIT(8)
 #define CSR_ACSMDDRCAS7_LSB                             9
-#define CSR_ACSMDDRCAS7_MASK                            BIT(9)
+#define CSR_ACSMDDRCAS7_MASK                            DDR_BIT(9)
 #define CSR_ACSMDDRRAS7_LSB                             10
-#define CSR_ACSMDDRRAS7_MASK                            BIT(10)
+#define CSR_ACSMDDRRAS7_MASK                            DDR_BIT(10)
 #define CSR_ACSMDDRCKESET7_LSB                          11
-#define CSR_ACSMDDRCKESET7_MASK                         BIT(11)
+#define CSR_ACSMDDRCKESET7_MASK                         DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR7_LSB                          12
-#define CSR_ACSMDDRCKECLR7_MASK                         BIT(12)
+#define CSR_ACSMDDRCKECLR7_MASK                         DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD7_LSB                         13
-#define CSR_ACSMSEQGATECMD7_MASK                        BIT(13)
+#define CSR_ACSMSEQGATECMD7_MASK                        DDR_BIT(13)
 #define CSR_ACSMSEQTERM7_LSB                            14
-#define CSR_ACSMSEQTERM7_MASK                           BIT(14)
+#define CSR_ACSMSEQTERM7_MASK                           DDR_BIT(14)
 #define CSR_ACSMLP3CA37_LSB                             15
-#define CSR_ACSMLP3CA37_MASK                            BIT(15)
+#define CSR_ACSMLP3CA37_MASK                            DDR_BIT(15)
 /* CSR_ACSMSEQ0X8 */
 #define CSR_ACSMSEQ0X8_LSB                              0
 #define CSR_ACSMSEQ0X8_MASK                             GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY8_LSB                            0
 #define CSR_ACSMMCLKDLY8_MASK                           GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE8_LSB                              8
-#define CSR_ACSMDDRWE8_MASK                             BIT(8)
+#define CSR_ACSMDDRWE8_MASK                             DDR_BIT(8)
 #define CSR_ACSMDDRCAS8_LSB                             9
-#define CSR_ACSMDDRCAS8_MASK                            BIT(9)
+#define CSR_ACSMDDRCAS8_MASK                            DDR_BIT(9)
 #define CSR_ACSMDDRRAS8_LSB                             10
-#define CSR_ACSMDDRRAS8_MASK                            BIT(10)
+#define CSR_ACSMDDRRAS8_MASK                            DDR_BIT(10)
 #define CSR_ACSMDDRCKESET8_LSB                          11
-#define CSR_ACSMDDRCKESET8_MASK                         BIT(11)
+#define CSR_ACSMDDRCKESET8_MASK                         DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR8_LSB                          12
-#define CSR_ACSMDDRCKECLR8_MASK                         BIT(12)
+#define CSR_ACSMDDRCKECLR8_MASK                         DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD8_LSB                         13
-#define CSR_ACSMSEQGATECMD8_MASK                        BIT(13)
+#define CSR_ACSMSEQGATECMD8_MASK                        DDR_BIT(13)
 #define CSR_ACSMSEQTERM8_LSB                            14
-#define CSR_ACSMSEQTERM8_MASK                           BIT(14)
+#define CSR_ACSMSEQTERM8_MASK                           DDR_BIT(14)
 #define CSR_ACSMLP3CA38_LSB                             15
-#define CSR_ACSMLP3CA38_MASK                            BIT(15)
+#define CSR_ACSMLP3CA38_MASK                            DDR_BIT(15)
 /* CSR_ACSMSEQ0X9 */
 #define CSR_ACSMSEQ0X9_LSB                              0
 #define CSR_ACSMSEQ0X9_MASK                             GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY9_LSB                            0
 #define CSR_ACSMMCLKDLY9_MASK                           GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE9_LSB                              8
-#define CSR_ACSMDDRWE9_MASK                             BIT(8)
+#define CSR_ACSMDDRWE9_MASK                             DDR_BIT(8)
 #define CSR_ACSMDDRCAS9_LSB                             9
-#define CSR_ACSMDDRCAS9_MASK                            BIT(9)
+#define CSR_ACSMDDRCAS9_MASK                            DDR_BIT(9)
 #define CSR_ACSMDDRRAS9_LSB                             10
-#define CSR_ACSMDDRRAS9_MASK                            BIT(10)
+#define CSR_ACSMDDRRAS9_MASK                            DDR_BIT(10)
 #define CSR_ACSMDDRCKESET9_LSB                          11
-#define CSR_ACSMDDRCKESET9_MASK                         BIT(11)
+#define CSR_ACSMDDRCKESET9_MASK                         DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR9_LSB                          12
-#define CSR_ACSMDDRCKECLR9_MASK                         BIT(12)
+#define CSR_ACSMDDRCKECLR9_MASK                         DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD9_LSB                         13
-#define CSR_ACSMSEQGATECMD9_MASK                        BIT(13)
+#define CSR_ACSMSEQGATECMD9_MASK                        DDR_BIT(13)
 #define CSR_ACSMSEQTERM9_LSB                            14
-#define CSR_ACSMSEQTERM9_MASK                           BIT(14)
+#define CSR_ACSMSEQTERM9_MASK                           DDR_BIT(14)
 #define CSR_ACSMLP3CA39_LSB                             15
-#define CSR_ACSMLP3CA39_MASK                            BIT(15)
+#define CSR_ACSMLP3CA39_MASK                            DDR_BIT(15)
 /* CSR_ACSMSEQ0X10 */
 #define CSR_ACSMSEQ0X10_LSB                             0
 #define CSR_ACSMSEQ0X10_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY10_LSB                           0
 #define CSR_ACSMMCLKDLY10_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE10_LSB                             8
-#define CSR_ACSMDDRWE10_MASK                            BIT(8)
+#define CSR_ACSMDDRWE10_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS10_LSB                            9
-#define CSR_ACSMDDRCAS10_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS10_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS10_LSB                            10
-#define CSR_ACSMDDRRAS10_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS10_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET10_LSB                         11
-#define CSR_ACSMDDRCKESET10_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET10_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR10_LSB                         12
-#define CSR_ACSMDDRCKECLR10_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR10_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD10_LSB                        13
-#define CSR_ACSMSEQGATECMD10_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD10_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM10_LSB                           14
-#define CSR_ACSMSEQTERM10_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM10_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA310_LSB                            15
-#define CSR_ACSMLP3CA310_MASK                           BIT(15)
+#define CSR_ACSMLP3CA310_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X11 */
 #define CSR_ACSMSEQ0X11_LSB                             0
 #define CSR_ACSMSEQ0X11_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY11_LSB                           0
 #define CSR_ACSMMCLKDLY11_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE11_LSB                             8
-#define CSR_ACSMDDRWE11_MASK                            BIT(8)
+#define CSR_ACSMDDRWE11_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS11_LSB                            9
-#define CSR_ACSMDDRCAS11_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS11_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS11_LSB                            10
-#define CSR_ACSMDDRRAS11_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS11_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET11_LSB                         11
-#define CSR_ACSMDDRCKESET11_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET11_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR11_LSB                         12
-#define CSR_ACSMDDRCKECLR11_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR11_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD11_LSB                        13
-#define CSR_ACSMSEQGATECMD11_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD11_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM11_LSB                           14
-#define CSR_ACSMSEQTERM11_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM11_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA311_LSB                            15
-#define CSR_ACSMLP3CA311_MASK                           BIT(15)
+#define CSR_ACSMLP3CA311_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X12 */
 #define CSR_ACSMSEQ0X12_LSB                             0
 #define CSR_ACSMSEQ0X12_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY12_LSB                           0
 #define CSR_ACSMMCLKDLY12_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE12_LSB                             8
-#define CSR_ACSMDDRWE12_MASK                            BIT(8)
+#define CSR_ACSMDDRWE12_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS12_LSB                            9
-#define CSR_ACSMDDRCAS12_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS12_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS12_LSB                            10
-#define CSR_ACSMDDRRAS12_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS12_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET12_LSB                         11
-#define CSR_ACSMDDRCKESET12_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET12_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR12_LSB                         12
-#define CSR_ACSMDDRCKECLR12_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR12_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD12_LSB                        13
-#define CSR_ACSMSEQGATECMD12_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD12_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM12_LSB                           14
-#define CSR_ACSMSEQTERM12_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM12_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA312_LSB                            15
-#define CSR_ACSMLP3CA312_MASK                           BIT(15)
+#define CSR_ACSMLP3CA312_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X13 */
 #define CSR_ACSMSEQ0X13_LSB                             0
 #define CSR_ACSMSEQ0X13_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY13_LSB                           0
 #define CSR_ACSMMCLKDLY13_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE13_LSB                             8
-#define CSR_ACSMDDRWE13_MASK                            BIT(8)
+#define CSR_ACSMDDRWE13_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS13_LSB                            9
-#define CSR_ACSMDDRCAS13_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS13_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS13_LSB                            10
-#define CSR_ACSMDDRRAS13_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS13_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET13_LSB                         11
-#define CSR_ACSMDDRCKESET13_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET13_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR13_LSB                         12
-#define CSR_ACSMDDRCKECLR13_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR13_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD13_LSB                        13
-#define CSR_ACSMSEQGATECMD13_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD13_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM13_LSB                           14
-#define CSR_ACSMSEQTERM13_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM13_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA313_LSB                            15
-#define CSR_ACSMLP3CA313_MASK                           BIT(15)
+#define CSR_ACSMLP3CA313_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X14 */
 #define CSR_ACSMSEQ0X14_LSB                             0
 #define CSR_ACSMSEQ0X14_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY14_LSB                           0
 #define CSR_ACSMMCLKDLY14_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE14_LSB                             8
-#define CSR_ACSMDDRWE14_MASK                            BIT(8)
+#define CSR_ACSMDDRWE14_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS14_LSB                            9
-#define CSR_ACSMDDRCAS14_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS14_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS14_LSB                            10
-#define CSR_ACSMDDRRAS14_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS14_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET14_LSB                         11
-#define CSR_ACSMDDRCKESET14_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET14_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR14_LSB                         12
-#define CSR_ACSMDDRCKECLR14_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR14_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD14_LSB                        13
-#define CSR_ACSMSEQGATECMD14_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD14_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM14_LSB                           14
-#define CSR_ACSMSEQTERM14_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM14_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA314_LSB                            15
-#define CSR_ACSMLP3CA314_MASK                           BIT(15)
+#define CSR_ACSMLP3CA314_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X15 */
 #define CSR_ACSMSEQ0X15_LSB                             0
 #define CSR_ACSMSEQ0X15_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY15_LSB                           0
 #define CSR_ACSMMCLKDLY15_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE15_LSB                             8
-#define CSR_ACSMDDRWE15_MASK                            BIT(8)
+#define CSR_ACSMDDRWE15_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS15_LSB                            9
-#define CSR_ACSMDDRCAS15_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS15_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS15_LSB                            10
-#define CSR_ACSMDDRRAS15_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS15_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET15_LSB                         11
-#define CSR_ACSMDDRCKESET15_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET15_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR15_LSB                         12
-#define CSR_ACSMDDRCKECLR15_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR15_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD15_LSB                        13
-#define CSR_ACSMSEQGATECMD15_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD15_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM15_LSB                           14
-#define CSR_ACSMSEQTERM15_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM15_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA315_LSB                            15
-#define CSR_ACSMLP3CA315_MASK                           BIT(15)
+#define CSR_ACSMLP3CA315_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X16 */
 #define CSR_ACSMSEQ0X16_LSB                             0
 #define CSR_ACSMSEQ0X16_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY16_LSB                           0
 #define CSR_ACSMMCLKDLY16_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE16_LSB                             8
-#define CSR_ACSMDDRWE16_MASK                            BIT(8)
+#define CSR_ACSMDDRWE16_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS16_LSB                            9
-#define CSR_ACSMDDRCAS16_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS16_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS16_LSB                            10
-#define CSR_ACSMDDRRAS16_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS16_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET16_LSB                         11
-#define CSR_ACSMDDRCKESET16_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET16_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR16_LSB                         12
-#define CSR_ACSMDDRCKECLR16_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR16_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD16_LSB                        13
-#define CSR_ACSMSEQGATECMD16_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD16_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM16_LSB                           14
-#define CSR_ACSMSEQTERM16_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM16_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA316_LSB                            15
-#define CSR_ACSMLP3CA316_MASK                           BIT(15)
+#define CSR_ACSMLP3CA316_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X17 */
 #define CSR_ACSMSEQ0X17_LSB                             0
 #define CSR_ACSMSEQ0X17_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY17_LSB                           0
 #define CSR_ACSMMCLKDLY17_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE17_LSB                             8
-#define CSR_ACSMDDRWE17_MASK                            BIT(8)
+#define CSR_ACSMDDRWE17_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS17_LSB                            9
-#define CSR_ACSMDDRCAS17_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS17_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS17_LSB                            10
-#define CSR_ACSMDDRRAS17_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS17_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET17_LSB                         11
-#define CSR_ACSMDDRCKESET17_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET17_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR17_LSB                         12
-#define CSR_ACSMDDRCKECLR17_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR17_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD17_LSB                        13
-#define CSR_ACSMSEQGATECMD17_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD17_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM17_LSB                           14
-#define CSR_ACSMSEQTERM17_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM17_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA317_LSB                            15
-#define CSR_ACSMLP3CA317_MASK                           BIT(15)
+#define CSR_ACSMLP3CA317_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X18 */
 #define CSR_ACSMSEQ0X18_LSB                             0
 #define CSR_ACSMSEQ0X18_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY18_LSB                           0
 #define CSR_ACSMMCLKDLY18_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE18_LSB                             8
-#define CSR_ACSMDDRWE18_MASK                            BIT(8)
+#define CSR_ACSMDDRWE18_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS18_LSB                            9
-#define CSR_ACSMDDRCAS18_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS18_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS18_LSB                            10
-#define CSR_ACSMDDRRAS18_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS18_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET18_LSB                         11
-#define CSR_ACSMDDRCKESET18_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET18_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR18_LSB                         12
-#define CSR_ACSMDDRCKECLR18_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR18_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD18_LSB                        13
-#define CSR_ACSMSEQGATECMD18_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD18_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM18_LSB                           14
-#define CSR_ACSMSEQTERM18_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM18_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA318_LSB                            15
-#define CSR_ACSMLP3CA318_MASK                           BIT(15)
+#define CSR_ACSMLP3CA318_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X19 */
 #define CSR_ACSMSEQ0X19_LSB                             0
 #define CSR_ACSMSEQ0X19_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY19_LSB                           0
 #define CSR_ACSMMCLKDLY19_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE19_LSB                             8
-#define CSR_ACSMDDRWE19_MASK                            BIT(8)
+#define CSR_ACSMDDRWE19_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS19_LSB                            9
-#define CSR_ACSMDDRCAS19_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS19_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS19_LSB                            10
-#define CSR_ACSMDDRRAS19_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS19_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET19_LSB                         11
-#define CSR_ACSMDDRCKESET19_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET19_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR19_LSB                         12
-#define CSR_ACSMDDRCKECLR19_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR19_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD19_LSB                        13
-#define CSR_ACSMSEQGATECMD19_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD19_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM19_LSB                           14
-#define CSR_ACSMSEQTERM19_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM19_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA319_LSB                            15
-#define CSR_ACSMLP3CA319_MASK                           BIT(15)
+#define CSR_ACSMLP3CA319_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X20 */
 #define CSR_ACSMSEQ0X20_LSB                             0
 #define CSR_ACSMSEQ0X20_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY20_LSB                           0
 #define CSR_ACSMMCLKDLY20_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE20_LSB                             8
-#define CSR_ACSMDDRWE20_MASK                            BIT(8)
+#define CSR_ACSMDDRWE20_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS20_LSB                            9
-#define CSR_ACSMDDRCAS20_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS20_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS20_LSB                            10
-#define CSR_ACSMDDRRAS20_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS20_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET20_LSB                         11
-#define CSR_ACSMDDRCKESET20_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET20_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR20_LSB                         12
-#define CSR_ACSMDDRCKECLR20_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR20_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD20_LSB                        13
-#define CSR_ACSMSEQGATECMD20_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD20_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM20_LSB                           14
-#define CSR_ACSMSEQTERM20_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM20_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA320_LSB                            15
-#define CSR_ACSMLP3CA320_MASK                           BIT(15)
+#define CSR_ACSMLP3CA320_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X21 */
 #define CSR_ACSMSEQ0X21_LSB                             0
 #define CSR_ACSMSEQ0X21_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY21_LSB                           0
 #define CSR_ACSMMCLKDLY21_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE21_LSB                             8
-#define CSR_ACSMDDRWE21_MASK                            BIT(8)
+#define CSR_ACSMDDRWE21_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS21_LSB                            9
-#define CSR_ACSMDDRCAS21_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS21_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS21_LSB                            10
-#define CSR_ACSMDDRRAS21_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS21_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET21_LSB                         11
-#define CSR_ACSMDDRCKESET21_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET21_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR21_LSB                         12
-#define CSR_ACSMDDRCKECLR21_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR21_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD21_LSB                        13
-#define CSR_ACSMSEQGATECMD21_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD21_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM21_LSB                           14
-#define CSR_ACSMSEQTERM21_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM21_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA321_LSB                            15
-#define CSR_ACSMLP3CA321_MASK                           BIT(15)
+#define CSR_ACSMLP3CA321_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X22 */
 #define CSR_ACSMSEQ0X22_LSB                             0
 #define CSR_ACSMSEQ0X22_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY22_LSB                           0
 #define CSR_ACSMMCLKDLY22_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE22_LSB                             8
-#define CSR_ACSMDDRWE22_MASK                            BIT(8)
+#define CSR_ACSMDDRWE22_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS22_LSB                            9
-#define CSR_ACSMDDRCAS22_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS22_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS22_LSB                            10
-#define CSR_ACSMDDRRAS22_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS22_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET22_LSB                         11
-#define CSR_ACSMDDRCKESET22_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET22_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR22_LSB                         12
-#define CSR_ACSMDDRCKECLR22_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR22_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD22_LSB                        13
-#define CSR_ACSMSEQGATECMD22_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD22_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM22_LSB                           14
-#define CSR_ACSMSEQTERM22_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM22_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA322_LSB                            15
-#define CSR_ACSMLP3CA322_MASK                           BIT(15)
+#define CSR_ACSMLP3CA322_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X23 */
 #define CSR_ACSMSEQ0X23_LSB                             0
 #define CSR_ACSMSEQ0X23_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY23_LSB                           0
 #define CSR_ACSMMCLKDLY23_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE23_LSB                             8
-#define CSR_ACSMDDRWE23_MASK                            BIT(8)
+#define CSR_ACSMDDRWE23_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS23_LSB                            9
-#define CSR_ACSMDDRCAS23_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS23_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS23_LSB                            10
-#define CSR_ACSMDDRRAS23_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS23_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET23_LSB                         11
-#define CSR_ACSMDDRCKESET23_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET23_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR23_LSB                         12
-#define CSR_ACSMDDRCKECLR23_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR23_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD23_LSB                        13
-#define CSR_ACSMSEQGATECMD23_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD23_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM23_LSB                           14
-#define CSR_ACSMSEQTERM23_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM23_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA323_LSB                            15
-#define CSR_ACSMLP3CA323_MASK                           BIT(15)
+#define CSR_ACSMLP3CA323_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X24 */
 #define CSR_ACSMSEQ0X24_LSB                             0
 #define CSR_ACSMSEQ0X24_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY24_LSB                           0
 #define CSR_ACSMMCLKDLY24_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE24_LSB                             8
-#define CSR_ACSMDDRWE24_MASK                            BIT(8)
+#define CSR_ACSMDDRWE24_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS24_LSB                            9
-#define CSR_ACSMDDRCAS24_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS24_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS24_LSB                            10
-#define CSR_ACSMDDRRAS24_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS24_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET24_LSB                         11
-#define CSR_ACSMDDRCKESET24_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET24_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR24_LSB                         12
-#define CSR_ACSMDDRCKECLR24_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR24_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD24_LSB                        13
-#define CSR_ACSMSEQGATECMD24_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD24_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM24_LSB                           14
-#define CSR_ACSMSEQTERM24_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM24_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA324_LSB                            15
-#define CSR_ACSMLP3CA324_MASK                           BIT(15)
+#define CSR_ACSMLP3CA324_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X25 */
 #define CSR_ACSMSEQ0X25_LSB                             0
 #define CSR_ACSMSEQ0X25_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY25_LSB                           0
 #define CSR_ACSMMCLKDLY25_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE25_LSB                             8
-#define CSR_ACSMDDRWE25_MASK                            BIT(8)
+#define CSR_ACSMDDRWE25_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS25_LSB                            9
-#define CSR_ACSMDDRCAS25_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS25_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS25_LSB                            10
-#define CSR_ACSMDDRRAS25_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS25_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET25_LSB                         11
-#define CSR_ACSMDDRCKESET25_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET25_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR25_LSB                         12
-#define CSR_ACSMDDRCKECLR25_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR25_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD25_LSB                        13
-#define CSR_ACSMSEQGATECMD25_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD25_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM25_LSB                           14
-#define CSR_ACSMSEQTERM25_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM25_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA325_LSB                            15
-#define CSR_ACSMLP3CA325_MASK                           BIT(15)
+#define CSR_ACSMLP3CA325_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X26 */
 #define CSR_ACSMSEQ0X26_LSB                             0
 #define CSR_ACSMSEQ0X26_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY26_LSB                           0
 #define CSR_ACSMMCLKDLY26_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE26_LSB                             8
-#define CSR_ACSMDDRWE26_MASK                            BIT(8)
+#define CSR_ACSMDDRWE26_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS26_LSB                            9
-#define CSR_ACSMDDRCAS26_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS26_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS26_LSB                            10
-#define CSR_ACSMDDRRAS26_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS26_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET26_LSB                         11
-#define CSR_ACSMDDRCKESET26_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET26_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR26_LSB                         12
-#define CSR_ACSMDDRCKECLR26_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR26_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD26_LSB                        13
-#define CSR_ACSMSEQGATECMD26_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD26_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM26_LSB                           14
-#define CSR_ACSMSEQTERM26_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM26_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA326_LSB                            15
-#define CSR_ACSMLP3CA326_MASK                           BIT(15)
+#define CSR_ACSMLP3CA326_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X27 */
 #define CSR_ACSMSEQ0X27_LSB                             0
 #define CSR_ACSMSEQ0X27_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY27_LSB                           0
 #define CSR_ACSMMCLKDLY27_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE27_LSB                             8
-#define CSR_ACSMDDRWE27_MASK                            BIT(8)
+#define CSR_ACSMDDRWE27_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS27_LSB                            9
-#define CSR_ACSMDDRCAS27_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS27_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS27_LSB                            10
-#define CSR_ACSMDDRRAS27_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS27_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET27_LSB                         11
-#define CSR_ACSMDDRCKESET27_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET27_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR27_LSB                         12
-#define CSR_ACSMDDRCKECLR27_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR27_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD27_LSB                        13
-#define CSR_ACSMSEQGATECMD27_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD27_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM27_LSB                           14
-#define CSR_ACSMSEQTERM27_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM27_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA327_LSB                            15
-#define CSR_ACSMLP3CA327_MASK                           BIT(15)
+#define CSR_ACSMLP3CA327_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X28 */
 #define CSR_ACSMSEQ0X28_LSB                             0
 #define CSR_ACSMSEQ0X28_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY28_LSB                           0
 #define CSR_ACSMMCLKDLY28_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE28_LSB                             8
-#define CSR_ACSMDDRWE28_MASK                            BIT(8)
+#define CSR_ACSMDDRWE28_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS28_LSB                            9
-#define CSR_ACSMDDRCAS28_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS28_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS28_LSB                            10
-#define CSR_ACSMDDRRAS28_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS28_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET28_LSB                         11
-#define CSR_ACSMDDRCKESET28_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET28_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR28_LSB                         12
-#define CSR_ACSMDDRCKECLR28_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR28_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD28_LSB                        13
-#define CSR_ACSMSEQGATECMD28_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD28_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM28_LSB                           14
-#define CSR_ACSMSEQTERM28_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM28_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA328_LSB                            15
-#define CSR_ACSMLP3CA328_MASK                           BIT(15)
+#define CSR_ACSMLP3CA328_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X29 */
 #define CSR_ACSMSEQ0X29_LSB                             0
 #define CSR_ACSMSEQ0X29_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY29_LSB                           0
 #define CSR_ACSMMCLKDLY29_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE29_LSB                             8
-#define CSR_ACSMDDRWE29_MASK                            BIT(8)
+#define CSR_ACSMDDRWE29_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS29_LSB                            9
-#define CSR_ACSMDDRCAS29_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS29_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS29_LSB                            10
-#define CSR_ACSMDDRRAS29_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS29_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET29_LSB                         11
-#define CSR_ACSMDDRCKESET29_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET29_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR29_LSB                         12
-#define CSR_ACSMDDRCKECLR29_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR29_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD29_LSB                        13
-#define CSR_ACSMSEQGATECMD29_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD29_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM29_LSB                           14
-#define CSR_ACSMSEQTERM29_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM29_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA329_LSB                            15
-#define CSR_ACSMLP3CA329_MASK                           BIT(15)
+#define CSR_ACSMLP3CA329_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X30 */
 #define CSR_ACSMSEQ0X30_LSB                             0
 #define CSR_ACSMSEQ0X30_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY30_LSB                           0
 #define CSR_ACSMMCLKDLY30_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE30_LSB                             8
-#define CSR_ACSMDDRWE30_MASK                            BIT(8)
+#define CSR_ACSMDDRWE30_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS30_LSB                            9
-#define CSR_ACSMDDRCAS30_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS30_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS30_LSB                            10
-#define CSR_ACSMDDRRAS30_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS30_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET30_LSB                         11
-#define CSR_ACSMDDRCKESET30_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET30_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR30_LSB                         12
-#define CSR_ACSMDDRCKECLR30_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR30_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD30_LSB                        13
-#define CSR_ACSMSEQGATECMD30_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD30_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM30_LSB                           14
-#define CSR_ACSMSEQTERM30_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM30_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA330_LSB                            15
-#define CSR_ACSMLP3CA330_MASK                           BIT(15)
+#define CSR_ACSMLP3CA330_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ0X31 */
 #define CSR_ACSMSEQ0X31_LSB                             0
 #define CSR_ACSMSEQ0X31_MASK                            GENMASK_32(15, 0)
 #define CSR_ACSMMCLKDLY31_LSB                           0
 #define CSR_ACSMMCLKDLY31_MASK                          GENMASK_32(7, 0)
 #define CSR_ACSMDDRWE31_LSB                             8
-#define CSR_ACSMDDRWE31_MASK                            BIT(8)
+#define CSR_ACSMDDRWE31_MASK                            DDR_BIT(8)
 #define CSR_ACSMDDRCAS31_LSB                            9
-#define CSR_ACSMDDRCAS31_MASK                           BIT(9)
+#define CSR_ACSMDDRCAS31_MASK                           DDR_BIT(9)
 #define CSR_ACSMDDRRAS31_LSB                            10
-#define CSR_ACSMDDRRAS31_MASK                           BIT(10)
+#define CSR_ACSMDDRRAS31_MASK                           DDR_BIT(10)
 #define CSR_ACSMDDRCKESET31_LSB                         11
-#define CSR_ACSMDDRCKESET31_MASK                        BIT(11)
+#define CSR_ACSMDDRCKESET31_MASK                        DDR_BIT(11)
 #define CSR_ACSMDDRCKECLR31_LSB                         12
-#define CSR_ACSMDDRCKECLR31_MASK                        BIT(12)
+#define CSR_ACSMDDRCKECLR31_MASK                        DDR_BIT(12)
 #define CSR_ACSMSEQGATECMD31_LSB                        13
-#define CSR_ACSMSEQGATECMD31_MASK                       BIT(13)
+#define CSR_ACSMSEQGATECMD31_MASK                       DDR_BIT(13)
 #define CSR_ACSMSEQTERM31_LSB                           14
-#define CSR_ACSMSEQTERM31_MASK                          BIT(14)
+#define CSR_ACSMSEQTERM31_MASK                          DDR_BIT(14)
 #define CSR_ACSMLP3CA331_LSB                            15
-#define CSR_ACSMLP3CA331_MASK                           BIT(15)
+#define CSR_ACSMLP3CA331_MASK                           DDR_BIT(15)
 /* CSR_ACSMSEQ1X0 */
 #define CSR_ACSMSEQ1X0_LSB                              0
 #define CSR_ACSMSEQ1X0_MASK                             GENMASK_32(15, 0)
 #define CSR_ACSMDDRCS0_LSB                              0
 #define CSR_ACSMDDRCS0_MASK                             GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN0_LSB                            8
-#define CSR_ACSMSAVEGEN0_MASK                           BIT(8)
+#define CSR_ACSMSAVEGEN0_MASK                           DDR_BIT(8)
 #define CSR_ACSMLOADCHK0_LSB                            9
-#define CSR_ACSMLOADCHK0_MASK                           BIT(9)
+#define CSR_ACSMLOADCHK0_MASK                           DDR_BIT(9)
 #define CSR_ACSMNORXENB0_LSB                            10
-#define CSR_ACSMNORXENB0_MASK                           BIT(10)
+#define CSR_ACSMNORXENB0_MASK                           DDR_BIT(10)
 #define CSR_ACSMNORXVAL0_LSB                            11
-#define CSR_ACSMNORXVAL0_MASK                           BIT(11)
+#define CSR_ACSMNORXVAL0_MASK                           DDR_BIT(11)
 #define CSR_ACSMDDRBNK0_LSB                             12
 #define CSR_ACSMDDRBNK0_MASK                            GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X1 */
@@ -3653,13 +3653,13 @@
 #define CSR_ACSMDDRCS1_LSB                              0
 #define CSR_ACSMDDRCS1_MASK                             GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN1_LSB                            8
-#define CSR_ACSMSAVEGEN1_MASK                           BIT(8)
+#define CSR_ACSMSAVEGEN1_MASK                           DDR_BIT(8)
 #define CSR_ACSMLOADCHK1_LSB                            9
-#define CSR_ACSMLOADCHK1_MASK                           BIT(9)
+#define CSR_ACSMLOADCHK1_MASK                           DDR_BIT(9)
 #define CSR_ACSMNORXENB1_LSB                            10
-#define CSR_ACSMNORXENB1_MASK                           BIT(10)
+#define CSR_ACSMNORXENB1_MASK                           DDR_BIT(10)
 #define CSR_ACSMNORXVAL1_LSB                            11
-#define CSR_ACSMNORXVAL1_MASK                           BIT(11)
+#define CSR_ACSMNORXVAL1_MASK                           DDR_BIT(11)
 #define CSR_ACSMDDRBNK1_LSB                             12
 #define CSR_ACSMDDRBNK1_MASK                            GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X2 */
@@ -3668,13 +3668,13 @@
 #define CSR_ACSMDDRCS2_LSB                              0
 #define CSR_ACSMDDRCS2_MASK                             GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN2_LSB                            8
-#define CSR_ACSMSAVEGEN2_MASK                           BIT(8)
+#define CSR_ACSMSAVEGEN2_MASK                           DDR_BIT(8)
 #define CSR_ACSMLOADCHK2_LSB                            9
-#define CSR_ACSMLOADCHK2_MASK                           BIT(9)
+#define CSR_ACSMLOADCHK2_MASK                           DDR_BIT(9)
 #define CSR_ACSMNORXENB2_LSB                            10
-#define CSR_ACSMNORXENB2_MASK                           BIT(10)
+#define CSR_ACSMNORXENB2_MASK                           DDR_BIT(10)
 #define CSR_ACSMNORXVAL2_LSB                            11
-#define CSR_ACSMNORXVAL2_MASK                           BIT(11)
+#define CSR_ACSMNORXVAL2_MASK                           DDR_BIT(11)
 #define CSR_ACSMDDRBNK2_LSB                             12
 #define CSR_ACSMDDRBNK2_MASK                            GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X3 */
@@ -3683,13 +3683,13 @@
 #define CSR_ACSMDDRCS3_LSB                              0
 #define CSR_ACSMDDRCS3_MASK                             GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN3_LSB                            8
-#define CSR_ACSMSAVEGEN3_MASK                           BIT(8)
+#define CSR_ACSMSAVEGEN3_MASK                           DDR_BIT(8)
 #define CSR_ACSMLOADCHK3_LSB                            9
-#define CSR_ACSMLOADCHK3_MASK                           BIT(9)
+#define CSR_ACSMLOADCHK3_MASK                           DDR_BIT(9)
 #define CSR_ACSMNORXENB3_LSB                            10
-#define CSR_ACSMNORXENB3_MASK                           BIT(10)
+#define CSR_ACSMNORXENB3_MASK                           DDR_BIT(10)
 #define CSR_ACSMNORXVAL3_LSB                            11
-#define CSR_ACSMNORXVAL3_MASK                           BIT(11)
+#define CSR_ACSMNORXVAL3_MASK                           DDR_BIT(11)
 #define CSR_ACSMDDRBNK3_LSB                             12
 #define CSR_ACSMDDRBNK3_MASK                            GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X4 */
@@ -3698,13 +3698,13 @@
 #define CSR_ACSMDDRCS4_LSB                              0
 #define CSR_ACSMDDRCS4_MASK                             GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN4_LSB                            8
-#define CSR_ACSMSAVEGEN4_MASK                           BIT(8)
+#define CSR_ACSMSAVEGEN4_MASK                           DDR_BIT(8)
 #define CSR_ACSMLOADCHK4_LSB                            9
-#define CSR_ACSMLOADCHK4_MASK                           BIT(9)
+#define CSR_ACSMLOADCHK4_MASK                           DDR_BIT(9)
 #define CSR_ACSMNORXENB4_LSB                            10
-#define CSR_ACSMNORXENB4_MASK                           BIT(10)
+#define CSR_ACSMNORXENB4_MASK                           DDR_BIT(10)
 #define CSR_ACSMNORXVAL4_LSB                            11
-#define CSR_ACSMNORXVAL4_MASK                           BIT(11)
+#define CSR_ACSMNORXVAL4_MASK                           DDR_BIT(11)
 #define CSR_ACSMDDRBNK4_LSB                             12
 #define CSR_ACSMDDRBNK4_MASK                            GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X5 */
@@ -3713,13 +3713,13 @@
 #define CSR_ACSMDDRCS5_LSB                              0
 #define CSR_ACSMDDRCS5_MASK                             GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN5_LSB                            8
-#define CSR_ACSMSAVEGEN5_MASK                           BIT(8)
+#define CSR_ACSMSAVEGEN5_MASK                           DDR_BIT(8)
 #define CSR_ACSMLOADCHK5_LSB                            9
-#define CSR_ACSMLOADCHK5_MASK                           BIT(9)
+#define CSR_ACSMLOADCHK5_MASK                           DDR_BIT(9)
 #define CSR_ACSMNORXENB5_LSB                            10
-#define CSR_ACSMNORXENB5_MASK                           BIT(10)
+#define CSR_ACSMNORXENB5_MASK                           DDR_BIT(10)
 #define CSR_ACSMNORXVAL5_LSB                            11
-#define CSR_ACSMNORXVAL5_MASK                           BIT(11)
+#define CSR_ACSMNORXVAL5_MASK                           DDR_BIT(11)
 #define CSR_ACSMDDRBNK5_LSB                             12
 #define CSR_ACSMDDRBNK5_MASK                            GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X6 */
@@ -3728,13 +3728,13 @@
 #define CSR_ACSMDDRCS6_LSB                              0
 #define CSR_ACSMDDRCS6_MASK                             GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN6_LSB                            8
-#define CSR_ACSMSAVEGEN6_MASK                           BIT(8)
+#define CSR_ACSMSAVEGEN6_MASK                           DDR_BIT(8)
 #define CSR_ACSMLOADCHK6_LSB                            9
-#define CSR_ACSMLOADCHK6_MASK                           BIT(9)
+#define CSR_ACSMLOADCHK6_MASK                           DDR_BIT(9)
 #define CSR_ACSMNORXENB6_LSB                            10
-#define CSR_ACSMNORXENB6_MASK                           BIT(10)
+#define CSR_ACSMNORXENB6_MASK                           DDR_BIT(10)
 #define CSR_ACSMNORXVAL6_LSB                            11
-#define CSR_ACSMNORXVAL6_MASK                           BIT(11)
+#define CSR_ACSMNORXVAL6_MASK                           DDR_BIT(11)
 #define CSR_ACSMDDRBNK6_LSB                             12
 #define CSR_ACSMDDRBNK6_MASK                            GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X7 */
@@ -3743,13 +3743,13 @@
 #define CSR_ACSMDDRCS7_LSB                              0
 #define CSR_ACSMDDRCS7_MASK                             GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN7_LSB                            8
-#define CSR_ACSMSAVEGEN7_MASK                           BIT(8)
+#define CSR_ACSMSAVEGEN7_MASK                           DDR_BIT(8)
 #define CSR_ACSMLOADCHK7_LSB                            9
-#define CSR_ACSMLOADCHK7_MASK                           BIT(9)
+#define CSR_ACSMLOADCHK7_MASK                           DDR_BIT(9)
 #define CSR_ACSMNORXENB7_LSB                            10
-#define CSR_ACSMNORXENB7_MASK                           BIT(10)
+#define CSR_ACSMNORXENB7_MASK                           DDR_BIT(10)
 #define CSR_ACSMNORXVAL7_LSB                            11
-#define CSR_ACSMNORXVAL7_MASK                           BIT(11)
+#define CSR_ACSMNORXVAL7_MASK                           DDR_BIT(11)
 #define CSR_ACSMDDRBNK7_LSB                             12
 #define CSR_ACSMDDRBNK7_MASK                            GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X8 */
@@ -3758,13 +3758,13 @@
 #define CSR_ACSMDDRCS8_LSB                              0
 #define CSR_ACSMDDRCS8_MASK                             GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN8_LSB                            8
-#define CSR_ACSMSAVEGEN8_MASK                           BIT(8)
+#define CSR_ACSMSAVEGEN8_MASK                           DDR_BIT(8)
 #define CSR_ACSMLOADCHK8_LSB                            9
-#define CSR_ACSMLOADCHK8_MASK                           BIT(9)
+#define CSR_ACSMLOADCHK8_MASK                           DDR_BIT(9)
 #define CSR_ACSMNORXENB8_LSB                            10
-#define CSR_ACSMNORXENB8_MASK                           BIT(10)
+#define CSR_ACSMNORXENB8_MASK                           DDR_BIT(10)
 #define CSR_ACSMNORXVAL8_LSB                            11
-#define CSR_ACSMNORXVAL8_MASK                           BIT(11)
+#define CSR_ACSMNORXVAL8_MASK                           DDR_BIT(11)
 #define CSR_ACSMDDRBNK8_LSB                             12
 #define CSR_ACSMDDRBNK8_MASK                            GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X9 */
@@ -3773,13 +3773,13 @@
 #define CSR_ACSMDDRCS9_LSB                              0
 #define CSR_ACSMDDRCS9_MASK                             GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN9_LSB                            8
-#define CSR_ACSMSAVEGEN9_MASK                           BIT(8)
+#define CSR_ACSMSAVEGEN9_MASK                           DDR_BIT(8)
 #define CSR_ACSMLOADCHK9_LSB                            9
-#define CSR_ACSMLOADCHK9_MASK                           BIT(9)
+#define CSR_ACSMLOADCHK9_MASK                           DDR_BIT(9)
 #define CSR_ACSMNORXENB9_LSB                            10
-#define CSR_ACSMNORXENB9_MASK                           BIT(10)
+#define CSR_ACSMNORXENB9_MASK                           DDR_BIT(10)
 #define CSR_ACSMNORXVAL9_LSB                            11
-#define CSR_ACSMNORXVAL9_MASK                           BIT(11)
+#define CSR_ACSMNORXVAL9_MASK                           DDR_BIT(11)
 #define CSR_ACSMDDRBNK9_LSB                             12
 #define CSR_ACSMDDRBNK9_MASK                            GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X10 */
@@ -3788,13 +3788,13 @@
 #define CSR_ACSMDDRCS10_LSB                             0
 #define CSR_ACSMDDRCS10_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN10_LSB                           8
-#define CSR_ACSMSAVEGEN10_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN10_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK10_LSB                           9
-#define CSR_ACSMLOADCHK10_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK10_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB10_LSB                           10
-#define CSR_ACSMNORXENB10_MASK                          BIT(10)
+#define CSR_ACSMNORXENB10_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL10_LSB                           11
-#define CSR_ACSMNORXVAL10_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL10_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK10_LSB                            12
 #define CSR_ACSMDDRBNK10_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X11 */
@@ -3803,13 +3803,13 @@
 #define CSR_ACSMDDRCS11_LSB                             0
 #define CSR_ACSMDDRCS11_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN11_LSB                           8
-#define CSR_ACSMSAVEGEN11_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN11_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK11_LSB                           9
-#define CSR_ACSMLOADCHK11_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK11_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB11_LSB                           10
-#define CSR_ACSMNORXENB11_MASK                          BIT(10)
+#define CSR_ACSMNORXENB11_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL11_LSB                           11
-#define CSR_ACSMNORXVAL11_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL11_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK11_LSB                            12
 #define CSR_ACSMDDRBNK11_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X12 */
@@ -3818,13 +3818,13 @@
 #define CSR_ACSMDDRCS12_LSB                             0
 #define CSR_ACSMDDRCS12_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN12_LSB                           8
-#define CSR_ACSMSAVEGEN12_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN12_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK12_LSB                           9
-#define CSR_ACSMLOADCHK12_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK12_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB12_LSB                           10
-#define CSR_ACSMNORXENB12_MASK                          BIT(10)
+#define CSR_ACSMNORXENB12_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL12_LSB                           11
-#define CSR_ACSMNORXVAL12_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL12_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK12_LSB                            12
 #define CSR_ACSMDDRBNK12_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X13 */
@@ -3833,13 +3833,13 @@
 #define CSR_ACSMDDRCS13_LSB                             0
 #define CSR_ACSMDDRCS13_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN13_LSB                           8
-#define CSR_ACSMSAVEGEN13_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN13_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK13_LSB                           9
-#define CSR_ACSMLOADCHK13_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK13_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB13_LSB                           10
-#define CSR_ACSMNORXENB13_MASK                          BIT(10)
+#define CSR_ACSMNORXENB13_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL13_LSB                           11
-#define CSR_ACSMNORXVAL13_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL13_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK13_LSB                            12
 #define CSR_ACSMDDRBNK13_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X14 */
@@ -3848,13 +3848,13 @@
 #define CSR_ACSMDDRCS14_LSB                             0
 #define CSR_ACSMDDRCS14_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN14_LSB                           8
-#define CSR_ACSMSAVEGEN14_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN14_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK14_LSB                           9
-#define CSR_ACSMLOADCHK14_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK14_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB14_LSB                           10
-#define CSR_ACSMNORXENB14_MASK                          BIT(10)
+#define CSR_ACSMNORXENB14_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL14_LSB                           11
-#define CSR_ACSMNORXVAL14_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL14_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK14_LSB                            12
 #define CSR_ACSMDDRBNK14_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X15 */
@@ -3863,13 +3863,13 @@
 #define CSR_ACSMDDRCS15_LSB                             0
 #define CSR_ACSMDDRCS15_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN15_LSB                           8
-#define CSR_ACSMSAVEGEN15_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN15_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK15_LSB                           9
-#define CSR_ACSMLOADCHK15_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK15_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB15_LSB                           10
-#define CSR_ACSMNORXENB15_MASK                          BIT(10)
+#define CSR_ACSMNORXENB15_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL15_LSB                           11
-#define CSR_ACSMNORXVAL15_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL15_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK15_LSB                            12
 #define CSR_ACSMDDRBNK15_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X16 */
@@ -3878,13 +3878,13 @@
 #define CSR_ACSMDDRCS16_LSB                             0
 #define CSR_ACSMDDRCS16_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN16_LSB                           8
-#define CSR_ACSMSAVEGEN16_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN16_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK16_LSB                           9
-#define CSR_ACSMLOADCHK16_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK16_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB16_LSB                           10
-#define CSR_ACSMNORXENB16_MASK                          BIT(10)
+#define CSR_ACSMNORXENB16_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL16_LSB                           11
-#define CSR_ACSMNORXVAL16_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL16_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK16_LSB                            12
 #define CSR_ACSMDDRBNK16_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X17 */
@@ -3893,13 +3893,13 @@
 #define CSR_ACSMDDRCS17_LSB                             0
 #define CSR_ACSMDDRCS17_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN17_LSB                           8
-#define CSR_ACSMSAVEGEN17_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN17_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK17_LSB                           9
-#define CSR_ACSMLOADCHK17_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK17_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB17_LSB                           10
-#define CSR_ACSMNORXENB17_MASK                          BIT(10)
+#define CSR_ACSMNORXENB17_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL17_LSB                           11
-#define CSR_ACSMNORXVAL17_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL17_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK17_LSB                            12
 #define CSR_ACSMDDRBNK17_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X18 */
@@ -3908,13 +3908,13 @@
 #define CSR_ACSMDDRCS18_LSB                             0
 #define CSR_ACSMDDRCS18_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN18_LSB                           8
-#define CSR_ACSMSAVEGEN18_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN18_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK18_LSB                           9
-#define CSR_ACSMLOADCHK18_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK18_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB18_LSB                           10
-#define CSR_ACSMNORXENB18_MASK                          BIT(10)
+#define CSR_ACSMNORXENB18_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL18_LSB                           11
-#define CSR_ACSMNORXVAL18_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL18_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK18_LSB                            12
 #define CSR_ACSMDDRBNK18_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X19 */
@@ -3923,13 +3923,13 @@
 #define CSR_ACSMDDRCS19_LSB                             0
 #define CSR_ACSMDDRCS19_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN19_LSB                           8
-#define CSR_ACSMSAVEGEN19_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN19_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK19_LSB                           9
-#define CSR_ACSMLOADCHK19_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK19_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB19_LSB                           10
-#define CSR_ACSMNORXENB19_MASK                          BIT(10)
+#define CSR_ACSMNORXENB19_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL19_LSB                           11
-#define CSR_ACSMNORXVAL19_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL19_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK19_LSB                            12
 #define CSR_ACSMDDRBNK19_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X20 */
@@ -3938,13 +3938,13 @@
 #define CSR_ACSMDDRCS20_LSB                             0
 #define CSR_ACSMDDRCS20_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN20_LSB                           8
-#define CSR_ACSMSAVEGEN20_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN20_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK20_LSB                           9
-#define CSR_ACSMLOADCHK20_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK20_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB20_LSB                           10
-#define CSR_ACSMNORXENB20_MASK                          BIT(10)
+#define CSR_ACSMNORXENB20_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL20_LSB                           11
-#define CSR_ACSMNORXVAL20_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL20_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK20_LSB                            12
 #define CSR_ACSMDDRBNK20_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X21 */
@@ -3953,13 +3953,13 @@
 #define CSR_ACSMDDRCS21_LSB                             0
 #define CSR_ACSMDDRCS21_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN21_LSB                           8
-#define CSR_ACSMSAVEGEN21_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN21_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK21_LSB                           9
-#define CSR_ACSMLOADCHK21_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK21_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB21_LSB                           10
-#define CSR_ACSMNORXENB21_MASK                          BIT(10)
+#define CSR_ACSMNORXENB21_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL21_LSB                           11
-#define CSR_ACSMNORXVAL21_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL21_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK21_LSB                            12
 #define CSR_ACSMDDRBNK21_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X22 */
@@ -3968,13 +3968,13 @@
 #define CSR_ACSMDDRCS22_LSB                             0
 #define CSR_ACSMDDRCS22_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN22_LSB                           8
-#define CSR_ACSMSAVEGEN22_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN22_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK22_LSB                           9
-#define CSR_ACSMLOADCHK22_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK22_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB22_LSB                           10
-#define CSR_ACSMNORXENB22_MASK                          BIT(10)
+#define CSR_ACSMNORXENB22_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL22_LSB                           11
-#define CSR_ACSMNORXVAL22_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL22_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK22_LSB                            12
 #define CSR_ACSMDDRBNK22_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X23 */
@@ -3983,13 +3983,13 @@
 #define CSR_ACSMDDRCS23_LSB                             0
 #define CSR_ACSMDDRCS23_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN23_LSB                           8
-#define CSR_ACSMSAVEGEN23_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN23_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK23_LSB                           9
-#define CSR_ACSMLOADCHK23_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK23_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB23_LSB                           10
-#define CSR_ACSMNORXENB23_MASK                          BIT(10)
+#define CSR_ACSMNORXENB23_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL23_LSB                           11
-#define CSR_ACSMNORXVAL23_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL23_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK23_LSB                            12
 #define CSR_ACSMDDRBNK23_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X24 */
@@ -3998,13 +3998,13 @@
 #define CSR_ACSMDDRCS24_LSB                             0
 #define CSR_ACSMDDRCS24_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN24_LSB                           8
-#define CSR_ACSMSAVEGEN24_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN24_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK24_LSB                           9
-#define CSR_ACSMLOADCHK24_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK24_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB24_LSB                           10
-#define CSR_ACSMNORXENB24_MASK                          BIT(10)
+#define CSR_ACSMNORXENB24_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL24_LSB                           11
-#define CSR_ACSMNORXVAL24_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL24_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK24_LSB                            12
 #define CSR_ACSMDDRBNK24_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X25 */
@@ -4013,13 +4013,13 @@
 #define CSR_ACSMDDRCS25_LSB                             0
 #define CSR_ACSMDDRCS25_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN25_LSB                           8
-#define CSR_ACSMSAVEGEN25_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN25_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK25_LSB                           9
-#define CSR_ACSMLOADCHK25_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK25_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB25_LSB                           10
-#define CSR_ACSMNORXENB25_MASK                          BIT(10)
+#define CSR_ACSMNORXENB25_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL25_LSB                           11
-#define CSR_ACSMNORXVAL25_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL25_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK25_LSB                            12
 #define CSR_ACSMDDRBNK25_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X26 */
@@ -4028,13 +4028,13 @@
 #define CSR_ACSMDDRCS26_LSB                             0
 #define CSR_ACSMDDRCS26_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN26_LSB                           8
-#define CSR_ACSMSAVEGEN26_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN26_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK26_LSB                           9
-#define CSR_ACSMLOADCHK26_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK26_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB26_LSB                           10
-#define CSR_ACSMNORXENB26_MASK                          BIT(10)
+#define CSR_ACSMNORXENB26_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL26_LSB                           11
-#define CSR_ACSMNORXVAL26_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL26_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK26_LSB                            12
 #define CSR_ACSMDDRBNK26_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X27 */
@@ -4043,13 +4043,13 @@
 #define CSR_ACSMDDRCS27_LSB                             0
 #define CSR_ACSMDDRCS27_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN27_LSB                           8
-#define CSR_ACSMSAVEGEN27_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN27_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK27_LSB                           9
-#define CSR_ACSMLOADCHK27_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK27_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB27_LSB                           10
-#define CSR_ACSMNORXENB27_MASK                          BIT(10)
+#define CSR_ACSMNORXENB27_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL27_LSB                           11
-#define CSR_ACSMNORXVAL27_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL27_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK27_LSB                            12
 #define CSR_ACSMDDRBNK27_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X28 */
@@ -4058,13 +4058,13 @@
 #define CSR_ACSMDDRCS28_LSB                             0
 #define CSR_ACSMDDRCS28_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN28_LSB                           8
-#define CSR_ACSMSAVEGEN28_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN28_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK28_LSB                           9
-#define CSR_ACSMLOADCHK28_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK28_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB28_LSB                           10
-#define CSR_ACSMNORXENB28_MASK                          BIT(10)
+#define CSR_ACSMNORXENB28_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL28_LSB                           11
-#define CSR_ACSMNORXVAL28_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL28_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK28_LSB                            12
 #define CSR_ACSMDDRBNK28_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X29 */
@@ -4073,13 +4073,13 @@
 #define CSR_ACSMDDRCS29_LSB                             0
 #define CSR_ACSMDDRCS29_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN29_LSB                           8
-#define CSR_ACSMSAVEGEN29_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN29_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK29_LSB                           9
-#define CSR_ACSMLOADCHK29_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK29_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB29_LSB                           10
-#define CSR_ACSMNORXENB29_MASK                          BIT(10)
+#define CSR_ACSMNORXENB29_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL29_LSB                           11
-#define CSR_ACSMNORXVAL29_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL29_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK29_LSB                            12
 #define CSR_ACSMDDRBNK29_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X30 */
@@ -4088,13 +4088,13 @@
 #define CSR_ACSMDDRCS30_LSB                             0
 #define CSR_ACSMDDRCS30_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN30_LSB                           8
-#define CSR_ACSMSAVEGEN30_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN30_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK30_LSB                           9
-#define CSR_ACSMLOADCHK30_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK30_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB30_LSB                           10
-#define CSR_ACSMNORXENB30_MASK                          BIT(10)
+#define CSR_ACSMNORXENB30_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL30_LSB                           11
-#define CSR_ACSMNORXVAL30_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL30_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK30_LSB                            12
 #define CSR_ACSMDDRBNK30_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ1X31 */
@@ -4103,13 +4103,13 @@
 #define CSR_ACSMDDRCS31_LSB                             0
 #define CSR_ACSMDDRCS31_MASK                            GENMASK_32(7, 0)
 #define CSR_ACSMSAVEGEN31_LSB                           8
-#define CSR_ACSMSAVEGEN31_MASK                          BIT(8)
+#define CSR_ACSMSAVEGEN31_MASK                          DDR_BIT(8)
 #define CSR_ACSMLOADCHK31_LSB                           9
-#define CSR_ACSMLOADCHK31_MASK                          BIT(9)
+#define CSR_ACSMLOADCHK31_MASK                          DDR_BIT(9)
 #define CSR_ACSMNORXENB31_LSB                           10
-#define CSR_ACSMNORXENB31_MASK                          BIT(10)
+#define CSR_ACSMNORXENB31_MASK                          DDR_BIT(10)
 #define CSR_ACSMNORXVAL31_LSB                           11
-#define CSR_ACSMNORXVAL31_MASK                          BIT(11)
+#define CSR_ACSMNORXVAL31_MASK                          DDR_BIT(11)
 #define CSR_ACSMDDRBNK31_LSB                            12
 #define CSR_ACSMDDRBNK31_MASK                           GENMASK_32(15, 12)
 /* CSR_ACSMSEQ2X0 */
@@ -4284,9 +4284,9 @@
 #define CSR_ACSMADRSELLOAD0_LSB                         12
 #define CSR_ACSMADRSELLOAD0_MASK                        GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD0_LSB                         14
-#define CSR_ACSMBNKSELLOAD0_MASK                        BIT(14)
+#define CSR_ACSMBNKSELLOAD0_MASK                        DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE0_LSB                         15
-#define CSR_ACSMLONGBUBBLE0_MASK                        BIT(15)
+#define CSR_ACSMLONGBUBBLE0_MASK                        DDR_BIT(15)
 /* CSR_ACSMSEQ3X1 */
 #define CSR_ACSMSEQ3X1_LSB                              0
 #define CSR_ACSMSEQ3X1_MASK                             GENMASK_32(15, 0)
@@ -4299,9 +4299,9 @@
 #define CSR_ACSMADRSELLOAD1_LSB                         12
 #define CSR_ACSMADRSELLOAD1_MASK                        GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD1_LSB                         14
-#define CSR_ACSMBNKSELLOAD1_MASK                        BIT(14)
+#define CSR_ACSMBNKSELLOAD1_MASK                        DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE1_LSB                         15
-#define CSR_ACSMLONGBUBBLE1_MASK                        BIT(15)
+#define CSR_ACSMLONGBUBBLE1_MASK                        DDR_BIT(15)
 /* CSR_ACSMSEQ3X2 */
 #define CSR_ACSMSEQ3X2_LSB                              0
 #define CSR_ACSMSEQ3X2_MASK                             GENMASK_32(15, 0)
@@ -4314,9 +4314,9 @@
 #define CSR_ACSMADRSELLOAD2_LSB                         12
 #define CSR_ACSMADRSELLOAD2_MASK                        GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD2_LSB                         14
-#define CSR_ACSMBNKSELLOAD2_MASK                        BIT(14)
+#define CSR_ACSMBNKSELLOAD2_MASK                        DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE2_LSB                         15
-#define CSR_ACSMLONGBUBBLE2_MASK                        BIT(15)
+#define CSR_ACSMLONGBUBBLE2_MASK                        DDR_BIT(15)
 /* CSR_ACSMSEQ3X3 */
 #define CSR_ACSMSEQ3X3_LSB                              0
 #define CSR_ACSMSEQ3X3_MASK                             GENMASK_32(15, 0)
@@ -4329,9 +4329,9 @@
 #define CSR_ACSMADRSELLOAD3_LSB                         12
 #define CSR_ACSMADRSELLOAD3_MASK                        GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD3_LSB                         14
-#define CSR_ACSMBNKSELLOAD3_MASK                        BIT(14)
+#define CSR_ACSMBNKSELLOAD3_MASK                        DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE3_LSB                         15
-#define CSR_ACSMLONGBUBBLE3_MASK                        BIT(15)
+#define CSR_ACSMLONGBUBBLE3_MASK                        DDR_BIT(15)
 /* CSR_ACSMSEQ3X4 */
 #define CSR_ACSMSEQ3X4_LSB                              0
 #define CSR_ACSMSEQ3X4_MASK                             GENMASK_32(15, 0)
@@ -4344,9 +4344,9 @@
 #define CSR_ACSMADRSELLOAD4_LSB                         12
 #define CSR_ACSMADRSELLOAD4_MASK                        GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD4_LSB                         14
-#define CSR_ACSMBNKSELLOAD4_MASK                        BIT(14)
+#define CSR_ACSMBNKSELLOAD4_MASK                        DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE4_LSB                         15
-#define CSR_ACSMLONGBUBBLE4_MASK                        BIT(15)
+#define CSR_ACSMLONGBUBBLE4_MASK                        DDR_BIT(15)
 /* CSR_ACSMSEQ3X5 */
 #define CSR_ACSMSEQ3X5_LSB                              0
 #define CSR_ACSMSEQ3X5_MASK                             GENMASK_32(15, 0)
@@ -4359,9 +4359,9 @@
 #define CSR_ACSMADRSELLOAD5_LSB                         12
 #define CSR_ACSMADRSELLOAD5_MASK                        GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD5_LSB                         14
-#define CSR_ACSMBNKSELLOAD5_MASK                        BIT(14)
+#define CSR_ACSMBNKSELLOAD5_MASK                        DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE5_LSB                         15
-#define CSR_ACSMLONGBUBBLE5_MASK                        BIT(15)
+#define CSR_ACSMLONGBUBBLE5_MASK                        DDR_BIT(15)
 /* CSR_ACSMSEQ3X6 */
 #define CSR_ACSMSEQ3X6_LSB                              0
 #define CSR_ACSMSEQ3X6_MASK                             GENMASK_32(15, 0)
@@ -4374,9 +4374,9 @@
 #define CSR_ACSMADRSELLOAD6_LSB                         12
 #define CSR_ACSMADRSELLOAD6_MASK                        GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD6_LSB                         14
-#define CSR_ACSMBNKSELLOAD6_MASK                        BIT(14)
+#define CSR_ACSMBNKSELLOAD6_MASK                        DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE6_LSB                         15
-#define CSR_ACSMLONGBUBBLE6_MASK                        BIT(15)
+#define CSR_ACSMLONGBUBBLE6_MASK                        DDR_BIT(15)
 /* CSR_ACSMSEQ3X7 */
 #define CSR_ACSMSEQ3X7_LSB                              0
 #define CSR_ACSMSEQ3X7_MASK                             GENMASK_32(15, 0)
@@ -4389,9 +4389,9 @@
 #define CSR_ACSMADRSELLOAD7_LSB                         12
 #define CSR_ACSMADRSELLOAD7_MASK                        GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD7_LSB                         14
-#define CSR_ACSMBNKSELLOAD7_MASK                        BIT(14)
+#define CSR_ACSMBNKSELLOAD7_MASK                        DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE7_LSB                         15
-#define CSR_ACSMLONGBUBBLE7_MASK                        BIT(15)
+#define CSR_ACSMLONGBUBBLE7_MASK                        DDR_BIT(15)
 /* CSR_ACSMSEQ3X8 */
 #define CSR_ACSMSEQ3X8_LSB                              0
 #define CSR_ACSMSEQ3X8_MASK                             GENMASK_32(15, 0)
@@ -4404,9 +4404,9 @@
 #define CSR_ACSMADRSELLOAD8_LSB                         12
 #define CSR_ACSMADRSELLOAD8_MASK                        GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD8_LSB                         14
-#define CSR_ACSMBNKSELLOAD8_MASK                        BIT(14)
+#define CSR_ACSMBNKSELLOAD8_MASK                        DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE8_LSB                         15
-#define CSR_ACSMLONGBUBBLE8_MASK                        BIT(15)
+#define CSR_ACSMLONGBUBBLE8_MASK                        DDR_BIT(15)
 /* CSR_ACSMSEQ3X9 */
 #define CSR_ACSMSEQ3X9_LSB                              0
 #define CSR_ACSMSEQ3X9_MASK                             GENMASK_32(15, 0)
@@ -4419,9 +4419,9 @@
 #define CSR_ACSMADRSELLOAD9_LSB                         12
 #define CSR_ACSMADRSELLOAD9_MASK                        GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD9_LSB                         14
-#define CSR_ACSMBNKSELLOAD9_MASK                        BIT(14)
+#define CSR_ACSMBNKSELLOAD9_MASK                        DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE9_LSB                         15
-#define CSR_ACSMLONGBUBBLE9_MASK                        BIT(15)
+#define CSR_ACSMLONGBUBBLE9_MASK                        DDR_BIT(15)
 /* CSR_ACSMSEQ3X10 */
 #define CSR_ACSMSEQ3X10_LSB                             0
 #define CSR_ACSMSEQ3X10_MASK                            GENMASK_32(15, 0)
@@ -4434,9 +4434,9 @@
 #define CSR_ACSMADRSELLOAD10_LSB                        12
 #define CSR_ACSMADRSELLOAD10_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD10_LSB                        14
-#define CSR_ACSMBNKSELLOAD10_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD10_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE10_LSB                        15
-#define CSR_ACSMLONGBUBBLE10_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE10_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X11 */
 #define CSR_ACSMSEQ3X11_LSB                             0
 #define CSR_ACSMSEQ3X11_MASK                            GENMASK_32(15, 0)
@@ -4449,9 +4449,9 @@
 #define CSR_ACSMADRSELLOAD11_LSB                        12
 #define CSR_ACSMADRSELLOAD11_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD11_LSB                        14
-#define CSR_ACSMBNKSELLOAD11_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD11_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE11_LSB                        15
-#define CSR_ACSMLONGBUBBLE11_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE11_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X12 */
 #define CSR_ACSMSEQ3X12_LSB                             0
 #define CSR_ACSMSEQ3X12_MASK                            GENMASK_32(15, 0)
@@ -4464,9 +4464,9 @@
 #define CSR_ACSMADRSELLOAD12_LSB                        12
 #define CSR_ACSMADRSELLOAD12_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD12_LSB                        14
-#define CSR_ACSMBNKSELLOAD12_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD12_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE12_LSB                        15
-#define CSR_ACSMLONGBUBBLE12_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE12_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X13 */
 #define CSR_ACSMSEQ3X13_LSB                             0
 #define CSR_ACSMSEQ3X13_MASK                            GENMASK_32(15, 0)
@@ -4479,9 +4479,9 @@
 #define CSR_ACSMADRSELLOAD13_LSB                        12
 #define CSR_ACSMADRSELLOAD13_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD13_LSB                        14
-#define CSR_ACSMBNKSELLOAD13_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD13_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE13_LSB                        15
-#define CSR_ACSMLONGBUBBLE13_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE13_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X14 */
 #define CSR_ACSMSEQ3X14_LSB                             0
 #define CSR_ACSMSEQ3X14_MASK                            GENMASK_32(15, 0)
@@ -4494,9 +4494,9 @@
 #define CSR_ACSMADRSELLOAD14_LSB                        12
 #define CSR_ACSMADRSELLOAD14_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD14_LSB                        14
-#define CSR_ACSMBNKSELLOAD14_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD14_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE14_LSB                        15
-#define CSR_ACSMLONGBUBBLE14_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE14_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X15 */
 #define CSR_ACSMSEQ3X15_LSB                             0
 #define CSR_ACSMSEQ3X15_MASK                            GENMASK_32(15, 0)
@@ -4509,9 +4509,9 @@
 #define CSR_ACSMADRSELLOAD15_LSB                        12
 #define CSR_ACSMADRSELLOAD15_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD15_LSB                        14
-#define CSR_ACSMBNKSELLOAD15_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD15_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE15_LSB                        15
-#define CSR_ACSMLONGBUBBLE15_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE15_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X16 */
 #define CSR_ACSMSEQ3X16_LSB                             0
 #define CSR_ACSMSEQ3X16_MASK                            GENMASK_32(15, 0)
@@ -4524,9 +4524,9 @@
 #define CSR_ACSMADRSELLOAD16_LSB                        12
 #define CSR_ACSMADRSELLOAD16_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD16_LSB                        14
-#define CSR_ACSMBNKSELLOAD16_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD16_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE16_LSB                        15
-#define CSR_ACSMLONGBUBBLE16_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE16_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X17 */
 #define CSR_ACSMSEQ3X17_LSB                             0
 #define CSR_ACSMSEQ3X17_MASK                            GENMASK_32(15, 0)
@@ -4539,9 +4539,9 @@
 #define CSR_ACSMADRSELLOAD17_LSB                        12
 #define CSR_ACSMADRSELLOAD17_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD17_LSB                        14
-#define CSR_ACSMBNKSELLOAD17_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD17_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE17_LSB                        15
-#define CSR_ACSMLONGBUBBLE17_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE17_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X18 */
 #define CSR_ACSMSEQ3X18_LSB                             0
 #define CSR_ACSMSEQ3X18_MASK                            GENMASK_32(15, 0)
@@ -4554,9 +4554,9 @@
 #define CSR_ACSMADRSELLOAD18_LSB                        12
 #define CSR_ACSMADRSELLOAD18_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD18_LSB                        14
-#define CSR_ACSMBNKSELLOAD18_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD18_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE18_LSB                        15
-#define CSR_ACSMLONGBUBBLE18_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE18_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X19 */
 #define CSR_ACSMSEQ3X19_LSB                             0
 #define CSR_ACSMSEQ3X19_MASK                            GENMASK_32(15, 0)
@@ -4569,9 +4569,9 @@
 #define CSR_ACSMADRSELLOAD19_LSB                        12
 #define CSR_ACSMADRSELLOAD19_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD19_LSB                        14
-#define CSR_ACSMBNKSELLOAD19_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD19_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE19_LSB                        15
-#define CSR_ACSMLONGBUBBLE19_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE19_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X20 */
 #define CSR_ACSMSEQ3X20_LSB                             0
 #define CSR_ACSMSEQ3X20_MASK                            GENMASK_32(15, 0)
@@ -4584,9 +4584,9 @@
 #define CSR_ACSMADRSELLOAD20_LSB                        12
 #define CSR_ACSMADRSELLOAD20_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD20_LSB                        14
-#define CSR_ACSMBNKSELLOAD20_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD20_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE20_LSB                        15
-#define CSR_ACSMLONGBUBBLE20_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE20_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X21 */
 #define CSR_ACSMSEQ3X21_LSB                             0
 #define CSR_ACSMSEQ3X21_MASK                            GENMASK_32(15, 0)
@@ -4599,9 +4599,9 @@
 #define CSR_ACSMADRSELLOAD21_LSB                        12
 #define CSR_ACSMADRSELLOAD21_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD21_LSB                        14
-#define CSR_ACSMBNKSELLOAD21_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD21_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE21_LSB                        15
-#define CSR_ACSMLONGBUBBLE21_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE21_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X22 */
 #define CSR_ACSMSEQ3X22_LSB                             0
 #define CSR_ACSMSEQ3X22_MASK                            GENMASK_32(15, 0)
@@ -4614,9 +4614,9 @@
 #define CSR_ACSMADRSELLOAD22_LSB                        12
 #define CSR_ACSMADRSELLOAD22_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD22_LSB                        14
-#define CSR_ACSMBNKSELLOAD22_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD22_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE22_LSB                        15
-#define CSR_ACSMLONGBUBBLE22_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE22_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X23 */
 #define CSR_ACSMSEQ3X23_LSB                             0
 #define CSR_ACSMSEQ3X23_MASK                            GENMASK_32(15, 0)
@@ -4629,9 +4629,9 @@
 #define CSR_ACSMADRSELLOAD23_LSB                        12
 #define CSR_ACSMADRSELLOAD23_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD23_LSB                        14
-#define CSR_ACSMBNKSELLOAD23_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD23_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE23_LSB                        15
-#define CSR_ACSMLONGBUBBLE23_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE23_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X24 */
 #define CSR_ACSMSEQ3X24_LSB                             0
 #define CSR_ACSMSEQ3X24_MASK                            GENMASK_32(15, 0)
@@ -4644,9 +4644,9 @@
 #define CSR_ACSMADRSELLOAD24_LSB                        12
 #define CSR_ACSMADRSELLOAD24_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD24_LSB                        14
-#define CSR_ACSMBNKSELLOAD24_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD24_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE24_LSB                        15
-#define CSR_ACSMLONGBUBBLE24_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE24_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X25 */
 #define CSR_ACSMSEQ3X25_LSB                             0
 #define CSR_ACSMSEQ3X25_MASK                            GENMASK_32(15, 0)
@@ -4659,9 +4659,9 @@
 #define CSR_ACSMADRSELLOAD25_LSB                        12
 #define CSR_ACSMADRSELLOAD25_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD25_LSB                        14
-#define CSR_ACSMBNKSELLOAD25_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD25_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE25_LSB                        15
-#define CSR_ACSMLONGBUBBLE25_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE25_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X26 */
 #define CSR_ACSMSEQ3X26_LSB                             0
 #define CSR_ACSMSEQ3X26_MASK                            GENMASK_32(15, 0)
@@ -4674,9 +4674,9 @@
 #define CSR_ACSMADRSELLOAD26_LSB                        12
 #define CSR_ACSMADRSELLOAD26_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD26_LSB                        14
-#define CSR_ACSMBNKSELLOAD26_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD26_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE26_LSB                        15
-#define CSR_ACSMLONGBUBBLE26_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE26_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X27 */
 #define CSR_ACSMSEQ3X27_LSB                             0
 #define CSR_ACSMSEQ3X27_MASK                            GENMASK_32(15, 0)
@@ -4689,9 +4689,9 @@
 #define CSR_ACSMADRSELLOAD27_LSB                        12
 #define CSR_ACSMADRSELLOAD27_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD27_LSB                        14
-#define CSR_ACSMBNKSELLOAD27_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD27_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE27_LSB                        15
-#define CSR_ACSMLONGBUBBLE27_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE27_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X28 */
 #define CSR_ACSMSEQ3X28_LSB                             0
 #define CSR_ACSMSEQ3X28_MASK                            GENMASK_32(15, 0)
@@ -4704,9 +4704,9 @@
 #define CSR_ACSMADRSELLOAD28_LSB                        12
 #define CSR_ACSMADRSELLOAD28_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD28_LSB                        14
-#define CSR_ACSMBNKSELLOAD28_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD28_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE28_LSB                        15
-#define CSR_ACSMLONGBUBBLE28_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE28_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X29 */
 #define CSR_ACSMSEQ3X29_LSB                             0
 #define CSR_ACSMSEQ3X29_MASK                            GENMASK_32(15, 0)
@@ -4719,9 +4719,9 @@
 #define CSR_ACSMADRSELLOAD29_LSB                        12
 #define CSR_ACSMADRSELLOAD29_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD29_LSB                        14
-#define CSR_ACSMBNKSELLOAD29_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD29_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE29_LSB                        15
-#define CSR_ACSMLONGBUBBLE29_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE29_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X30 */
 #define CSR_ACSMSEQ3X30_LSB                             0
 #define CSR_ACSMSEQ3X30_MASK                            GENMASK_32(15, 0)
@@ -4734,9 +4734,9 @@
 #define CSR_ACSMADRSELLOAD30_LSB                        12
 #define CSR_ACSMADRSELLOAD30_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD30_LSB                        14
-#define CSR_ACSMBNKSELLOAD30_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD30_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE30_LSB                        15
-#define CSR_ACSMLONGBUBBLE30_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE30_MASK                       DDR_BIT(15)
 /* CSR_ACSMSEQ3X31 */
 #define CSR_ACSMSEQ3X31_LSB                             0
 #define CSR_ACSMSEQ3X31_MASK                            GENMASK_32(15, 0)
@@ -4749,9 +4749,9 @@
 #define CSR_ACSMADRSELLOAD31_LSB                        12
 #define CSR_ACSMADRSELLOAD31_MASK                       GENMASK_32(13, 12)
 #define CSR_ACSMBNKSELLOAD31_LSB                        14
-#define CSR_ACSMBNKSELLOAD31_MASK                       BIT(14)
+#define CSR_ACSMBNKSELLOAD31_MASK                       DDR_BIT(14)
 #define CSR_ACSMLONGBUBBLE31_LSB                        15
-#define CSR_ACSMLONGBUBBLE31_MASK                       BIT(15)
+#define CSR_ACSMLONGBUBBLE31_MASK                       DDR_BIT(15)
 /* CSR_ACSMPLAYBACK0X0 */
 #define CSR_ACSMPLAYBACK0X0_LSB                         0
 #define CSR_ACSMPLAYBACK0X0_MASK                        GENMASK_32(11, 0)
@@ -4802,7 +4802,7 @@
 #define CSR_ACSMPLAYBACK1X7_MASK                        GENMASK_32(11, 0)
 /* CSR_ACSMPSTATEOVREN */
 #define CSR_ACSMPSTATEOVREN_LSB                         0
-#define CSR_ACSMPSTATEOVREN_MASK                        BIT(0)
+#define CSR_ACSMPSTATEOVREN_MASK                        DDR_BIT(0)
 /* CSR_ACSMPSTATEOVRVAL */
 #define CSR_ACSMPSTATEOVRVAL_LSB                        0
 #define CSR_ACSMPSTATEOVRVAL_MASK                       GENMASK_32(3, 0)
@@ -4812,7 +4812,7 @@
 #define CSR_ACSMCSMASK_LSB                              0
 #define CSR_ACSMCSMASK_MASK                             GENMASK_32(7, 0)
 #define CSR_ACSMCSMODE_LSB                              8
-#define CSR_ACSMCSMODE_MASK                             BIT(8)
+#define CSR_ACSMCSMODE_MASK                             DDR_BIT(8)
 #define CSR_ACSMPARMASK_LSB                             9
 #define CSR_ACSMPARMASK_MASK                            GENMASK_32(12, 9)
 /* CSR_ACSMCKEVAL */
@@ -5038,27 +5038,27 @@
 #define CSR_ACSMDDRADRUP_LSB                            0
 #define CSR_ACSMDDRADRUP_MASK                           GENMASK_32(3, 0)
 #define CSR_ACSMHIGHADDR_LSB                            4
-#define CSR_ACSMHIGHADDR_MASK                           BIT(4)
+#define CSR_ACSMHIGHADDR_MASK                           DDR_BIT(4)
 #define CSR_ACSMADR13PLUGHOLE_LSB                       5
-#define CSR_ACSMADR13PLUGHOLE_MASK                      BIT(5)
+#define CSR_ACSMADR13PLUGHOLE_MASK                      DDR_BIT(5)
 #define CSR_ACSMCTRL16RSVD_LSB                          6
-#define CSR_ACSMCTRL16RSVD_MASK                         BIT(6)
+#define CSR_ACSMCTRL16RSVD_MASK                         DDR_BIT(6)
 #define CSR_ACSMWRTLVLODTCTRL_LSB                       7
-#define CSR_ACSMWRTLVLODTCTRL_MASK                      BIT(7)
+#define CSR_ACSMWRTLVLODTCTRL_MASK                      DDR_BIT(7)
 #define CSR_ACSMWRTLVLODT_LSB                           8
 #define CSR_ACSMWRTLVLODT_MASK                          GENMASK_32(11, 8)
 #define CSR_ACSM2TGRPINHIBIT_LSB                        12
 #define CSR_ACSM2TGRPINHIBIT_MASK                       GENMASK_32(15, 12)
 /* CSR_LOWSPEEDCLOCKSTOPVAL */
 #define CSR_LOWSPEEDCLOCKSTOPVAL_LSB                    0
-#define CSR_LOWSPEEDCLOCKSTOPVAL_MASK                   BIT(0)
+#define CSR_LOWSPEEDCLOCKSTOPVAL_MASK                   DDR_BIT(0)
 /* CSR_ACSMCTRL18 */
 #define CSR_ACSMCTRL18_LSB                              0
 #define CSR_ACSMCTRL18_MASK                             GENMASK_32(1, 0)
 #define CSR_ACSMLOCALDONE_LSB                           0
-#define CSR_ACSMLOCALDONE_MASK                          BIT(0)
+#define CSR_ACSMLOCALDONE_MASK                          DDR_BIT(0)
 #define CSR_ACSMSTOPONERRASRTD_LSB                      1
-#define CSR_ACSMSTOPONERRASRTD_MASK                     BIT(1)
+#define CSR_ACSMSTOPONERRASRTD_MASK                     DDR_BIT(1)
 /* CSR_ACSMCTRL19 */
 #define CSR_ACSMCTRL19_LSB                              0
 #define CSR_ACSMCTRL19_MASK                             GENMASK_32(2, 0)
@@ -5095,37 +5095,37 @@
 #define CSR_ACSMCTRL0_LSB                               0
 #define CSR_ACSMCTRL0_MASK                              GENMASK_32(15, 0)
 #define CSR_ACSMRSVDCTRL00_LSB                          0
-#define CSR_ACSMRSVDCTRL00_MASK                         BIT(0)
+#define CSR_ACSMRSVDCTRL00_MASK                         DDR_BIT(0)
 #define CSR_ACSMDYNBLMODE_LSB                           1
-#define CSR_ACSMDYNBLMODE_MASK                          BIT(1)
+#define CSR_ACSMDYNBLMODE_MASK                          DDR_BIT(1)
 #define CSR_ACSMBURSTLEN_LSB                            2
-#define CSR_ACSMBURSTLEN_MASK                           BIT(2)
+#define CSR_ACSMBURSTLEN_MASK                           DDR_BIT(2)
 #define CSR_ACSMINFLOOP_LSB                             3
-#define CSR_ACSMINFLOOP_MASK                            BIT(3)
+#define CSR_ACSMINFLOOP_MASK                            DDR_BIT(3)
 #define CSR_ACSMRXVALMODE_LSB                           4
-#define CSR_ACSMRXVALMODE_MASK                          BIT(4)
+#define CSR_ACSMRXVALMODE_MASK                          DDR_BIT(4)
 #define CSR_ACSMSTPONERRMODE_LSB                        5
-#define CSR_ACSMSTPONERRMODE_MASK                       BIT(5)
+#define CSR_ACSMSTPONERRMODE_MASK                       DDR_BIT(5)
 #define CSR_ACSM2TMODE_LSB                              6
-#define CSR_ACSM2TMODE_MASK                             BIT(6)
+#define CSR_ACSM2TMODE_MASK                             DDR_BIT(6)
 #define CSR_ACSMTRAINSOEMODE_LSB                        7
-#define CSR_ACSMTRAINSOEMODE_MASK                       BIT(7)
+#define CSR_ACSMTRAINSOEMODE_MASK                       DDR_BIT(7)
 #define CSR_ACSMGATEDDRCMD_LSB                          8
-#define CSR_ACSMGATEDDRCMD_MASK                         BIT(8)
+#define CSR_ACSMGATEDDRCMD_MASK                         DDR_BIT(8)
 #define CSR_ACSMGEARDOWNMODE_LSB                        9
-#define CSR_ACSMGEARDOWNMODE_MASK                       BIT(9)
+#define CSR_ACSMGEARDOWNMODE_MASK                       DDR_BIT(9)
 #define CSR_ACSMGEARDOWNPHASE_LSB                       10
-#define CSR_ACSMGEARDOWNPHASE_MASK                      BIT(10)
+#define CSR_ACSMGEARDOWNPHASE_MASK                      DDR_BIT(10)
 #define CSR_ACSMGEARDOWNSYNC_LSB                        11
-#define CSR_ACSMGEARDOWNSYNC_MASK                       BIT(11)
+#define CSR_ACSMGEARDOWNSYNC_MASK                       DDR_BIT(11)
 #define CSR_ACSMCAPRBSMODE_LSB                          12
-#define CSR_ACSMCAPRBSMODE_MASK                         BIT(12)
+#define CSR_ACSMCAPRBSMODE_MASK                         DDR_BIT(12)
 #define CSR_ACSMGATERXFIFOWRITE_LSB                     13
-#define CSR_ACSMGATERXFIFOWRITE_MASK                    BIT(13)
+#define CSR_ACSMGATERXFIFOWRITE_MASK                    DDR_BIT(13)
 #define CSR_ACSMPARMODE_LSB                             14
-#define CSR_ACSMPARMODE_MASK                            BIT(14)
+#define CSR_ACSMPARMODE_MASK                            DDR_BIT(14)
 #define CSR_ACSMTDSMODE_LSB                             15
-#define CSR_ACSMTDSMODE_MASK                            BIT(15)
+#define CSR_ACSMTDSMODE_MASK                            DDR_BIT(15)
 /* CSR_ACSMCTRL1 */
 #define CSR_ACSMCTRL1_LSB                               0
 #define CSR_ACSMCTRL1_MASK                              GENMASK_32(15, 0)
@@ -5219,13 +5219,13 @@
 #define CSR_PPGCCTRL1_LSB                               1
 #define CSR_PPGCCTRL1_MASK                              GENMASK_32(4, 1)
 #define CSR_HWTTXDBIEN_LSB                              1
-#define CSR_HWTTXDBIEN_MASK                             BIT(1)
+#define CSR_HWTTXDBIEN_MASK                             DDR_BIT(1)
 #define CSR_HWTRXDBIEN_LSB                              2
-#define CSR_HWTRXDBIEN_MASK                             BIT(2)
+#define CSR_HWTRXDBIEN_MASK                             DDR_BIT(2)
 #define CSR_HWTTXDMDBIVAL_LSB                           3
-#define CSR_HWTTXDMDBIVAL_MASK                          BIT(3)
+#define CSR_HWTTXDMDBIVAL_MASK                          DDR_BIT(3)
 #define CSR_HWTTXDMDBISEL_LSB                           4
-#define CSR_HWTTXDMDBISEL_MASK                          BIT(4)
+#define CSR_HWTTXDMDBISEL_MASK                          DDR_BIT(4)
 /* CSR_PPGCLANE2CRCINMAP0 */
 #define CSR_PPGCLANE2CRCINMAP0_LSB                      0
 #define CSR_PPGCLANE2CRCINMAP0_MASK                     GENMASK_32(11, 0)
@@ -5312,17 +5312,17 @@
 #define CSR_PRBSGENCTL_LSB                              0
 #define CSR_PRBSGENCTL_MASK                             GENMASK_32(6, 0)
 #define CSR_PPGCMODE_LSB                                0
-#define CSR_PPGCMODE_MASK                               BIT(0)
+#define CSR_PPGCMODE_MASK                               DDR_BIT(0)
 #define CSR_PPGCDMMODE_LSB                              1
-#define CSR_PPGCDMMODE_MASK                             BIT(1)
+#define CSR_PPGCDMMODE_MASK                             DDR_BIT(1)
 #define CSR_PPGCLDFFMODE_LSB                            2
-#define CSR_PPGCLDFFMODE_MASK                           BIT(2)
+#define CSR_PPGCLDFFMODE_MASK                           DDR_BIT(2)
 #define CSR_PPGCSEL23BPRBS_LSB                          3
-#define CSR_PPGCSEL23BPRBS_MASK                         BIT(3)
+#define CSR_PPGCSEL23BPRBS_MASK                         DDR_BIT(3)
 #define CSR_PPGCPATADV_LSB                              4
 #define CSR_PPGCPATADV_MASK                             GENMASK_32(5, 4)
 #define CSR_PPGCENBPATSTRESSMODE_LSB                    6
-#define CSR_PPGCENBPATSTRESSMODE_MASK                   BIT(6)
+#define CSR_PPGCENBPATSTRESSMODE_MASK                   DDR_BIT(6)
 /* CSR_PRBSGENSTATELO */
 #define CSR_PRBSGENSTATELO_LSB                          0
 #define CSR_PRBSGENSTATELO_MASK                         GENMASK_32(15, 0)
@@ -5492,7 +5492,7 @@
 #define CSR_SEQ0BWAITCONDSEL_MASK                       GENMASK_32(2, 0)
 /* CSR_PHYINLP3 */
 #define CSR_PHYINLP3_LSB                                0
-#define CSR_PHYINLP3_MASK                               BIT(0)
+#define CSR_PHYINLP3_MASK                               DDR_BIT(0)
 /* CSR_SEQUENCEREG0B0S0 */
 #define CSR_SEQUENCEREG0B0S0_LSB                        0
 #define CSR_SEQUENCEREG0B0S0_MASK                       GENMASK_32(15, 0)
@@ -6626,9 +6626,9 @@
 /* DRTUB0 register offsets */
 /* CSR_DCTSHADOWREGS */
 #define CSR_DCTSHADOWREGS_LSB                           0
-#define CSR_DCTSHADOWREGS_MASK                          BIT(0)
+#define CSR_DCTSHADOWREGS_MASK                          DDR_BIT(0)
 #define CSR_DCTWRITEPROTSHADOW_LSB                      0
-#define CSR_DCTWRITEPROTSHADOW_MASK                     BIT(0)
+#define CSR_DCTWRITEPROTSHADOW_MASK                     DDR_BIT(0)
 /* CSR_DCTWRITEONLYSHADOW */
 #define CSR_DCTWRITEONLYSHADOW_LSB                      0
 #define CSR_DCTWRITEONLYSHADOW_MASK                     GENMASK_32(15, 0)
@@ -6637,23 +6637,23 @@
 #define CSR_UCTWRITEONLY_MASK                           GENMASK_32(15, 0)
 /* CSR_UCTWRITEPROT */
 #define CSR_UCTWRITEPROT_LSB                            0
-#define CSR_UCTWRITEPROT_MASK                           BIT(0)
+#define CSR_UCTWRITEPROT_MASK                           DDR_BIT(0)
 /* CSR_UCTDATWRITEONLY */
 #define CSR_UCTDATWRITEONLY_LSB                         0
 #define CSR_UCTDATWRITEONLY_MASK                        GENMASK_32(15, 0)
 /* CSR_UCTDATWRITEPROT */
 #define CSR_UCTDATWRITEPROT_LSB                         0
-#define CSR_UCTDATWRITEPROT_MASK                        BIT(0)
+#define CSR_UCTDATWRITEPROT_MASK                        DDR_BIT(0)
 /* CSR_UCTLERR */
 #define CSR_UCTLERR_LSB                                 0
-#define CSR_UCTLERR_MASK                                BIT(0)
+#define CSR_UCTLERR_MASK                                DDR_BIT(0)
 /* CSR_UCCLKHCLKENABLES */
 #define CSR_UCCLKHCLKENABLES_LSB                        0
 #define CSR_UCCLKHCLKENABLES_MASK                       GENMASK_32(1, 0)
 #define CSR_UCCLKEN_LSB                                 0
-#define CSR_UCCLKEN_MASK                                BIT(0)
+#define CSR_UCCLKEN_MASK                                DDR_BIT(0)
 #define CSR_HCLKEN_LSB                                  1
-#define CSR_HCLKEN_MASK                                 BIT(1)
+#define CSR_HCLKEN_MASK                                 DDR_BIT(1)
 /* CSR_CURPSTATE0B */
 #define CSR_CURPSTATE0B_LSB                             0
 #define CSR_CURPSTATE0B_MASK                            GENMASK_32(3, 0)
@@ -6681,20 +6681,20 @@
 /* APBONLY0 register offsets */
 /* CSR_MICROCONTMUXSEL */
 #define CSR_MICROCONTMUXSEL_LSB                         0
-#define CSR_MICROCONTMUXSEL_MASK                        BIT(0)
+#define CSR_MICROCONTMUXSEL_MASK                        DDR_BIT(0)
 /* CSR_UCTSHADOWREGS */
 #define CSR_UCTSHADOWREGS_LSB                           0
 #define CSR_UCTSHADOWREGS_MASK                          GENMASK_32(1, 0)
 #define CSR_UCTWRITEPROTSHADOW_LSB                      0
-#define CSR_UCTWRITEPROTSHADOW_MASK                     BIT(0)
+#define CSR_UCTWRITEPROTSHADOW_MASK                     DDR_BIT(0)
 #define CSR_UCTDATWRITEPROTSHADOW_LSB                   1
-#define CSR_UCTDATWRITEPROTSHADOW_MASK                  BIT(1)
+#define CSR_UCTDATWRITEPROTSHADOW_MASK                  DDR_BIT(1)
 /* CSR_DCTWRITEONLY */
 #define CSR_DCTWRITEONLY_LSB                            0
 #define CSR_DCTWRITEONLY_MASK                           GENMASK_32(15, 0)
 /* CSR_DCTWRITEPROT */
 #define CSR_DCTWRITEPROT_LSB                            0
-#define CSR_DCTWRITEPROT_MASK                           BIT(0)
+#define CSR_DCTWRITEPROT_MASK                           DDR_BIT(0)
 /* CSR_UCTWRITEONLYSHADOW */
 #define CSR_UCTWRITEONLYSHADOW_LSB                      0
 #define CSR_UCTWRITEONLYSHADOW_MASK                     GENMASK_32(15, 0)
@@ -6703,7 +6703,7 @@
 #define CSR_UCTDATWRITEONLYSHADOW_MASK                  GENMASK_32(15, 0)
 /* CSR_NEVERGATECSRCLOCK */
 #define CSR_NEVERGATECSRCLOCK_LSB                       0
-#define CSR_NEVERGATECSRCLOCK_MASK                      BIT(0)
+#define CSR_NEVERGATECSRCLOCK_MASK                      DDR_BIT(0)
 /* CSR_DFICFGRDDATAVALIDTICKS */
 #define CSR_DFICFGRDDATAVALIDTICKS_LSB                  0
 #define CSR_DFICFGRDDATAVALIDTICKS_MASK                 GENMASK_32(5, 0)
@@ -6711,33 +6711,33 @@
 #define CSR_MICRORESET_LSB                              0
 #define CSR_MICRORESET_MASK                             GENMASK_32(3, 0)
 #define CSR_STALLTOMICRO_LSB                            0
-#define CSR_STALLTOMICRO_MASK                           BIT(0)
+#define CSR_STALLTOMICRO_MASK                           DDR_BIT(0)
 #define CSR_TESTWAKEUP_LSB                              1
-#define CSR_TESTWAKEUP_MASK                             BIT(1)
+#define CSR_TESTWAKEUP_MASK                             DDR_BIT(1)
 #define CSR_RSVDMICRO_LSB                               2
-#define CSR_RSVDMICRO_MASK                              BIT(2)
+#define CSR_RSVDMICRO_MASK                              DDR_BIT(2)
 #define CSR_RESETTOMICRO_LSB                            3
-#define CSR_RESETTOMICRO_MASK                           BIT(3)
+#define CSR_RESETTOMICRO_MASK                           DDR_BIT(3)
 /* CSR_SEQUENCEROVERRIDE */
 #define CSR_SEQUENCEROVERRIDE_LSB                       0
 #define CSR_SEQUENCEROVERRIDE_MASK                      GENMASK_32(10, 0)
 #define CSR_FORCESEQ0BDFIFREQ_LSB                       0
 #define CSR_FORCESEQ0BDFIFREQ_MASK                      GENMASK_32(4, 0)
 #define CSR_FORCESEQ0BSTART_LSB                         5
-#define CSR_FORCESEQ0BSTART_MASK                        BIT(5)
+#define CSR_FORCESEQ0BSTART_MASK                        DDR_BIT(5)
 #define CSR_FORCESEQ0BSTOP_LSB                          6
-#define CSR_FORCESEQ0BSTOP_MASK                         BIT(6)
+#define CSR_FORCESEQ0BSTOP_MASK                         DDR_BIT(6)
 #define CSR_BLOCKSEQ0BREQUESTS_LSB                      7
-#define CSR_BLOCKSEQ0BREQUESTS_MASK                     BIT(7)
+#define CSR_BLOCKSEQ0BREQUESTS_MASK                     DDR_BIT(7)
 #define CSR_BLOCKSEQ0BACK_LSB                           8
-#define CSR_BLOCKSEQ0BACK_MASK                          BIT(8)
+#define CSR_BLOCKSEQ0BACK_MASK                          DDR_BIT(8)
 #define CSR_DISABLETERMINATEFLAG_LSB                    9
-#define CSR_DISABLETERMINATEFLAG_MASK                   BIT(9)
+#define CSR_DISABLETERMINATEFLAG_MASK                   DDR_BIT(9)
 #define CSR_SELECTDFIFREQTOGPRMUX_LSB                   10
-#define CSR_SELECTDFIFREQTOGPRMUX_MASK                  BIT(10)
+#define CSR_SELECTDFIFREQTOGPRMUX_MASK                  DDR_BIT(10)
 /* CSR_DFIINITCOMPLETESHADOW */
 #define CSR_DFIINITCOMPLETESHADOW_LSB                   0
-#define CSR_DFIINITCOMPLETESHADOW_MASK                  BIT(0)
+#define CSR_DFIINITCOMPLETESHADOW_MASK                  DDR_BIT(0)
 
 
 /* Fields brought to you by the letter B */

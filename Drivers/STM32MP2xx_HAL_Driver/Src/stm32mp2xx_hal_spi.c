@@ -3649,7 +3649,7 @@ static void SPI_RxISR_8BIT(SPI_HandleTypeDef *hspi)
   hspi->pRxBuffPtr += sizeof(uint8_t);
   hspi->RxXferCount--;
 
-  /* Disable IT if no more data excepted */
+  /* Disable IT if no more data expected */
   if (hspi->RxXferCount == 0UL)
   {
     /* Disable RXP interrupts */
@@ -3677,7 +3677,7 @@ static void SPI_RxISR_16BIT(SPI_HandleTypeDef *hspi)
   hspi->pRxBuffPtr += sizeof(uint16_t);
   hspi->RxXferCount--;
 
-  /* Disable IT if no more data excepted */
+  /* Disable IT if no more data expected */
   if (hspi->RxXferCount == 0UL)
   {
     /* Disable RXP interrupts */
@@ -3699,7 +3699,7 @@ static void SPI_RxISR_32BIT(SPI_HandleTypeDef *hspi)
   hspi->pRxBuffPtr += sizeof(uint32_t);
   hspi->RxXferCount--;
 
-  /* Disable IT if no more data excepted */
+  /* Disable IT if no more data expected */
   if (hspi->RxXferCount == 0UL)
   {
     /* Disable RXP interrupts */
@@ -3721,7 +3721,7 @@ static void SPI_TxISR_8BIT(SPI_HandleTypeDef *hspi)
   hspi->pTxBuffPtr += sizeof(uint8_t);
   hspi->TxXferCount--;
 
-  /* Disable IT if no more data excepted */
+  /* Disable IT if no more data expected */
   if (hspi->TxXferCount == 0UL)
   {
     /* Disable TXP interrupts */
@@ -3748,7 +3748,7 @@ static void SPI_TxISR_16BIT(SPI_HandleTypeDef *hspi)
   hspi->pTxBuffPtr += sizeof(uint16_t);
   hspi->TxXferCount--;
 
-  /* Disable IT if no more data excepted */
+  /* Disable IT if no more data expected */
   if (hspi->TxXferCount == 0UL)
   {
     /* Disable TXP interrupts */
@@ -3769,7 +3769,7 @@ static void SPI_TxISR_32BIT(SPI_HandleTypeDef *hspi)
   hspi->pTxBuffPtr += sizeof(uint32_t);
   hspi->TxXferCount--;
 
-  /* Disable IT if no more data excepted */
+  /* Disable IT if no more data expected */
   if (hspi->TxXferCount == 0UL)
   {
     /* Disable TXP interrupts */

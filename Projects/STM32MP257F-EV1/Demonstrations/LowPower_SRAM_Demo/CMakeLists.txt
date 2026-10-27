@@ -19,7 +19,9 @@ set(DEFINITIONS "-DSTM32MP257Cxx \
 				-DUSE_HAL_DRIVER \
 				-DNO_ATOMIC_64_SUPPORT \
 				-DMETAL_INTERNAL \
-				-DVIRTIO_DEVICE_ONLY \
+				-DVIRTIO_DEVICE_SUPPORT=1 \
+				-DVIRTIO_DRIVER_SUPPORT=0 \
+				-DVQ_RX_EMPTY_NOTIFY=0 \
 				-DMETAL_MAX_DEVICE_REGIONS=2 \
 				-DLINUX_RPROC_MASTER \
 				-DSTM32MP2 \
@@ -69,6 +71,7 @@ set(MW_SRC_FILES ${MW_SRC_FILES}
 						${BASE_DIR}/../../../../Middlewares/Third_Party/OpenAMP/open-amp/lib/rpmsg/rpmsg_virtio.c
 						${BASE_DIR}/../../../../Middlewares/Third_Party/OpenAMP/open-amp/lib/virtio/virtio.c
 						${BASE_DIR}/../../../../Middlewares/Third_Party/OpenAMP/open-amp/lib/virtio/virtqueue.c
+						${BASE_DIR}/../../../../Middlewares/Third_Party/OpenAMP/open-amp/lib/utils/utilities.c
 						${BASE_DIR}/../../../../Middlewares/Third_Party/OpenAMP/virtual_driver/virt_uart.c
 						)
 set(OPENAMP_SRC_GEN_FILES ${OPENAMP_SRC_GEN_FILES}
@@ -94,7 +97,7 @@ set(APPLICATION_SRC ${APPLICATION_SRC} ${HAL_SRC_FILES} ${BSP_SRC_FILES} ${UTILS
 
 include_directories(APPLICATION_INCLUDE ${BASE_DIR}/CM33/NonSecure/Core/Inc )
 include_directories(APPLICATION_INCLUDE ${BASE_DIR}/CM33/NonSecure/OPENAMP )
-include_directories(APPLICATION_INCLUDE ${BASE_DIR}/CM33/NonSecure/libmetal/lib/include )
+include_directories(APPLICATION_INCLUDE ${BASE_DIR}/build/libmetal/lib/include )
 include_directories(APPLICATION_INCLUDE ${BASE_DIR}/../../../../Middlewares/Third_Party/OpenAMP/open-amp/lib/include )
 include_directories(APPLICATION_INCLUDE ${BASE_DIR}/../../../../Middlewares/Third_Party/OpenAMP/virtual_driver )
 include_directories(APPLICATION_INCLUDE ${BASE_DIR}/../../../../Drivers/CMSIS/Device/ST/STM32MP2xx/Include )

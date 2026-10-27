@@ -74,8 +74,8 @@ typedef struct
   uint8_t buff[(ETH_RX_BUFFER_SIZE + 31) & ~31] __ALIGNED(32);
 } RxBuff_t;
 
-ETH_DMADescTypeDef DMARxDscrTab[ETH_RX_DESC_CNT] __attribute__((section(".RxDecripSection"))); /* Ethernet Rx DMA Descriptors */
-ETH_DMADescTypeDef DMATxDscrTab[ETH_TX_DESC_CNT] __attribute__((section(".TxDecripSection")));   /* Ethernet Tx DMA Descriptors */
+ETH_DMADescTypeDef DMARxDscrTab[ETH_RX_DESC_CNT] __attribute__((section(".RxDescripSection"))); /* Ethernet Rx DMA Descriptors */
+ETH_DMADescTypeDef DMATxDscrTab[ETH_TX_DESC_CNT] __attribute__((section(".TxDescripSection")));   /* Ethernet Tx DMA Descriptors */
 
 /* Memory Pool Declaration */
 LWIP_MEMPOOL_DECLARE(RX_POOL, ETH_RX_BUFFER_CNT, sizeof(RxBuff_t), "Zero-copy RX PBUF pool");
@@ -127,28 +127,6 @@ void pbuf_free_custom(struct pbuf *p);
   */
 static void low_level_init(struct netif *netif)
 {
-  /* Start ETH HAL Init */
-#if 0  // done in main.c MX_ETH_Init()
-  uint8_t macaddress[6]= {ETH_MAC_ADDR0, ETH_MAC_ADDR1, ETH_MAC_ADDR2, ETH_MAC_ADDR3, ETH_MAC_ADDR4, ETH_MAC_ADDR5};
-
-  heth.Instance = ETH;
-  heth.Init.MACAddr = macaddress;
-  heth.Init.MediaInterface = HAL_ETH_RMII_MODE;
-  heth.Init.RxDesc = DMARxDscrTab;
-  heth.Init.TxDesc = DMATxDscrTab;
-  heth.Init.RxBuffLen = ETH_RX_BUFFER_SIZE;
-
-  /* configure ethernet peripheral (GPIOs, clocks, MAC, DMA) */
-  HAL_ETH_Init(&heth);
-
-  /* Set Tx packet config common parameters */
-  memset(&TxConfig, 0 , sizeof(ETH_TxPacketConfig_t));
-  TxConfig.Attributes = ETH_TX_PACKETS_FEATURES_CSUM | ETH_TX_PACKETS_FEATURES_CRCPAD;
-  TxConfig.ChecksumCtrl = ETH_CHECKSUM_IPHDR_PAYLOAD_INSERT_PHDR_CALC;
-  TxConfig.CRCPadCtrl = ETH_CRC_PAD_INSERT;
-
-#endif
-  /* End ETH HAL Init */
 
   /* set MAC hardware address length */
   netif->hwaddr_len = ETH_HWADDR_LEN;
@@ -443,8 +421,7 @@ void ethernet_link_check_state(struct netif *netif)
   ETH_MACConfigTypeDef MACConf = {0};
   int32_t PHYLinkState = 0U;
   uint32_t linkchanged = 0U, speed = 0U, duplex =0U;
-  FunctionalState port_select = DISABLE;
-
+  FunctionalState portselect = DISABLE;
   PHYLinkState = RTL8211_GetLinkState(&RTL8211);
 
 	/* Get link state */
@@ -460,41 +437,45 @@ void ethernet_link_check_state(struct netif *netif)
 	  case RTL8211_STATUS_1000MBITS_FULLDUPLEX:
 		duplex = ETH_FULLDUPLEX_MODE;
 		speed = ETH_SPEED_1000M;
-		port_select = DISABLE;
+    portselect = DISABLE;
 		linkchanged = 1;
 		break;
 	  case RTL8211_STATUS_1000MBITS_HALFDUPLEX:
 		duplex = ETH_HALFDUPLEX_MODE;
 		speed = ETH_SPEED_1000M;
-		port_select = DISABLE;
+    portselect = DISABLE;
 		linkchanged = 1;
 		break;
 	#endif
 	  case RTL8211_STATUS_100MBITS_FULLDUPLEX:
 				duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_100M;
-				port_select = ENABLE;
+        portselect = ENABLE;
 				linkchanged = 1;
 				break;
 	  case RTL8211_STATUS_100MBITS_HALFDUPLEX:
 				duplex = ETH_HALFDUPLEX_MODE;
 				speed = ETH_SPEED_100M;
-				port_select = ENABLE;
+        portselect = ENABLE;
 				linkchanged = 1;
 				break;
 	  case RTL8211_STATUS_10MBITS_FULLDUPLEX:
 				duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_10M;
-				port_select = ENABLE;
+        portselect = ENABLE;
 				linkchanged = 1;
 				break;
 	  case RTL8211_STATUS_10MBITS_HALFDUPLEX:
 				duplex = ETH_HALFDUPLEX_MODE;
 				speed = ETH_SPEED_10M;
-				port_select = ENABLE;
+        portselect = ENABLE;
 				linkchanged = 1;
 				break;
 	  default:
+				duplex = ETH_FULLDUPLEX_MODE;
+				speed = ETH_SPEED_100M;
+        portselect = ENABLE;
+				linkchanged = 1;
 				break;
     }
 
@@ -503,15 +484,15 @@ void ethernet_link_check_state(struct netif *netif)
       HAL_ETH_GetMACConfig(&heth, &MACConf);
       MACConf.DuplexMode = duplex;
       MACConf.Speed = speed;
-      MACConf.PortSelect = port_select;
+      MACConf.PortSelect = portselect;
       HAL_ETH_SetMACConfig(&heth, &MACConf);
       HAL_ETH_Start_IT(&heth);
       netif_set_up(netif);
       netif_set_link_up(netif);
     }
   }
-
 }
+
 void HAL_ETH_RxAllocateCallback(uint8_t **buff)
 {
 /* USER CODE BEGIN HAL ETH RxAllocateCallback */

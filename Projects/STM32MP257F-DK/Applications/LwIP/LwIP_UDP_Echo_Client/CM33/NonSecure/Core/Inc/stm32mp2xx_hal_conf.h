@@ -57,7 +57,7 @@
 /* #define HAL_I2S_MODULE_ENABLED       */
 /* #define HAL_I3C_MODULE_ENABLED       */
 #define HAL_ICACHE_MODULE_ENABLED
-/* #define HAL_IPCC_MODULE_ENABLED      */
+#define HAL_IPCC_MODULE_ENABLED
 /* #define HAL_IRDA_MODULE_ENABLED      */
 /* #define HAL_IWDG_MODULE_ENABLED      */
 /* #define HAL_LPTIM_MODULE_ENABLED     */
@@ -188,8 +188,8 @@
 
 #define  USE_RTOS                     0U
 #define  PREFETCH_ENABLE              0U
-#define  INSTRUCTION_CACHE_ENABLE     0U
-#define  DATA_CACHE_ENABLE            0U
+#define  INSTRUCTION_CACHE_ENABLE     1U
+#define  DATA_CACHE_ENABLE            1U
 
 /* ########################### Ethernet Configuration ######################### */
 #define ETH_TX_DESC_CNT   32  /* number of Ethernet Tx DMA descriptors */

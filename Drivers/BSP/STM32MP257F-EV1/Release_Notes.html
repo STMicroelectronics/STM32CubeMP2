@@ -1499,11 +1499,13 @@ text-align: center;
 <div class="col-sm-12 col-lg-8">
 <h1 id="update-history">Update History</h1>
 <div class="collapse">
-<input type="checkbox" id="collapse-section3" checked aria-hidden="true"> <label for="collapse-section3" checked aria-hidden="true"><strong>V1.3.1 / 20-May-2026</strong></label>
+<input type="checkbox" id="collapse-section3" checked aria-hidden="true"> <label for="collapse-section3" aria-hidden="true"><strong>V1.4.0 / 28-Oct-2026</strong></label>
 <div>
 <h2 id="main-changes">Main Changes</h2>
 <ul>
-<li>Bug Fixes.</li>
+<li>Fix COM resource check condition to require all 3 (TX, RX and UART) acquisitions.</li>
+<li>ADC sample time macros renamed to align with MP25-RM (RM0457.Rev5) for both HAL and LL.</li>
+<li>Fix VPP_DDR PMIC voltage level.</li>
 </ul>
 <h2 id="notes">Notes</h2>
 <p>stm32mp257f_eval_conf_template.h file must be copied in user application as &gt;stm32mp257f_eval_conf.h with optional configuration update</p>

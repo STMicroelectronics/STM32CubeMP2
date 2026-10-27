@@ -36,8 +36,8 @@ int32_t ddrphy_phyinit_isdbytedisabled(int32_t dbytenumber)
 
   if ((nad0 + nad1) > userinputbasic.numdbyte)
   {
-    ERROR("%s invalid PHY configuration:\n", __func__);
-    ERROR("numactivedbytedfi0(%d)+numactivedbytedfi1(%d)>numdbytes(%d).\n",
+    DDR_ERROR("%s invalid PHY configuration:\n", __func__);
+    DDR_ERROR("numactivedbytedfi0(%d)+numactivedbytedfi1(%d)>numdbytes(%d).\n",
           nad0, nad1, userinputbasic.numdbyte);
   }
 
@@ -66,7 +66,7 @@ int32_t ddrphy_phyinit_isdbytedisabled(int32_t dbytenumber)
   else
   {
     disabledbyte = 0;
-    ERROR("%s invalid PHY configuration:dfi1exists is neither 1 or 0.\n", __func__);
+    DDR_ERROR("%s invalid PHY configuration:dfi1exists is neither 1 or 0.\n", __func__);
   }
 #endif /* STM32MP_LPDDR4_TYPE */
 
@@ -75,8 +75,8 @@ int32_t ddrphy_phyinit_isdbytedisabled(int32_t dbytenumber)
   if ((mb_ddr_1d[0].enableddqs < 1U) ||
       (mb_ddr_1d[0].enableddqs > (uint8_t)(8 * userinputbasic.numactivedbytedfi0)))
   {
-    ERROR("%s enableddqs(%d)\n", __func__, mb_ddr_1d[0].enableddqs);
-    ERROR("Value must be 0 < enableddqs < userinputbasic.numactivedbytedfi0 * 8.\n");
+    DDR_ERROR("%s enableddqs(%d)\n", __func__, mb_ddr_1d[0].enableddqs);
+    DDR_ERROR("Value must be 0 < enableddqs < userinputbasic.numactivedbytedfi0 * 8.\n");
   }
 
   if (dbytenumber < 8)
@@ -87,16 +87,16 @@ int32_t ddrphy_phyinit_isdbytedisabled(int32_t dbytenumber)
   if ((mb_ddr_1d[0].enableddqscha < 1U) ||
       (mb_ddr_1d[0].enableddqscha > (uint8_t)(8 * userinputbasic.numactivedbytedfi0)))
   {
-    ERROR("%s enableddqscha(%d)\n", __func__, mb_ddr_1d[0].enableddqscha);
-    ERROR("Value must be 0 < enableddqscha < userinputbasic.numactivedbytedfi0 * 8.\n");
+    DDR_ERROR("%s enableddqscha(%d)\n", __func__, mb_ddr_1d[0].enableddqscha);
+    DDR_ERROR("Value must be 0 < enableddqscha < userinputbasic.numactivedbytedfi0 * 8.\n");
   }
 
   if (userinputbasic.dfi1exists && (userinputbasic.numactivedbytedfi1 > 0) &&
       ((mb_ddr_1d[0].enableddqschb < 1U) ||
        (mb_ddr_1d[0].enableddqschb > (uint8_t)(8 * userinputbasic.numactivedbytedfi1))))
   {
-    ERROR("%s enableddqschb(%d)\n", __func__, mb_ddr_1d[0].enableddqschb);
-    ERROR("Value must be 0 < enableddqschb < userinputbasic.numactivedbytedfi1 * 8.\n");
+    DDR_ERROR("%s enableddqschb(%d)\n", __func__, mb_ddr_1d[0].enableddqschb);
+    DDR_ERROR("Value must be 0 < enableddqschb < userinputbasic.numactivedbytedfi1 * 8.\n");
   }
 #endif /* STM32MP_LPDDR4_TYPE */
 

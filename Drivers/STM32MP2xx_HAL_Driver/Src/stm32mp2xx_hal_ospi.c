@@ -281,7 +281,7 @@ static void              OSPI_DMAError(DMA_HandleTypeDef *hdma);
 static void              OSPI_DMAAbortCplt(DMA_HandleTypeDef *hdma);
 static HAL_StatusTypeDef OSPI_WaitFlagStateUntilTimeout(OSPI_HandleTypeDef *hospi, uint32_t Flag, FlagStatus State,
                                                         uint32_t Tickstart, uint32_t Timeout);
-static HAL_StatusTypeDef OSPI_ConfigCmd(OSPI_HandleTypeDef *hospi, OSPI_RegularCmdTypeDef *cmd);
+static HAL_StatusTypeDef OSPI_ConfigCmd(OSPI_HandleTypeDef *hospi, const OSPI_RegularCmdTypeDef *cmd);
 /**
   @endcond
   */
@@ -997,7 +997,7 @@ HAL_StatusTypeDef HAL_OSPI_Command_IT(OSPI_HandleTypeDef *hospi, OSPI_RegularCmd
   * @param  Timeout : Timeout duration
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_OSPI_HyperbusCfg(OSPI_HandleTypeDef *hospi, OSPI_HyperbusCfgTypeDef *cfg, uint32_t Timeout)
+HAL_StatusTypeDef HAL_OSPI_HyperbusCfg(OSPI_HandleTypeDef *hospi, const OSPI_HyperbusCfgTypeDef *cfg, uint32_t Timeout)
 {
   HAL_StatusTypeDef status;
   uint32_t state;
@@ -1044,7 +1044,7 @@ HAL_StatusTypeDef HAL_OSPI_HyperbusCfg(OSPI_HandleTypeDef *hospi, OSPI_HyperbusC
   * @param  Timeout : Timeout duration
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_OSPI_HyperbusCmd(OSPI_HandleTypeDef *hospi, OSPI_HyperbusCmdTypeDef *cmd, uint32_t Timeout)
+HAL_StatusTypeDef HAL_OSPI_HyperbusCmd(OSPI_HandleTypeDef *hospi, const OSPI_HyperbusCmdTypeDef *cmd, uint32_t Timeout)
 {
   HAL_StatusTypeDef status;
   uint32_t tickstart = HAL_GetTick();
@@ -1666,7 +1666,7 @@ HAL_StatusTypeDef HAL_OSPI_Receive_DMA(OSPI_HandleTypeDef *hospi, uint8_t *pData
   * @note   This function is used only in Automatic Polling Mode
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_OSPI_AutoPolling(OSPI_HandleTypeDef *hospi, OSPI_AutoPollingTypeDef *cfg, uint32_t Timeout)
+HAL_StatusTypeDef HAL_OSPI_AutoPolling(OSPI_HandleTypeDef *hospi, const OSPI_AutoPollingTypeDef *cfg, uint32_t Timeout)
 {
   HAL_StatusTypeDef status;
   uint32_t tickstart = HAL_GetTick();
@@ -1744,7 +1744,7 @@ HAL_StatusTypeDef HAL_OSPI_AutoPolling(OSPI_HandleTypeDef *hospi, OSPI_AutoPolli
   * @note   This function is used only in Automatic Polling Mode
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_OSPI_AutoPolling_IT(OSPI_HandleTypeDef *hospi, OSPI_AutoPollingTypeDef *cfg)
+HAL_StatusTypeDef HAL_OSPI_AutoPolling_IT(OSPI_HandleTypeDef *hospi, const OSPI_AutoPollingTypeDef *cfg)
 {
   HAL_StatusTypeDef status;
   uint32_t tickstart = HAL_GetTick();
@@ -1819,7 +1819,7 @@ HAL_StatusTypeDef HAL_OSPI_AutoPolling_IT(OSPI_HandleTypeDef *hospi, OSPI_AutoPo
   * @note   This function is used only in Memory mapped Mode
   * @retval HAL status
   */
-HAL_StatusTypeDef HAL_OSPI_MemoryMapped(OSPI_HandleTypeDef *hospi, OSPI_MemoryMappedTypeDef *cfg)
+HAL_StatusTypeDef HAL_OSPI_MemoryMapped(OSPI_HandleTypeDef *hospi, const OSPI_MemoryMappedTypeDef *cfg)
 {
   HAL_StatusTypeDef status;
   uint32_t tickstart = HAL_GetTick();
@@ -2729,7 +2729,7 @@ static HAL_StatusTypeDef OSPI_WaitFlagStateUntilTimeout(OSPI_HandleTypeDef *hosp
   * @param  cmd   : structure that contains the command configuration information
   * @retval HAL status
   */
-static HAL_StatusTypeDef OSPI_ConfigCmd(OSPI_HandleTypeDef *hospi, OSPI_RegularCmdTypeDef *cmd)
+static HAL_StatusTypeDef OSPI_ConfigCmd(OSPI_HandleTypeDef *hospi, const OSPI_RegularCmdTypeDef *cmd)
 {
   HAL_StatusTypeDef status = HAL_OK;
   __IO uint32_t *ccr_reg;

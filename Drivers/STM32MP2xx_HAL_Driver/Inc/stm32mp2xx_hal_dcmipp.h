@@ -2046,12 +2046,13 @@ HAL_StatusTypeDef HAL_DCMIPP_PARALLEL_SetConfig(DCMIPP_HandleTypeDef *hdcmipp,
 HAL_StatusTypeDef HAL_DCMIPP_CSI_PIPE_SetConfig(DCMIPP_HandleTypeDef *hdcmipp,
                                                 uint32_t Pipe, const DCMIPP_CSI_PIPE_ConfTypeDef
                                                 *pCSI_PipeConfig);
-HAL_StatusTypeDef HAL_DCMIPP_CSI_SetConfig(DCMIPP_HandleTypeDef *hdcmipp, const DCMIPP_CSI_ConfTypeDef *pCSI_Config);
-HAL_StatusTypeDef HAL_DCMIPP_CSI_SetVCFilteringConfig(DCMIPP_HandleTypeDef *hdcmipp,
+HAL_StatusTypeDef HAL_DCMIPP_CSI_SetConfig(const DCMIPP_HandleTypeDef *hdcmipp,
+                                           const DCMIPP_CSI_ConfTypeDef *pCSI_Config);
+HAL_StatusTypeDef HAL_DCMIPP_CSI_SetVCFilteringConfig(const DCMIPP_HandleTypeDef *hdcmipp,
                                                       uint32_t VirtualChannel,
                                                       const DCMIPP_CSI_VCFilteringConfTypeDef
                                                       *pVCFilteringConfig);
-HAL_StatusTypeDef HAL_DCMIPP_CSI_SetVCConfig(DCMIPP_HandleTypeDef *hdcmipp,
+HAL_StatusTypeDef HAL_DCMIPP_CSI_SetVCConfig(const DCMIPP_HandleTypeDef *hdcmipp,
                                              uint32_t VirtualChannel,
                                              uint32_t DataTypeFormat);
 #endif /* DCMIPP_CSI2_SUPPORT */
@@ -2415,15 +2416,15 @@ HAL_StatusTypeDef HAL_DCMIPP_PIPE_CSI_SetVirtualChannelID(DCMIPP_HandleTypeDef *
 HAL_StatusTypeDef HAL_DCMIPP_PARALLEL_SetSyncUnmask(DCMIPP_HandleTypeDef *hdcmipp,
                                                     const DCMIPP_EmbeddedSyncUnmaskTypeDef *SyncUnmask);
 #if defined(DCMIPP_CSI2_SUPPORT)
-HAL_StatusTypeDef HAL_DCMIPP_CSI_SetLineByteCounterConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter,
+HAL_StatusTypeDef HAL_DCMIPP_CSI_SetLineByteCounterConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter,
                                                           const DCMIPP_CSI_LineByteCounterConfTypeDef *pLineByteConfig);
-HAL_StatusTypeDef HAL_DCMIPP_CSI_EnableLineByteCounter(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter);
-HAL_StatusTypeDef HAL_DCMIPP_CSI_DisableLineByteCounter(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter);
-HAL_StatusTypeDef HAL_DCMIPP_CSI_SetTimerConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Timer,
+HAL_StatusTypeDef HAL_DCMIPP_CSI_EnableLineByteCounter(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter);
+HAL_StatusTypeDef HAL_DCMIPP_CSI_DisableLineByteCounter(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter);
+HAL_StatusTypeDef HAL_DCMIPP_CSI_SetTimerConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Timer,
                                                 const DCMIPP_CSI_TimerConfTypeDef *TimerConfig);
-HAL_StatusTypeDef HAL_DCMIPP_CSI_EnableTimer(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Timer);
-HAL_StatusTypeDef HAL_DCMIPP_CSI_DisableTimer(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Timer);
-HAL_StatusTypeDef HAL_DCMIPP_CSI_SetWatchdogCounterConfig(DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter);
+HAL_StatusTypeDef HAL_DCMIPP_CSI_EnableTimer(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Timer);
+HAL_StatusTypeDef HAL_DCMIPP_CSI_DisableTimer(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Timer);
+HAL_StatusTypeDef HAL_DCMIPP_CSI_SetWatchdogCounterConfig(const DCMIPP_HandleTypeDef *hdcmipp, uint32_t Counter);
 #endif /* DCMIPP_CSI2_SUPPORT */
 
 HAL_StatusTypeDef HAL_DCMIPP_PIPE_EnablePAD(DCMIPP_HandleTypeDef *hdcmipp,  uint32_t Pipe);

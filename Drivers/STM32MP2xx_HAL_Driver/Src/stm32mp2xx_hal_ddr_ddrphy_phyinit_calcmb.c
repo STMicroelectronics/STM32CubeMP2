@@ -51,7 +51,7 @@ int32_t ddrphy_phyinit_calcmb(void)
   int32_t nad1 = 0;
   uint16_t mr4 __unused;
 
-  VERBOSE("%s Start\n", __func__);
+  DDR_VERBOSE("%s Start\n", __func__);
 
 #if STM32MP_LPDDR4_TYPE
   nad1 = userinputbasic.numactivedbytedfi1;
@@ -60,19 +60,19 @@ int32_t ddrphy_phyinit_calcmb(void)
   /* A few checks to make sure valid programming */
   if ((nad0 <= 0) || (nad1 < 0) || (userinputbasic.numdbyte <= 0))
   {
-    ERROR("%s numactivedbytedfi0, numactivedbytedfi1, numdbyte out of range.\n", __func__);
+    DDR_ERROR("%s numactivedbytedfi0, numactivedbytedfi1, numdbyte out of range.\n", __func__);
     return -1;
   }
 
   if ((nad0 + nad1) > userinputbasic.numdbyte)
   {
-    ERROR("%s numactivedbytedfi0+numactivedbytedfi1 is larger than numdbyte\n", __func__);
+    DDR_ERROR("%s numactivedbytedfi0+numactivedbytedfi1 is larger than numdbyte\n", __func__);
     return -1;
   }
 
   if ((userinputbasic.dfi1exists == 0) && (nad1 != 0))
   {
-    ERROR("%s dfi1exists==0 but numdbytedfi1 != 0\n", __func__);
+    DDR_ERROR("%s dfi1exists==0 but numdbytedfi1 != 0\n", __func__);
     return -1;
   }
 
@@ -95,10 +95,10 @@ int32_t ddrphy_phyinit_calcmb(void)
 #if STM32MP_DDR4_TYPE
     if (mr4 != 0x0U)
     {
-      ERROR("%s Setting DRAM CAL mode is not supported by the PHY.\n", __func__);
-      ERROR("Memory controller may set CAL mode after PHY has entered mission\n");
-      ERROR("mode. Please check value programmed in mb_ddr_1d[*].mr4\n");
-      ERROR("and unset A8:6\n");
+      DDR_ERROR("%s Setting DRAM CAL mode is not supported by the PHY.\n", __func__);
+      DDR_ERROR("Memory controller may set CAL mode after PHY has entered mission\n");
+      DDR_ERROR("mode. Please check value programmed in mb_ddr_1d[*].mr4\n");
+      DDR_ERROR("and unset A8:6\n");
       return -1;
     }
 #endif /* STM32MP_DDR4_TYPE */
@@ -250,7 +250,7 @@ int32_t ddrphy_phyinit_calcmb(void)
 #endif /* STM32MP_LPDDR4_TYPE */
   } /* myps */
 
-  VERBOSE("%s End\n", __func__);
+  DDR_VERBOSE("%s End\n", __func__);
 
   return 0;
 }

@@ -12,7 +12,9 @@
 #include <metal/errno.h>
 #include <metal/irq_controller.h>
 #include <metal/alloc.h>
-#include <nuttx/irq.h>
+#include <nuttx/arch.h>
+
+#include "irq.h"
 
 unsigned int metal_irq_save_disable(void)
 {

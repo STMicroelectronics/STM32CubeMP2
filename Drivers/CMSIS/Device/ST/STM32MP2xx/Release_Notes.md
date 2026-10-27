@@ -34,8 +34,36 @@ Various template file are provided to easily build an application. They can be a
 # __Update History__
 
 ::: {.collapse}
-<input type="checkbox" id="collapse-section4" checked aria-hidden="true">
-<label for="collapse-section4" checked aria-hidden="true">__V1.3.1 / 20-May-2026__</label>
+<input type="checkbox" id="collapse-section5" checked aria-hidden="true">
+<label for="collapse-section5" checked aria-hidden="true">__V1.4.0 / 28-Oct-2026__</label>
+<div>
+
+## Main Changes
+
+
+## Contents
+
+- Renamed the DDRDBG AC swizzle registers and bitfield macros to indexed names ( DDR34_AC_SWIZZLE_0 – DDR34_AC_SWIZZLE_6 ) to prevent MISRA C:2012 Rule 5.2 warnings and macro name collisions.
+- Fixed the USB EHCI HCIVERSION mask alignment and clarified its field description.
+- Fix MISRA C:2012 Rule 10.6 constants in CMSIS device headers.
+- Initialize MSPLIM at  Reset_Handler  entry in STM32MP2xx Cortex-M33 GCC and IAR startup templates to enable hardware stack-overflow detection.
+
+
+## Known Limitations
+
+None
+
+## Dependencies
+
+None
+
+</div>
+:::
+
+
+::: {.collapse}
+<input type="checkbox" id="collapse-section4" aria-hidden="true">
+<label for="collapse-section4" aria-hidden="true">__V1.3.1.rc1 / 27-Mar-2026__</label>
 <div>
 
 ## Main Changes
@@ -44,8 +72,6 @@ Various template file are provided to easily build an application. They can be a
 ## Contents
 
 - Fix Malformed comment and missing Open parentheis in some definitions
-- Update ETH CMSIS definitions
-- General updates
 
 
 ## Known Limitations

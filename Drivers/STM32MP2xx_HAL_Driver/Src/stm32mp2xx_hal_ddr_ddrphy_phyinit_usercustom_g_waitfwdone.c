@@ -184,7 +184,7 @@ int32_t ddrphy_phyinit_usercustom_g_waitfwdone(void)
   uint32_t fw_major_message;
   int32_t ret;
 
-  VERBOSE("%s Start\n", __func__);
+  DDR_VERBOSE("%s Start\n", __func__);
 
   do
   {
@@ -194,7 +194,7 @@ int32_t ddrphy_phyinit_usercustom_g_waitfwdone(void)
       return ret;
     }
 
-    VERBOSE("fw_major_message = %x\n", fw_major_message);
+    DDR_VERBOSE("fw_major_message = %x\n", fw_major_message);
 
     if (fw_major_message == FW_MAJ_MSG_START_STREAMING)
     {
@@ -218,7 +218,7 @@ int32_t ddrphy_phyinit_usercustom_g_waitfwdone(void)
           return ret;
         }
 
-        VERBOSE("streaming message = %x\n", read_data);
+        DDR_VERBOSE("streaming message = %x\n", read_data);
       }
     }
   } while ((fw_major_message != FW_MAJ_MSG_TRAINING_SUCCESS) &&
@@ -228,11 +228,11 @@ int32_t ddrphy_phyinit_usercustom_g_waitfwdone(void)
 
   if (fw_major_message == FW_MAJ_MSG_TRAINING_FAILED)
   {
-    ERROR("%s Training has failed.\n", __func__);
+    DDR_ERROR("%s Training has failed.\n", __func__);
     return -1;
   }
 
-  VERBOSE("%s End\n", __func__);
+  DDR_VERBOSE("%s End\n", __func__);
 
   return 0;
 }

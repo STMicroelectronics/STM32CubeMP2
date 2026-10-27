@@ -1315,7 +1315,7 @@ HAL_StatusTypeDef HAL_SMBUS_Slave_Transmit_IT(SMBUS_HandleTypeDef *hsmbus, uint8
     /* Note : The SMBUS interrupts must be enabled after unlocking current process
               to avoid the risk of SMBUS interrupt handle execution before current
               process unlock */
-    /* REnable ADDR interrupt */
+    /* Re-enable ADDR interrupt */
     SMBUS_Enable_IRQ(hsmbus, SMBUS_IT_TX | SMBUS_IT_ADDR);
 
     return HAL_OK;
@@ -1398,7 +1398,7 @@ HAL_StatusTypeDef HAL_SMBUS_Slave_Receive_IT(SMBUS_HandleTypeDef *hsmbus, uint8_
     /* Note : The SMBUS interrupts must be enabled after unlocking current process
               to avoid the risk of SMBUS interrupt handle execution before current
               process unlock */
-    /* REnable ADDR interrupt */
+    /* Re-enable ADDR interrupt */
     SMBUS_Enable_IRQ(hsmbus, SMBUS_IT_RX | SMBUS_IT_ADDR);
 
     return HAL_OK;

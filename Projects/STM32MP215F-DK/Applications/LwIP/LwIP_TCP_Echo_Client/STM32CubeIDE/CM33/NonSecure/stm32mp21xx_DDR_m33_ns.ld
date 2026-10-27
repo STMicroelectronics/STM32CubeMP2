@@ -216,7 +216,8 @@ SECTIONS
 		KEEP(*(.heap*))
 		__HeapLimit = .;
 	} > RAM
-	
+
+
     .tcp_sec (NOLOAD) :
 	{
 		. = ALIGN(4);
@@ -226,7 +227,8 @@ SECTIONS
 		. = ALIGN(4);
     	*(.Rx_PoolSection)
 	} > ETH
-	
+
+
 	/* .stack_dummy section doesn't contains any symbols. It is only
 	 * used for linker to calculate size of stack sections, and assign
 	 * values to stack symbols later */
@@ -235,11 +237,14 @@ SECTIONS
 		KEEP(*(.stack*))
 	} > RAM
 
-  /* Set stack top to end of RAM, and stack limit move down by
-   * size of stack_dummy section */
+  /* Set stack top to end of RAM. __StackLimit sets MSPLIM (Reset_Handler
+   * in startup_stm32mp21xx_m33_ns.S), so it drives the actual guarded
+   * stack size, not the startup file's SIZEOF(.stack_dummy)/Stack_Size
+   * (1KB): the LwIP/Ethernet call chain (RX ISR -> ip4/udp/etharp -> HAL
+   * ETH) needs more headroom, so reserve 8KB here instead. */
+  _Min_Stack_Size = 0x2000;
   __StackTop = ORIGIN(RAM) + LENGTH(RAM);
-  __StackLimit = __StackTop - SIZEOF(.stack_dummy);
-  PROVIDE(__stack = __StackTop);
+  __StackLimit = __StackTop - _Min_Stack_Size;
   PROVIDE(_estack = __StackTop);
 
   /* Check if data + heap + stack exceeds RAM limit */

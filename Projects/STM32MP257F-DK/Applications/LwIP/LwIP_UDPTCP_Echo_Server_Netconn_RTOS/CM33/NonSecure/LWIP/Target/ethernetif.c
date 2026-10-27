@@ -33,6 +33,9 @@
 
 /* Within 'USER CODE' section, code will be kept by default at each generation */
 /* USER CODE BEGIN 0 */
+#if defined(DATA_CACHE_ENABLE) && (DATA_CACHE_ENABLE == 1U)
+extern DCACHE_HandleTypeDef hdcache;
+#endif
 
 /* USER CODE END 0 */
 
@@ -290,7 +293,7 @@ static void low_level_init(struct netif *netif)
   /* USER CODE END OS_THREAD_ATTR_CMSIS_RTOS_V2 */
   uint32_t duplex, speed = 0;
   int32_t PHYLinkState = 0;
-  FunctionState portselect = DISABLE;
+  FunctionalState portselect = DISABLE;
   /* Start ETH HAL Init */
   driver_hardware_initialize();
   /* End ETH HAL Init */
@@ -700,44 +703,44 @@ void ethernet_link_thread(void* argument)
 			case ETH_PHY_STATUS_1000MBITS_FULLDUPLEX:
 				duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_1000M;
-        portselect = DISABLE;
+				portselect = DISABLE;
 				linkchanged = 1;
 				break;
 			case ETH_PHY_STATUS_1000MBITS_HALFDUPLEX:
 				duplex = ETH_HALFDUPLEX_MODE;
 				speed = ETH_SPEED_1000M;
-        portselect = DISABLE;
+				portselect = DISABLE;
 				linkchanged = 1;
 				break;
 	#endif
 			case ETH_PHY_STATUS_100MBITS_FULLDUPLEX:
 				duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_100M;
-        portselect = ENABLE;
+				portselect = ENABLE;
 				linkchanged = 1;
 				break;
 			case ETH_PHY_STATUS_100MBITS_HALFDUPLEX:
 				duplex = ETH_HALFDUPLEX_MODE;
 				speed = ETH_SPEED_100M;
-        portselect = ENABLE;
+				portselect = ENABLE;
 				linkchanged = 1;
 				break;
 			case ETH_PHY_STATUS_10MBITS_FULLDUPLEX:
 				duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_10M;
-        portselect = ENABLE;
+				portselect = ENABLE;
 				linkchanged = 1;
 				break;
 			case ETH_PHY_STATUS_10MBITS_HALFDUPLEX:
 				duplex = ETH_HALFDUPLEX_MODE;
 				speed = ETH_SPEED_10M;
-        portselect = ENABLE;
+				portselect = ENABLE;
 				linkchanged = 1;
 				break;
 			default:
-  			duplex = ETH_FULLDUPLEX_MODE;
+				duplex = ETH_FULLDUPLEX_MODE;
 				speed = ETH_SPEED_100M;
-        portselect = ENABLE;
+				portselect = ENABLE;
 				linkchanged = 1;
 				break;
 			}
@@ -821,8 +824,10 @@ void HAL_ETH_RxLinkCallback(void **pStart, void **pEnd, uint8_t *buff, uint16_t 
     p->tot_len += Length;
   }
 
+#if defined(DATA_CACHE_ENABLE) && (DATA_CACHE_ENABLE == 1U)
   /* Invalidate data cache because Rx DMA's writing to physical memory makes it stale. */
-//  SCB_InvalidateDCache_by_Addr((uint32_t *)buff, Length);
+  HAL_DCACHE_InvalidateByAddr(&hdcache,(uint32_t *)buff, Length);
+#endif
 
 /* USER CODE END HAL ETH RxLinkCallback */
 }

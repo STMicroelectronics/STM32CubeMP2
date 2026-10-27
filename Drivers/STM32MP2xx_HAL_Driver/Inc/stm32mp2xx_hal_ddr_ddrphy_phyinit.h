@@ -24,8 +24,6 @@ extern bool retention_enable;
 
 extern user_input_basic_t userinputbasic;
 extern user_input_advanced_t userinputadvanced;
-extern user_input_mode_register_t userinputmoderegister;
-extern user_input_swizzle_t userinputswizzle;
 
 extern pmu_smb_ddr_1d_t mb_ddr_1d[NB_PS];
 extern pmu_smb_ddr_1d_t shdw_ddr_1d[NB_PS];

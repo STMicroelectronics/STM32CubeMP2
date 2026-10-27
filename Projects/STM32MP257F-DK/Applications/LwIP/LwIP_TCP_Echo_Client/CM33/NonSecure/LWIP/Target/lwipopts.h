@@ -59,10 +59,9 @@ a lot of data that needs to be copied, this should be set high. */
 
 /* Relocate the LwIP RAM heap pointer */
 extern unsigned char memp_memory_LWIP_HEAP_RAM_base[];
-#define LWIP_RAM_HEAP_POINTER    (&memp_memory_LWIP_HEAP_RAM_base[0]) // (0x30004000)
+#define LWIP_RAM_HEAP_POINTER    (&memp_memory_LWIP_HEAP_RAM_base[0])
 
-
-/* MEMP_NUM_TCP_PCB: the number of simulatenously active TCP
+/* MEMP_NUM_TCP_PCB: the number of simultaneously active TCP
    connections. */
 #define MEMP_NUM_TCP_PCB        10
 
@@ -87,6 +86,24 @@ extern unsigned char memp_memory_LWIP_HEAP_RAM_base[];
 */
 #define LWIP_NETIF_LINK_CALLBACK        1
 
+/* Optional single-board loopback self-test: set to 1 to enable an
+   additional client that connects to this board's own IP address and
+   checks that data is echoed back correctly. This lets the LwIP stack be
+   exercised on a single board, without requiring a second board or PC. Disabled
+   by default. */
+#define LOOPBACK_TEST_ENABLE             0
+
+/* LWIP_NETIF_LOOPBACK==1: Support sending packets with a destination IP
+   address equal to the netif's own IP address. Required when the optional
+   loopback self-test above (LOOPBACK_TEST_ENABLE) is enabled. */
+#define LWIP_NETIF_LOOPBACK             LOOPBACK_TEST_ENABLE
+
+#if LWIP_NETIF_LOOPBACK
+/* LWIP_LOOPBACK_MAX_PKTS: maximum number of pbufs queued on the loopback
+   traffic while waiting to be processed by netif_poll(). */
+#define LWIP_LOOPBACK_MAX_PKTS          4
+#endif
+
 /* ---------- TCP options ---------- */
 #define LWIP_TCP                1
 #define TCP_TTL                 255
@@ -107,7 +124,7 @@ extern unsigned char memp_memory_LWIP_HEAP_RAM_base[];
 
 
 /* ---------- DHCP options ---------- */
-#define LWIP_DHCP               0
+#define LWIP_DHCP               1
 
 
 /* ---------- UDP options ---------- */

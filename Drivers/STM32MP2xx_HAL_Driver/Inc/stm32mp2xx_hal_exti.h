@@ -701,6 +701,20 @@ typedef struct
   * @{
   */
 
+/* Get EXTI instance associated to EXTI bank index (0: EXTI1, 1: EXTI2) */
+#define EXTI_GET_INSTANCE(extiIndex)  (((extiIndex) == 0U) ? EXTI1 : EXTI2)
+
+#if !defined(CORE_CM0PLUS)
+#if defined(CORE_CM33)
+/* Get EXTI core instance (CPU 2) associated to EXTI bank index (0: EXTI1, 1: EXTI2) */
+#define EXTI_GET_CPU_INSTANCE(extiIndex)  (((extiIndex) == 0U) ? EXTI1_C2 : EXTI2_C2)
+#endif  /* CORE_CM33 */
+#if defined(CORE_CA35)
+/* Get EXTI core instance (CPU 1) associated to EXTI bank index (0: EXTI1, 1: EXTI2) */
+#define EXTI_GET_CPU_INSTANCE(extiIndex)  (((extiIndex) == 0U) ? EXTI1_C1 : EXTI2_C1)
+#endif  /* CORE_CA35 */
+#endif  /* !defined(CORE_CM0PLUS) */
+
 /**
   * @}
   */
@@ -1128,9 +1142,9 @@ HAL_StatusTypeDef HAL_EXTI_GetHandle(EXTI_HandleTypeDef *hexti, uint32_t ExtiLin
   * @{
   */
 /* IO operation functions *****************************************************/
-void              HAL_EXTI_IRQHandler(EXTI_HandleTypeDef *hexti);
+void              HAL_EXTI_IRQHandler(const EXTI_HandleTypeDef *hexti);
 uint32_t          HAL_EXTI_GetPending(const EXTI_HandleTypeDef *hexti, uint32_t Edge);
-void              HAL_EXTI_ClearPending(EXTI_HandleTypeDef *hexti, uint32_t Edge);
+void              HAL_EXTI_ClearPending(const EXTI_HandleTypeDef *hexti, uint32_t Edge);
 void              HAL_EXTI_GenerateSWI(const EXTI_HandleTypeDef *hexti);
 
 /**

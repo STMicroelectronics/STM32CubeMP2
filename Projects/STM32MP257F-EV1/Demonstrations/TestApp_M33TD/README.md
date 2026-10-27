@@ -185,7 +185,6 @@ TestApp_M33TD
      -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts          # External DT file for sdcard_sdcard bootdevice mode
      -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts               # External DT file common for all bootdevice modes
      ```
-
    **Note**: `-DDTS_EXT_DIR` points to `Utilities/dt-stm32mp`. Ensure this is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.
 2. Configure the TFM CMake project:
    - Right-click on `TestApp_M33TD_CM33_trusted-firmware-m` -> `CMake Configure`.
@@ -236,15 +235,15 @@ While building the `TestApp_M33TD`, the test execution behavior can be controlle
 #### **Scenario 1: ENABLE_AUTO_TEST is ON (Set to 1)**
 - **Behavior**:
   - The TestApp will execute automatically.
-  - **AUTO** tests will be fully executed, including all steps (AcquireResource -> Init -> Run -> Deinit -> ReleaseResource).
-  - **MANUAL** tests will be partially executed, performing only the resource acquisition and release steps (AcquireResource -> ReleaseResource).
+   - Enabled **AUTO** tests will be fully executed, including all steps (AcquireResource -> Init -> Run -> Deinit -> ReleaseResource).
+   - Enabled **MANUAL** tests will be partially executed, performing only the resource acquisition and release steps (AcquireResource -> ReleaseResource).
 - **Purpose**:
   - This scenario validates the correct runtime configuration settings required for specific M33 examples in the M33TDCID profile.
 
 #### **Scenario 2: ENABLE_AUTO_TEST is OFF (Set to 0)**
 - **Behavior**:
   - The TestApp will execute tests fully based on **User Button 2** actions.
-  - Both **AUTO** and **MANUAL** tests will be executed completely (AcquireResource -> Init -> Run -> Deinit -> ReleaseResource).
+   - Enabled **AUTO** and **MANUAL** tests will be executed completely (AcquireResource -> Init -> Run -> Deinit -> ReleaseResource).
 
 ### How to Run Manual Tests
 
@@ -284,7 +283,7 @@ This section ensures that developers can configure and control the execution of 
 
 #### UART Console Output
 
-Below is a sample UART log output from the CM33 during the boot and runtime sequence:
+Below is an illustrative UART log from the CM33 during the boot and runtime sequence, aligned with the default EV1 test selection. Firmware versions and interleaving with other tasks may vary:
 
 ```
 [INF] init:pmic@33 STPMIC:20 V1.1
@@ -332,31 +331,22 @@ INFO: low power firmware "v1.0.0.rc1"
 [INF][Crypto] Init HW accelerator...
 [INF][Crypto] Init HW accelerator... complete.
 [NS] [INF] Non-Secure system starting...
-[NS] [INF] STM32Cube FW version: v1.2.0-rc0
+[NS] [INF] STM32Cube FW version: v1.3.1-rc0
 [NS] [INF] [DisplayTask] Display is initialized and ready...
 [NS] [INF] [WdgMonitor] watchdog timeout: 120000ms
 [NS] [INF] [OpenAMP] waiting remote processor initialisation...
 [NS] [INF] [RemoteProc] starting copro cpu@0... (pending)
-[NS] [INF] [TestApp] Acquiring resources for test: TIMERS
-[NS] [INF] [TestApp] Running test: TIMERS
-[NS] [INF] [RemoteProc] copro cpu@0 started.
-[NS] [INF] [TestApp] Test TIMERS: PASSED
-[NS] [INF] [TestApp] Releasing resources for test: TIMERS
 [NS] [INF] [TestApp] Acquiring resources for test: I2C
 [NS] [INF] [TestApp] Skipping manual test in auto Test mode: I2C
 [NS] [INF] [TestApp] Releasing resources for test: I2C
 [NS] [INF] [TestApp] Acquiring resources for test: SPI
 [NS] [INF] [TestApp] Skipping manual test in auto Test mode: SPI
 [NS] [INF] [TestApp] Releasing resources for test: SPI
-[NS] [INF] [TestApp] Acquiring resources for test: ADC
-[NS] [INF] [TestApp] Running test: ADC
-[NS] [INF] [TestApp] Test ADC: PASSED
-[NS] [INF] [TestApp] Releasing resources for test: ADC
 [NS] [INF] [TestApp] Acquiring resources for test: I3C
 [NS] [INF] [TestApp] Skipping manual test in auto Test mode: I3C
 [NS] [INF] [TestApp] Releasing resources for test: I3C
 [NS] [INF] [TestApp] All tests completed.
-[NS] [INF] [OpenAMP]  Ready for RPMsg communication
+[NS] [INF] [RemoteProc] copro cpu@0 started.
 ```
 
 ### Understanding TestApp Logs
@@ -364,6 +354,8 @@ INFO: low power firmware "v1.0.0.rc1"
 This log demonstrates the CM33 boot sequence (MCUboot/TF-M), secure-non-secure handover, and the main runtime tasks from the shared utility stack, plus the TestApp test execution flow.
 
 > **Note:** The presence of `Skipping manual test in auto Test mode: ...` indicates the project was built with `ENABLE_AUTO_TEST=1` (for example via `-DENABLE_AUTO_TEST=ON`).
+
+> **Note:** ADC and TIMERS are excluded from the default build, so they produce no TestApp resource-acquisition, execution, or release logs in either mode.
 
 The log also reflects the specific firmware and configuration used for the device boot:
 
@@ -378,7 +370,7 @@ Key runtime milestones:
 - Watchdog monitor: `[WdgMonitor] watchdog timeout: ...`
 - A35 bring-up: `[RemoteProc] starting ...` then `[RemoteProc] copro cpu@0 started.`
 - TestApp progress:
-  - Test start/finish lines (for example: `Running test: ...`, `Test ...: PASSED`, `All tests completed.`)
+   - Resource acquisition/release and completion lines (for example: `Acquiring resources for test: ...`, `Releasing resources for test: ...`, `All tests completed.`)
   - Auto-test behavior for MANUAL tests (for example: `Skipping manual test in auto Test mode: ...`)
 - RPMsg ready: `[OpenAMP]  Ready for RPMsg communication`
 
@@ -391,14 +383,14 @@ Once the system has completed boot (for example, you see `[RemoteProc] copro cpu
 1. **Verify TestApp automatic mode (`ENABLE_AUTO_TEST=1`)**
    - Build with `-DENABLE_AUTO_TEST=ON`.
    - Expected CM33 logs:
-      - `[TestApp] ... Running test: ...` for **AUTO** tests
-      - `[TestApp] Skipping manual test in auto Test mode: ...` for **MANUAL** tests
+      - `[TestApp] Acquiring resources for test: ...` and `[TestApp] Releasing resources for test: ...` for I2C, SPI, and I3C
+      - `[TestApp] Skipping manual test in auto Test mode: ...` for I2C, SPI, and I3C
       - `[TestApp] All tests completed.`
 
 2. **Verify TestApp manual mode (`ENABLE_AUTO_TEST=0`, USER2-triggered)**
    - Build with `-DENABLE_AUTO_TEST=OFF`.
    - Press **USER2** to trigger the TestApp sequence as described in [TestApp Task Configuration](#testapp-task-configuration).
-   - Expected CM33 logs: both **AUTO** and **MANUAL** tests execute fully (no "Skipping manual test" messages).
+   - Expected CM33 logs: the enabled tests execute fully (no "Skipping manual test" messages).
 
 3. **Button-triggered A35 reboot (USER2, very long press)**
    - Press **USER2** for **at least 5 seconds**.

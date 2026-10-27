@@ -49,7 +49,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN PV */
-
+extern IPCC_HandleTypeDef hipcc1;
 /* USER CODE END PV */
 
 static osSemaphoreId_t tx_EventSemaphore;
@@ -99,7 +99,7 @@ int Thread_Openamp_DeInit()
 
   osThreadTerminate(ThreadOpenampHandle);
 
-  OPENAMP_DeInit();
+  OPENAMP_DeInit(&hipcc1);
 
   /* USER CODE BEGIN POST_OPENAMP_DEINIT */
 
@@ -118,7 +118,13 @@ static void Thread_Openamp_Entry(void *argument)
   (void) argument;
 
   /* Libmetal Initilalization */
-  if(MX_OPENAMP_Init(RPMSG_REMOTE, NULL))
+  if(MX_OPENAMP_Init(RPMSG_REMOTE, &hipcc1))
+  {
+    Error_Handler();
+  }
+
+  /* RPMsg Initialization */
+  if(MX_OPENAMP_RPMsg_Init(RPMSG_REMOTE, NULL, &hipcc1))
   {
     Error_Handler();
   }

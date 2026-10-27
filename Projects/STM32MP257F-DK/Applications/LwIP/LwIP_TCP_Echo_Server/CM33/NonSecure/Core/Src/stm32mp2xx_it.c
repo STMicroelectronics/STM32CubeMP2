@@ -190,4 +190,9 @@ void ETH1_PMT_IRQHandler(void)
   /* USER CODE END ETH_IRQn 1 */
 }
 
+void IPCC1_RX_IRQHandler(void)
+{
+  HAL_IPCC_RX_IRQHandler(&hipcc1);
+}
+
 /* USER CODE END 1 */

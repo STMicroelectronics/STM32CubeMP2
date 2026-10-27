@@ -237,24 +237,27 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="
 id="non-secure-m33-firmware-build-template_starterapp_m33td-application">Non-Secure
 M33 Firmware Build (Template_StarterApp_M33TD Application)</h3>
 <ol type="1">
-<li><p>Navigate to
-<code>Firmware/Projects/STM32MP235F-DK/Templates/Template_StarterApp_M33TD</code>.</p></li>
-<li><p>Run the following command:</p>
-<div class="sourceCode" id="cb4"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>   <span class="fu">cmake</span> <span class="at">-G</span><span class="st">&quot;Unix Makefiles&quot;</span> <span class="at">-B</span> build <span class="at">-DTFM_BUILD_DIR</span><span class="op">=&lt;</span>TFM_BUILD_DIRECTORY<span class="op">&gt;</span> -DREMOTE_PROC_AUTO_START=ON</span></code></pre></div>
+<li>Navigate to
+<code>Firmware/Projects/STM32MP235F-DK/Templates/Template_StarterApp_M33TD</code>.</li>
+<li>Run the following command:
+<code>bash  cmake -G"Unix Makefiles" -B build -DTFM_BUILD_DIR=&lt;TFM_BUILD_DIRECTORY&gt;</code>
 <ul>
 <li>If <code>TFM_BUILD_DIR</code> is not specified, the default path
 <code>Firmware/Middlewares/Third_Party/trusted-firmware-m/config_default</code>
-will be used, assuming the TFM Secure Build step is completed.</li>
-<li>By default:
+is used.</li>
+<li>Current project CMake options:
 <ul>
-<li><code>REMOTE_PROC_AUTO_START</code> is set to <code>1</code> for
-Template_StarterApp_M33TD unless explicitly provided</li>
+<li><code>-DREMOTE_PROC_AUTO_START=ON|OFF</code> (default:
+<code>ON</code>)</li>
+<li><code>-DREALTIME_DEBUG_LOG_ENABLED=ON|OFF</code> (default:
+<code>OFF</code>)</li>
+<li><code>-DFAULT_EXCEPTION_ENABLE=ON|OFF</code> (default:
+<code>ON</code>)</li>
+<li><code>-DFAULT_EXCEPTION_BACKTRACE_ENABLE=ON|OFF</code> (default:
+<code>ON</code>)</li>
 </ul></li>
 </ul></li>
-<li><p>Build the project:</p>
-<div class="sourceCode" id="cb5"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span> <span class="at">-C</span> build all</span></code></pre></div></li>
+<li>Build the project: <code>bash  make -C build all</code></li>
 </ol>
 <hr />
 <h2 id="to-build-native-stm32cubeide-project">To Build Native
@@ -432,8 +435,8 @@ below. For each test, look for the corresponding activity on the
 <ol type="1">
 <li><strong>Simulate a Linux crash and observe recovery</strong>
 <ul>
-<li>On the Linux console (as <code>root</code>), run:
-<code>bash  sync; sleep 2; sync; echo c &gt; /proc/sysrq-trigger</code></li>
+<li><p>On the Linux console (as <code>root</code>), run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">sync; sleep 2; sync; echo c &gt; /proc/sysrq-trigger</code></pre></div></li>
 <li>This forces a kernel crash on the A35 side. On the CM33 UART,
 RemoteProc should report crash detection and attempt recovery (for
 example: <code>Crash detected ... Attempting recovery...</code>, then a
@@ -441,7 +444,8 @@ stop/restart sequence).</li>
 </ul></li>
 <li><strong>Cold reset from Linux</strong>
 <ul>
-<li>On Linux, run: <code>bash  reboot</code></li>
+<li><p>On Linux, run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">reboot</code></pre></div></li>
 <li>A cold reset typically reboots the full platform; you should see
 TF-M/MCUboot banners again on the CM33 UART. Depending on timing, you
 may also see an SCMI notification such as
@@ -449,8 +453,9 @@ may also see an SCMI notification such as
 </ul></li>
 <li><strong>Warm reset from Linux</strong>
 <ul>
-<li>On Linux, run:
-<code>bash  echo warm &gt;&gt; /sys/kernel/reboot/mode  reboot</code></li>
+<li><p>On Linux, run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo warm &gt;&gt; /sys/kernel/reboot/mode
+reboot</code></pre></div></li>
 <li>A warm reset typically restarts the A35 while keeping CM33 running;
 on the CM33 UART you should see <code>SYS_POWER_WARM_RESET</code> and a
 RemoteProc stop/start sequence.</li>

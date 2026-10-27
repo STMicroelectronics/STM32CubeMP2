@@ -206,8 +206,8 @@ SECTIONS
 		KEEP(*(.heap*))
 		__HeapLimit = .;
 	} > RAM
-	
-    .tcp_sec (NOLOAD) : 
+
+    .tcp_sec (NOLOAD) :
 	{
 		. = ALIGN(4);
     	*(.RxDecripSection)

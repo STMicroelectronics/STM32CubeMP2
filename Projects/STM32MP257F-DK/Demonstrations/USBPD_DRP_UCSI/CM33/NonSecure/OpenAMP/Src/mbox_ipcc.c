@@ -61,7 +61,6 @@
 
 /* USER CODE END PFP */
 
-extern IPCC_HandleTypeDef hipcc1;
 uint32_t vring0_id = 0; /* used for channel 1 */
 uint32_t vring1_id = 1; /* used for channel 2 */
 
@@ -75,9 +74,9 @@ static const osSemaphoreAttr_t semAttr_IpccSemaphore = {
 
 /* USER CODE END PFP */
 
-void IPCC_channel1_callback(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir);
-void IPCC_channel2_callback(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir);
-void CoproSync_DetachCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir);
+static void IPCC_channel1_callback(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir);
+static void IPCC_channel2_callback(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir);
+void        CoproSync_DetachCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir);
 
 
 /**
@@ -85,7 +84,7 @@ void CoproSync_DetachCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex, IPCC_
   * @param  None
   * @retval : Operation result
   */
-int MAILBOX_Init(void)
+int MAILBOX_Init(IPCC_HandleTypeDef *hipcc, MAILBOX_ChannelCallback_t cb)
 {
 
   /* The Linux defines the maximum message queue of 20 elements */
@@ -101,22 +100,27 @@ int MAILBOX_Init(void)
 
   /* USER CODE END  PRE_MAILBOX_INIT */
 
-  if (HAL_IPCC_ActivateNotification(&hipcc1, IPCC_CHANNEL_1, IPCC_CHANNEL_DIR_RX,
-                                    IPCC_channel1_callback) != HAL_OK)
+  if (hipcc == NULL)
+  {
+    return -1;
+  }
+
+  if (HAL_IPCC_ActivateNotification(hipcc, IPCC_CHANNEL_1, IPCC_CHANNEL_DIR_RX,
+                                    cb ? cb : IPCC_channel1_callback) != HAL_OK)
   {
     OPENAMP_log_err("%s: ch_1 RX fail\n", __func__);
     return -1;
   }
 
-  if (HAL_IPCC_ActivateNotification(&hipcc1, IPCC_CHANNEL_2, IPCC_CHANNEL_DIR_RX,
-                                    IPCC_channel2_callback) != HAL_OK)
+  if (HAL_IPCC_ActivateNotification(hipcc, IPCC_CHANNEL_2, IPCC_CHANNEL_DIR_RX,
+                                    cb ? cb : IPCC_channel2_callback) != HAL_OK)
   {
     OPENAMP_log_err("%s: ch_2 RX fail\n", __func__);
     return -1;
   }
 
-  if (HAL_IPCC_ActivateNotification(&hipcc1, IPCC_CHANNEL_4, IPCC_CHANNEL_DIR_RX,
-                                    CoproSync_DetachCb) != HAL_OK)
+  if (HAL_IPCC_ActivateNotification(hipcc, IPCC_CHANNEL_4, IPCC_CHANNEL_DIR_RX,
+                                    cb ? cb : CoproSync_DetachCb) != HAL_OK)
   {
     OPENAMP_log_err("%s: ch_4 RX fail\n", __func__);
     return -1;
@@ -133,18 +137,18 @@ int MAILBOX_Init(void)
   * @param  None
   * @retval : None
   */
-void MAILBOX_DeInit(void)
+void MAILBOX_DeInit(IPCC_HandleTypeDef *hipcc)
 {
   /* USER CODE BEGIN PRE_MAILBOX_INIT */
 
   /* USER CODE END  PRE_MAILBOX_INIT */
 
-  if (HAL_IPCC_DeActivateNotification(&hipcc1, IPCC_CHANNEL_1, IPCC_CHANNEL_DIR_RX) != HAL_OK)
+  if (HAL_IPCC_DeActivateNotification(hipcc, IPCC_CHANNEL_1, IPCC_CHANNEL_DIR_RX) != HAL_OK)
   {
     OPENAMP_log_err("%s: ch_1 RX fail\n", __func__);
   }
 
-  if (HAL_IPCC_DeActivateNotification(&hipcc1, IPCC_CHANNEL_2, IPCC_CHANNEL_DIR_RX) != HAL_OK)
+  if (HAL_IPCC_DeActivateNotification(hipcc, IPCC_CHANNEL_2, IPCC_CHANNEL_DIR_RX) != HAL_OK)
   {
     OPENAMP_log_err("%s: ch_2 RX fail\n", __func__);
   }
@@ -195,7 +199,7 @@ int MAILBOX_Poll(struct virtio_device *vdev)
 int MAILBOX_Notify(void *priv, uint32_t id)
 {
   uint32_t channel;
-  (void)priv;
+  IPCC_HandleTypeDef *hipcc = (IPCC_HandleTypeDef *)priv;
 
    /* USER CODE BEGIN PRE_MAILBOX_NOTIFY */
 
@@ -220,14 +224,14 @@ int MAILBOX_Notify(void *priv, uint32_t id)
   }
 
   /* Check that the channel is free (otherwise wait until it is) */
-  if (HAL_IPCC_GetChannelStatus(&hipcc1, channel, IPCC_CHANNEL_DIR_TX) == IPCC_CHANNEL_STATUS_OCCUPIED)
+  if (HAL_IPCC_GetChannelStatus(hipcc, channel, IPCC_CHANNEL_DIR_TX) == IPCC_CHANNEL_STATUS_OCCUPIED)
   {
     OPENAMP_log_dbg("Waiting for channel to be freed\r\n");
-    while (HAL_IPCC_GetChannelStatus(&hipcc1, channel, IPCC_CHANNEL_DIR_TX) == IPCC_CHANNEL_STATUS_OCCUPIED);
+    while (HAL_IPCC_GetChannelStatus(hipcc, channel, IPCC_CHANNEL_DIR_TX) == IPCC_CHANNEL_STATUS_OCCUPIED);
   }
 
   /* Inform A35 (either new message, or buf free) */
-  HAL_IPCC_NotifyCPU(&hipcc1, channel, IPCC_CHANNEL_DIR_TX);
+  HAL_IPCC_NotifyCPU(hipcc, channel, IPCC_CHANNEL_DIR_TX);
 
   /* USER CODE BEGIN POST_MAILBOX_NOTIFY */
 
@@ -241,7 +245,7 @@ int MAILBOX_Notify(void *priv, uint32_t id)
 
 /* USER CODE END 0 */
 /* Callback from IPCC Interrupt Handler: Master Processor informs that there are some free buffers */
-void IPCC_channel1_callback(IPCC_HandleTypeDef * hipcc,
+static void IPCC_channel1_callback(IPCC_HandleTypeDef * hipcc,
          uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir)
 {
   /* USER CODE BEGIN PRE_MAILBOX_CHANNEL1_CALLBACK */
@@ -256,10 +260,9 @@ void IPCC_channel1_callback(IPCC_HandleTypeDef * hipcc,
 }
 
 /* Callback from IPCC Interrupt Handler: new message received from Master Processor */
-void IPCC_channel2_callback(IPCC_HandleTypeDef * hipcc,
+static void IPCC_channel2_callback(IPCC_HandleTypeDef * hipcc,
          uint32_t ChannelIndex, IPCC_CHANNELDirTypeDef ChannelDir)
 {
-
   /* USER CODE BEGIN PRE_MAILBOX_CHANNEL2_CALLBACK */
 
   /* USER CODE END  PRE_MAILBOX_CHANNEL2_CALLBACK */
@@ -285,7 +288,6 @@ __weak void CoproSync_DetachCb(IPCC_HandleTypeDef * hipcc, uint32_t ChannelIndex
 {
   /* by default nothing done */
   HAL_IPCC_NotifyCPU(hipcc, ChannelIndex, IPCC_CHANNEL_DIR_RX);
-
 }
 
 /************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/

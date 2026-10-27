@@ -174,6 +174,7 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
   /* Select Ethernet 50MHz internal clock from RCC */
   HAL_SYSCFG_ETH1RefClockSelect(SYSCFG_ETH_RCC_REF_CLK);
 
+#if defined(USE_DEVELOPMENT_MODE)
   /* Enable GPIOA clock */
   if (ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(90)) == RESMGR_STATUS_ACCESS_OK){
     __HAL_RCC_GPIOA_CLK_ENABLE();
@@ -193,6 +194,7 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
   if (ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(97)) == RESMGR_STATUS_ACCESS_OK){
     __HAL_RCC_GPIOH_CLK_ENABLE();
   }
+#endif
 
   /* Configure PA13 - 1. ETH1_TX_EN */
   GPIO_InitStructure.Pin = GPIO_PIN_13;
@@ -288,27 +290,6 @@ void HAL_ETH_MspInit(ETH_HandleTypeDef *heth)
  */
 void HAL_ETH_MspDeInit(ETH_HandleTypeDef *heth)
 {
-  /* Disable GPIOA clock */
-  if (ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(90)) == RESMGR_STATUS_ACCESS_OK)
-  {
-    __HAL_RCC_GPIOA_CLK_DISABLE();
-  }
-  /* Disable GPIOC clock */
-  if (ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(92)) == RESMGR_STATUS_ACCESS_OK)
-  {
-    __HAL_RCC_GPIOC_CLK_DISABLE();
-  }
-  /* Disable GPIOF clock */
-  if (ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(95)) == RESMGR_STATUS_ACCESS_OK)
-  {
-    __HAL_RCC_GPIOF_CLK_DISABLE();
-  }
-  /* Disable GPIOH clock */
-  if (ResMgr_Request(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(97)) == RESMGR_STATUS_ACCESS_OK)
-  {
-    __HAL_RCC_GPIOH_CLK_DISABLE();
-  }
-
   /* Disable Ethernet clocks */
   __HAL_RCC_ETH1_CLK_DISABLE();
   __HAL_RCC_ETH1MAC_CLK_DISABLE();
@@ -317,69 +298,90 @@ void HAL_ETH_MspDeInit(ETH_HandleTypeDef *heth)
 
   /* Disable IRQ */
   HAL_NVIC_DisableIRQ(ETH1_SBD_IRQn);
-  HAL_NVIC_DisableIRQ(ETH1_PMT_IRQn);
 
-  /* Release GPIOA clock */
-  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(90)) != RESMGR_STATUS_ACCESS_OK){
-    Error_Handler();
+#if defined(USE_DEVELOPMENT_MODE)
+  /* Disable GPIOA clock */
+  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(90)) == RESMGR_STATUS_ACCESS_OK)
+  {
+    __HAL_RCC_GPIOA_CLK_DISABLE();
   }
-  /* Release GPIOC clock */
-  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(92)) != RESMGR_STATUS_ACCESS_OK){
-    Error_Handler();
+  /* Disable GPIOC clock */
+  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(92)) == RESMGR_STATUS_ACCESS_OK)
+  {
+    __HAL_RCC_GPIOC_CLK_DISABLE();
   }
-  /* Release GPIOF clock */
-  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(95)) != RESMGR_STATUS_ACCESS_OK){
-    Error_Handler();
+  /* Disable GPIOF clock */
+  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(95)) == RESMGR_STATUS_ACCESS_OK)
+  {
+    __HAL_RCC_GPIOF_CLK_DISABLE();
   }
-  /* Release GPIOH clock */
-  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(97)) != RESMGR_STATUS_ACCESS_OK){
-    Error_Handler();
+  /* Disable GPIOH clock */
+  if (ResMgr_Release(RESMGR_RESOURCE_RIF_RCC, RESMGR_RCC_RESOURCE(97)) == RESMGR_STATUS_ACCESS_OK)
+  {
+    __HAL_RCC_GPIOH_CLK_DISABLE();
   }
+#endif
+
   /* Release ETH1 using Resource manager */
   if (ResMgr_Release(RESMGR_RESOURCE_RIFSC, STM32MP21_RIFSC_ETH1_ID) != RESMGR_STATUS_ACCESS_OK){
     Error_Handler();
   }
-  /* Release GPIOA13 using Resource manager */
+
+  /* Release GPIOA13 ETH1_TX_EN using Resource manager */
   if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOA, RESMGR_GPIO_PIN(13))  != RESMGR_STATUS_ACCESS_OK){
     Error_Handler();
   }
-  /* Release GPIOA15 using Resource manager */
-  if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOA, RESMGR_GPIO_PIN(15)) != RESMGR_STATUS_ACCESS_OK){
+
+  /* Release GPIOA15 ETH1_TXD0 using Resource manager */
+  if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOA, RESMGR_GPIO_PIN(15))  != RESMGR_STATUS_ACCESS_OK){
     Error_Handler();
   }
-  /* Release GPIOC1 using Resource manager */
+
+  /* Release GPIOC1 ETH1_TXD1 using Resource manager */
   if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOC, RESMGR_GPIO_PIN(1)) != RESMGR_STATUS_ACCESS_OK){
     Error_Handler();
   }
-  /* Release GPIOC2 using Resource manager */
-  if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOC, RESMGR_GPIO_PIN(2)) != RESMGR_STATUS_ACCESS_OK){
-    Error_Handler();
-  }
-  /* Release GPIOC6 using Resource manager */
-  if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOC, RESMGR_GPIO_PIN(6)) != RESMGR_STATUS_ACCESS_OK){
-    Error_Handler();
-  }
-  /* Release GPIOF0 using Resource manager */
-  if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOF, RESMGR_GPIO_PIN(0)) != RESMGR_STATUS_ACCESS_OK){
-    Error_Handler();
-  }
-  /* Release GPIOF1 using Resource manager */
+
+  /* Release GPIOF1 ETH1_RXD0 using Resource manager */
   if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOF, RESMGR_GPIO_PIN(1)) != RESMGR_STATUS_ACCESS_OK){
     Error_Handler();
   }
-  /* Release GPIOF2 using Resource manager */
+
+  /* Release GPIOC2 ETH1_RXD1 using Resource manager */
+  if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOC, RESMGR_GPIO_PIN(2)) != RESMGR_STATUS_ACCESS_OK){
+    Error_Handler();
+  }
+
+  /* Release GPIOA11 ETH1_CRS_DV using Resource manager */
+  if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOA, RESMGR_GPIO_PIN(11)) != RESMGR_STATUS_ACCESS_OK){
+    Error_Handler();
+  }
+
+  /* Release GPIOF0 ETH1_MDC using Resource manager */
+  if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOF, RESMGR_GPIO_PIN(0)) != RESMGR_STATUS_ACCESS_OK){
+    Error_Handler();
+  }
+
+  /* Release GPIOF2 ETH1_MDIO using Resource manager */
   if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOF, RESMGR_GPIO_PIN(2)) != RESMGR_STATUS_ACCESS_OK){
     Error_Handler();
   }
-  /* Release GPIOF8 using Resource manager */
+
+  /* Release GPIOH11 ETH1_NRST using Resource manager */
+  if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOH, RESMGR_GPIO_PIN(11)) != RESMGR_STATUS_ACCESS_OK){
+    Error_Handler();
+  }
+
+  /* Release GPIOA12 ETH1_MDINT using Resource manager */
+  if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOA, RESMGR_GPIO_PIN(12))  != RESMGR_STATUS_ACCESS_OK){
+    Error_Handler();
+  }
+
+  /* Release GPIOF8 ETH1_CLK using Resource manager */
   if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOF, RESMGR_GPIO_PIN(8)) != RESMGR_STATUS_ACCESS_OK){
     Error_Handler();
   }
-  /* Release GPIOH11 using Resource manager */
-  if (ResMgr_Release(RESMGR_RESOURCE_RIF_GPIOH, RESMGR_GPIO_PIN(11)) != RESMGR_STATUS_ACCESS_OK)
-  {
-    Error_Handler();
-  }
+
 }
 
 /* USER CODE BEGIN 1 */

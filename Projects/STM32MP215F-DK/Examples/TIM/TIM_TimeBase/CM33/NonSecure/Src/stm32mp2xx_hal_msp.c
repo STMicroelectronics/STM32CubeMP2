@@ -55,6 +55,10 @@ void HAL_TIM_Base_MspInit(TIM_HandleTypeDef* htim_base)
 
   if(htim_base->Instance==TIM5)
   {
+    /* Reset TIM5 to clear any configuration left by a previously loaded firmware */
+    __HAL_RCC_TIM5_FORCE_RESET();
+    __HAL_RCC_TIM5_RELEASE_RESET();
+
     /* TIM5 clock enable */
     __HAL_RCC_TIM5_CLK_ENABLE();
 
@@ -75,8 +79,17 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
 
   /* USER CODE END TIM5_MspDeInit 0 */
 
-  /* Peripheral clock disable */
-  __HAL_RCC_TIM5_CLK_DISABLE();
+  if(htim_base->Instance==TIM5)
+  {
+    HAL_NVIC_DisableIRQ(TIM5_IRQn);
+
+    /* Reset TIM5 so that no configuration is left for the next firmware */
+    __HAL_RCC_TIM5_FORCE_RESET();
+    __HAL_RCC_TIM5_RELEASE_RESET();
+
+    /* Peripheral clock disable */
+    __HAL_RCC_TIM5_CLK_DISABLE();
+  }
 
   /* USER CODE BEGIN TIM5_MspDeInit 1 */
 

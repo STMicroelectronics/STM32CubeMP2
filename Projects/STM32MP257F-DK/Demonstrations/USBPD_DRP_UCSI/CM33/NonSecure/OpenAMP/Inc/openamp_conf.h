@@ -25,6 +25,19 @@
  extern "C" {
 #endif
 
+/**
+ *  Define RPMSG role.
+ * On stm32MP series the Cortex-A has the host(driver) role, the Cortex-M
+ * has the remote(device) role
+ */
+#if (VIRTIO_DEVICE_SUPPORT == 1)
+#define OPENAMP_ROLE RPMSG_REMOTE
+#elif (VIRTIO_DRIVER_SUPPORT == 1)
+#define OPENAMP_ROLE RPMSG_HOST
+#elif !defined (OPENAMP_ROLE)
+#error  OPENAMP_ROLE must be defined
+#endif
+
 /* Includes ------------------------------------------------------------------*/
 #if defined (__LOG_TRACE_IO_) || defined(__LOG_UART_IO_)
 #include "openamp_log.h"

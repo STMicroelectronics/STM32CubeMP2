@@ -51,6 +51,8 @@
     .global FreeRTOS_IRQ_Handler
     .global FreeRTOS_FIQ_Handler
     .global FreeRTOS_SWI_Handler
+    .global FreeRTOS_SVC_Handler
+    .global SVC_Handler
     .global vPortRestoreTaskContext
 
 
@@ -140,11 +142,15 @@
 
 
 /******************************************************************************
- * SVC handler is used to start the scheduler.
+ * SVC handler aliases are used to start the scheduler.
  *****************************************************************************/
 .align 4
 .type FreeRTOS_SWI_Handler, %function
+.type FreeRTOS_SVC_Handler, %function
+.type SVC_Handler, %function
 FreeRTOS_SWI_Handler:
+FreeRTOS_SVC_Handler:
+SVC_Handler:
     /* Save the context of the current task and select a new task to run. */
     portSAVE_CONTEXT
     LDR R0, vTaskSwitchContextConst

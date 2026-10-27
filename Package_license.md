@@ -50,6 +50,7 @@ __SOFTWARE BILL OF MATERIALS__
 | STM32 Projects              | STMicroelectronics                          | [SLA](#collapse-section1) (BSD-3-Clause for basic Examples)
 | STM32 Utilities             | STMicroelectronics                          | [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
 | LwIP                        | Swedish Institute of Computer Science, STMicroelectronics  | [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
+| MbedTLS                     | Arm Limited (or its affiliates)             | [Apache-2.0](https://opensource.org/licenses/Apache-2.0)
 | Utilities lcd               | STMicroelectronics                          | [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
 | Utilities Fonts             | STMicroelectronics                          | [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
 | Utilities CoproSync         | STMicroelectronics                          | [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
@@ -58,7 +59,6 @@ __SOFTWARE BILL OF MATERIALS__
 | Utilities M33TD_NSAppCore   | STMicroelectronics                          | [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
 | Utilities ResourcesManager  | STMicroelectronics                          | [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
 | Utilities TRACER_EMB        | STMicroelectronics                          | [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
-| Utilities dt-stm32mp        | STMicroelectronics                          | [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
 | scmiagent                   | ARM Limited                                 | [BSD-3-Clause](https://opensource.org/licenses/BSD-3-Clause)
 
 

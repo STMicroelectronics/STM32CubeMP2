@@ -2,11 +2,22 @@
   ******************************************************************************
   * @file    mmu_stm32mp2xx.c
   * @author  MCD Application Team
-  * @brief   CMSIS Cortex-A35 Device Peripheral Access Layer MMU Setup source file.
+  * @brief   CMSIS Cortex-A35 AArch32 short-descriptor MMU setup source file.
   *
-  *   This file provides one function called from SystemInit
-  *      - MMU_CreateTranslationTable() : This function is called at startup
-  *                      during system initialization to setup MMU Translation tables
+  * This file builds the level-1 translation table and any required level-2
+  * coarse page tables from the project supplied MMU_REGION_TABLE.
+  *
+  * To use this template:
+  * - include mmu_stm32mp2xx.h and define MMU_REGION_TABLE in stm32mp2xx_mmu_conf.h
+  * - describe each region with virtual address, physical address, size,
+  *   attributes, execute-never, security state and granularity
+  * - keep section regions aligned to 1 Mbyte and page regions aligned to 4 Kbytes
+  * - call MMU_CreateTranslationTable() from SystemInit() before MMU_Enable()
+  *
+  * The current implementation supports AArch32 short descriptors with TTBR0
+  * covering the full 4 Gbyte virtual address space, domain 0 descriptors,
+  * 1 Mbyte section mappings and 4 Kbyte small-page mappings. It is common to
+  * STM32MP2xx projects; each project owns its region table in stm32mp2xx_mmu_conf.h.
   *
   ******************************************************************************
   * @attention
@@ -21,263 +32,407 @@
   ******************************************************************************
   */
 
-/* Memory map description STM32MP257Cxx
-                                                     Memory Type
-0xFFFFFFFF |--------------------------| ---------   ------------
-           |           DDR            |  2G            Normal
-0x80000000 |--------------------------| ---------   ------------
-           |         FMC NOR          | 256M          Device RO
-0x70000000 |--------------------------| ---------   ------------
-           |        OCTOSPIx          | 256M          Device RO
-0x60000000 |--------------------------| ---------   ------------
-           |       Peripherals        | 512M        Device RW/RO
-0x40000000 |--------------------------| ---------   ------------
-           |          Fault           | 256M-384k      Fault
-0x30060000 |--------------------------| ---------   ------------
-           |          SRAM1           | 128k           Normal
-0x30040000 |--------------------------| ---------   ------------
-           |          Fault           | 256k           Fault
-0x30000000 |--------------------------| ---------   ------------
-           |          Fault           | 256M-256k      Fault
-0x20040000 |--------------------------| ---------   ------------
-           |    SYSRAM - Stacks       |              Normal RW
-           |--------------------------|             ------------
-           |    SYSRAM - TTB          |              Normal RW
-           |--------------------------|             ------------
-           |    SYSRAM - RW ZI Data   |              Normal RW
-           |--------------------------| 256k        ------------
-           |    SYSRAM - RW Data      |              Normal RW
-           |--------------------------|             ------------
-           |    SYSRAM - RO Data      |            Normal Exec RO
-           |--------------------------|             ------------
-           |    SYSRAM - RO Code      |            Normal Exec RO
-0x20000000 |--------------------------| ---------   ------------
-           |          Fault           | 512M           Fault
-0x00000000 |--------------------------| ---------   ------------
-*/
+/* L1 cache information and CCSIR restrictions:
+ * - Write-through support is not available
+ * - Write-back support is available
+ * - Read allocation support is available
+ * - Write allocation support is available
+ */
 
-// L1 Cache info and restrictions about architecture of the caches (CCSIR register):
-// Write-Through support *not* available
-// Write-Back support available.
-// Read allocation support available.
-// Write allocation support available.
+/* Use the shareable attribute carefully. For cores without coherency logic, such as
+ * SCU, marking a region as shareable forces the processor to avoid caching that
+ * region regardless of the inner cache settings. Cortex-A RTX versions use
+ * LDREX/STREX instructions that rely on local monitors. Local monitors are used
+ * only when the region is cached; non-cacheable regions use the global monitor.
+ * Some Cortex-A implementations do not include global monitors, so a wrong
+ * shareable attribute might cause STREX to fail.
+ */
 
-// Note: You should use the Shareable attribute carefully.
-// For cores without coherency logic (such as SCU) marking a region as shareable forces the processor to not cache that region regardless of the inner cache settings.
-// Cortex-A versions of RTX use LDREX/STREX instructions relying on Local monitors. Local monitors will be used only when the region gets cached, regions that are not cached will use the Global Monitor.
-// Some Cortex-A implementations do not include Global Monitors, so wrongly setting the attribute Shareable may cause STREX to fail.
-   
-// Recall: When the Shareable attribute is applied to a memory region that is not Write-Back, Normal memory, data held in this region is treated as Non-cacheable.
-// When SMP bit = 0, Inner WB/WA Cacheable Shareable attributes are treated as Non-cacheable.
-// When SMP bit = 1, Inner WB/WA Cacheable Shareable attributes are treated as Cacheable.
-   
-// Following MMU configuration is expected
-// SCTLR.AFE == 1 (Simplified access permissions model - AP[2:1] define access permissions, AP[0] is an access flag)
-// SCTLR.TRE == 0 (TEX remap disabled, so memory type and attributes are described directly by bits in the descriptor)
-// Domain 0 is always the Client domain
-// Descriptors should place all memory in domain 0
+/* When the shareable attribute is applied to a memory region that is not
+ * write-back normal memory, data held in this region is treated as non-cacheable.
+ * When SMP bit is 0, inner WB/WA cacheable shareable attributes are treated as
+ * non-cacheable. When SMP bit is 1, inner WB/WA cacheable shareable attributes
+ * are treated as cacheable.
+ */
+
+/* Expected MMU configuration:
+ * - SCTLR.AFE is 1, AP[2:1] define access permissions and AP[0] is an access flag
+ * - SCTLR.TRE is 0, TEX remap is disabled and descriptor bits describe attributes
+ * - Domain 0 is the client domain
+ * - Descriptors place all memory in domain 0
+ */
 
 #include "stm32mp2xx.h"
+#include "mmu_stm32mp2xx.h"
+#include "stm32mp2xx_mmu_conf.h"
 
-//--------------------- TTB sizes  -------------------
-#define TTB_L1_SIZE                     0x4000
-#define TTB_L2_1M_SIZE                  0x0400
+#define SECTION_SHIFT   20U
+#define SECTION_SIZE    (1U << SECTION_SHIFT)    /* 1MB */
+#define L1_ENTRY_COUNT  4096U
 
-//Import symbols from linker
-extern uint32_t __TEXT_START__;     // Start of code section (RO+Executable)
-extern uint32_t __TEXT_END__;       // End of code section (4096 bytes aligned)
-extern uint32_t __RO_START__;       // Start of data RO section (RO + Non-Executable)
-extern uint32_t __RO_END__;         // End of RO section (4096 bytes aligned)
+#define SMALL_PAGE_SHIFT  12U
+#define SMALL_PAGE_SIZE   (1U << SMALL_PAGE_SHIFT)  /* 4KB */
 
-extern uint32_t TTB;
+#define MMU_MAX_COARSE_TABLES  32U /* max number of 4KB regions */
 
-// Level 2 table pointers
-//-----------------------------------------------------
-#define CODE_AND_DATA_TABLE_L2_BASE_4k ((uint32_t)&TTB + TTB_L1_SIZE)                 //Map 1M of 4k pages for code and data
-#define SRAM_TABLE_L2_BASE_4k          (CODE_AND_DATA_TABLE_L2_BASE_4k + TTB_L2_1M_SIZE) //Map 1M of 4k pages for SRAM
-#define GIC_TABLE_L2_BASE_4k           (SRAM_TABLE_L2_BASE_4k + TTB_L2_1M_SIZE)          //Map 1M of 4k pages for GIC peripheral access
 
-/* Define global descriptors */
-static uint32_t Sect_SO;                // Strongly ordered, shareable by default
-static uint32_t Sect_Normal;            // outer & inner wb/wa, non-shareable, executable, rw, domain 0, base addr 0
-static uint32_t Sect_Normal_Shared;     // outer & inner wb/wa, shareable, executable, rw, domain 0, base addr 0
-static uint32_t Sect_Device_RO;         // device, non-shareable, non-executable, ro, domain 0, base addr 0
-static uint32_t Sect_Device_RW;         // as Sect_Device_RO, but writeable
-static uint32_t Sect_Device_RW_Shared;  // as Sect_Device_RO, but writeable, shareable
+/* =========================================================================
+ *  L1 Translation Table
+ * =========================================================================
+ *  4 GB / 1 MB = 4096 entries, 16 KB, 16 KB aligned
+ */
+__attribute__((aligned(16384)))
+static uint32_t L1_TT[4096];
 
-static uint32_t Page_L1_4k  = 0x0;      // generic
-static uint32_t Page_4k_Normal_Cod;     // outer & inner wb/wa, shareable, executable, ro, domain 0, base addr 0
-static uint32_t Page_4k_Normal_RO;      // outer & inner wb/wa, shareable, non-executable, ro, domain 0, base addr 0
-static uint32_t Page_4k_Normal_RW;      // outer & inner wb/wa, shareable, rw, domain 0, base addr 0
-static uint32_t Page_4k_Device_RW;      // shared device, not executable, rw, domain 0
-static uint32_t Page_4k_Normal_RW_NonCacheable;   // outer & inner Non- Cacheable, shareable, rw, domain 0, base addr 0
+static const mmu_region_t mmu_regions[] = MMU_REGION_TABLE;
 
-void MMU_CreateTranslationTable(void)
+static const uint32_t mmu_regions_count =
+  sizeof(mmu_regions) / sizeof(mmu_regions[0]);
+
+/* =========================================================================
+ *  Coarse Page Tables for 4KB pages
+ * =========================================================================
+ *
+ * Each coarse table:
+ *   - 1KB (256 entries * 4 bytes)
+ *   - Covers 1MB of virtual address space: 256 * 4KB
+ *
+ * L1 entry points to a coarse table when using small pages.
+ */
+
+__attribute__((aligned(1024)))
+static uint32_t L2_CoarseTables[MMU_MAX_COARSE_TABLES][256];
+
+static uint32_t CoarseTableCount = 0U;
+
+/* Utility: allocate a new coarse page table, return its index or -1 */
+static int32_t MMU_AllocateCoarseTable(void)
 {
-  mmu_region_attributes_Type region;
+  uint32_t index;
 
-  // Create faulting entries for full 4GB address space to ensure any access to incorrect memory location will be trapped
-  // Further sections and pages setup will overwrite these default table entries
-  MMU_TTSection (&TTB, 0, 4096U, DESCRIPTOR_FAULT);
-
-  /*
-   * Generate descriptors. Refer to core_ca.h to get information about attributes
-   *
-   */
-  // Create descriptors for Vectors, RO, RW, ZI sections
-  section_so(Sect_SO, region);
-  section_normal(Sect_Normal, region);
-
-  Sect_Normal_Shared = Sect_Normal;
-  MMU_SharedSection(&Sect_Normal_Shared, SHARED);
-
-  // Create descriptors for peripherals
-  section_device_ro(Sect_Device_RO, region);
-  section_device_rw(Sect_Device_RW, region);
-
-  Sect_Device_RW_Shared = Sect_Device_RW;
-  MMU_SharedSection(&Sect_Device_RW_Shared, SHARED);
-
-  // Create descriptors for 4k pages
-  page4k_device_rw(Page_L1_4k, Page_4k_Device_RW, region);
-
-  region.rg_t = PAGE_4k;
-  region.domain = 0x0;
-  region.e_t = ECC_DISABLED;
-  region.g_t = GLOBAL;
-  region.inner_norm_t = WB_WA;
-  region.outer_norm_t = WB_WA;
-  region.mem_t = NORMAL;
-  region.sec_t = SECURE;
-  region.xn_t = EXECUTE;
-  /* This should be READ but SW4STM32/GDB/OpenOCD is not able to step in a read-only code section ... */
-  /* So set it RW */
-  region.priv_t = RW;
-  region.user_t = RW;
-  region.sh_t = SHARED;
-  MMU_GetPageDescriptor(&Page_L1_4k, &Page_4k_Normal_Cod, region);
-
-  region.rg_t = PAGE_4k;
-  region.domain = 0x0;
-  region.e_t = ECC_DISABLED;
-  region.g_t = GLOBAL;
-  region.inner_norm_t = WB_WA;
-  region.outer_norm_t = WB_WA;
-  region.mem_t = NORMAL;
-  region.sec_t = SECURE;
-  region.xn_t = NON_EXECUTE;
-  region.priv_t = READ;
-  region.user_t = READ;
-  region.sh_t = SHARED;
-  MMU_GetPageDescriptor(&Page_L1_4k, &Page_4k_Normal_RO, region);
-
-  region.rg_t = PAGE_4k;
-  region.domain = 0x0;
-  region.e_t = ECC_DISABLED;
-  region.g_t = GLOBAL;
-  region.inner_norm_t = WB_WA;
-  region.outer_norm_t = WB_WA;
-  region.mem_t = NORMAL;
-  region.sec_t = SECURE;
-  region.xn_t = NON_EXECUTE;
-  region.priv_t = RW;
-  region.user_t = RW;
-  region.sh_t = SHARED;
-  MMU_GetPageDescriptor(&Page_L1_4k, &Page_4k_Normal_RW, region);
-
-  region.rg_t = PAGE_4k;
-  region.domain = 0x0;
-  region.e_t = ECC_DISABLED;
-  region.g_t = GLOBAL;
-  region.inner_norm_t = NON_CACHEABLE;
-  region.outer_norm_t = NON_CACHEABLE;
-  region.mem_t = NORMAL;
-  region.sec_t = SECURE;
-  region.xn_t = NON_EXECUTE;
-  region.priv_t = RW;
-  region.user_t = RW;
-  region.sh_t = SHARED;
-  MMU_GetPageDescriptor(&Page_L1_4k, &Page_4k_Normal_RW_NonCacheable, region);
-
-  /*
-   *  Define MMU flat-map regions and attributes
-   *
-   */
-  // Define 256M OSPI memory as device, non-shareable, non-executable, ro
-  MMU_TTSection (&TTB, (uint32_t)OSPI1_MEM_BASE  , ((FMC_NOR_MEM_BASE - OSPI1_MEM_BASE) >> 20 ),
-		 Sect_Device_RO);
-
-  // Define 256M FMC NOR memory as device, non-shareable, non-executable, ro
-  MMU_TTSection (&TTB, (uint32_t)FMC_NOR_MEM_BASE, ((DDR_MEM_BASE - FMC_NOR_MEM_BASE) >> 20 )  ,
-		 Sect_Device_RO);
-
-  // All DDR (2GB) Executable, Cacheable & RW - applications may choose to divide memory into RO executable
-  MMU_TTSection (&TTB, (uint32_t)DDR_MEM_BASE    , 2048U                                       ,
-		 Sect_Normal_Shared);
-
-  //-------------------- SYSRAM ------------------
-  // Create (256 * 4k)=1MB faulting entries to cover SYSRAM 1M aligned range
-  MMU_TTPage4k (&TTB, SYSRAM_BASE & 0xFFF00000, 1024U/4U, Page_L1_4k,
-		(uint32_t *)CODE_AND_DATA_TABLE_L2_BASE_4k, DESCRIPTOR_FAULT);
-  // Create (64 * 4k)=256k Normal entries to cover full SYSRAM (includes RW_data, ZI_Data, TTB, Stacks, heap)
-  MMU_TTPage4k (&TTB, SYSRAM_BASE             , 256U/4U , Page_L1_4k,
-		(uint32_t *)CODE_AND_DATA_TABLE_L2_BASE_4k, Page_4k_Normal_RW);
-
-  //-------------------- Code and data ------------------
-  // Assuming that Code and Data fits in a single 1 Mbytes section
-  if ( (uint32_t)&__TEXT_START__ >= DDR_MEM_BASE ) /* Code in DDR */
+  if (CoarseTableCount >= MMU_MAX_COARSE_TABLES)
   {
-    // Create 4k pages Normal, RW, shared entries to cover DDR Code and RO data 1M aligned range
-    uint32_t aligned_CodeStart   = (uint32_t)&__TEXT_START__ & 0xFFF00000;
-    uint32_t aligned_RO_Data_End = ((uint32_t)&__RO_END__ + 0x000FFFFF) & 0xFFF00000;
-
-    // Ensure Code and RO data can fit in single 1M section
-    // because this is the size of Level to CODE_AND_DATA_TABLE_L2_BASE_4k Table
-    if (aligned_RO_Data_End-aligned_CodeStart > 0x00100000)
-    {
-      /* Infinite loop */
-      while (1)
-      {
-      }
-    }
-    MMU_TTPage4k (&TTB, aligned_CodeStart, ((aligned_RO_Data_End - aligned_CodeStart)) / 4096,
-		  Page_L1_4k, (uint32_t *)CODE_AND_DATA_TABLE_L2_BASE_4k, Page_4k_Normal_RW);
+    return -1;
   }
 
-  // Create Normal, executable+RO entries to cover Code
-  MMU_TTPage4k (&TTB, (uint32_t)&__TEXT_START__,
-		((uint32_t)&__TEXT_END__ - (uint32_t)&__TEXT_START__ + 4095) / 4096,
-		Page_L1_4k, (uint32_t *)CODE_AND_DATA_TABLE_L2_BASE_4k, Page_4k_Normal_Cod);
+  index = CoarseTableCount++;
+  /* Clear entries */
+  for (uint32_t i = 0U; i < 256U; ++i)
+  {
+    L2_CoarseTables[index][i] = 0U;
+  }
 
-  // Create Normal, non-executable+RO entries to cover RO data range
-  MMU_TTPage4k (&TTB, (uint32_t)&__RO_START__  ,
-		((uint32_t)&__RO_END__ - (uint32_t)&__RO_START__ + 4095) / 4096    ,
-		Page_L1_4k, (uint32_t *)CODE_AND_DATA_TABLE_L2_BASE_4k, Page_4k_Normal_RO);
+  return (int32_t)index;
+}
 
-  //-------------------- RETRAM ------------------
-  // Create (32 * 4k)=128k Normal entries to cover RETRAM
-  MMU_TTPage4k (&TTB, RETRAM_BASE              , 128U/4U , Page_L1_4k,
-		(uint32_t *)CODE_AND_DATA_TABLE_L2_BASE_4k, Page_4k_Normal_RW);
+/* =========================================================================
+ *  Helpers for Descriptors and L1 TT Construction
+ * =========================================================================
+ */
 
-  //--------------------- PERIPHERALS -------------------
-  // Define Peripheral memory as Strongly ordered, shareable, RW , Non Cacheable
-  MMU_TTSection (&TTB, (uint32_t)PERIPH_BASE, ((OSPI1_MEM_BASE - PERIPH_BASE) >> 20 )    , Sect_SO);
+/* Section descriptor creation */
+static inline uint32_t MMU_MakeSectionDesc(uint32_t phys, uint32_t attrs, uint8_t xn, uint8_t ns)
+{
+  uint32_t desc = 0U;
 
-  /* Set location of level 1 page table
-  ; 31:14 - Translation table base addr (31:14-TTBCR.N, TTBCR.N is 0 out of reset)
-  ; 13:7  - 0x0
-  ; 6     - IRGN[0] 0x0 (Inner WB WA)
-  ; 5     - NOS     0x0 (Non-shared)
-  ; 4:3   - RGN     0x1 (Outer WB WA)
-  ; 2     - IMP     0x0 (Implementation Defined)
-  ; 1     - S       0x0 (Non-shared)
-  ; 0     - IRGN[1] 0x1 (Inner WB WA) */
-  __set_TTBR0(((uint32_t)&TTB) | 9U);
-  __ISB();
+  desc |= (phys & 0xFFF00000U); /* base address [31:20] */
+  desc |= SECTION_DESC;         /* section descriptor    */
+  desc |= SECTION_DOMAIN0;
+  desc |= SECTION_AP_PRW_UNO;   /* privileged RW, user NO */
+  desc |= attrs;
 
-  /* Set up domain access control register
-  ; We set domain 0 to Client and all other domains to No Access.
-  ; All translation table entries specify domain 0 */
-  __set_DACR(1);
+  if (xn != 0U)
+  {
+    desc |= SECTION_XN;
+  }
+
+  if (ns != 0U)
+  {
+    desc |= SECTION_NS;
+  }
+
+  return desc;
+}
+
+/* Small page descriptor creation (simplified, same attributes semantics) */
+static inline uint32_t MMU_MakeL2SmallPageDesc(uint32_t phys, uint32_t attrs, uint8_t xn)
+{
+  uint32_t desc = 0U;
+
+  /* Base address [31:12] */
+  desc |= (phys & 0xFFFFF000U);
+
+  /* Small page descriptor */
+  desc |= SMALL_PAGE_DESC;  /* bits[1:0] = 10 */
+
+  /* XN for small pages is encoded in bit[0] (descriptor type becomes 0b11). */
+  if (xn != 0U)
+  {
+    desc |= 1U;
+  }
+
+  /* AP[2:0] = 0b001: Priv RW, User NO
+   * AP0 -> bit4 = 1
+   * AP1 -> bit5 = 0
+   * AP2 -> bit9 = 0
+   */
+  desc |= (1U << 4);  /* AP0=1 */
+  /* C/B bits share the same position for sections and small pages (bits[3:2]). */
+  desc |= attrs & (SECTION_CACHEABLE | SECTION_BUFFERABLE);
+
+  /* TEX bits differ between section and small page descriptors:
+   * - section TEX[2:0] are bits[14:12]
+   * - small page TEX[2:0] are bits[8:6]
+   * Keep the public attrs semantics (SECTION_TEXx) but map to the correct positions.
+   */
+  if ((attrs & SECTION_TEX0) != 0U)
+  {
+    desc |= (1U << 6);
+  }
+  if ((attrs & SECTION_TEX1) != 0U)
+  {
+    desc |= (1U << 7);
+  }
+  if ((attrs & SECTION_TEX2) != 0U)
+  {
+    desc |= (1U << 8);
+  }
+
+  /* For small page, S bit is 10; SECTION_SHAREABLE also uses bit 16 for sections,
+     so we cannot reuse it directly. We must set S explicitly for pages. */
+  if ((attrs & SECTION_SHAREABLE) != 0U)
+  {
+    desc |= (1U << 10);  /* S=1 */
+  }
+
+  return desc;
+}
+
+/* L1 coarse table descriptor */
+static inline uint32_t MMU_MakeCoarseTableDesc(uint32_t l2_phys_addr, uint8_t ns)
+{
+  uint32_t desc = 0U;
+
+  desc |= (l2_phys_addr & 0xFFFFFC00U);
+  desc |= COARSE_TABLE_DESC;  /* bits[1:0]=01 */
+
+  if (ns != 0U)
+  {
+    desc |= PAGETABLE_NS;
+  }
+
+  return desc;
+}
+
+static void MMU_ClearL1Table(void)
+{
+  for (uint32_t i = 0U; i < L1_ENTRY_COUNT; ++i)
+  {
+    L1_TT[i] = 0U;
+  }
+  /* Also reset coarse tables counter */
+  CoarseTableCount = 0U;
+}
+
+/* Ensure an L1 entry for 'va' points to a coarse table, return L2 table pointer */
+static uint32_t *MMU_GetOrCreateCoarseTable(uint32_t va, uint8_t ns)
+{
+  uint32_t l1_index = va >> SECTION_SHIFT;
+  uint32_t desc = L1_TT[l1_index];
+  uint32_t *l2_va;
+  uint32_t  l2_pa;
+  int32_t table_index;
+
+  if ((desc & 0x3U) == COARSE_TABLE_DESC)
+  {
+    /* Already a coarse table; return its base */
+    l2_pa = desc & 0xFFFFFC00U;
+    return (uint32_t *)(uintptr_t)l2_pa;
+  }
+
+  /* Need to allocate a new coarse table */
+  table_index = MMU_AllocateCoarseTable();
+  if (table_index < 0)
+  {
+    /* Out of tables; in product code, assert or handle error */
+    return (uint32_t *)0;
+  }
+
+  l2_va = &L2_CoarseTables[table_index][0];
+  l2_pa = (uint32_t)(uintptr_t)l2_va;  /* flat mapping assumed */
+
+  L1_TT[l1_index] = MMU_MakeCoarseTableDesc(l2_pa, ns);
+
+  return l2_va;
+}
+
+static void MMU_BuildFromRegions(void)
+{
+  uint32_t num_sections;
+  uint32_t num_pages;
+  uint32_t index;
+  uint32_t va;
+  uint32_t pa;
+
+  MMU_ClearL1Table();
+
+  for (uint32_t region_index = 0U; region_index < mmu_regions_count; ++region_index)
+  {
+    const mmu_region_t *reg = &mmu_regions[region_index];
+
+    va = reg->va_start;
+    pa = reg->pa_start;
+
+    if (reg->granularity == MMU_GRANULARITY_SECTION_1M)
+    {
+      num_sections = reg->size >> SECTION_SHIFT;
+
+      /* --- 1MB Section mapping --- */
+
+      if ((reg->va_start & (SECTION_SIZE - 1U)) != 0U ||
+          (reg->pa_start & (SECTION_SIZE - 1U)) != 0U ||
+          (reg->size     & (SECTION_SIZE - 1U)) != 0U)
+      {
+        /* Misaligned; skip or assert in production */
+        continue;
+      }
+
+      for (uint32_t n = 0U; n < num_sections; ++n)
+      {
+        index = va >> SECTION_SHIFT;
+        if (index >= L1_ENTRY_COUNT)
+        {
+          break; /* outside 4GB VA */
+        }
+
+        L1_TT[index] = MMU_MakeSectionDesc(pa, reg->attrs, reg->xn, reg->ns);
+
+        va += SECTION_SIZE;
+        pa += SECTION_SIZE;
+      }
+
+    }
+    else
+    {
+      num_pages = reg->size >> SMALL_PAGE_SHIFT;
+
+      /* --- 4KB Small page mapping --- */
+      if ((reg->va_start & (SMALL_PAGE_SIZE - 1U)) != 0U ||
+          (reg->pa_start & (SMALL_PAGE_SIZE - 1U)) != 0U ||
+          (reg->size     & (SMALL_PAGE_SIZE - 1U)) != 0U)
+      {
+        /* Misaligned; skip or assert in production */
+        continue;
+      }
+
+      for (uint32_t n = 0U; n < num_pages; ++n)
+      {
+        uint32_t *l2_table = MMU_GetOrCreateCoarseTable(va, reg->ns);
+        /* L2 index: bits[19:12] select 4KB within the 1MB block */
+        index = (va >> SMALL_PAGE_SHIFT) & 0xFFU;
+
+        if (l2_table == (uint32_t *)0)
+        {
+          break; /* no L2 table available */
+        }
+
+        l2_table[index] = MMU_MakeL2SmallPageDesc(pa, reg->attrs, reg->xn);
+
+        va += SMALL_PAGE_SIZE;
+        pa += SMALL_PAGE_SIZE;
+      }
+    }
+  }
+}
+
+/* =========================================================================
+ *  CP15 / System Control Helpers (AArch32)
+ * =========================================================================
+ */
+
+static inline void MMU_SetTTBCR(uint32_t val)
+{
+  __asm__ volatile(
+    "mcr p15, 0, %0, c2, c0, 2\n"
+    "isb\n"
+    :
+    : "r"(val)
+    : "memory");
+}
+
+static void MMU_InvalidateCachesAndTLB(void)
+{
+  uint32_t zero = 0U;
+
+  /* Invalidate entire I-cache */
+  __asm__ volatile(
+    "mcr p15, 0, %0, c7, c5, 0\n"
+    :
+    : "r"(zero)
+    : "memory");
+
+  /* Optional: Invalidate entire D-cache (uncomment if needed) */
+  /*
+  __asm__ volatile (
+      "mcr p15, 0, %0, c7, c6, 0\n"
+      :
+      : "r"(zero)
+      : "memory");
+  */
+
+  /* Invalidate entire unified TLB */
+  __set_TLBIALL(0);
+
+  __DSB();
   __ISB();
 }
+
+/* =========================================================================
+ *  Public MMU Init API
+ * =========================================================================
+ */
+
+/**
+    * @brief  Create translation tables and program MMU translation registers.
+    * @note   Enabling MMU/caches/branch prediction is optional and currently
+    *         disabled in this template (see the #if 0 block).
+    * @retval None
+    */
+void MMU_CreateTranslationTable(void)
+{
+  uint32_t ttbr0 = (uint32_t)L1_TT;
+  uint32_t sctlr;
+
+  /* 1) Disable MMU, caches, branch prediction */
+  sctlr = __get_SCTLR();
+  sctlr &= ~((1U << 0)   |    /* M: MMU */
+             (1U << 2)   |   /* C: D-cache */
+             (1U << 11)  |   /* Z: branch prediction */
+             (1U << 12)  |   /* I: cache */
+             (1U << 28));    /* TRE set to 0 */
+  __set_SCTLR(sctlr);
+  __ISB();
+
+  /* 2) Initialize PRRR/NMRR for TEX/C/B scheme */
+
+
+  /* 3) Build L1 and L2 tables from region table */
+  MMU_BuildFromRegions();
+
+  /* 4) TTBR0: base address of L1_TT (physical address in secure SRAM) */
+  __set_TTBR0(ttbr0);
+  __ISB();
+
+  /* 5) TTBCR: N = 0 => all VA space via TTBR0 */
+  MMU_SetTTBCR(0U);
+  __ISB();
+
+  /* 6) DACR: domain 0 as Manager (0b11), others 0 */
+  __set_DACR(0x3U);
+  __ISB();
+
+  /* 7) Invalidate caches & TLB */
+  MMU_InvalidateCachesAndTLB();
+
+}
+

@@ -8,7 +8,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2022 STMicroelectronics. All rights reserved.
+  * Copyright (c) 2022-2025 STMicroelectronics. All rights reserved.
   *
   * This software component is licensed by ST under BSD 3-Clause license,
   * the "License"; You may not use this file except in compliance with the
@@ -18,6 +18,30 @@
   ******************************************************************************
 
   @endverbatim
+
+### V1.0.10/-November-2025 ###
+================================
+   + Integrate official release v2025.10
+
+### V1.0.10/7-May-2025 ###
+================================
+   + Integrate official release v2025.04
+
+### V1.0.9/7-november-2024 ###
+================================
+   + Integrate official release v2024.10
+
+### V1.0.8/31-may-2024 ###
+================================
+   + Integrate official release v2024.05
+
+### V1.0.7/31-october-2023 ###
+================================
+   + Integrate official release v2023.10
+
+### V1.0.6/30-April-2023 ###
+================================
+   + Integrate official release v2023.04
 
 ### V1.0.5/04-November-2022 ###
 ================================
@@ -30,7 +54,7 @@
 ### V1.0.3/15-September-2021 ###
 ================================
    + Integrate official release v2021.04
-	 
+
 ### V1.0.2/11-November-2020 ###
 ===============================
    + Integrate official release v2020.10

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>README</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="./../../../../_htmresc/mini-st_2020.css" />
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="row">
+<div class="col-sm-12 col-lg-8">
+<div class="row">
+<div class="col-sm-12 col-lg-8">
+<h1>OpenAMP_TTY_echo Demonstration (CM33 NonSecure)</h1>
+<hr />
+<h2>Application Description</h2>
+<p>The OpenAMP_TTY_echo demonstration shows how to use the <strong>OpenAMP middleware</strong> and <strong>Virtual UART</strong>
+to create an Inter-Processor Communication (IPC) channel that appears as a TTY device
+(<code>/dev/ttyRPMSGx</code>) inside Linux running on the CA35.</p>
+<ul>
+<li><strong>CM33</strong> acts as the <strong>REMOTE</strong> processor. It runs as a bare-metal firmware, started and stopped
+  by Linux via the RemoteProc framework.</li>
+<li><strong>CA35</strong> acts as the <strong>HOST</strong> (OpenAMP RPROC master). Linux controls the CM33 lifecycle and
+  exchanges messages through the RPMsg/VirtIO transport over IPCC1.</li>
+<li>The CM33 creates two Virtual UART channels (<strong>VirtUART0</strong> → <code>/dev/ttyRPMSG0</code>,
+  <strong>VirtUART1</strong> → <code>/dev/ttyRPMSG1</code>) and echoes back every message it receives.</li>
+<li><strong>LED3 (orange)</strong> toggles on each successfully received message.</li>
+</ul>
+<hr />
+<h2>How It Works</h2>
+<ol>
+<li>Linux loads the signed CM33 firmware via RemoteProc and starts the remote processor.</li>
+<li>The CM33 initialises IPCC1, sets up the resource table, and registers VirtUART0 and VirtUART1
+   RPMsg endpoints.</li>
+<li>When Linux writes to <code>/dev/ttyRPMSG0</code> or <code>/dev/ttyRPMSG1</code>, the CM33 receives the message,
+   toggles LED3, and sends the same data back.</li>
+<li>Linux reads the echoed data from the same device node.</li>
+</ol>
+<hr />
+<h2>Expected Success Behavior</h2>
+<ul>
+<li>LED3 (orange) toggles on each message received from Linux.</li>
+<li>Data written to <code>/dev/ttyRPMSG0</code> and <code>/dev/ttyRPMSG1</code> is echoed back and visible in the Linux
+  console.</li>
+</ul>
+<h2>Error Behaviors</h2>
+<ul>
+<li>LED3 (orange) does not blink: CM33 firmware did not start or VirtUART initialisation failed.
+  Check that the signed binary is correctly placed and RemoteProc state is <code>running</code>.</li>
+</ul>
+<hr />
+<h2>Keywords</h2>
+<p>OpenAMP, RPMsg, VirtUART, IPCC, Inter-Processor Communication, RemoteProc, bare-metal, CM33,
+CA35, Linux</p>
+<hr />
+<h2>Directory Contents</h2>
+<pre><code>CM33/NonSecure/
+├── Core/
+│   ├── Inc/
+│   │   ├── main.h                       Main application header
+│   │   ├── stm32mp235f_disco_conf.h      STM32MP235F-DK board configuration
+│   │   ├── stm32mp2xx_hal_conf.h         HAL configuration
+│   │   └── stm32mp2xx_it.h              Interrupt handlers header
+│   └── Src/
+│       ├── main.c                        Main application (VirtUART init + echo loop)
+│       ├── stm32mp2xx_hal_msp.c          HAL MSP initialisation
+│       └── stm32mp2xx_it.c              Interrupt handlers
+└── OPENAMP/
+    ├── mbox_ipcc.c / .h                  IPCC1 mailbox implementation
+    ├── openamp.c / .h                    OpenAMP wrapper (init, deinit, poll)
+    ├── openamp_conf.h                    OpenAMP role and transport configuration
+    ├── openamp_log.c / .h                Trace/log helpers
+    └── rsc_table.c / .h                  Resource table (shared memory layout)
+</code></pre>
+<hr />
+<h2>Hardware and Software Environment</h2>
+<ul>
+<li>This demonstration runs on <strong>STM32MP23xxxx</strong> devices.</li>
+<li>Tested with <strong>STMicroelectronics STM32MP235F-DK</strong> board.</li>
+<li><strong>Linux</strong> must be running on CA35 with RemoteProc and RPMsg support enabled in the kernel.</li>
+<li>Connect an <strong>ST-Link</strong> cable to the PC USB port to observe CM33 trace output.</li>
+</ul>
+<hr />
+<h2>To Build with CMake (Command Line)</h2>
+<p>Navigate to the project root directory
+(<code>Firmware/Projects/STM32MP235F-DK/Demonstrations/OpenAMP/OpenAMP_TTY_echo</code>):</p>
+<ol>
+<li>
+<p><strong>Configure</strong>:
+   <code>bash
+   cmake -G"Unix Makefiles" -B build</code></p>
+<blockquote>
+<p>On Windows with STM32CubeIDE, add the toolchain and make paths to <code>PATH</code> first.
+Example (STM32CubeIDE 1.19.0):
+<code>bash
+export PATH="/c/ST/STM32CubeIDE_1.19.0.25A9/STM32CubeIDE/plugins/\
+com.st.stm32cube.ide.mcu.externaltools.gnu-tools-for-stm32.13.3.rel1.win32_1.0.0.202411081344/tools/bin:\
+/c/ST/STM32CubeIDE_1.19.0.25A9/STM32CubeIDE/plugins/\
+com.st.stm32cube.ide.mcu.externaltools.make.win32_2.2.0.202409170845/tools/bin:$PATH"</code></p>
+</blockquote>
+</li>
+<li>
+<p><strong>Build</strong>:
+   <code>bash
+   cmake --build build</code>
+   or equivalently:
+   <code>bash
+   make -C build all</code></p>
+</li>
+</ol>
+<h3>CMake Output Artifacts</h3>
+<p>All outputs are placed in the <code>build/</code> directory:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>OpenAMP_TTY_echo_CM33_NonSecure.elf</code></td>
+<td>ELF with debug symbols</td>
+</tr>
+<tr>
+<td><code>OpenAMP_TTY_echo_CM33_NonSecure.bin</code></td>
+<td>Raw binary</td>
+</tr>
+<tr>
+<td><code>OpenAMP_TTY_echo_CM33_NonSecure.hex</code></td>
+<td>Intel HEX</td>
+</tr>
+<tr>
+<td><code>OpenAMP_TTY_echo_CM33_NonSecure_stripped.elf</code></td>
+<td>Stripped ELF (debug removed)</td>
+</tr>
+<tr>
+<td><code>OpenAMP_TTY_echo_CM33_NonSecure_sign.bin</code></td>
+<td><strong>Signed binary — loaded by Linux RemoteProc</strong></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>To Build with STM32CubeIDE</h2>
+<h3>Project Structure</h3>
+<pre><code>STM32CubeIDE/
+├── .project                              Workspace-level project (import this)
+├── CM33/
+│   ├── .project                          CM33 aggregate project
+│   └── NonSecure/
+│       ├── .project                      OpenAMP_TTY_echo_CM33_NonSecure project
+│       └── .cproject                     Build configurations
+</code></pre>
+<blockquote>
+<p><strong>Note</strong>: Refer to the
+<a href="https://wiki.st.com/stm32mpu/wiki/How_to_create_an_M33-TD_boot_project_using_STM32CubeIDE">STM32 MPU wiki</a>
+for instructions on importing a project into STM32CubeIDE.</p>
+</blockquote>
+<h3>Import</h3>
+<ol>
+<li>Open STM32CubeIDE.</li>
+<li><code>File → Import → General → Existing Projects into Workspace</code>.</li>
+<li>Browse to <code>STM32CubeIDE/</code> and import all discovered projects.</li>
+</ol>
+<h3>Build Configurations</h3>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CA35TDCID_m33_ns</code></td>
+<td>Debug build — produces stripped ELF only</td>
+</tr>
+<tr>
+<td><code>CA35TDCID_m33_ns_sign</code></td>
+<td><strong>Production build</strong> — runs <code>sign_rproc_fw.py</code> post-build to produce the signed binary</td>
+</tr>
+</tbody>
+</table>
+<p>To build:
+- Right-click on <code>OpenAMP_TTY_echo_CM33_NonSecure</code> → <code>Build Configurations → Set Active</code> →
+  select <code>CA35TDCID_m33_ns_sign</code>.
+- Right-click → <code>Build Project</code>.</p>
+<hr />
+<h2>How to Deploy and Run</h2>
+<ol>
+<li>
+<p>Copy <code>OpenAMP_TTY_echo_CM33_NonSecure_sign.bin</code> to the Linux filesystem on the target board.</p>
+</li>
+<li>
+<p>Place it in the RemoteProc firmware search path, for example:
+   <code>bash
+   cp OpenAMP_TTY_echo_CM33_NonSecure_sign.bin /lib/firmware/</code></p>
+</li>
+<li>
+<p>Load and start the CM33 firmware:
+   <code>bash
+   echo OpenAMP_TTY_echo_CM33_NonSecure_sign.bin &gt; /sys/class/remoteproc/remoteproc0/firmware
+   echo start &gt; /sys/class/remoteproc/remoteproc0/state</code></p>
+</li>
+<li>
+<p>Configure the VirtUART channels and send test messages:
+   <code>bash
+   stty -onlcr -echo -F /dev/ttyRPMSG0
+   cat /dev/ttyRPMSG0 &amp;
+   stty -onlcr -echo -F /dev/ttyRPMSG1
+   cat /dev/ttyRPMSG1 &amp;
+   echo "Hello Virtual UART0" &gt; /dev/ttyRPMSG0
+   echo "Hello Virtual UART1" &gt; /dev/ttyRPMSG1</code></p>
+</li>
+<li>
+<p>Expected output in the Linux console:
+   <code>Hello Virtual UART0
+   Hello Virtual UART1</code></p>
+</li>
+<li>
+<p>To stop the CM33 firmware:
+   <code>bash
+   echo stop &gt; /sys/class/remoteproc/remoteproc0/state</code></p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+</div>
+</body>
+</html>

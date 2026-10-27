@@ -568,20 +568,22 @@ remote processor.</li>
 </ul></li>
 <li><strong>Simulate a Linux crash and observe recovery</strong>
 <ul>
-<li>On the Linux console (as <code>root</code>), run:
-<code>bash  sync; sleep 2; sync; echo c &gt; /proc/sysrq-trigger</code></li>
+<li><p>On the Linux console (as <code>root</code>), run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">sync; sleep 2; sync; echo c &gt; /proc/sysrq-trigger</code></pre></div></li>
 <li>On the CM33 UART, RemoteProc should report crash detection and
 attempt recovery (stop/start sequence).</li>
 </ul></li>
 <li><strong>Cold reset from Linux</strong>
 <ul>
-<li>On Linux, run: <code>bash  reboot</code></li>
+<li><p>On Linux, run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">reboot</code></pre></div></li>
 <li>You should see MCUboot/TF-M banners again on the CM33 UART.</li>
 </ul></li>
 <li><strong>Warm reset from Linux</strong>
 <ul>
-<li>On Linux, run:
-<code>bash  echo warm &gt;&gt; /sys/kernel/reboot/mode  reboot</code></li>
+<li><p>On Linux, run:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo warm &gt;&gt; /sys/kernel/reboot/mode
+reboot</code></pre></div></li>
 <li>A warm reset typically restarts the A35 while keeping CM33 running;
 on the CM33 UART you should see the relevant SCMI notification and
 RemoteProc/OpenAMP re-init sequence (messages may vary by build
@@ -600,18 +602,22 @@ below assume that node is <code>/dev/rpmsg2</code>.</li>
 </ul></li>
 <li><strong>Suspend policy test: STOP2</strong>
 <ul>
-<li>Limit the firmware suspend policy to STOP2 before Linux enters
-suspend:
-<code>bash  echo "LIMIT_PM_STOP2" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li><p>Limit the firmware suspend policy to STOP2 before Linux enters
+suspend:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo "LIMIT_PM_STOP2" &gt; /dev/rpmsg2
+echo deep &gt; /sys/power/mem_sleep
+rtcwake -m mem -s 10</code></pre></div></li>
 <li>Expected behavior: Linux requests suspend, the firmware keeps the
 low-power target at STOP2, and the system wakes up after the RTC
 timeout.</li>
 </ul></li>
 <li><strong>Suspend policy test: LP_STOP2</strong>
 <ul>
-<li>Allow the low-power manager to enter LP_STOP2 instead of plain
-STOP2:
-<code>bash  echo "LIMIT_PM_LP_STOP2" &gt; /dev/rpmsg2  echo deep &gt; /sys/power/mem_sleep  rtcwake -m mem -s 10</code></li>
+<li><p>Allow the low-power manager to enter LP_STOP2 instead of plain
+STOP2:</p>
+<div class="sourceCode"><pre class="sourceCode bash"><code class="sourceCode bash">echo "LIMIT_PM_LP_STOP2" &gt; /dev/rpmsg2
+echo deep &gt; /sys/power/mem_sleep
+rtcwake -m mem -s 10</code></pre></div></li>
 <li>Expected behavior: Linux suspend still uses the RTC wake-up, but the
 firmware low-power target is constrained to LP_STOP2.</li>
 </ul></li>

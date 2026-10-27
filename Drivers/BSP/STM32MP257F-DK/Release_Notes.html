@@ -1499,41 +1499,53 @@ text-align: center;
 <div class="col-sm-12 col-lg-8">
 <h1 id="update-history">Update History</h1>
 <div class="collapse">
-<input type="checkbox" id="collapse-section2" checked aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>V1.3.0 / 02-Feb-2026</strong></label>
+<input type="checkbox" id="collapse-section3" checked aria-hidden="true"> <label for="collapse-section3" aria-hidden="true"><strong>V1.4.0 / 28-Oct-2026</strong></label>
 <div>
 <h2 id="main-changes">Main Changes</h2>
 <ul>
-<li>Enable/Disable ADC kernel clocks using SCMI</li>
+<li>Fix COM resource check condition to require all 3 (TX, RX and UART) acquisitions.</li>
+<li>ADC sample time macros renamed to align with MP25-RM (RM0457.Rev5) for both HAL and LL.</li>
 </ul>
 <h2 id="notes">Notes</h2>
 <p>stm32mp257f_disco_conf_template.h file must be copied in user application as &gt;stm32mp257f_disco_conf.h with optional configuration update</p>
 </div>
 </div>
 <div class="collapse">
-<input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>V1.2.0 / 03-June-2025</strong></label>
+<input type="checkbox" id="collapse-section2" aria-hidden="true"> <label for="collapse-section2" aria-hidden="true"><strong>V1.3.0 / 02-Feb-2026</strong></label>
 <div>
 <h2 id="main-changes-1">Main Changes</h2>
 <ul>
-<li>Refactor(MP2-DK): ErrorHandler function is externally defined in the examples for DK board.</li>
-<li>fix(MP25): added conditional compilation for CORE_CM33 in BSP_COM_Init</li>
-<li>PMIC: add a default ramp delay for regulators</li>
-<li>PMIC: Factorize regulator enabling and disabling</li>
+<li>Enable/Disable ADC kernel clocks using SCMI</li>
 </ul>
 <h2 id="notes-1">Notes</h2>
 <p>stm32mp257f_disco_conf_template.h file must be copied in user application as &gt;stm32mp257f_disco_conf.h with optional configuration update</p>
 </div>
 </div>
 <div class="collapse">
-<input type="checkbox" id="collapse-section0" aria-hidden="true"> <label for="collapse-section0" aria-hidden="true"><strong>V1.0.0 / 31-May-2024</strong></label>
+<input type="checkbox" id="collapse-section1" aria-hidden="true"> <label for="collapse-section1" aria-hidden="true"><strong>V1.2.0 / 03-June-2025</strong></label>
 <div>
 <h2 id="main-changes-2">Main Changes</h2>
+<ul>
+<li>Refactor(MP2-DK): ErrorHandler function is externally defined in the examples for DK board.</li>
+<li>fix(MP25): added conditional compilation for CORE_CM33 in BSP_COM_Init</li>
+<li>PMIC: add a default ramp delay for regulators</li>
+<li>PMIC: Factorize regulator enabling and disabling</li>
+</ul>
+<h2 id="notes-2">Notes</h2>
+<p>stm32mp257f_disco_conf_template.h file must be copied in user application as &gt;stm32mp257f_disco_conf.h with optional configuration update</p>
+</div>
+</div>
+<div class="collapse">
+<input type="checkbox" id="collapse-section0" aria-hidden="true"> <label for="collapse-section0" aria-hidden="true"><strong>V1.0.0 / 31-May-2024</strong></label>
+<div>
+<h2 id="main-changes-3">Main Changes</h2>
 <p><strong>v1.0.0 release</strong> of STMP32MP257F-DK BSP</p>
 <h2 id="contents">Contents</h2>
 <ul>
 <li>Documentation updated.</li>
 <li>Cleanup and Fixes around usage of ResourcesManager</li>
 </ul>
-<h2 id="notes-2">Notes</h2>
+<h2 id="notes-3">Notes</h2>
 <p>stm32mp257f_disco_conf_template.h file must be copied in user application as &gt;stm32mp257f_disco_conf.h with optional configuration update</p>
 </div>
 </div>

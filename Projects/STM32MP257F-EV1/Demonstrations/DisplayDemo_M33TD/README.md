@@ -72,9 +72,9 @@ Connect the evaluation board and the low-power display (SSD1306) through the I2C
 │               │ -------------------  │            │
 │               │  CN5.2          VDD  │            │
 │               │ -------------------  │   SSD1306  │
-│     MPU       │  CN5.27        SDA   │    OLED    │
+│     MPU       │  CN5.3         SDA   │    OLED    │
 │   EV1 Board   │ -------------------  │   Display  │
-│               │  CN5.28        SCL   │            │
+│               │  CN5.5         SCL   │            │
 │               │ -------------------  │            │
 │               │                      └------------┘
 └───────────────┘
@@ -174,7 +174,6 @@ DisplayDemo_M33TD
      -DDTS_BOARD_S=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts          # External DT file for sdcard_sdcard bootdevice mode
      -DDTS_BOARD_NS=stm32mp2/m33-td/tfm/stm32mp257f-ev1-cm33tdcid-ostl-ns.dts               # External DT file common for all bootdevice modes
      ```
-
    **Note**: `-DDTS_EXT_DIR` points to `Utilities/dt-stm32mp`. Ensure this is checked out at the required OpenSTLinux-release tag (see the External Device Tree prerequisite) so the secure build resolves the correct device tree.
 2. Configure the TFM CMake project:
    - Right-click on `DisplayDemo_M33TD_CM33_trusted-firmware-m` -> `CMake Configure`.
@@ -301,7 +300,9 @@ Below is a sample UART log output from the CM33 during the boot and runtime sequ
 ### Understanding DisplayDemo Logs
 
 This log demonstrates the full boot process, provisioning status, image loading, and remote processor management, including crash detection and recovery.
+
 > **Note:** The `[RemoteProc] starting copro cpu@0... **done**` message confirms that the A35 coprocessor was started. In this demonstration, the coprocessor is started by pressing **User Button 2**, as described in [2. RemoteProc Task](#purpose).
+
 To trigger a crash and observe the recovery sequence as shown in the log, you can run the following command on the Linux console (as root):
 
 ```bash
@@ -311,6 +312,7 @@ sync; sleep 2; sync; echo c > /proc/sysrq-trigger
 This command forces a kernel crash, allowing you to verify the crash handling and recovery features implemented in the DisplayDemo_M33TD application.
 
 The log also reflects the specific firmware and configuration used for the device boot:
+
 - **CubeFW Version**: The STM32Cube firmware version is shown (e.g., `STM32Cube FW version: v1.2.0-rc8`).
 - **TFM Version**: The Trusted Firmware-M version is indicated (e.g., `welcome to TF-M: v2.1.0-stm32mp-r1-rc5`).
 - **Device Tree Files**: The log lists the external device tree files used for the build and boot (e.g., `dts: stm32mp257f-ev1-cm33tdcid-ostl-sdcard-bl2.dts` and `dts: stm32mp257f-ev1-cm33tdcid-ostl-sdcard-s.dts`).

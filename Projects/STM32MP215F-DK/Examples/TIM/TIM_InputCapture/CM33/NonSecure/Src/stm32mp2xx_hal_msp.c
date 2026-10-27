@@ -52,6 +52,10 @@ void HAL_TIM_IC_MspInit(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN TIM8_MspInit 0 */
   if(htim->Instance==TIM8)
   {
+    /* Reset TIM8 to clear any configuration left by a previously loaded firmware */
+    __HAL_RCC_TIM8_FORCE_RESET();
+    __HAL_RCC_TIM8_RELEASE_RESET();
+
     /* TIMx Peripheral clock enable */
 	  __HAL_RCC_TIM8_CLK_ENABLE();
   }
@@ -98,8 +102,15 @@ void HAL_TIM_IC_MspDeInit(TIM_HandleTypeDef* htim)
 
   if(htim->Instance==TIM8)
   {
-    /* Peripheral clock disable */
+    HAL_NVIC_DisableIRQ(TIM8_CC_IRQn);
+
     HAL_GPIO_DeInit(GPIOC, (GPIO_PIN_10));
+
+    /* Reset TIM8 so that no configuration is left for the next firmware */
+    __HAL_RCC_TIM8_FORCE_RESET();
+    __HAL_RCC_TIM8_RELEASE_RESET();
+
+    /* Peripheral clock disable */
     __HAL_RCC_TIM8_CLK_DISABLE();
 
   }
