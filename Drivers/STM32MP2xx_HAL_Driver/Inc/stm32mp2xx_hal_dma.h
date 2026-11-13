@@ -578,7 +578,7 @@ typedef struct __DMA_HandleTypeDef
 #define HPDMA_REQUEST_LPTIM1_IC1 (111U) /*!< HPDMA HW request is LPTIM1_IC1    */
 #define HPDMA_REQUEST_LPTIM1_IC2 (112U) /*!< HPDMA HW request is LPTIM1_IC2    */
 #define HPDMA_REQUEST_LPTIM1_UE  (113U) /*!< HPDMA HW request is LPTIM1_UE     */
-#define HPDMA_REQUEST_LPTIM2_IC1 (115U) /*!< HPDMA HW request is LPTIM2_IC1    */
+#define HPDMA_REQUEST_LPTIM2_IC1 (114U) /*!< HPDMA HW request is LPTIM2_IC1    */
 #define HPDMA_REQUEST_LPTIM2_IC2 (115U) /*!< HPDMA HW request is LPTIM2_IC2    */
 #define HPDMA_REQUEST_LPTIM2_UE  (116U) /*!< HPDMA HW request is LPTIM2_UE     */
 #define HPDMA_REQUEST_TIM2_TRIG  (117U) /*!< HPDMA HW request is TIM2_TRIG     */
